@@ -5,6 +5,7 @@ import Menu from './Menu';
 import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
+import axios from 'axios';
 
 const spritemap = '/icons.svg';
 
@@ -82,32 +83,49 @@ const Titulaciones = () => {
     }
 
     const nextPage = () => {
-        if (pagination.page <= pagination.totalPages)
+        console.log("Cambiando de página");
+        console.debug(pagination);
+        if (pagination.page <= pagination.totalPages - 1) {
             setPagination({...pagination, page:pagination.page+1})
+        }
     }
 
-    const fetchData = async () => {
-        const url ="/silefe.titulacion/get-titulaciones";
+    const fetchData2 = () => {
+        const url ="/silefe.titulacion/get-titulaciones/";
         Liferay.Service(url,{page:pagination.page},obj => {
+            console.log("datos recibidos fetch 2");
             console.debug(obj);
-            setTitulaciones(obj.map(item=>{return ({...item,checked:false})}));
+            //setTitulaciones(obj.map(item=>{return ({...item,checked:false})}));
         });
     }
-/*
-    const fetchData2 = async () => {
+
+    const fetchData = () => {
+    //    const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
+    //    const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=1`;
+    //    axios.get(url,{
+    //        headers: {
+    //            'Authorization': `Basic ${token}`
+    //        }
+    //    }).then( response => {
+    //        console.log(response)
+    //        //setTitulaciones(response.data);
+    //    }).catch (err => {
+    //        console.error(err);
+    //    })
+
+        // vamos aqui
+
+        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}`;
         const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
-        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones`;
         axios.get(url,{
-            headers: {
-                'Authorization': `Basic ${token}`
-            }
-        }).then( response => {
-            setTitulaciones(response.data);
-        }).catch (err => {
-            console.error(err);
-        })
+          headers: {
+              'Authorization': `Basic ${token}`
+          }}).then(response => {
+            setTitulaciones(response.data.data);
+            setPagination({...pagination,totalPages:response.data.totalPages})
+        });
     }
-*/
+
     const handleSave = () => {
         const userId = Liferay.ThemeDisplay.getUserId();
         const userName = Liferay.ThemeDisplay.getUserName();
@@ -139,7 +157,8 @@ const Titulaciones = () => {
     }
 
     useEffect(()=>{
-        fetchData()
+        fetchData();
+        //fetchData2();
     },[pagination.page]);
 
     if (!titulaciones) 
