@@ -6,6 +6,7 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import axios from 'axios';
+import XMLParser from 'react-xml-parser';
 
 
 const Colectivos = () => {
@@ -20,12 +21,12 @@ const Colectivos = () => {
         {
             columnName: "colectivoId",
             columnTitle: "Id",
-            columnType: "checkbox",        
+            columnType: "checkbox",
         },
         {
             columnName: "descripcion",
             columnTitle: "Descripción",
-            columnType: "string",
+            columnType: "string",//"localized",
         },
     ];
 
@@ -72,6 +73,12 @@ const Colectivos = () => {
 
     const handleEdit = () => {
         console.log("handleEdit");
+        let sel = colectivos.filter(i => i.checked);
+        console.log(sel);
+        if (sel.length > 0) {
+            setItem(sel[0]);
+        }
+        console.log("hecho");
     }
 
     const handleNew = () => {
@@ -92,18 +99,22 @@ const Colectivos = () => {
 */
     const fetchData = () => {
         console.log("Colectivos: solicitud hecha por axios");
-        const auth = 'XPx0mhYO'
+        //const auth = 'idpOqCzy'
         const languageId = Liferay.ThemeDisplay.getLanguageId();
+        let auth = Liferay.authToken;
 
         const url = `http://localhost:8080/api/jsonws/silefe.colectivo/get-colectivos?page=${pagination.page}&languageId=${languageId}&p_auth=${auth}`;
         //const url = `http://localhost:8080/api/jsonws/silefe.colectivo/get-colectivos?`;
         const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
-
         axios.get(url,{
           headers: {
               'Authorization': `Basic ${token}`
           }}).then(response => {
-            setColectivos(response.data.data);
+            let data2 = response.data.data.map( i => { 
+                let d = new XMLParser().parseFromString(i.descripcion);
+                return {...i,checked:false,descripcion:d.getElementsByTagName('Descripcion')[0].value};
+              })
+            setColectivos(data2);
             setPagination({...pagination,totalPages:response.data.totalPages})
         });
     }

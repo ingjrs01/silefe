@@ -39,6 +39,12 @@ const Table = ({columns,rows,handleCheck,handleAllCheck,allCheck}) => {
                          <span>{row[column.columnName]}</span> 
                         </ClayTable.Cell>
                       )
+                    if (column.columnType == "localized")
+                        return (
+                          <ClayTable.Cell><ClayCheckbox checked={row.checked} onChange={()=>{handleCheck(index)}} value={row[column.columnName]}  />
+                          <span>{ row[column.columnName].children[0].value  }</span> 
+                         </ClayTable.Cell> 
+                        )
                   })
                 }
                 {/*

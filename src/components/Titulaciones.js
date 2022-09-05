@@ -103,8 +103,9 @@ const Titulaciones = () => {
     const fetchData = () => {
         console.log("Titulaciones: solicitud hecha por axios");
 
-        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}&p_auth=XPx0mhYO`;
+        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}&p_auth=idpOqCzy`;
         const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
+
         axios.get(url,{
           headers: {
               'Authorization': `Basic ${token}`
