@@ -1,7 +1,7 @@
 {
 	"translatorTextKey": "",
 	"supportedLocales": [],
-	"liferayDir": "/home/jriveiro/project/liferay/liferay-server",
+	"liferayDir": "/home/jriveiro/project/liferay/silefe-server",
 	"webpack": {
 		"rules": [
 			{

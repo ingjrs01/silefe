@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Table from './components/Table';
+//import Table from './components/Table';
 import VMenu from './components/VMenu';
 import Titulaciones from './components/Titulaciones';
+import Colectivos from './components/Colectivos/Colectivos';
 import { Route, Routes } from 'react-router-dom';
 
 const Application = () => {
@@ -20,7 +21,7 @@ const Application = () => {
                     <div className="sheet-section">
                         <Routes>
                             <Route path='/titulaciones' element={ <Titulaciones /> }   />
-                            <Route path='/lele' element={ <Table /> }  />
+                            <Route path='/colectivos'   element={ <Colectivos /> }  />
                         </Routes>
                     </div>
                 </div>

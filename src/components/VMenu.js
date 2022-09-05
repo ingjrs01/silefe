@@ -70,7 +70,7 @@ const VMenu = () => {
                                     <Link to="/titulaciones" className="active nav-link">Titulaciones</Link>
         						</li>
         						<li className="nav-item">
-        							<a className="nav-link" href="#1">Otros</a>
+									<Link to="/colectivos" className="active nav-link">Colectivos</Link>
         						</li>
         						<li className="nav-item">
         							<button

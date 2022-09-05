@@ -91,8 +91,9 @@ const Titulaciones = () => {
     }
 
     const fetchData2 = () => {
-        const url ="/silefe.titulacion/get-titulaciones/";
-        Liferay.Service(url,{page:pagination.page},obj => {
+        console.log("Titulaciones: fetch con Liferay.Service");
+        const url ="/silefe.titulacion/get-titulaciones";
+        Liferay.Service(url,{page:pagination.page,p_auth:"zq1qeRg0"},obj => {
             console.log("datos recibidos fetch 2");
             console.debug(obj);
             //setTitulaciones(obj.map(item=>{return ({...item,checked:false})}));
@@ -100,28 +101,17 @@ const Titulaciones = () => {
     }
 
     const fetchData = () => {
-    //    const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
-    //    const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=1`;
-    //    axios.get(url,{
-    //        headers: {
-    //            'Authorization': `Basic ${token}`
-    //        }
-    //    }).then( response => {
-    //        console.log(response)
-    //        //setTitulaciones(response.data);
-    //    }).catch (err => {
-    //        console.error(err);
-    //    })
+        console.log("Titulaciones: solicitud hecha por axios");
 
-        // vamos aqui
-
-        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}`;
+        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}&p_auth=XPx0mhYO`;
         const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
         axios.get(url,{
           headers: {
               'Authorization': `Basic ${token}`
           }}).then(response => {
-            setTitulaciones(response.data.data);
+            console.debug(response);
+            setTitulaciones(response.data.data.map(item=>{return({...item,checked:false})}));
+
             setPagination({...pagination,totalPages:response.data.totalPages})
         });
     }
@@ -143,7 +133,7 @@ const Titulaciones = () => {
                 setPagination({...pagination,page:pagination.totalPages})
                 console.log("Se acaba de guardar");
                 console.log(pagination);
-                //fetchData();
+                fetchData();
             }
             );
         }
