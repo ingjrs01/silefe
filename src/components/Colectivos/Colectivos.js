@@ -81,18 +81,29 @@ const Colectivos = () => {
     const confirmDelete = () => {
         console.log("Y ahora borro de verdad");
 
-        const url = `http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivo&p_auth:${getAuthToken()}`;
+        //const url = `http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivo&p_auth:${getAuthToken()}`;
+        const auth = getAuthToken();
+
+        console.log("elementos a borrar");
+        console.log(items);
+        let s = items.filter(item => item.checked).map( i => {return i.colectivosId});
+        console.log(s);
+
+
+        const url = `http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivo?colectivoId=${s[0]}&p_auth=${auth}`;
 
         
         //const url = `http://localhost:8080/api/jsonws/silefe.colectivo/get-colectivos?page=${pagination.page}&languageId=${languageId}&p_auth=${auth}`;
 
-
         let data = {
-            colectivoId: 1
+            colectivoId: 1,
         }
 
         const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
-        axios.post(url,data).then(response => {
+        axios.post(url,data,{
+            headers: {
+                'Authorization': `Basic ${token}`
+            }}).then(response => {
             console.log(response);
             setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
             fetchData();
@@ -104,6 +115,9 @@ const Colectivos = () => {
             //console.log(data2);
             //setItems(data2);
             //setPagination({...pagination,totalPages:response.data.totalPages})
+        }).catch(err => {
+            console.log("Error haciendo petición");
+            console.log(err);
         });
 
 
