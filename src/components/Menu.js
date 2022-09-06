@@ -5,9 +5,10 @@ import ClayIcon from '@clayui/icon';
 import {ClayInput} from '@clayui/form';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayToolbar from '@clayui/toolbar';
+//import spritemap from '../icons.svg';
 
 
-const spritemap = '/icons.svg';
+const spritemap = '../icons.svg';
 
 const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNew}) => {
 
@@ -18,8 +19,7 @@ const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNe
       <ClayToolbar.Nav>
         <ClayToolbar.Item className="text-left" expand>
           <ClayToolbar.Section>
-            <label className="component-title">{"Foo Bar"}</label>
-
+            <label className="component-title">{"SiLeFe "}</label>
 
             <ClayIcon  symbol="lock" />
           </ClayToolbar.Section>
@@ -65,6 +65,7 @@ const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNe
           <ClayToolbar.Section>
             <ClayButton displayType="danger" onClick={() => { handleDelete() }}>
               {"Borrar"}
+              <ClayIcon spritemap={spritemap} symbol="plus" />
             </ClayButton>
 
 

@@ -102,8 +102,9 @@ const Titulaciones = () => {
 
     const fetchData = () => {
         console.log("Titulaciones: solicitud hecha por axios");
+        let auth = Liferay.authToken;
 
-        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}&p_auth=idpOqCzy`;
+        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}&p_auth=${auth}`;
         const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
 
         axios.get(url,{
