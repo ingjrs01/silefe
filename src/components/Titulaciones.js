@@ -6,6 +6,7 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import axios from 'axios';
+import {getAuthToken,getLanguageId} from '../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
@@ -102,9 +103,10 @@ const Titulaciones = () => {
 
     const fetchData = () => {
         console.log("Titulaciones: solicitud hecha por axios");
-        let auth = Liferay.authToken;
+        let auth         = getAuthToken();
+        const languageId = getLanguageId();
 
-        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}&p_auth=${auth}`;
+        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}&languageId=${languageId}&p_auth=${auth}`;
         const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
 
         axios.get(url,{

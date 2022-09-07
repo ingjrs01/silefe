@@ -20,7 +20,7 @@ const Colectivos = () => {
 
     const columns = [
         {
-            columnName: "colectivoId",
+            columnName: "colectivosId",
             columnTitle: "Id",
             columnType: "checkbox",
         },
@@ -39,7 +39,7 @@ const Colectivos = () => {
         console.log("nextPage");
     }
 
-    const handleSave = () => {
+    const handleSave2 = () => {
         console.log("handleSave");
         
         console.log(item);
@@ -71,6 +71,75 @@ const Colectivos = () => {
 
     }
 
+    const handleSave = async () => {
+        const auth = getAuthToken()
+        console.log("Guardando");
+        console.debug(item);
+
+        const data = {
+            colectivoId: item.colectivosId,
+            descripcion: item.descripcion,
+            userId: Liferay.ThemeDisplay.getUserId(),
+            userName: Liferay.ThemeDisplay.getUserName()
+        }
+
+        const lala = JSON.stringify(data);
+        console.log(lala);
+
+        if (item.colectivosId == 0) {
+            console.log("voy a actuailzar");
+            console.debug(item);
+
+            const res = await fetch("http://localhost:8080/api/jsonws/invoke", {
+                "credentials": "include",
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                    "Accept": "*/*",
+                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                    "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": "http://localhost:8080/titulaciones",
+            "body": `{\"/silefe.colectivo/add-colectivo\":{${lala}}}`,
+            "method": "POST",
+            "mode": "cors"
+            });
+
+        }
+        else {
+            console.log("actualizando colectivo");
+            console.log("voy a actuailzar");
+            console.debug(item);
+
+            const res = await fetch("http://localhost:8080/api/jsonws/invoke", {
+                "credentials": "include",
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                    "Accept": "*/*",
+                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                    "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": "http://localhost:8080/colectivos",
+            "body": `{\"/silefe.colectivo/save-colectivo\":${lala}}`,
+            "method": "POST",
+            "mode": "cors"
+            });
+
+
+
+        }
+
+    }
+
     const handleDelete = () => {
         console.log("handleDelete");
         if (items.filter(item => item.checked).length > 0)
@@ -78,43 +147,72 @@ const Colectivos = () => {
 
     }
 
-    const confirmDelete = () => {
-        console.log("Y ahora borro de verdad");
 
-        //const url = `http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivo&p_auth:${getAuthToken()}`;
+    const confirmDelete = async () => {
+        const auth = getAuthToken()
+        let s = items.filter(item => item.checked).map( i => {return i.colectivosId});
+
+        console.log();
+        const res = await fetch("http://localhost:8080/api/jsonws/invoke", {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": "http://localhost:8080/titulaciones",
+            "body": `{\"/silefe.colectivo/remove-colectivos\":{\"colectivos\":[${s}]}}`,
+            "method": "POST",
+            "mode": "cors"
+        });
+
+        console.debug(res);
+        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        fetchData();
+
+    }
+
+
+
+
+    // lalala
+
+    const confirmDelete2 = () => {
+        console.log("Y ahora borro de verdad con axios");
+
         const auth = getAuthToken();
 
-        console.log("elementos a borrar");
         console.log(items);
         let s = items.filter(item => item.checked).map( i => {return i.colectivosId});
         console.log(s);
 
-
-        const url = `http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivo?colectivoId=${s[0]}&p_auth=${auth}`;
-
-        
-        //const url = `http://localhost:8080/api/jsonws/silefe.colectivo/get-colectivos?page=${pagination.page}&languageId=${languageId}&p_auth=${auth}`;
-
-        let data = {
-            colectivoId: 1,
-        }
-
-        const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
-        axios.post(url,data,{
-            headers: {
-                'Authorization': `Basic ${token}`
-            }}).then(response => {
+        //const url = `http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivos`;
+        axios.post(`http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivos`,{colectivos:[504]},{
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "mode": "cors"
+        }).then(response => {
+            console.log("response");
             console.log(response);
             setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
             fetchData();
 
-            //let data2 = response.data.data.map( i => {    
-            //    let d = new XMLParser().parseFromString(i.descripcion);
-            //    return {...i,checked:false,descripcion:d.getElementsByTagName('Descripcion')[0].value};
-            //});
-            //console.log(data2);
-            //setItems(data2);
-            //setPagination({...pagination,totalPages:response.data.totalPages})
         }).catch(err => {
             console.log("Error haciendo petición");
             console.log(err);
@@ -127,11 +225,13 @@ const Colectivos = () => {
         let sel = items.filter(i => i.checked);
         if (sel.length > 0) {
             setItem(sel[0]);
+
+            console.log(item);
         }
     }
 
     const handleNew = () => {
-        setItem({id: 0, descripcion: ""})
+        setItem({colectivosId: 0, descripcion: ""})
         setItems(items.map( t => {return ({...t,checked:false})}));
     }
 
