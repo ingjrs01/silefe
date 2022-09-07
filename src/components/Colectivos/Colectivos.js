@@ -40,7 +40,7 @@ const Colectivos = () => {
     }
 
     const handleSave2 = () => {
-        console.log("handleSave");
+        //console.log("handleSave");
         
         console.log(item);
         if (item.colectivoId == null || item.colectivoId == 0) {         
@@ -73,7 +73,7 @@ const Colectivos = () => {
 
     const handleSave = async () => {
         const auth = getAuthToken()
-        console.log("Guardando");
+        console.log("Guardando con método nuevo");
         console.debug(item);
 
         const data = {
@@ -87,7 +87,7 @@ const Colectivos = () => {
         console.log(lala);
 
         if (item.colectivosId == 0) {
-            console.log("voy a actuailzar");
+            console.log("Guardando uno nuevo");
             console.debug(item);
 
             const res = await fetch("http://localhost:8080/api/jsonws/invoke", {
@@ -104,7 +104,7 @@ const Colectivos = () => {
                 "Sec-Fetch-Site": "same-origin"
             },
             "referrer": "http://localhost:8080/titulaciones",
-            "body": `{\"/silefe.colectivo/add-colectivo\":{${lala}}}`,
+            "body": `{\"/silefe.colectivo/add-colectivo\":${lala}}`,
             "method": "POST",
             "mode": "cors"
             });
@@ -133,6 +133,8 @@ const Colectivos = () => {
             "method": "POST",
             "mode": "cors"
             });
+
+            fetchData();
 
 
 
@@ -180,8 +182,6 @@ const Colectivos = () => {
 
 
 
-
-    // lalala
 
     const confirmDelete2 = () => {
         console.log("Y ahora borro de verdad con axios");
@@ -261,13 +261,13 @@ const Colectivos = () => {
           headers: {
               'Authorization': `Basic ${token}`
           }}).then(response => {
-            console.log(response.data.data);
-            let data2 = response.data.data.map( i => {    
-                let d = new XMLParser().parseFromString(i.descripcion);
-                return {...i,checked:false,descripcion:d.getElementsByTagName('Descripcion')[0].value};
-            });
-            console.log(data2);
-            setItems(data2);
+            //console.log(response.data.data);
+            //let data2 = response.data.data.map( i => {    
+            //    let d = new XMLParser().parseFromString(i.descripcion);
+            //    return {...i,checked:false,descripcion:d.getElementsByTagName('Descripcion')[0].value};
+            //});
+            //console.log(data2);
+            setItems(response.data.data);
             setPagination({...pagination,totalPages:response.data.totalPages})
         });
     }
