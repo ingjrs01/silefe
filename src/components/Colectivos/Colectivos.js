@@ -6,7 +6,7 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import axios from 'axios';
-import XMLParser from 'react-xml-parser';
+//import XMLParser from 'react-xml-parser';
 import {getAuthToken,getLanguageId} from '../../includes/LiferayFunctions';
 
 const spritemap = '../icons.svg';
@@ -33,19 +33,18 @@ const Colectivos = () => {
 
     const prevPage = () => {
         console.log("prevPage");
+        if (pagination.page > 0)
+            setPagination({...pagination,page:pagination.page-1})
     }
 
     const nextPage= () => {
         console.log("nextPage");
+        if (pagination.page < pagination.totalPages - 1)
+            setPagination({...pagination,page:pagination.page+1})
     }
 
     const handleSave2 = () => {
-        //console.log("handleSave");
-        
-        console.log(item);
         if (item.colectivoId == null || item.colectivoId == 0) {         
-            
-            
             const url = '/silefe.colectivo/add-colectivo';
             Liferay.Service(url, {
                 "descripcion": item.descripcion,
@@ -108,6 +107,7 @@ const Colectivos = () => {
             "method": "POST",
             "mode": "cors"
             });
+            fetchData();
 
         }
         else {
@@ -135,18 +135,13 @@ const Colectivos = () => {
             });
 
             fetchData();
-
-
-
         }
-
     }
 
     const handleDelete = () => {
         console.log("handleDelete");
         if (items.filter(item => item.checked).length > 0)
             onOpenChange(true);        
-
     }
 
 
@@ -179,9 +174,6 @@ const Colectivos = () => {
         fetchData();
 
     }
-
-
-
 
     const confirmDelete2 = () => {
         console.log("Y ahora borro de verdad con axios");
@@ -217,15 +209,12 @@ const Colectivos = () => {
             console.log("Error haciendo petición");
             console.log(err);
         });
-
-
     }
 
     const handleEdit = () => {
         let sel = items.filter(i => i.checked);
         if (sel.length > 0) {
             setItem(sel[0]);
-
             console.log(item);
         }
     }
@@ -252,9 +241,6 @@ const Colectivos = () => {
         const languageId = getLanguageId();
         const auth       = getAuthToken();
 
-        //console.log("Version lele: ");
-        //console.log(process.env.REACT_APP_API_URL);
-        
         const url = `http://localhost:8080/api/jsonws/silefe.colectivo/get-colectivos?page=${pagination.page}&languageId=${languageId}&p_auth=${auth}`;
         const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
         axios.get(url,{
@@ -274,9 +260,7 @@ const Colectivos = () => {
 
     useEffect(()=>{
         fetchData();
-    },[])
-
-
+    },[pagination.page])
 
     if (!items) 
         return (<div>Cargando</div>)
@@ -346,6 +330,5 @@ const Colectivos = () => {
         </>
     );
 }
-
 
 export default Colectivos;
