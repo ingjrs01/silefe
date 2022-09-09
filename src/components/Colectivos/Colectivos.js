@@ -6,7 +6,6 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import axios from 'axios';
-//import XMLParser from 'react-xml-parser';
 import {getAuthToken,getLanguageId} from '../../includes/LiferayFunctions';
 
 const spritemap = '../icons.svg';
@@ -32,42 +31,13 @@ const Colectivos = () => {
     ];
 
     const prevPage = () => {
-        console.log("prevPage");
         if (pagination.page > 0)
             setPagination({...pagination,page:pagination.page-1})
     }
 
     const nextPage= () => {
-        console.log("nextPage");
         if (pagination.page < pagination.totalPages - 1)
             setPagination({...pagination,page:pagination.page+1})
-    }
-
-    const handleSave2 = () => {
-        if (item.colectivoId == null || item.colectivoId == 0) {         
-            const url = '/silefe.colectivo/add-colectivo';
-            Liferay.Service(url, {
-                "descripcion": item.descripcion,
-                "userId"     : Liferay.ThemeDisplay.getUserId(),
-                "userName"   : Liferay.ThemeDisplay.getUserName()
-            }, obj => {
-                setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento añadido correctamente"}]);
-                setPagination({...pagination,page:pagination.totalPages})
-                console.log("Se acaba de guardar");
-                console.log(pagination);
-                fetchData();
-            }
-            );
-        }
-        else {
-            console.log("Voy a guardar lo qu eya está");
-            Liferay.Service( '/silefe.titulacion/save-titulacion',item,obj => {
-                console.log(obj);
-                setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento guardado correctamente"}]);
-                fetchData();
-                });
-        }
-
     }
 
     const handleSave = async () => {
@@ -108,7 +78,7 @@ const Colectivos = () => {
             "mode": "cors"
             });
             fetchData();
-
+            handleNew();
         }
         else {
             console.log("actualizando colectivo");
@@ -135,11 +105,11 @@ const Colectivos = () => {
             });
 
             fetchData();
+            handleNew();
         }
     }
 
     const handleDelete = () => {
-        console.log("handleDelete");
         if (items.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
@@ -169,7 +139,6 @@ const Colectivos = () => {
             "mode": "cors"
         });
 
-        console.debug(res);
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
 
@@ -236,6 +205,51 @@ const Colectivos = () => {
 
     }
 
+    const handleSearch = () => {
+        console.log("buscando");
+        fetchSearch();
+    }
+
+    const fetchSearch = () => {
+        console.log("Buscando");
+        const languageId = getLanguageId();
+        const auth       = getAuthToken();
+
+        const searchtext = 'olecti';
+
+        const data = {
+            descripcion: searchtext,
+            page: 0,
+            languageId:  1//languageId,
+        };
+
+        fetch("http://localhost:8080/api/jsonws/invoke", {
+            "credentials": "include",
+            "headers": {
+                "x-csrf-token": auth,
+            },
+            "referrer": "http://localhost:8080/colectivos",
+            "body": `{\"/silefe.colectivo/filter":${JSON.stringify(data)}}`,
+            "method": "POST"
+
+        }).then((response) => {
+            let datos = JSON.parse (response.json());
+            setItems(datos.data);
+        });
+        //console.log("respuesta sin procesar");
+        //console.log(response);
+        //let lele = stringify(response);
+        //let lele = JSON.parse(response);
+
+        //let respuesta = await response.json();
+        //console.log("Respuesta recibida");
+        //console.log(respuesta);
+        //console.log(typeof(response));
+
+        //console.debug(JSON.parse(respuesta));
+        //setItems(respuesta.data);
+    }
+
     const fetchData = () => {
         console.log("Colectivos: solicitud hecha por axios");
         const languageId = getLanguageId();
@@ -274,6 +288,7 @@ const Colectivos = () => {
                 handleDelete={handleDelete} 
                 handleEdit={handleEdit}
                 handleNew={handleNew}
+                handleSearch={handleSearch}
             />
 
             <ColectivoForm setItem={setItem} item={item} />

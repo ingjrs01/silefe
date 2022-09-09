@@ -10,7 +10,7 @@ import ClayToolbar from '@clayui/toolbar';
 
 const spritemap = '../icons.svg';
 
-const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNew}) => {
+const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNew,handleSearch}) => {
 
 //  const spritemap = "/icons.svg";
 
@@ -31,7 +31,8 @@ const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNe
             <ClayInput.GroupItem>
               <ClayInput
                 className="form-control-inline"
-                placeholder="Search..."
+                placeholder="Buscar..."
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
             </ClayInput.GroupItem>
           </ClayInput.Group>
