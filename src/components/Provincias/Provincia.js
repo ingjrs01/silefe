@@ -1,0 +1,279 @@
+import React, {useState,useEffect} from 'react';
+import ProvinciaForm from './ProvinciaForm';
+import Menu from '../Menu';
+import Table from '../Table';
+import ClayAlert from '@clayui/alert';
+import ClayModal, {useModal} from '@clayui/modal';
+import ClayButton from '@clayui/button';
+import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
+
+const spritemap = '../icons.svg';
+
+const Provincias = () => {
+    const [items,setItems] = useState([]);
+    const [item,setItem]                 = useState({id:0,nombre:""});
+    const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false});
+    const [toastItems,setToastItems]     = useState([]);    
+    const {observer, onOpenChange, open} = useModal();
+
+    console.log("Datos principales");
+    console.log(url_api);
+
+    const columns = [
+        {
+            columnName: "id",
+            columnTitle: "Id",
+            columnType: "checkbox",
+        },
+        {
+            columnName: "nombre",
+            columnTitle: "Nombre",
+            columnType: "string",
+        },
+    ];
+
+    const reset = () => {
+        setItem({id:0, nombre: ""})
+    }
+
+    const prevPage = () => {
+        if (pagination.page > 0)
+            setPagination({...pagination,page:pagination.page-1})
+    }
+
+    const nextPage = () => {
+        if (pagination.page < pagination.totalPages - 1)
+            setPagination({...pagination,page:pagination.page+1})
+    }
+
+    const handleSave = async () => {
+        const auth = getAuthToken()
+        const data = {
+            id: item.id,
+            name: item.nombre,
+            userId: Liferay.ThemeDisplay.getUserId(),
+            userName: Liferay.ThemeDisplay.getUserName(),
+            languageId: 'es-es'
+        }
+
+        const lala = JSON.stringify(data);
+
+        if (item.id == 0) {
+            const res = await fetch(url_api, {
+                "credentials": "include",
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                    "Accept": "*/*",
+                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                    "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": "http://localhost:8080/titulaciones",
+            "body": `{\"/silefe.provincia/add-provincia\":${lala}}`,
+            "method": "POST",
+            "mode": "cors"
+            });
+            fetchData();
+            handleNew();
+        }
+        else {
+            const res = await fetch(url_api, {
+                "credentials": "include",
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                    "Accept": "*/*",
+                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                    "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": "http://localhost:8080/provincia",
+            "body": `{\"/silefe.provincia/save-provincia\":${lala}}`,
+            "method": "POST",
+            "mode": "cors"
+            });
+
+            fetchData();
+            handleNew();
+        }
+        reset()
+
+    }
+
+    const handleDelete = () => {
+        if (items.filter(item => item.checked).length > 0)
+            onOpenChange(true);        
+    }
+
+    const confirmDelete = async () => {
+        const auth = getAuthToken()
+        let s = items.filter(item => item.checked).map( i => {return i.id});
+
+        const res = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": "http://localhost:8080/provincias",
+            "body": `{\"/silefe.provincia/remove-provincias\":{\"provincias\":[${s}]}}`,
+            "method": "REMOVE",
+            "mode": "cors"
+        });
+
+        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        fetchData();
+
+    }
+
+    const handleEdit = () => {
+        let sel = items.filter(i => i.checked);
+        if (sel.length > 0) {
+            setItem({id:sel[0].id,nombre:sel[0].nombre});
+        }
+
+    }
+
+    const handleNew = () => {
+        setItem({id: 0, name: ""})
+        setItems(items.map( t => {return ({...t,checked:false})}));
+    }
+
+    const handleSearch = () => {
+        console.log("handleSearch");
+
+    }
+
+    const fetchData = async () => {
+        console.log("Provincia: solicitud hecha por fetch");
+        const languageId = getLanguageId();
+        const auth       = getAuthToken();
+
+        const searchtext = '*';
+
+        const data = {
+            name: searchtext,
+            page: 0,
+            languageId:  1
+        };
+
+
+        let response = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "x-csrf-token": auth,
+            },
+            "referrer": "http://localhost:8080/provincias",
+            "body": `{\"/silefe.provincia/filter":${JSON.stringify(data)}}`,
+            "method": "POST"
+
+        });
+        
+        let dd = await response.json();
+        let datos = await JSON.parse (dd);
+        let d2 = await datos.data.map(i => {return({...i,id:i.provinciaId,checked:false})})
+        await setItems(d2);//await setItems(datos.data);
+
+    }
+
+    const handleCheck = (index) => {
+        let tmp = items.slice();
+        tmp[index].checked = !items[index].checked;
+        setItems(tmp);
+    }
+
+    const handleAllCheck = () => {
+        setPagination({...pagination,allCheck:!pagination.allCheck})
+        setItems(items.map( i => {return ({...i,checked:pagination.allCheck})}));
+    }
+
+
+    useEffect(()=>{
+        fetchData();
+    },[pagination.page])
+
+    if (!items) 
+        return (<div>Cargando</div>)
+
+    return (
+        <>
+            <Menu 
+                prevPage={prevPage} 
+                nextPage={nextPage} 
+                handleSave={handleSave} 
+                handleDelete={handleDelete} 
+                handleEdit={handleEdit}
+                handleNew={handleNew}
+                handleSearch={handleSearch}
+            />
+            <ProvinciaForm setItem={setItem} item={item} />
+            <Table 
+                columns={columns}
+                rows={items} 
+                handleCheck={handleCheck} 
+                handleAllCheck={handleAllCheck}  
+                allCheck={pagination.allCheck}
+             />
+            <ClayAlert.ToastContainer>
+                {toastItems.map(value => (
+                <ClayAlert
+                    autoClose={5000}
+                    key={value}
+                    onClose={() => {
+                        setToastItems(prevItems =>
+                            prevItems.filter(item => item !== value)
+                        );
+                    }}
+                    spritemap={spritemap}
+                    title={`${value.title}`}
+                    displayType={value.type}
+                >{`${value.text}`}</ClayAlert>
+                ))}
+            </ClayAlert.ToastContainer>
+
+            {open && (
+                <ClayModal
+                    observer={observer}
+                    size="lg"
+                    spritemap={spritemap}
+                    status="info"
+                >
+                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
+                    <ClayModal.Body>
+                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
+                    </ClayModal.Body>
+                    <ClayModal.Footer
+                        first={
+                            <ClayButton.Group spaced>
+                                <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{"Cancelar"}</ClayButton>
+                            </ClayButton.Group>
+                        }
+                        last={
+                            <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
+                                {"Borrar"}
+                            </ClayButton>
+                        }
+                    />
+                </ClayModal>
+            )}
+
+
+        </>
+    )
+}
+
+export default Provincias;
