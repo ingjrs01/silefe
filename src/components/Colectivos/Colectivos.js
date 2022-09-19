@@ -6,7 +6,7 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import axios from 'axios';
-import {getAuthToken,getLanguageId} from '../../includes/LiferayFunctions';
+import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 
 const spritemap = '../icons.svg';
 
@@ -60,7 +60,7 @@ const Colectivos = () => {
             console.log("Guardando uno nuevo");
             console.debug(item);
 
-            const res = await fetch("http://localhost:8080/api/jsonws/invoke", {
+            const res = await fetch(url_api, {
                 "credentials": "include",
                 "headers": {
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
@@ -86,7 +86,7 @@ const Colectivos = () => {
             console.log("voy a actuailzar");
             console.debug(item);
 
-            const res = await fetch("http://localhost:8080/api/jsonws/invoke", {
+            const res = await fetch(url_api, {
                 "credentials": "include",
                 "headers": {
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
@@ -121,7 +121,7 @@ const Colectivos = () => {
         let s = items.filter(item => item.checked).map( i => {return i.colectivosId});
 
         console.log();
-        const res = await fetch("http://localhost:8080/api/jsonws/invoke", {
+        const res = await fetch(url_api, {
             "credentials": "include",
             "headers": {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
@@ -224,7 +224,7 @@ const Colectivos = () => {
             languageId:  1//languageId,
         };
 
-        fetch("http://localhost:8080/api/jsonws/invoke", {
+        fetch(url_api, {
             "credentials": "include",
             "headers": {
                 "x-csrf-token": auth,
