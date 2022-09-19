@@ -49,7 +49,8 @@ const Colectivos = () => {
             colectivoId: item.colectivosId,
             descripcion: item.descripcion,
             userId: Liferay.ThemeDisplay.getUserId(),
-            userName: Liferay.ThemeDisplay.getUserName()
+            userName: Liferay.ThemeDisplay.getUserName(),
+            languageId: 'es-Es'
         }
 
         const lala = JSON.stringify(data);

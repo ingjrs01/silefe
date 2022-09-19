@@ -73,6 +73,9 @@ const VMenu = () => {
 									<Link to="/colectivos" className="active nav-link">Colectivos</Link>
         						</li>
         						<li className="nav-item">
+									<Link to="/provincias" className="active nav-link">Provincias</Link>
+        						</li>
+        						<li className="nav-item">
         							<button
         								aria-controls="menubarVerticalMdNestedCollapseButton02"
         								aria-expanded="false"
