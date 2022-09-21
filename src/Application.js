@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-//import Table from './components/Table';
+import { Route, Routes } from 'react-router-dom';
 import VMenu from './components/VMenu';
 import Titulaciones from './components/Titulaciones';
 import Colectivos from './components/Colectivos/Colectivos';
 import Provincias from './components/Provincias/Provincia';
 import Cnaes from './components/Cnaes/Cnaes';
 import Cnos from './components/Cnos/Cnos';
-import { Route, Routes } from 'react-router-dom';
+import Experiencias from './components/Experiencias/Experiencias';
 
 const Application = () => {
 
@@ -28,6 +28,7 @@ const Application = () => {
                             <Route path='/provincias'   element={ <Provincias /> }   />
                             <Route path='/cnaes'        element={ <Cnaes /> }   />
                             <Route path='/cnos'         element={ <Cnos /> }   />
+                            <Route path='/experiencias' element={ <Experiencias /> }   />
                         </Routes>
                     </div>
                 </div>
