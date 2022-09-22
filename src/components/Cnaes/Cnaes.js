@@ -2,16 +2,19 @@ import React, {useEffect, useState} from "react";
 import CnaeForm from "./CnaeForm";
 import Menu from '../Menu';
 import Table from '../Table';
-import ClayAlert from '@clayui/alert';
+//import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 
+const spritemap = '../icons.svg';
 
 const Cnaes = () => {
     const [items,setItems] = useState([]);
     const [item,setItem]   = useState({id:0,descripcion:""});
     const [pagination,setPagination] = useState({page:0,totalPages:0,allCheck:false})
+    const {observer, onOpenChange, open} = useModal();
+
 
     const columns = [
         {
@@ -29,7 +32,7 @@ const Cnaes = () => {
     // Inicio las varibles para la api:    
     const auth = getAuthToken()
     const lang = getLanguageId();
-
+    const referer = "http://localhost:8080/cnaes";
 
     const prevPage = ()  => {
         if (pagination.page > 0)
@@ -57,7 +60,6 @@ const Cnaes = () => {
     }
 
     const handleSave = async () => {
-        console.log("handleSave");
         const data = {
             id: item.id,
             descripcion: item.descripcion,
@@ -72,11 +74,6 @@ const Cnaes = () => {
         if (item.id == 0)
             endpoint = '/silefe.cnae/add-cnae';
 
-        console.log("Justo preparados:");
-        console.log(url_api);
-        console.log(endpoint);
-        console.log(lala);
-
         const res = await fetch(url_api, {
             "credentials": "include",
             "headers": {
@@ -90,7 +87,7 @@ const Cnaes = () => {
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "same-origin"
         },
-        "referrer": "http://localhost:8080/cnaes",
+        "referrer": `\"${referer}\"`,
         "body": `{\"${endpoint}\":${lala}}`,
         "method": "POST",
         "mode": "cors"
@@ -106,6 +103,7 @@ const Cnaes = () => {
         await fetchData();
         handleNew();
         reset()
+        onOpenChange(false);
     }
 
     const handleDelete = () => {
@@ -115,12 +113,14 @@ const Cnaes = () => {
 
     const handleEdit = () => {
         console.log("edit");
+        //setShowform(true);
+        onOpenChange(true);
 
     }
 
     const handleNew = () => {
         console.log("handlenew");
-
+        onOpenChange(true);
     }
 
     const handleSearch = () => {
@@ -129,6 +129,7 @@ const Cnaes = () => {
     }
 
     const fetchData = async () => {
+        const endpoint = "/silefe.cnae/filter";
         const data = {
             languageId : lang,
             descripcion : '',
@@ -139,8 +140,8 @@ const Cnaes = () => {
             "headers": {
                 "x-csrf-token": auth,
             },
-            "referrer": "http://localhost:8080/cnaes",
-            "body": `{\"/silefe.cnae/filter":${JSON.stringify(data)}}`,
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
             "method": "POST"
         });
 
@@ -148,7 +149,6 @@ const Cnaes = () => {
         let datos = await JSON.parse (dd);
         let d2 = await datos.data.map(i => {return({...i,id:i.cnaeId,checked:false})});
         await setItems(d2);
-
     }
 
     useEffect(()=>{
@@ -171,6 +171,36 @@ const Cnaes = () => {
                 handleSearch={handleSearch}
             />
             <CnaeForm setItem={setItem} item={item} />
+            
+            {open && (
+                <ClayModal
+                    observer={observer}
+                    size="lg"
+                    spritemap={spritemap}
+                    status="info"
+                >
+                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
+                    <ClayModal.Body>
+                        <CnaeForm setItem={setItem} item={item} />
+                    </ClayModal.Body>
+                    <ClayModal.Footer
+                        first={
+                            <ClayButton.Group spaced>
+                                <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{"Cancelar"}</ClayButton>
+                            </ClayButton.Group>
+                        }
+                        last={
+                            <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
+                                {"Borrar"}
+                            </ClayButton>
+                        }
+                    />
+                </ClayModal>
+            )}
+
+
+            {/* Probando a borrar cosas aquí*/}
+
             <Table 
                 columns={columns}
                 rows={items} 

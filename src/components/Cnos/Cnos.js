@@ -10,7 +10,6 @@ import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunction
 
 const spritemap = '../icons.svg';
 
-
 const Cnos = () => {
     const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false});
     const [show,setShow]                 = useState(true);
@@ -142,6 +141,7 @@ const Cnos = () => {
             //console.log("Dato a mostrar");
             //console.log(items[index]);
             setItem({...item,id:sel[0].cnoId,codigo:sel[0].codigo,descripcion:sel[0].descripcion});
+            setShow(true);
         }
     }
     const handleNew = () => { 
@@ -204,14 +204,19 @@ const Cnos = () => {
                 handleNew={handleNew}
                 handleSearch={handleSearch}
             />
-            <CnoForm setItem={setItem} item={item} show={show} />
+
+            {show ? <CnoForm setItem={setItem} item={item} setShow={setShow} /> : null}
+            
+            {
+             !show ?
             <Table 
                 columns={columns}
                 rows={items} 
                 handleCheck={handleCheck} 
                 handleAllCheck={handleAllCheck}  
                 allCheck={pagination.allCheck}
-             />
+             /> : null
+            }
             <ClayAlert.ToastContainer>
                 {toastItems.map(value => (
                 <ClayAlert
