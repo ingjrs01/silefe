@@ -5,13 +5,7 @@ import ClayCard from '@clayui/card';
 
 const spritemap = '/icons.svg';
 
-const CnoForm = ({setItem, item, setShow}) => {
-
-    const clicke = (e) => {
-      e.preventDefault();
-      console.log("lalala");
-      setShow(false);
-    }
+const CnoForm = ({setItem, item, save, cancel}) => {
 
     return (
       <ClayCard>
@@ -36,14 +30,17 @@ const CnoForm = ({setItem, item, setShow}) => {
                 <textarea className="form-control" placeholder="Descripción" name="descripcion" value={item.descripcion} onChange={ e => {setItem({...item,descripcion:e.target.value})}}></textarea>
               </ClayForm.Group>
 
-              <ClayButton onClick={e => clicke(e)} displayType="primary">
-              Mostrar
-            </ClayButton>
             </ClayForm>
           </ClayCard.Description>
 
-          <ClayButton onClick={e => clicke(e)} displayType="danger">{"Cancelar"}</ClayButton>
-          <ClayButton onClick={e => clicke(e)} displayType="primary">{"Guardar"}</ClayButton>
+          <div className="btn-group">
+          <div className="btn-group-item">
+            <ClayButton onClick={e => cancel()} displayType="secondary">{"Cancelar"}</ClayButton>
+          </div>
+          <div className="btn-group-item">
+          <ClayButton onClick={e => save()} displayType="primary">{"Guardar"}</ClayButton>
+          </div>
+        </div>
 
         </ClayCard.Body>
       </ClayCard>

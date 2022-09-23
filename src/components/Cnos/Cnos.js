@@ -12,7 +12,7 @@ const spritemap = '../icons.svg';
 
 const Cnos = () => {
     const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false});
-    const [show,setShow]                 = useState(true);
+    const [showform,setShowform]         = useState(false);
     const [items,setItems]               = useState([]);
     const [item,setItem]                 = useState({id:0,nombre:""});
     const [toastItems,setToastItems]     = useState([]);    
@@ -41,19 +41,19 @@ const Cnos = () => {
     ];
 
     useEffect(()=>{
-        console.log("Cargando datos");
         fetchData();
-    },[]);
+    },[pagination.page]);
 
     const prevPage = () => { 
-        console.log("prevPage");
+        if (pagination.page > 0)
+            setPagination({...pagination,page: pagination.page - 1});            
     }
     const nextPage = () => { 
-        console.log("nextPage");
+        if (pagination.page < pagination.totalPages - 1)
+            setPagination({...pagination,page:pagination.page + 1});
     }
 
     const handleSave = async () => {
-        console.log("handleSave");
         const data = {
             cnoId:          item.id,
             codigo:      item.codigo,
@@ -84,18 +84,12 @@ const Cnos = () => {
         "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
         "method": "POST",
         "mode": "cors"
-        }).then(res => {
-            console.log("llego a la respuesta");
-            console.log(res);
-        }).catch(err => {
-            console.log("error")
-            console.log(err);
         });
 
         await console.log(res);
         await fetchData();
-        handleNew();
-        reset()
+        await reset();
+        await setShowform(false);
     }
 
     const handleDelete = () => {
@@ -104,7 +98,7 @@ const Cnos = () => {
     }
 
     const confirmDelete = async () => {
-        const endpoint = '/silefe.provincia/remove-provincias';
+        const endpoint = '/silefe.cno/remove-cnos';
         let s = items.filter(item => item.checked).map( i => {return i.id});
 
         const res = await fetch(url_api, {
@@ -121,55 +115,50 @@ const Cnos = () => {
                 "Sec-Fetch-Site": "same-origin"
             },
             "referrer": `\"${referrer}\"`,
-            "body": `{\"${endpoint}\":{\"provincias\":[${s}]}}`,
+            "body": `{\"${endpoint}\":{\"cnos\":[${s}]}}`,
             "method": "REMOVE",
             "mode": "cors"
         });
-        console.log(res);
-
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
-
     }
-
 
     const handleEdit = () => { 
-        console.log("edit");
         const sel = items.filter(i => i.checked)
         if (sel.length > 0){
-            //console.log(sel);
-            //console.log("Dato a mostrar");
-            //console.log(items[index]);
             setItem({...item,id:sel[0].cnoId,codigo:sel[0].codigo,descripcion:sel[0].descripcion});
-            setShow(true);
+            setShowform(true);
         }
     }
+
     const handleNew = () => { 
-        console.log("new");
-        setItem({id:0,codigo:'',descripcion:''});
+        reset();
+        setShowform(true);
     }
+
     const handleSearch = () => { 
         console.log("search");
     }
+
     const handleCheck = (index) => { 
         let tmp = items.slice();
         tmp[index].checked = !items[index].checked;
         setItems(tmp);
     }
+
     const handleAllCheck = () => { 
-        console.log("allcheck");
         setPagination({...pagination,allCheck:!pagination.allCheck});
         setItems( items.map(i => { return({...i,checked:pagination.allCheck}) }) );
     }
 
     const reset = () => {
-        console.log("reset");
+        setItem({id:0,codigo:'',descripcion:''});
     }
 
     const fetchData = async () => {
         const endpoint = "/silefe.cno/filter";  
         
-        const data = {
+        const postdata = {
             page:         pagination.page,
             codigo :      '',
             descripcion : '',
@@ -182,15 +171,17 @@ const Cnos = () => {
                 "x-csrf-token": auth,
             },
             "referrer": `\"${referrer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
+            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
             "method": "POST"
         });
-        await console.log("Respuesta: " + response);
-        let dd = await response.json();
-        let datos = await JSON.parse (dd);
-        let d2 = await datos.data.map(i => {return({...i,id:i.cnoId,checked:false})})
-        await setItems(d2);//await setItems(datos.data);
 
+        let {data} = await JSON.parse (await response.json());
+        await setItems(await data.map(i => {return({...i,id:i.cnoId,checked:false})}));
+    }
+
+    const handleCancel = () => {
+        setItems(items.map(i => { return ({...i,checked:false})}));
+        setShowform(false);        
     }
 
     return (
@@ -205,17 +196,17 @@ const Cnos = () => {
                 handleSearch={handleSearch}
             />
 
-            {show ? <CnoForm setItem={setItem} item={item} setShow={setShow} /> : null}
+            {showform && <CnoForm setItem={setItem} item={item} save={ handleSave} cancel={handleCancel} /> }
             
             {
-             !show ?
+             !showform &&
             <Table 
                 columns={columns}
                 rows={items} 
                 handleCheck={handleCheck} 
                 handleAllCheck={handleAllCheck}  
                 allCheck={pagination.allCheck}
-             /> : null
+             />
             }
             <ClayAlert.ToastContainer>
                 {toastItems.map(value => (

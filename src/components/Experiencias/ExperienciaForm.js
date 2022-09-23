@@ -26,11 +26,11 @@ const ExperienciaForm = ({ setItem, item,save,cancel }) => {
           </ClayForm>
         </ClayCard.Description>
 
-        <div class="btn-group">
-          <div class="btn-group-item">
+        <div className="btn-group">
+          <div className="btn-group-item">
             <ClayButton onClick={e => cancel()} displayType="secondary">{"Cancelar"}</ClayButton>
           </div>
-          <div class="btn-group-item">
+          <div className="btn-group-item">
           <ClayButton onClick={e => save()} displayType="primary">{"Guardar"}</ClayButton>
           </div>
         </div>
