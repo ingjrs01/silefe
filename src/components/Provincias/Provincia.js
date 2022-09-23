@@ -12,12 +12,15 @@ const spritemap = '../icons.svg';
 const Provincias = () => {
     const [items,setItems] = useState([]);
     const [item,setItem]                 = useState({id:0,nombre:""});
+    const [showform,setShowform]         = useState(false);
     const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
-    console.log("Datos principales");
-    console.log(url_api);
+    // Inicializo las variables principales
+    const auth = getAuthToken();
+    const lang = getLanguageId();
+    const referer = 'http://localhost:8080/provincias';
 
     const columns = [
         {
@@ -47,64 +50,41 @@ const Provincias = () => {
     }
 
     const handleSave = async () => {
-        const auth = getAuthToken()
-        const data = {
+        const postdata = {
             id: item.id,
             name: item.nombre,
             userId: Liferay.ThemeDisplay.getUserId(),
             userName: Liferay.ThemeDisplay.getUserName(),
-            languageId: 'es-es'
+            languageId: lang
         }
 
-        const lala = JSON.stringify(data);
+        let endpoint = '/silefe.provincia/save-provincia'
+        if (item.id == 0) 
+            endpoint = '/silefe.provincia/add-provincia';
 
-        if (item.id == 0) {
-            const res = await fetch(url_api, {
-                "credentials": "include",
-                "headers": {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                    "Accept": "*/*",
-                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                    "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": "http://localhost:8080/titulaciones",
-            "body": `{\"/silefe.provincia/add-provincia\":${lala}}`,
-            "method": "POST",
-            "mode": "cors"
-            });
-            fetchData();
-            handleNew();
-        }
-        else {
-            const res = await fetch(url_api, {
-                "credentials": "include",
-                "headers": {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                    "Accept": "*/*",
-                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                    "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": "http://localhost:8080/provincia",
-            "body": `{\"/silefe.provincia/save-provincia\":${lala}}`,
-            "method": "POST",
-            "mode": "cors"
-            });
+        const res = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+            "x-csrf-token": auth,
+            "Content-Type": "text/plain;charset=UTF-8",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin"
+        },
+        "referrer": `\"${referer}\"`,
+        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
+        "method": "POST",
+        "mode": "cors"
+        });
 
-            fetchData();
-            handleNew();
-        }
+            
         reset()
-
+        fetchData();
+        setShowform(false);
     }
 
     const handleDelete = () => {
@@ -113,7 +93,7 @@ const Provincias = () => {
     }
 
     const confirmDelete = async () => {
-        const auth = getAuthToken()
+        const endpoint = '/silefe.provincia/remove-provincias';
         let s = items.filter(item => item.checked).map( i => {return i.id});
 
         const res = await fetch(url_api, {
@@ -129,21 +109,22 @@ const Provincias = () => {
                 "Sec-Fetch-Mode": "cors",
                 "Sec-Fetch-Site": "same-origin"
             },
-            "referrer": "http://localhost:8080/provincias",
-            "body": `{\"/silefe.provincia/remove-provincias\":{\"provincias\":[${s}]}}`,
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":{\"provincias\":[${s}]}}`,
             "method": "REMOVE",
             "mode": "cors"
         });
 
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
-
+        setShowform(false);
     }
 
     const handleEdit = () => {
         let sel = items.filter(i => i.checked);
         if (sel.length > 0) {
             setItem({id:sel[0].id,nombre:sel[0].nombre});
+            setShowform(true);
         }
 
     }
@@ -151,6 +132,7 @@ const Provincias = () => {
     const handleNew = () => {
         setItem({id: 0, name: ""})
         setItems(items.map( t => {return ({...t,checked:false})}));
+        setShowform(true);
     }
 
     const handleSearch = () => {
@@ -160,34 +142,28 @@ const Provincias = () => {
 
     const fetchData = async () => {
         console.log("Provincia: solicitud hecha por fetch");
-        const languageId = getLanguageId();
-        const auth       = getAuthToken();
+        const endpoint   = '/silefe.provincia/filter';
+        const searchtext = '';
 
-        const searchtext = '*';
-
-        const data = {
+        const postdata = {
             name: searchtext,
-            page: 0,
-            languageId:  1
+            page: pagination.page,
+            languageId: lang
         };
-
 
         let response = await fetch(url_api, {
             "credentials": "include",
             "headers": {
                 "x-csrf-token": auth,
             },
-            "referrer": "http://localhost:8080/provincias",
-            "body": `{\"/silefe.provincia/filter":${JSON.stringify(data)}}`,
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
             "method": "POST"
 
         });
         
-        let dd = await response.json();
-        let datos = await JSON.parse (dd);
-        let d2 = await datos.data.map(i => {return({...i,id:i.provinciaId,checked:false})})
-        await setItems(d2);//await setItems(datos.data);
-
+        let {data} = await JSON.parse (await response.json());
+        await setItems(await data.map(i => {return({...i,id:i.provinciaId,checked:false})}));
     }
 
     const handleCheck = (index) => {
@@ -201,6 +177,11 @@ const Provincias = () => {
         setItems(items.map( i => {return ({...i,checked:pagination.allCheck})}));
     }
 
+    const handleCancel = () => {
+        console.log("cancelar");
+        reset();
+        setShowform(false);
+    }
 
     useEffect(()=>{
         fetchData();
@@ -219,15 +200,21 @@ const Provincias = () => {
                 handleEdit={handleEdit}
                 handleNew={handleNew}
                 handleSearch={handleSearch}
-            />
-            <ProvinciaForm setItem={setItem} item={item} />
-            <Table 
-                columns={columns}
-                rows={items} 
-                handleCheck={handleCheck} 
-                handleAllCheck={handleAllCheck}  
-                allCheck={pagination.allCheck}
-             />
+            />            
+            { showform && <ProvinciaForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} />}
+
+            {
+                !showform &&
+                <Table 
+                    columns={columns}
+                    rows={items} 
+                    handleCheck={handleCheck} 
+                    handleAllCheck={handleAllCheck}  
+                    allCheck={pagination.allCheck}
+                 />
+
+            }
+
             <ClayAlert.ToastContainer>
                 {toastItems.map(value => (
                 <ClayAlert
