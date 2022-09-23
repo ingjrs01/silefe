@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import CnaeForm from "./CnaeForm";
 import Menu from '../Menu';
 import Table from '../Table';
-//import ClayAlert from '@clayui/alert';
+import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
@@ -10,11 +10,12 @@ import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunction
 const spritemap = '../icons.svg';
 
 const Cnaes = () => {
-    const [items,setItems] = useState([]);
-    const [item,setItem]   = useState({id:0,descripcion:""});
-    const [pagination,setPagination] = useState({page:0,totalPages:0,allCheck:false})
+    const [items,setItems]               = useState([]);
+    const [item,setItem]                 = useState({id:0,descripcion:""});
+    const [showform,setShowform]         = useState(false);
+    const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false})
+    const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
-
 
     const columns = [
         {
@@ -34,27 +35,27 @@ const Cnaes = () => {
     const lang = getLanguageId();
     const referer = "http://localhost:8080/cnaes";
 
+    const reset = () => {
+        setItem({id:0,descripcion:""});
+    }
+
     const prevPage = ()  => {
         if (pagination.page > 0)
             setPagination({...pagination,page:pagination.page - 1})
     }
 
     const nextPage = ()  => {
-        console.log("prevPage");
         if (pagination.page < pagination.totalPages - 1)
             setPagination({...pagination,page:pagination.page + 1})
     }
 
     const handleCheck = (index) => {
-        console.log("handleCheck");
-
         let tmp = items.slice();
-        tmp[index] = !items[index].checked;
+        tmp[index].checked = !items[index].checked;
         setItems(tmp);
     }
 
     const handleAllCheck =  () => {
-        console.log("handleAllCheck");
         setPagination({...pagination,allCheck:!pagination.allCheck});
         setItems(items.map(i => {return({...i,checked:pagination.allCheck})}));
     }
@@ -68,9 +69,7 @@ const Cnaes = () => {
             languageId: lang            
         }
 
-        const lala = JSON.stringify(data);
         let endpoint = '/silefe.cnae/save-cnae';
-
         if (item.id == 0)
             endpoint = '/silefe.cnae/add-cnae';
 
@@ -88,49 +87,71 @@ const Cnaes = () => {
             "Sec-Fetch-Site": "same-origin"
         },
         "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${lala}}`,
+        "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
         "method": "POST",
         "mode": "cors"
-        }).then(res => {
-            console.log("llego a la respuesta");
-            console.log(res);
-        }).catch(err => {
-            console.log("error")
-            console.log(err);
         });
 
         await console.log(res);
         await fetchData();
-        handleNew();
-        reset()
-        onOpenChange(false);
+        await handleNew();
+        await reset()
+        await setShowform(false);
+        await onOpenChange(false);
     }
 
     const handleDelete = () => {
-        console.log("delete");
-
+        if (items.filter(item => item.checked).length > 0)
+            onOpenChange(true);        
     }
 
-    const handleEdit = () => {
-        console.log("edit");
-        //setShowform(true);
-        onOpenChange(true);
+    const confirmDelete = async () => {
+        const endpoint = "/silefe.cnae/remove-cnaes";
+        let s = items.filter(item => item.checked).map( i => {return i.id});
 
+        const res = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":{\"cnaes\":[${s}]}}`,
+            "method": "REMOVE",
+            "mode": "cors"
+        });
+
+        setShowform(false);
+        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        fetchData();
+    }
+
+    const handleEdit = (index) => {
+        const sel = items.filter(i => i.checked);
+
+        setItem({id:sel[0].id,descripcion:sel[0].descripcion});
+        setShowform(true);
     }
 
     const handleNew = () => {
-        console.log("handlenew");
-        onOpenChange(true);
+        reset();
+        setShowform(true);
     }
 
     const handleSearch = () => {
         console.log("handlesearch");
-
     }
 
     const fetchData = async () => {
         const endpoint = "/silefe.cnae/filter";
-        const data = {
+        const postdata = {
             languageId : lang,
             descripcion : '',
             page: pagination.page
@@ -141,14 +162,17 @@ const Cnaes = () => {
                 "x-csrf-token": auth,
             },
             "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
+            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
             "method": "POST"
         });
 
-        let dd = await response.json();
-        let datos = await JSON.parse (dd);
-        let d2 = await datos.data.map(i => {return({...i,id:i.cnaeId,checked:false})});
-        await setItems(d2);
+        let {data} = await JSON.parse (await response.json());
+        await setItems(await data.map(i => {return({...i,id:i.cnaeId,checked:false})}));
+    }
+
+    const handleCancel = () => {
+        reset();
+        setShowform(false);
     }
 
     useEffect(()=>{
@@ -157,7 +181,6 @@ const Cnaes = () => {
 
     if (!items) 
         return (<div>Cargando</div>)
-
 
     return (
         <>
@@ -170,8 +193,37 @@ const Cnaes = () => {
                 handleNew={handleNew}
                 handleSearch={handleSearch}
             />
-            <CnaeForm setItem={setItem} item={item} />
-            
+           
+            { showform && <CnaeForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} /> }
+
+            {
+                !showform &&
+                <Table 
+                    columns={columns}
+                    rows={items} 
+                    handleCheck={handleCheck} 
+                    handleAllCheck={handleAllCheck}  
+                    allCheck={pagination.allCheck}
+                 />
+            }
+
+            <ClayAlert.ToastContainer>
+                {toastItems.map(value => (
+                <ClayAlert
+                    autoClose={5000}
+                    key={value}
+                    onClose={() => {
+                        setToastItems(prevItems =>
+                            prevItems.filter(item => item !== value)
+                        );
+                    }}
+                    spritemap={spritemap}
+                    title={`${value.title}`}
+                    displayType={value.type}
+                >{`${value.text}`}</ClayAlert>
+                ))}
+            </ClayAlert.ToastContainer>
+
             {open && (
                 <ClayModal
                     observer={observer}
@@ -181,7 +233,7 @@ const Cnaes = () => {
                 >
                     <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
                     <ClayModal.Body>
-                        <CnaeForm setItem={setItem} item={item} />
+                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
                     </ClayModal.Body>
                     <ClayModal.Footer
                         first={
@@ -197,18 +249,6 @@ const Cnaes = () => {
                     />
                 </ClayModal>
             )}
-
-
-            {/* Probando a borrar cosas aquí*/}
-
-            <Table 
-                columns={columns}
-                rows={items} 
-                handleCheck={handleCheck} 
-                handleAllCheck={handleAllCheck}  
-                allCheck={pagination.allCheck}
-             />
-
         </>
     )
 }
