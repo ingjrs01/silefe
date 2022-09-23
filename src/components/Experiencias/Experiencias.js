@@ -118,22 +118,14 @@ const Experiencias = () => {
 
     }
 
-
-
     const handleEdit = () => {
-        console.log("edit");
-        
         let sel = items.filter(i => i.checked);
         setItem({id:sel[0].id,descripcion:sel[0].descripcion});
-        console.log(sel);
         setShowform(true);
     }
 
     const handleNew = () => {
         setItem({id:0,descripcion:''});
-        //onOpnChange(true);
-        
-        //onOpenChange(true);
         setShowform(true);
     }
 
@@ -157,7 +149,7 @@ const Experiencias = () => {
         const endpoint = "/silefe.experiencia/filter";
         const searchtext = '';
 
-        const data = {
+        const postdata = {
             page: pagination.page,
             descripcion: searchtext,
             languageId:  lang
@@ -169,16 +161,18 @@ const Experiencias = () => {
                 "x-csrf-token": auth,
             },
             "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
+            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
             "method": "POST"
         });
 
-        await console.log(response);
-        let dd = await response.json();
-        let datos = await JSON.parse (dd);
-        await console.log(datos);
-        let d2 = await datos.data.map(i => {return({...i,id:i.experienciaId,checked:false})})
-        await setItems(d2);
+        let {data} = await JSON.parse (await response.json());
+        await setItems(await data.map(i => {return({...i,id:i.experienciaId,checked:false})}));
+    }
+
+    const handleCancel = () => {
+        reset();
+        setItems(items.map(i => {return({...i,checked:false})}));
+        setShowform(false);
     }
 
     useEffect( ()=> {
@@ -199,7 +193,7 @@ const Experiencias = () => {
             />
 
 
-            { showform && (<ExperienciaForm setItem={setItem} item={item} save={handleSave} /> ) }
+            { showform && (<ExperienciaForm setItem={setItem} item={item} save={handleSave} cancel={handleCancel} /> ) }
             
             {
                 !showform &&

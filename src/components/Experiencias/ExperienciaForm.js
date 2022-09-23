@@ -5,7 +5,7 @@ import ClayButton from '@clayui/button';
 
 const spritemap = '/icons.svg';
 
-const ExperienciaForm = ({ setItem, item,save }) => {
+const ExperienciaForm = ({ setItem, item,save,cancel }) => {
 
   return (
     <ClayCard>
@@ -28,7 +28,7 @@ const ExperienciaForm = ({ setItem, item,save }) => {
 
         <div class="btn-group">
           <div class="btn-group-item">
-            <ClayButton onClick={e => clicke(e)} displayType="secondary">{"Cancelar"}</ClayButton>
+            <ClayButton onClick={e => cancel()} displayType="secondary">{"Cancelar"}</ClayButton>
           </div>
           <div class="btn-group-item">
           <ClayButton onClick={e => save()} displayType="primary">{"Guardar"}</ClayButton>
