@@ -1,12 +1,12 @@
 import React, {useState,useEffect} from 'react';
-import Table from './Table';
+import Table from '../Table';
 import TitulacionForm from './TitulacionForm';
-import Menu from './Menu';
+import Menu from '../Menu';
 import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import axios from 'axios';
-import {getAuthToken,getLanguageId} from '../includes/LiferayFunctions';
+import {getAuthToken,getLanguageId} from '../../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
