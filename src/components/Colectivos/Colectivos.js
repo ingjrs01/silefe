@@ -5,7 +5,6 @@ import Table from '../Table';
 import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
-import axios from 'axios';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 
 const spritemap = '../icons.svg';
@@ -13,6 +12,7 @@ const spritemap = '../icons.svg';
 const Colectivos = () => {
     const [items,setItems] = useState([]);
     const [item,setItem]                 = useState({id:0,descripcion:""});
+    const [showform, setShowform]        = useState(false);
     const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
@@ -30,6 +30,11 @@ const Colectivos = () => {
         },
     ];
 
+    // Inicializando las variables:
+    const auth    = getAuthToken()
+    const lang    = getLanguageId()
+    const referer = 'http://localhost:8080/colectivos';
+
     const prevPage = () => {
         if (pagination.page > 0)
             setPagination({...pagination,page:pagination.page-1})
@@ -40,74 +45,46 @@ const Colectivos = () => {
             setPagination({...pagination,page:pagination.page+1})
     }
 
-    const handleSave = async () => {
-        const auth = getAuthToken()
-        console.log("Guardando con método nuevo");
-        console.debug(item);
+    const reset = () => {
+        setItem({id:0,descripcion:""});
+    }
 
-        const data = {
+    const handleSave = async () => {
+        const postdata = {
             colectivoId: item.colectivosId,
             descripcion: item.descripcion,
             userId: Liferay.ThemeDisplay.getUserId(),
             userName: Liferay.ThemeDisplay.getUserName(),
-            languageId: 'es-Es'
+            languageId: lang
         }
 
-        const lala = JSON.stringify(data);
-        console.log(lala);
+        let endpoint = '/silefe.colectivo/save-colectivo';
+        if (item.colectivosId == 0)
+            endpoint = '/silefe.colectivo/add-colectivo';
 
-        if (item.colectivosId == 0) {
-            console.log("Guardando uno nuevo");
-            console.debug(item);
+        const res = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+            "x-csrf-token": auth,
+            "Content-Type": "text/plain;charset=UTF-8",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin"
+        },
+        "referrer": `\"${referer}\"`,
+        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
+        "method": "POST",
+        "mode": "cors"
+        });
 
-            const res = await fetch(url_api, {
-                "credentials": "include",
-                "headers": {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                    "Accept": "*/*",
-                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                    "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": "http://localhost:8080/titulaciones",
-            "body": `{\"/silefe.colectivo/add-colectivo\":${lala}}`,
-            "method": "POST",
-            "mode": "cors"
-            });
-            fetchData();
-            handleNew();
-        }
-        else {
-            console.log("actualizando colectivo");
-            console.log("voy a actuailzar");
-            console.debug(item);
+        fetchData();
+        reset();
+        setShowform(false);
 
-            const res = await fetch(url_api, {
-                "credentials": "include",
-                "headers": {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                    "Accept": "*/*",
-                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                    "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": "http://localhost:8080/colectivos",
-            "body": `{\"/silefe.colectivo/save-colectivo\":${lala}}`,
-            "method": "POST",
-            "mode": "cors"
-            });
-
-            fetchData();
-            handleNew();
-        }
     }
 
     const handleDelete = () => {
@@ -145,53 +122,18 @@ const Colectivos = () => {
 
     }
 
-    const confirmDelete2 = () => {
-        console.log("Y ahora borro de verdad con axios");
-
-        const auth = getAuthToken();
-
-        console.log(items);
-        let s = items.filter(item => item.checked).map( i => {return i.colectivosId});
-        console.log(s);
-
-        //const url = `http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivos`;
-        axios.post(`http://localhost:8080/api/jsonws/silefe.colectivo/remove-colectivos`,{colectivos:[504]},{
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "mode": "cors"
-        }).then(response => {
-            console.log("response");
-            console.log(response);
-            setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
-            fetchData();
-
-        }).catch(err => {
-            console.log("Error haciendo petición");
-            console.log(err);
-        });
-    }
-
     const handleEdit = () => {
         let sel = items.filter(i => i.checked);
         if (sel.length > 0) {
             setItem(sel[0]);
-            console.log(item);
+            setShowform(true);
         }
     }
 
     const handleNew = () => {
         setItem({colectivosId: 0, descripcion: ""})
         setItems(items.map( t => {return ({...t,checked:false})}));
+        setShowform(true);
     }
 
     const handleCheck = (index) => {
@@ -208,69 +150,45 @@ const Colectivos = () => {
 
     const handleSearch = () => {
         console.log("buscando");
-        fetchSearch();
+        fetchData();
     }
 
-    const fetchSearch = () => {
-        console.log("Buscando");
-        const languageId = getLanguageId();
-        const auth       = getAuthToken();
+    const fetchData = async () => {
+        console.log("Colectivos: solicitud hecha por fetch");
+        const endpoint = '/silefe.colectivo/filter';
 
-        const searchtext = 'olecti';
-
-        const data = {
-            descripcion: searchtext,
-            page: 0,
-            languageId:  1//languageId,
+        const postdata = {
+            page: pagination.page,
+            descripcion: '',
+            languageId:  lang
         };
 
-        fetch(url_api, {
+        const res = await fetch(url_api, {
             "credentials": "include",
             "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
                 "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
             },
-            "referrer": "http://localhost:8080/colectivos",
-            "body": `{\"/silefe.colectivo/filter":${JSON.stringify(data)}}`,
-            "method": "POST"
-
-        }).then((response) => {
-            let datos = JSON.parse (response.json());
-            setItems(datos.data);
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
+            "method": "POST",
+            "mode": "cors"
         });
-        //console.log("respuesta sin procesar");
-        //console.log(response);
-        //let lele = stringify(response);
-        //let lele = JSON.parse(response);
 
-        //let respuesta = await response.json();
-        //console.log("Respuesta recibida");
-        //console.log(respuesta);
-        //console.log(typeof(response));
-
-        //console.debug(JSON.parse(respuesta));
-        //setItems(respuesta.data);
+        let {data} = await JSON.parse (await res.json());
+        await setItems(await data.map(i => {return({...i,id:i.colectivoId,checked:false})}));
     }
 
-    const fetchData = () => {
-        console.log("Colectivos: solicitud hecha por axios");
-        const languageId = getLanguageId();
-        const auth       = getAuthToken();
-
-        const url = `http://localhost:8080/api/jsonws/silefe.colectivo/get-colectivos?page=${pagination.page}&languageId=${languageId}&p_auth=${auth}`;
-        const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
-        axios.get(url,{
-          headers: {
-              'Authorization': `Basic ${token}`
-          }}).then(response => {
-            //console.log(response.data.data);
-            //let data2 = response.data.data.map( i => {    
-            //    let d = new XMLParser().parseFromString(i.descripcion);
-            //    return {...i,checked:false,descripcion:d.getElementsByTagName('Descripcion')[0].value};
-            //});
-            //console.log(data2);
-            setItems(response.data.data);
-            setPagination({...pagination,totalPages:response.data.totalPages})
-        });
+    const handleCancel = () => {
+        console.log("Cancelando");
+        setShowform(false);
     }
 
     useEffect(()=>{
@@ -292,14 +210,17 @@ const Colectivos = () => {
                 handleSearch={handleSearch}
             />
 
-            <ColectivoForm setItem={setItem} item={item} />
-            <Table 
-                columns={columns}
-                rows={items} 
-                handleCheck={handleCheck} 
-                handleAllCheck={handleAllCheck}  
-                allCheck={pagination.allCheck}
-             />
+            { showform && <ColectivoForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} />}
+            {
+                !showform &&
+                <Table 
+                    columns={columns}
+                    rows={items} 
+                    handleCheck={handleCheck} 
+                    handleAllCheck={handleAllCheck}  
+                    allCheck={pagination.allCheck}
+                />
+            }
 
             <ClayAlert.ToastContainer>
                 {toastItems.map(value => (
