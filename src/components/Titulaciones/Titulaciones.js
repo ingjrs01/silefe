@@ -5,17 +5,17 @@ import Menu from '../Menu';
 import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
-import axios from 'axios';
-import {getAuthToken,getLanguageId} from '../../includes/LiferayFunctions';
+import {getAuthToken,getLanguageId, url_api} from '../../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
 const Titulaciones = () => {
-    const [titulaciones, setTitulaciones] = useState([]);
-    const [toastItems,setToastItems]      = useState([]);    
+    const [items, setItems] = useState([]);
+    const [toastItems,setToastItems]      = useState([]);
     const [item, setItem]                 = useState({id:0,codigo:"",descripcion:""});
     const [allCheck,setAllCheck]          = useState(false);
-    const [pagination, setPagination]     = useState({page:0,totalPages:0,allCheck:false})
+    const [pagination, setPagination]     = useState({page:0,totalPages:0,allCheck:false});
+    const [showform,setShowform]          = useState(false);
     const {observer, onOpenChange, open}  = useModal();
 
     const columns = [
@@ -36,46 +36,72 @@ const Titulaciones = () => {
         },
     ];
 
-    const confirmDelete = () => {
-        const url = '/silefe.titulacion/remove-titulacion';
-        let s = titulaciones.filter(item => item.checked).map( i => {return i.titulacionId});
-        Liferay.Service(url,
-        {
-            titulaciones: s
-        }, obj => {
-            console.log(obj);
-            setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
-            fetchData();
+    // Inicializando las variables: 
+    const auth = getAuthToken();
+    const lang = getLanguageId();
+    const referer = "http://localhost:8080/titulaciones";
+
+    const reset = () => {
+        setItem({id:0,codigo:"",descripcion:""});
+    }
+
+    const confirmDelete = async () => {
+        const endpoint = "/silefe.titulacion/remove-titulaciones";
+        let s = items.filter(item => item.checked).map( i => {return i.id});
+
+        const res = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":{\"titulaciones\":[${s}]}}`,
+            "method": "REMOVE",
+            "mode": "cors"
         });
+
+        setShowform(false);
+        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        fetchData();
     }
 
     const handleDelete = () => {
-        if (titulaciones.filter(item => item.checked).length > 0)
+        if (items.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
 
     const handleCheck = (index) => {        
-        let tmp = titulaciones.slice();
-        tmp[index].checked = !titulaciones[index].checked;
-        setTitulaciones(tmp);
+        let tmp = items.slice();
+        tmp[index].checked = !items[index].checked;
+        setItems(tmp);
       }
     
     const handleAllCheck = () => {
         setAllCheck(!allCheck);
-        let tmp = titulaciones.map( i => {return ({...i,checked:allCheck})});
-        setTitulaciones(tmp);
+        let tmp = items.map( i => {return ({...i,checked:allCheck})});
+        setItems(tmp);
     }
 
     const handleEdit = () => {
-        let sel = titulaciones.filter(i => i.checked);
+        let sel = items.filter(i => i.checked);
         if (sel.length > 0) {
             setItem(sel[0]);
+            setShowform(true);
         }
     }
 
     const handleNew = () => {
-        setItem({id: 0, codigo: "", descripcion: ""})
-        setTitulaciones(titulaciones.map( t => {return ({...t,checked:false})}));
+        reset();
+        setItems(items.map( t => {return ({...t,checked:false})}));
+        setShowform(true);
     }
     
     const prevPage = () => {
@@ -84,78 +110,99 @@ const Titulaciones = () => {
     }
 
     const nextPage = () => {
-        console.log("Cambiando de página");
         console.debug(pagination);
         if (pagination.page <= pagination.totalPages - 1) {
             setPagination({...pagination, page:pagination.page+1})
         }
     }
 
-    const fetchData2 = () => {
-        console.log("Titulaciones: fetch con Liferay.Service");
-        const url ="/silefe.titulacion/get-titulaciones";
-        Liferay.Service(url,{page:pagination.page,p_auth:"zq1qeRg0"},obj => {
-            console.log("datos recibidos fetch 2");
-            console.debug(obj);
-            //setTitulaciones(obj.map(item=>{return ({...item,checked:false})}));
+    const fetchData = async () => {
+        console.log("Titulaciones: solicitud hecha por fetch");
+        const endpoint = "/silefe.titulacion/filter";
+        const searchtext = '';
+
+        const postdata = {
+            page:        pagination.page,
+            descripcion: searchtext,
+            languageId:  lang
+        };
+
+        const response = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
+            "method": "POST",
+            "mode": "cors"
         });
+
+        let {data} = await JSON.parse (await response.json());
+        await setItems(await data.map(i => {return({...i,id:i.titulacionId,checked:false})}));
+        setShowform(false);
     }
 
-    const fetchData = () => {
-        console.log("Titulaciones: solicitud hecha por axios");
-        let auth         = getAuthToken();
-        const languageId = getLanguageId();
-
-        const url = `http://localhost:8080/api/jsonws/silefe.titulacion/get-titulaciones?page=${pagination.page}&languageId=${languageId}&p_auth=${auth}`;
-        const token = 'anVhbnJpdmVpcm9AZ21haWwuY29tOmxlbGVsZQo=';
-
-        axios.get(url,{
-          headers: {
-              'Authorization': `Basic ${token}`
-          }}).then(response => {
-            console.debug(response);
-            setTitulaciones(response.data.data.map(item=>{return({...item,checked:false})}));
-
-            setPagination({...pagination,totalPages:response.data.totalPages})
-        });
-    }
-
-    const handleSave = () => {
-        const userId = Liferay.ThemeDisplay.getUserId();
-        const userName = Liferay.ThemeDisplay.getUserName();
+    const handleSave = async () => {
+        const data = {
+            titulacionId:item.id,
+            codigo:      item.codigo,
+            descripcion: item.descripcion,
+            userId:      Liferay.ThemeDisplay.getUserId(),
+            userName:    Liferay.ThemeDisplay.getUserName(),
+            languageId:  lang
+        }
+        let endpoint = "/silefe.titulacion/save-titulacion";
+        if (item.id == 0)
+            endpoint = "/silefe.titulacion/add-titulacion";
         
-        console.log(item);
-        if (item.titulacionId == null || item.titulacionId == 0) {            
-            const url = '/silefe.titulacion/add-titulacion';
-            Liferay.Service(url, {
-                "codigo"     : item.codigo,
-                "descripcion": item.descripcion,
-                "userId"     : userId,
-                "userName"   : userName
-            }, obj => {
-                setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento añadido correctamente"}]);
-                setPagination({...pagination,page:pagination.totalPages})
-                console.log("Se acaba de guardar");
-                console.log(pagination);
-                fetchData();
-            }
-            );
-        }
-        else {
-            Liferay.Service( '/silefe.titulacion/save-titulacion',item,obj => {
-                console.log(obj);
-                setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento guardado correctamente"}]);
-                fetchData();
-                });
-        }
+        const res = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+            "x-csrf-token": auth,
+            "Content-Type": "text/plain;charset=UTF-8",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin"
+        },
+        "referrer": `\"${referer}\"`,
+        "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
+        "method": "POST",
+        "mode": "cors"
+        });
+        await console.log("Recibidos resutlados: ");
+        await console.log(res);
+
+
+        await fetchData();
+        await reset()
+        await setShowform(false);
+        await setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento añadido correctamente"}]);
+        //setPagination({...pagination,page:pagination.totalPages});
+    }
+
+    const handleCancel = () => {
+        console.log("Cancelando el guardado");
+        setShowform(false);
     }
 
     useEffect(()=>{
         fetchData();
-        //fetchData2();
-    },[pagination.page]);
+    },[]);
 
-    if (!titulaciones) 
+    if (!items) 
     return (<div>Cargando</div>)
     
     return (
@@ -168,58 +215,60 @@ const Titulaciones = () => {
                 handleEdit={handleEdit}
                 handleNew={handleNew}
             />
+            { showform && <TitulacionForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} />}
+            {
+                !showform &&
+                <Table 
+                    columns={columns}
+                    rows={items} 
+                    handleCheck={handleCheck} 
+                    handleAllCheck={handleAllCheck}  
+                    allCheck={allCheck}
+                />
+        }
 
-            <TitulacionForm setItem={setItem} item={item} />
-            <Table 
-                columns={columns}
-                rows={titulaciones} 
-                handleCheck={handleCheck} 
-                handleAllCheck={handleAllCheck}  
-                allCheck={allCheck}
-             />
+        <ClayAlert.ToastContainer>
+            {toastItems.map(value => (
+            <ClayAlert
+                autoClose={5000}
+                key={value}
+                onClose={() => {
+                    setToastItems(prevItems =>
+                        prevItems.filter(item => item !== value)
+                    );
+                }}
+                spritemap={spritemap}
+                title={`${value.title}`}
+                displayType={value.type}
+            >{`${value.text}`}</ClayAlert>
+            ))}
+        </ClayAlert.ToastContainer>
 
-            <ClayAlert.ToastContainer>
-                {toastItems.map(value => (
-                <ClayAlert
-                    autoClose={5000}
-                    key={value}
-                    onClose={() => {
-                        setToastItems(prevItems =>
-                            prevItems.filter(item => item !== value)
-                        );
-                    }}
-                    spritemap={spritemap}
-                    title={`${value.title}`}
-                    displayType={value.type}
-                >{`${value.text}`}</ClayAlert>
-                ))}
-            </ClayAlert.ToastContainer>
-
-            {open && (
-                <ClayModal
-                    observer={observer}
-                    size="lg"
-                    spritemap={spritemap}
-                    status="info"
-                >
-                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
-                    <ClayModal.Body>
-                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
-                    </ClayModal.Body>
-                    <ClayModal.Footer
-                        first={
-                            <ClayButton.Group spaced>
-                                <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{"Cancelar"}</ClayButton>
-                            </ClayButton.Group>
-                        }
-                        last={
-                            <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
-                                {"Borrar"}
-                            </ClayButton>
-                        }
-                    />
-                </ClayModal>
-            )}
+        {open && (
+            <ClayModal
+                observer={observer}
+                size="lg"
+                spritemap={spritemap}
+                status="info"
+            >
+                <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
+                <ClayModal.Body>
+                    <h1>{"Seguro que desea borrar este elemento ?"}</h1>
+                </ClayModal.Body>
+                <ClayModal.Footer
+                    first={
+                        <ClayButton.Group spaced>
+                            <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{"Cancelar"}</ClayButton>
+                        </ClayButton.Group>
+                    }
+                    last={
+                        <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
+                            {"Borrar"}
+                        </ClayButton>
+                    }
+                />
+            </ClayModal>
+        )}
 
         </>
     )

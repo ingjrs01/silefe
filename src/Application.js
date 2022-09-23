@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import VMenu from './components/VMenu';
-import Titulaciones from './components/Titulaciones';
+import Titulaciones from './components/Titulaciones/Titulaciones';
 import Colectivos from './components/Colectivos/Colectivos';
 import Provincias from './components/Provincias/Provincia';
 import Cnaes from './components/Cnaes/Cnaes';
