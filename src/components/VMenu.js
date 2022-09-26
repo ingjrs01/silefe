@@ -1,7 +1,9 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
+import MenuItems from '../menu/MenuItems';
 
 const VMenu = () => {
+    const location = useLocation(); 
 
     return (
         <nav className="menubar menubar-transparent menubar-vertical-expand-md">
@@ -66,24 +68,17 @@ const VMenu = () => {
         					id="menubarVerticalMdNestedCollapseButton01"
         				>
         					<ul className="nav nav-stacked">
-        						<li className="nav-item">
-                                    <Link to="/titulaciones" className="active nav-link">Titulaciones</Link>
-        						</li>
-        						<li className="nav-item">
-									<Link to="/colectivos" className="nav-link">Colectivos</Link>
-        						</li>
-        						<li className="nav-item">
-									<Link to="/provincias" className="nav-link">Provincias</Link>
-        						</li>
-        						<li className="nav-item">
-									<Link to="/cnaes" className="nav-link">Cnae's</Link>
-        						</li>
-        						<li className="nav-item">
-									<Link to="/cnos" className="nav-link">Cno's</Link>
-        						</li>
-        						<li className="nav-item">
-									<Link to="/experiencias" className="nav-link">Experiencia</Link>
-        						</li>
+
+								{/*   Vamos a pintar el menú */}
+								{  MenuItems.map(i => {
+									return (
+										<li className="nav-item">
+											<Link to={i.url} className={`nav-link ${ location.pathname == i.url ? "active" : "" } `}> {i.caption} </Link> 
+										</li>											
+									);
+								}) }
+
+
         						<li className="nav-item">
         							<button
         								aria-controls="menubarVerticalMdNestedCollapseButton02"

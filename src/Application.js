@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import VMenu from './components/VMenu';
 import Titulaciones from './components/Titulaciones/Titulaciones';
 import Colectivos from './components/Colectivos/Colectivos';
@@ -9,10 +9,6 @@ import Cnos from './components/Cnos/Cnos';
 import Experiencias from './components/Experiencias/Experiencias';
 
 const Application = () => {
-
-    console.log("Obteniendo la ruta: ");
-    const location = useLocation(); 
-    console.log(location.pathname);
 
     return (
         <div className="container">
