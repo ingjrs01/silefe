@@ -189,6 +189,7 @@ const Colectivos = () => {
     const handleCancel = () => {
         console.log("Cancelando");
         setShowform(false);
+        setItems(items.map(i => {return ({...i,checked:false})}));
     }
 
     useEffect(()=>{

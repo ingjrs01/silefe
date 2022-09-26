@@ -196,6 +196,7 @@ const Titulaciones = () => {
     const handleCancel = () => {
         console.log("Cancelando el guardado");
         setShowform(false);
+        setItems( items.map( i => {return ({...i,checked:false})}));
     }
 
     useEffect(()=>{

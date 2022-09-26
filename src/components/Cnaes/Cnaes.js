@@ -173,7 +173,9 @@ const Cnaes = () => {
     const handleCancel = () => {
         reset();
         setShowform(false);
+        setItems(items.map(i => {return ({...i,checked:false})}));
     }
+
 
     useEffect(()=>{
         fetchData();

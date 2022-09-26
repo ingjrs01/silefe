@@ -181,6 +181,7 @@ const Provincias = () => {
         console.log("cancelar");
         reset();
         setShowform(false);
+        setItems(items.map( i => { return ({...i,checked:false})}));
     }
 
     useEffect(()=>{
