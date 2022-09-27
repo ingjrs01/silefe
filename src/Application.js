@@ -7,6 +7,9 @@ import Provincias from './components/Provincias/Provincia';
 import Cnaes from './components/Cnaes/Cnaes';
 import Cnos from './components/Cnos/Cnos';
 import Experiencias from './components/Experiencias/Experiencias';
+import Salarios from './components/Salarios/Salarios';
+import MBaja from './components/MBaja/MBaja';
+import Horarios from './components/Horarios/Horarios';
 
 const Application = () => {
 
@@ -29,6 +32,9 @@ const Application = () => {
                             <Route path='/cnaes'        element={ <Cnaes /> }   />
                             <Route path='/cnos'         element={ <Cnos /> }   />
                             <Route path='/experiencias' element={ <Experiencias /> }   />
+                            <Route path='/salarios'     element={ <Salarios /> }   />
+                            <Route path='/mbaja'        element={ <MBaja /> }   />
+                            <Route path='/horarios'     element={ <Horarios /> }   />
                         </Routes>
                     </div>
                 </div>

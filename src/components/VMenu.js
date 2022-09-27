@@ -73,7 +73,7 @@ const VMenu = () => {
 								{  MenuItems.map(i => {
 									return (
 										<li className="nav-item">
-											<Link to={i.url} className={`nav-link ${ location.pathname == i.url ? "active" : "" } `}> {i.caption} </Link> 
+											<Link to={i.url} className={`nav-link ${ location.pathname == i.url ? "active" : "" } `} key={i.key}> {i.caption} </Link> 
 										</li>											
 									);
 								}) }
