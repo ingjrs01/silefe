@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import ClayForm, {ClayInput} from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
@@ -19,11 +19,10 @@ const DefaultForm = ({form, setItem, item, cancel, save}) => {
 
               { form.rows.map( row => {
                 return (
-              <ClayForm.Group className="hs-success" key={row.key} >
-                <label htmlFor="basicInput">{row.label}</label>
-                <ClayInput placeholder={row.placeholder} type="text" name="codigo" value={item.codigo} onChange={e => { setItem({ ...item, codigo: e.target.value }) }}></ClayInput>
-              </ClayForm.Group>
-
+                  <ClayForm.Group className="hs-success" key={row.key} >
+                    <label htmlFor="basicInput">{row.label}</label>
+                    <ClayInput placeholder={row.placeholder} type="text" name={row.name} value={item[row.name]} onChange={e => { setItem({ ...item, [e.target.name]: e.target.value }) }}></ClayInput>
+                  </ClayForm.Group>
                 )
               })}
 

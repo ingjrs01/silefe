@@ -16,6 +16,14 @@ const Horarios = () => {
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
+    const [form,setForm]                 = useState( {
+        title: "Título del formulario",
+        rows: [
+            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
+            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
+            {key:3,label: "otros",  name: "otros",       value:"lilili", placeholder:"otros datos"}
+        ]
+    })
 
     const referrer = "http://localhost:8080/horarios";
     const auth = getAuthToken();
@@ -35,15 +43,6 @@ const Horarios = () => {
     ];
 
 
-    const form =  {
-        title: "Título del formulario",
-        rows: [
-            {key:1,label: "ID",     value:"lalala", placeholder:"Identifier"},
-            {key:2,label: "nombre", value:"lelele", placeholder:"nombre"},
-            {key:3,label: "otros",  value:"lilili", placeholder:"otros datos"}
-        ]
-
-    }
 
     useEffect(()=>{
         fetchData();
