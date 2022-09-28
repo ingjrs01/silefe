@@ -5,12 +5,13 @@ import ClayIcon from '@clayui/icon';
 import {ClayInput} from '@clayui/form';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayToolbar from '@clayui/toolbar';
+import {PAGINATION_ACTIONS} from '../includes/reducers/paginate.reducer';
 //import spritemap from '../icons.svg';
 
 
 const spritemap = '../icons.svg';
 
-const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNew,handleSearch}) => {
+const Menu = ({paginate, handleDelete, handleSave, handleEdit,handleNew,handleSearch}) => {
 
 //  const spritemap = "/icons.svg";
 
@@ -44,7 +45,7 @@ const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNe
             <ClayButton.Group>
               <ClayButtonWithIcon
                 displayType="secondary"
-                onClick={() => { prevPage()}}
+                onClick={() => { paginate({type:PAGINATION_ACTIONS.PREV_PAGE})}}
                 small
                 symbol="user"
               />
@@ -52,7 +53,7 @@ const Menu = ({nextPage, prevPage, handleDelete, handleSave, handleEdit,handleNe
 
               <ClayButtonWithIcon
                 displayType="secondary"
-                onClick={() => { nextPage() }}
+                onClick={() => { paginate({type:PAGINATION_ACTIONS.NEXT_PAGE}) }}
                 spritemap={spritemap}
                 small
                 symbol="angle-right"

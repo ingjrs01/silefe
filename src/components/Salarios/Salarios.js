@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import DefaultForm from "../DefaultForm";
 import Menu from '../Menu';
 import Table from '../Table';
@@ -6,14 +6,15 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
+import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 
 const spritemap = '../icons.svg';
 
 const Salarios = () => {
+    const [pagination,setPagination]     = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items,setItems]               = useState([]);
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [showform,setShowform]         = useState(false);
-    const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false})
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -39,16 +40,6 @@ const Salarios = () => {
         setItem({id:0,descripcion:""});
     }
 
-    const prevPage = ()  => {
-        if (pagination.page > 0)
-            setPagination({...pagination,page:pagination.page - 1})
-    }
-
-    const nextPage = ()  => {
-        if (pagination.page < pagination.totalPages - 1)
-            setPagination({...pagination,page:pagination.page + 1})
-    }
-
     const handleCheck = (index) => {
         let tmp = items.slice();
         tmp[index].checked = !items[index].checked;
@@ -56,7 +47,7 @@ const Salarios = () => {
     }
 
     const handleAllCheck =  () => {
-        setPagination({...pagination,allCheck:!pagination.allCheck});
+        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!pagination.allCheck});
         setItems(items.map(i => {return({...i,checked:pagination.allCheck})}));
     }
 
@@ -166,8 +157,9 @@ const Salarios = () => {
             "method": "POST"
         });
 
-        let {data} = await JSON.parse (await response.json());
+        let {data,totalPages} = await JSON.parse (await response.json());
         await setItems(await data.map(i => {return({...i,id:i.salariosId,checked:false})}));
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
     const handleCancel = () => {
@@ -187,8 +179,7 @@ const Salarios = () => {
     return (
         <>
             <Menu 
-                prevPage={prevPage} 
-                nextPage={nextPage} 
+                paginate={paginate}
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 handleEdit={handleEdit}

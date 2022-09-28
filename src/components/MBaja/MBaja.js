@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from "react";
+import React, {useState,useEffect, useReducer} from "react";
 import CnaeForm from "../DefaultForm";
 import Menu from '../Menu';
 import Table from '../Table';
@@ -6,14 +6,15 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
+import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 
 const spritemap = '../icons.svg';
 
 const MBaja = () => {
+    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items,setItems]               = useState([]);
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [showform,setShowform]         = useState(false);
-    const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false})
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -52,24 +53,15 @@ const MBaja = () => {
             "method": "POST"
         });
 
-        let {data} = await JSON.parse (await response.json());
+        let {data,totalPages} = await JSON.parse (await response.json());
         await setItems(await data.map(i => {return({...i,id:i.mBajaId,checked:false})}));
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
     useEffect(()=>{
         fetchData();
     },[]);
 
-    const prevPage = () => {
-        if (pagination.page > 0)
-            setPagination({...pagination,page : pagination.page - 1});
-    }
-
-    const nextPage = () => {
-        if (pagination.page > pagination.totalPages - 1)
-            setPagination({...pagination,page : pagination.page + 1});
-
-    }
 
     const handleSave = () => {
 
@@ -96,7 +88,7 @@ const MBaja = () => {
     }
 
     const handleAllCheck = () => {
-        setPagination({...pagination,checkAll:!pagination.checkAll});
+        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,checkAll:!pagination.checkAll});
         setItems(items.map(i => {return ({...i,checked: pagination.checkAll})}));
     }
 
@@ -108,8 +100,7 @@ const MBaja = () => {
     return (
         <>
             <Menu 
-                prevPage={prevPage} 
-                nextPage={nextPage} 
+                paginate={paginate}
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 handleEdit={handleEdit}

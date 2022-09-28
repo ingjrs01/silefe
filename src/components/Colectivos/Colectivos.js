@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState,useEffect,useReducer} from 'react';
 import ColectivoForm from './ColectivoForm';
 import Menu from '../Menu';
 import Table from '../Table';
@@ -6,14 +6,15 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
+import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
 
 const spritemap = '../icons.svg';
 
 const Colectivos = () => {
+    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
     const [items,setItems] = useState([]);
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [showform, setShowform]        = useState(false);
-    const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -34,16 +35,6 @@ const Colectivos = () => {
     const auth    = getAuthToken()
     const lang    = getLanguageId()
     const referer = 'http://localhost:8080/colectivos';
-
-    const prevPage = () => {
-        if (pagination.page > 0)
-            setPagination({...pagination,page:pagination.page-1})
-    }
-
-    const nextPage= () => {
-        if (pagination.page < pagination.totalPages - 1)
-            setPagination({...pagination,page:pagination.page+1})
-    }
 
     const reset = () => {
         setItem({id:0,descripcion:""});
@@ -143,7 +134,7 @@ const Colectivos = () => {
     }
 
     const handleAllCheck = () => {
-        setPagination({...pagination,allCheck:!pagination.allCheck})
+        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!pagination.allCheck})
         setItems(items.map( i => {return ({...i,checked:pagination.allCheck})}));
 
     }
@@ -182,8 +173,9 @@ const Colectivos = () => {
             "mode": "cors"
         });
 
-        let {data} = await JSON.parse (await res.json());
+        let {data,totalPages} = await JSON.parse (await res.json());
         await setItems(await data.map(i => {return({...i,id:i.colectivoId,checked:false})}));
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,page:totalPages});
     }
 
     const handleCancel = () => {
@@ -202,8 +194,7 @@ const Colectivos = () => {
     return (
         <>
             <Menu 
-                prevPage={prevPage} 
-                nextPage={nextPage} 
+                paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 handleEdit={handleEdit}

@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState,useEffect,useReducer} from 'react';
 import Table from '../Table';
 import TitulacionForm from './TitulacionForm';
 import Menu from '../Menu';
@@ -6,15 +6,15 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId, url_api} from '../../includes/LiferayFunctions';
+import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
 
 const spritemap = '/icons.svg';
 
 const Titulaciones = () => {
+    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items, setItems] = useState([]);
     const [toastItems,setToastItems]      = useState([]);
     const [item, setItem]                 = useState({id:0,codigo:"",descripcion:""});
-    const [allCheck,setAllCheck]          = useState(false);
-    const [pagination, setPagination]     = useState({page:0,totalPages:0,allCheck:false});
     const [showform,setShowform]          = useState(false);
     const {observer, onOpenChange, open}  = useModal();
 
@@ -88,6 +88,10 @@ const Titulaciones = () => {
         setAllCheck(!allCheck);
         let tmp = items.map( i => {return ({...i,checked:allCheck})});
         setItems(tmp);
+        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!paginate.allCheck});
+        setItems(items.map(i => {return {...i,checked:paginate.allCheck}}));
+
+
     }
 
     const handleEdit = () => {
@@ -104,18 +108,6 @@ const Titulaciones = () => {
         setShowform(true);
     }
     
-    const prevPage = () => {
-        if (pagination.page > 0)
-            setPagination({...pagination, page:pagination.page-1})
-    }
-
-    const nextPage = () => {
-        console.debug(pagination);
-        if (pagination.page <= pagination.totalPages - 1) {
-            setPagination({...pagination, page:pagination.page+1})
-        }
-    }
-
     const fetchData = async () => {
         console.log("Titulaciones: solicitud hecha por fetch");
         const endpoint = "/silefe.titulacion/filter";
@@ -126,6 +118,7 @@ const Titulaciones = () => {
             descripcion: searchtext,
             languageId:  lang
         };
+        console.log(postdata);
 
         const response = await fetch(url_api, {
             "credentials": "include",
@@ -146,8 +139,10 @@ const Titulaciones = () => {
             "mode": "cors"
         });
 
-        let {data} = await JSON.parse (await response.json());
+        let {data,totalPages} = await JSON.parse (await response.json());
+        console.log(data);
         await setItems(await data.map(i => {return({...i,id:i.titulacionId,checked:false})}));
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
         setShowform(false);
     }
 
@@ -190,7 +185,6 @@ const Titulaciones = () => {
         await reset()
         await setShowform(false);
         await setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento añadido correctamente"}]);
-        //setPagination({...pagination,page:pagination.totalPages});
     }
 
     const handleCancel = () => {
@@ -209,8 +203,7 @@ const Titulaciones = () => {
     return (
         <>
             <Menu 
-                prevPage={prevPage} 
-                nextPage={nextPage} 
+                paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 handleEdit={handleEdit}

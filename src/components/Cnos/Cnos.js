@@ -1,5 +1,4 @@
-import React,{useEffect,useState} from "react";
-//import ProvinciaForm from './ProvinciaForm';
+import React,{useEffect,useReducer,useState} from "react";
 import CnoForm from "./CnoForm";
 import Menu from '../Menu';
 import Table from '../Table';
@@ -7,11 +6,12 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
+import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 
 const spritemap = '../icons.svg';
 
 const Cnos = () => {
-    const [pagination,setPagination]     = useState({page:0,totalPages:0,allCheck:false});
+    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
     const [showform,setShowform]         = useState(false);
     const [items,setItems]               = useState([]);
     const [item,setItem]                 = useState({id:0,nombre:""});
@@ -43,15 +43,6 @@ const Cnos = () => {
     useEffect(()=>{
         fetchData();
     },[pagination.page]);
-
-    const prevPage = () => { 
-        if (pagination.page > 0)
-            setPagination({...pagination,page: pagination.page - 1});            
-    }
-    const nextPage = () => { 
-        if (pagination.page < pagination.totalPages - 1)
-            setPagination({...pagination,page:pagination.page + 1});
-    }
 
     const handleSave = async () => {
         const data = {
@@ -86,7 +77,6 @@ const Cnos = () => {
         "mode": "cors"
         });
 
-        await console.log(res);
         await fetchData();
         await reset();
         await setShowform(false);
@@ -147,7 +137,7 @@ const Cnos = () => {
     }
 
     const handleAllCheck = () => { 
-        setPagination({...pagination,allCheck:!pagination.allCheck});
+        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!paginate.allCheck});
         setItems( items.map(i => { return({...i,checked:pagination.allCheck}) }) );
     }
 
@@ -175,8 +165,9 @@ const Cnos = () => {
             "method": "POST"
         });
 
-        let {data} = await JSON.parse (await response.json());
+        let {data,totalPages} = await JSON.parse (await response.json());
         await setItems(await data.map(i => {return({...i,id:i.cnoId,checked:false})}));
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,totalPages:totalPages});
     }
 
     const handleCancel = () => {
@@ -187,8 +178,7 @@ const Cnos = () => {
     return (
         <>
             <Menu 
-                prevPage={prevPage} 
-                nextPage={nextPage} 
+                paginate={paginate}
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 handleEdit={handleEdit}
