@@ -16,14 +16,6 @@ const Horarios = () => {
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
-    const [form,setForm]                 = useState( {
-        title: "Título del formulario",
-        rows: [
-            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
-            {key:3,label: "otros",  name: "otros",       value:"lilili", placeholder:"otros datos"}
-        ]
-    })
 
     const referrer = "http://localhost:8080/horarios";
     const auth = getAuthToken();
@@ -42,7 +34,13 @@ const Horarios = () => {
         },
     ];
 
-
+    const form = {
+        title: "Título del formulario",
+        rows: [
+            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
+            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
+        ]
+    };
 
     useEffect(()=>{
         fetchData();
@@ -84,12 +82,11 @@ const Horarios = () => {
             "Sec-Fetch-Site": "same-origin"
         },
         "referrer": `\"${referrer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
+        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
         "method": "POST",
         "mode": "cors"
         });
 
-        await console.log(res);
         await fetchData();
         await reset();
         await setShowform(false);
@@ -118,7 +115,7 @@ const Horarios = () => {
                 "Sec-Fetch-Site": "same-origin"
             },
             "referrer": `\"${referrer}\"`,
-            "body": `{\"${endpoint}\":{\"cnos\":[${s}]}}`,
+            "body": `{\"${endpoint}\":{\"horarios\":[${s}]}}`,
             "method": "REMOVE",
             "mode": "cors"
         });
@@ -129,7 +126,7 @@ const Horarios = () => {
     const handleEdit = () => { 
         const sel = items.filter(i => i.checked)
         if (sel.length > 0){
-            setItem({...item,id:sel[0].cnoId,codigo:sel[0].codigo,descripcion:sel[0].descripcion});
+            setItem({...item,id:sel[0].horarioId,descripcion:sel[0].descripcion});
             setShowform(true);
         }
     }
@@ -160,7 +157,6 @@ const Horarios = () => {
 
     const fetchData = async () => {
         const endpoint = "/silefe.horario/filter";  
-        console.log(endpoint);
         
         const postdata = {
             page:         pagination.page,
@@ -179,7 +175,7 @@ const Horarios = () => {
         });
 
         let {data} = await JSON.parse (await response.json());
-        await setItems(await data.map(i => {return({...i,id:i.cnoId,checked:false})}));
+        await setItems(await data.map(i => {return({...i,id:i.horarioId,checked:false})}));
     }
 
     const handleCancel = () => {
