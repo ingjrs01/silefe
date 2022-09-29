@@ -1,5 +1,5 @@
 import React, {useState,useEffect, useReducer} from "react";
-import CnaeForm from "../DefaultForm";
+import DefaultForm from "../DefaultForm";
 import Menu from '../Menu';
 import Table from '../Table';
 import ClayAlert from '@clayui/alert';
@@ -31,6 +31,14 @@ const MBaja = () => {
         },
 
     ]
+    const form = {
+        title: "Motivos de baja",
+        rows: [
+            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
+            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
+        ]
+    };
+
     // Inicio las varibles para la api:    
     const auth = getAuthToken()
     const lang = getLanguageId();
@@ -54,38 +62,111 @@ const MBaja = () => {
         });
 
         let {data,totalPages} = await JSON.parse (await response.json());
-        await setItems(await data.map(i => {return({...i,id:i.mBajaId,checked:false})}));
+        await setItems(await data.map(i => {return({...i,id:i.MBajaId,checked:false})}));
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
     useEffect(()=>{
         fetchData();
-    },[]);
+    },[pagination.page]);
 
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        const postdata = {
+            mbajaId:     item.id,
+            descripcion: item.descripcion,
+            userId:      Liferay.ThemeDisplay.getUserId(),
+            userName:    Liferay.ThemeDisplay.getUserName(),
+            languageId:  lang            
+        }
+
+        let endpoint = '/silefe.mbaja/save-m-baja';
+        if (item.id == 0)
+            endpoint = '/silefe.mbaja/add-m-baja';
+
+        const res = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+            "x-csrf-token": auth,
+            "Content-Type": "text/plain;charset=UTF-8",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin"
+        },
+        "referrer": `\"${referer}\"`,
+        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
+        "method": "POST",
+        "mode": "cors"
+        });
+
+        await fetchData();
+        await handleNew();
+        await reset()
+        await setShowform(false);
+        await onOpenChange(false);
 
     }
 
     const handleDelete = () => {
+        if (items.filter(item => item.checked).length > 0)
+            onOpenChange(true);        
+    }
 
+    const confirmDelete = async () => {
+        const endpoint = '/silefe.mbaja/remove-m-bajas';
+        console.log("cofirmDelete");
+        console.log(items);
+        let s = items.filter(item => item.checked).map( i => {return i.id});
+
+        const res = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":{\"mBajaIds\":[${s}]}}`,
+            "method": "REMOVE",
+            "mode": "cors"
+        });
+        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        fetchData();
     }
 
     const handleEdit = () => {
-
+        const sel = items.filter(i => i.checked)
+        if (sel.length > 0){
+            setItem({...item,id:sel[0].mBajaId,descripcion:sel[0].descripcion});
+            setShowform(true);
+        }
     }
 
     const handleNew = () => {
-
+        reset();
+        setShowform(true);
     }
 
     const handleSearch = () => {
 
     }
 
-    const handleCheck = (index) => {
-
+    const handleCheck = (index) => { 
+        let tmp = items.slice();
+        tmp[index].checked = !items[index].checked;
+        setItems(tmp);
     }
+
 
     const handleAllCheck = () => {
         paginate({type:PAGINATION_ACTIONS.CHECK_ALL,checkAll:!pagination.checkAll});
@@ -93,9 +174,13 @@ const MBaja = () => {
     }
 
     const handleCancel = () => {
-
+        setItems(items.map(i => { return ({...i,checked:false})}));
+        setShowform(false);        
     }
 
+    const reset = () => {
+        setItem({id: 0,descripcion: ""});
+    }
 
     return (
         <>
@@ -108,7 +193,7 @@ const MBaja = () => {
                 handleSearch={handleSearch}                
             />
            
-            { showform && <DefaultForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} /> }
+            {showform && <DefaultForm form={form} setItem={setItem} item={item} save={ handleSave} cancel={handleCancel} /> }
 
             {
                 !showform &&

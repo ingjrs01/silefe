@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import CnaeForm from "./CnaeForm";
 import Menu from '../Menu';
 import Table from '../Table';
@@ -11,7 +11,7 @@ import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reduc
 const spritemap = '../icons.svg';
 
 const Cnaes = () => {
-    const [pagination,paginate]          = useState(reducer,{page:0,totalPages:0,allCheck:false})
+    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items,setItems]               = useState([]);
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [showform,setShowform]         = useState(false);
@@ -159,7 +159,7 @@ const Cnaes = () => {
 
         let {data,totalPages} = await JSON.parse (await response.json());
         await setItems(await data.map(i => {return({...i,id:i.cnaeId,checked:false})}));
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,totalPages:totalPages});
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
     const handleCancel = () => {
@@ -167,7 +167,6 @@ const Cnaes = () => {
         setShowform(false);
         setItems(items.map(i => {return ({...i,checked:false})}));
     }
-
 
     useEffect(()=>{
         fetchData();
@@ -179,8 +178,7 @@ const Cnaes = () => {
     return (
         <>
             <Menu 
-                prevPage={prevPage} 
-                nextPage={nextPage} 
+                paginate={paginate}
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 handleEdit={handleEdit}

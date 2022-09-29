@@ -85,13 +85,8 @@ const Titulaciones = () => {
       }
     
     const handleAllCheck = () => {
-        setAllCheck(!allCheck);
-        let tmp = items.map( i => {return ({...i,checked:allCheck})});
-        setItems(tmp);
-        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!paginate.allCheck});
+        paginate({type:PAGINATION_ACTIONS.CHECK_ALL, allCheck:!paginate.allCheck});
         setItems(items.map(i => {return {...i,checked:paginate.allCheck}}));
-
-
     }
 
     const handleEdit = () => {
@@ -195,7 +190,7 @@ const Titulaciones = () => {
 
     useEffect(()=>{
         fetchData();
-    },[]);
+    },[pagination.page]);
 
     if (!items) 
     return (<div>Cargando</div>)
@@ -217,7 +212,7 @@ const Titulaciones = () => {
                     rows={items} 
                     handleCheck={handleCheck} 
                     handleAllCheck={handleAllCheck}  
-                    allCheck={allCheck}
+                    allCheck={pagination.allCheck}
                 />
         }
 

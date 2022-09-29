@@ -11,7 +11,7 @@ import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reduc
 const spritemap = '../icons.svg';
 
 const Salarios = () => {
-    const [pagination,setPagination]     = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
+    const [pagination,paginate]     = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items,setItems]               = useState([]);
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [showform,setShowform]         = useState(false);
@@ -31,6 +31,14 @@ const Salarios = () => {
         },
 
     ]
+    const form = {
+        title: "Rangos salariales",
+        rows: [
+            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
+            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
+        ]
+    };
+
     // Inicio las varibles para la api:    
     const auth = getAuthToken()
     const lang = getLanguageId();
@@ -83,7 +91,6 @@ const Salarios = () => {
         "mode": "cors"
         });
 
-        await console.log(res);
         await fetchData();
         await handleNew();
         await reset()
@@ -187,7 +194,7 @@ const Salarios = () => {
                 handleSearch={handleSearch}
             />
            
-            { showform && <DefaultForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} /> }
+            {showform && <DefaultForm form={form} setItem={setItem} item={item} save={ handleSave} cancel={handleCancel} /> }
 
             {
                 !showform &&

@@ -167,7 +167,7 @@ const Cnos = () => {
 
         let {data,totalPages} = await JSON.parse (await response.json());
         await setItems(await data.map(i => {return({...i,id:i.cnoId,checked:false})}));
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,totalPages:totalPages});
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
     const handleCancel = () => {

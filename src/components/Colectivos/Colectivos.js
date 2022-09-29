@@ -75,7 +75,6 @@ const Colectivos = () => {
         fetchData();
         reset();
         setShowform(false);
-
     }
 
     const handleDelete = () => {
@@ -110,8 +109,7 @@ const Colectivos = () => {
 
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
-
-    }
+}
 
     const handleEdit = () => {
         let sel = items.filter(i => i.checked);
@@ -136,7 +134,6 @@ const Colectivos = () => {
     const handleAllCheck = () => {
         paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!pagination.allCheck})
         setItems(items.map( i => {return ({...i,checked:pagination.allCheck})}));
-
     }
 
     const handleSearch = () => {
@@ -175,11 +172,10 @@ const Colectivos = () => {
 
         let {data,totalPages} = await JSON.parse (await res.json());
         await setItems(await data.map(i => {return({...i,id:i.colectivoId,checked:false})}));
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,page:totalPages});
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
     const handleCancel = () => {
-        console.log("Cancelando");
         setShowform(false);
         setItems(items.map(i => {return ({...i,checked:false})}));
     }

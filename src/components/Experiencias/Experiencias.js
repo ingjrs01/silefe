@@ -36,16 +36,16 @@ const Experiencias = () => {
     ];
 
     const handleSave = async () => {
-        const data = {
-            id:         item.id,
-            descripcion:item.nombre,
-            userId:     Liferay.ThemeDisplay.getUserId(),
-            userName:   Liferay.ThemeDisplay.getUserName(),
-            languageId: lang
+        const postdata = {
+            id:          item.id,
+            descripcion: item.descripcion,
+            userId:      Liferay.ThemeDisplay.getUserId(),
+            userName:    Liferay.ThemeDisplay.getUserName(),
+            languageId:  lang
         }
+
         let endpoint = "/silefe.experiencia/add-experiencia";
 
-        const lala = JSON.stringify(data);
         const res = await fetch(url_api, {
             "credentials": "include",
             "headers": {
@@ -60,10 +60,11 @@ const Experiencias = () => {
             "Sec-Fetch-Site": "same-origin"
         },
         "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${lala}}`,
+        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
         "method": "POST",
         "mode": "cors"
         });
+        console.log(res);
         fetchData();
         reset()
         setShowform(false);
@@ -74,7 +75,6 @@ const Experiencias = () => {
     }
 
     const handleDelete = () => {
-        console.log("delete");
         if (items.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
@@ -135,7 +135,6 @@ const Experiencias = () => {
     }
 
     const fetchData = async () => {
-        console.log("Experiencia: solicitud hecha por fetch");
         const endpoint = "/silefe.experiencia/filter";
         const searchtext = '';
 

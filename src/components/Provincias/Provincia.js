@@ -11,7 +11,7 @@ import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reduc
 const spritemap = '../icons.svg';
 
 const Provincias = () => {
-    const [pagination,paginate]     = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
+    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
     const [items,setItems] = useState([]);
     const [item,setItem]                 = useState({id:0,nombre:""});
     const [showform,setShowform]         = useState(false);
@@ -155,7 +155,7 @@ const Provincias = () => {
         
         let {data,totalPages} = await JSON.parse (await response.json());
         await setItems(await data.map(i => {return({...i,id:i.provinciaId,checked:false})}));
-        await paginate({type:PAGINATION_ACTIONS,pages:totalPages});
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
     const handleCheck = (index) => {
@@ -170,7 +170,6 @@ const Provincias = () => {
     }
 
     const handleCancel = () => {
-        console.log("cancelar");
         reset();
         setShowform(false);
         setItems(items.map( i => { return ({...i,checked:false})}));
