@@ -2,9 +2,9 @@ import React,{ useState } from 'react';
 import ClayTable from '@clayui/table';
 import {ClayCheckbox} from '@clayui/form';
 import {ClayLabel} from '@clayui/label';
+import {red_items,ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
-
-const Table = ({columns,rows,handleCheck,handleAllCheck,allCheck}) => {
+const Table = ({columns,rows, itemsHandle,handleAllCheck,allCheck}) => {
 
   return (
     <ClayTable>
@@ -15,7 +15,7 @@ const Table = ({columns,rows,handleCheck,handleAllCheck,allCheck}) => {
                   if (column.columnType == "string")
                     return (<ClayTable.Cell>{ column.columnTitle }</ClayTable.Cell> )
                   if (column.columnType == "checkbox")
-                    return (<ClayTable.Cell headingCell><ClayCheckbox checked={allCheck} onChange={() => handleAllCheck()} /> </ClayTable.Cell>)
+                    return (<ClayTable.Cell headingCell><ClayCheckbox checked={allCheck} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
                 })
             }
           {/*
@@ -35,13 +35,13 @@ const Table = ({columns,rows,handleCheck,handleAllCheck,allCheck}) => {
                       return (<ClayTable.Cell>{ row[column.columnName] }</ClayTable.Cell> )
                     if (column.columnType == "checkbox")
                       return (
-                        <ClayTable.Cell><ClayCheckbox checked={row.checked} onChange={()=>{handleCheck(index)}} value={row[column.columnName]}  />
+                        <ClayTable.Cell><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[column.columnName]}  />
                          <span>{row[column.columnName]}</span> 
                         </ClayTable.Cell>
                       )
                     if (column.columnType == "localized")
                         return (
-                          <ClayTable.Cell><ClayCheckbox checked={row.checked} onChange={()=>{handleCheck(index)}} value={row[column.columnName]}  />
+                          <ClayTable.Cell><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index})}} value={row[column.columnName]}  />
                           <span>{ row[column.columnName].children[0].value  }</span> 
                          </ClayTable.Cell> 
                         )

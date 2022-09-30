@@ -6,15 +6,16 @@ import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
-import {reducer, PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
+import {PAGINATION_ACTIONS, reducer} from '../../includes/reducers/paginate.reducer';
+import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 
 const spritemap = '../icons.svg';
 
 const Horarios = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
+    const [itms,itemsHandle]             = useReducer(red_items,{arr:[]}); 
+    const [item,setItm]                 = useState({id:0,descripcion:""});
     const [showform,setShowform]         = useState(false);
-    const [items,setItems]               = useState([]);
-    const [item,setItem]                 = useState({id:0,descripcion:""});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -85,13 +86,17 @@ const Horarios = () => {
     }
 
     const handleDelete = () => {
-        if (items.filter(item => item.checked).length > 0)
+        if (itms.arr.filter(item => item.checked).length > 0) {
+            let s = itms.arr.filter(item => item.checked).map( i => {return i.id});
+            console.log(s);
+
             onOpenChange(true);        
+        }
     }
 
     const confirmDelete = async () => {
         const endpoint = '/silefe.horario/remove-horarios';
-        let s = items.filter(item => item.checked).map( i => {return i.id});
+        let s = itms.arr.filter(item => item.checked).map( i => {return i.id});
 
         const res = await fetch(url_api, {
             "credentials": "include",
@@ -116,35 +121,22 @@ const Horarios = () => {
     }
 
     const handleEdit = () => { 
-        const sel = items.filter(i => i.checked)
+        const sel = itms.arr.filter(i => i.checked)
         if (sel.length > 0){
-            setItem({...item,id:sel[0].horarioId,descripcion:sel[0].descripcion});
+            //setItem({...item,id:sel[0].horarioId,descripcion:sel[0].descripcion});
+            itemsHandle({type:ITEMS_ACTIONS.INIT_ITEM,item:sel[0]});
             setShowform(true);
         }
     }
 
     const handleNew = () => { 
         reset();
+
         setShowform(true);
     }
 
     const handleSearch = () => { 
         console.log("search");
-    }
-
-    const handleCheck = (index) => { 
-        let tmp = items.slice();
-        tmp[index].checked = !items[index].checked;
-        setItems(tmp);
-    }
-
-    const handleAllCheck = () => { 
-        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!pagination.allCheck})
-        setItems( items.map(i => { return({...i,checked:pagination.allCheck}) }) );
-    }
-
-    const reset = () => {
-        setItem({id:0,descripcion:''});
     }
 
     const fetchData = async () => {
@@ -167,13 +159,30 @@ const Horarios = () => {
         });
 
         let {data, totalPages} = await JSON.parse (await response.json());
-        await setItems(await data.map(i => {return({...i,id:i.horarioId,checked:false})}));
+        let tmp = await data.map(i => {return({...i,id:i.horarioId,checked:false})});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES, pages:totalPages});
     }
 
     const handleCancel = () => {
-        setItems(items.map(i => { return ({...i,checked:false})}));
+        itemsHandle({type:ITEMS_ACTIONS.UNSELECT});
         setShowform(false);        
+    }
+
+    const reset = () => {
+        console.log("resetenado");
+    }
+
+    const setItem = (fieldname,value) => {
+        console.log("EStableciendo ");
+        //itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:e.target.name,  value:e.target.value});
+        console.log(fieldname);
+        console.log(value);
+        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
+    }
+
+    if (itms.arr.length == 0) {
+        return (<div>Cargando</div>);
     }
 
     return (
@@ -187,17 +196,25 @@ const Horarios = () => {
                 handleSearch={handleSearch}
             />
 
-            {showform && <DefaultForm form={form} setItem={setItem} item={item} save={ handleSave} cancel={handleCancel} /> }
-            
             {
+                showform && 
+                <DefaultForm 
+                    form={form} 
+                    setItem={setItem}  
+                    item={itms.item} 
+                    save={ handleSave} 
+                    cancel={handleCancel} 
+                />
+            }
+            
+            {                
              !showform &&
-            <Table 
-                columns={columns}
-                rows={items} 
-                handleCheck={handleCheck} 
-                handleAllCheck={handleAllCheck}  
-                allCheck={pagination.allCheck}
-             />
+              <Table 
+                  columns={columns}
+                  rows={itms.arr} 
+                  itemsHandle={itemsHandle} 
+                  allCheck={pagination.allCheck}
+              />
             }
             <ClayAlert.ToastContainer>
                 {toastItems.map(value => (

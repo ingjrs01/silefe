@@ -2,8 +2,12 @@ import React from "react";
 import ClayForm, {ClayInput} from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
+//import {ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 
 const spritemap = '/icons.svg';
+
+//setItem({ ...item, [e.target.name]: e.target.value })
+//itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:e.target.name,  value:e.target.value});
 
 const DefaultForm = ({form, setItem, item, cancel, save}) => {
 
@@ -21,11 +25,11 @@ const DefaultForm = ({form, setItem, item, cancel, save}) => {
                 return (
                   <ClayForm.Group className="hs-success" key={row.key} >
                     <label htmlFor="basicInput">{row.label}</label>
-                    <ClayInput placeholder={row.placeholder} type="text" name={row.name} value={item[row.name]} onChange={e => { setItem({ ...item, [e.target.name]: e.target.value }) }}></ClayInput>
+                    <ClayInput placeholder={row.placeholder} type="text" name={row.name} value={item[row.name]} onChange={e => { setItem(e.target.name,e.target.value) }}>
+                    </ClayInput>
                   </ClayForm.Group>
                 )
               })}
-
 
             </ClayForm>
           </ClayCard.Description>
