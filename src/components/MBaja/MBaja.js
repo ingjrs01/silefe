@@ -7,14 +7,13 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
+import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 
 const spritemap = '../icons.svg';
 
 const MBaja = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [items,setItems]               = useState([]);
-    const [item,setItem]                 = useState({id:0,descripcion:""});
-    const [showform,setShowform]         = useState(false);
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -62,7 +61,8 @@ const MBaja = () => {
         });
 
         let {data,totalPages} = await JSON.parse (await response.json());
-        await setItems(await data.map(i => {return({...i,id:i.MBajaId,checked:false})}));
+        const tmp = await data.map(i => {return({...i,id:i.MBajaId,checked:false})});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
@@ -73,15 +73,15 @@ const MBaja = () => {
 
     const handleSave = async () => {
         const postdata = {
-            mbajaId:     item.id,
-            descripcion: item.descripcion,
+            mbajaId:     items.item.id,
+            descripcion: items.item.descripcion,
             userId:      Liferay.ThemeDisplay.getUserId(),
             userName:    Liferay.ThemeDisplay.getUserName(),
             languageId:  lang            
         }
 
         let endpoint = '/silefe.mbaja/save-m-baja';
-        if (item.id == 0)
+        if (items.item.id == 0)
             endpoint = '/silefe.mbaja/add-m-baja';
 
         const res = await fetch(url_api, {
@@ -103,24 +103,19 @@ const MBaja = () => {
         "mode": "cors"
         });
 
+        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
         await fetchData();
-        await handleNew();
-        await reset()
-        await setShowform(false);
         await onOpenChange(false);
-
     }
 
     const handleDelete = () => {
-        if (items.filter(item => item.checked).length > 0)
+        if (items.arr.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
 
     const confirmDelete = async () => {
         const endpoint = '/silefe.mbaja/remove-m-bajas';
-        console.log("cofirmDelete");
-        console.log(items);
-        let s = items.filter(item => item.checked).map( i => {return i.id});
+        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
         const res = await fetch(url_api, {
             "credentials": "include",
@@ -144,42 +139,12 @@ const MBaja = () => {
         fetchData();
     }
 
-    const handleEdit = () => {
-        const sel = items.filter(i => i.checked)
-        if (sel.length > 0){
-            setItem({...item,id:sel[0].mBajaId,descripcion:sel[0].descripcion});
-            setShowform(true);
-        }
-    }
-
-    const handleNew = () => {
-        reset();
-        setShowform(true);
-    }
-
     const handleSearch = () => {
-
+        console.log("handleSearch");
     }
 
-    const handleCheck = (index) => { 
-        let tmp = items.slice();
-        tmp[index].checked = !items[index].checked;
-        setItems(tmp);
-    }
-
-
-    const handleAllCheck = () => {
-        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,checkAll:!pagination.checkAll});
-        setItems(items.map(i => {return ({...i,checked: pagination.checkAll})}));
-    }
-
-    const handleCancel = () => {
-        setItems(items.map(i => { return ({...i,checked:false})}));
-        setShowform(false);        
-    }
-
-    const reset = () => {
-        setItem({id: 0,descripcion: ""});
+    const setItem = (fieldname,value) => {
+        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
     }
 
     return (
@@ -187,21 +152,27 @@ const MBaja = () => {
             <Menu 
                 paginate={paginate}
                 handleSave={handleSave} 
-                handleDelete={handleDelete} 
-                handleEdit={handleEdit}
-                handleNew={handleNew}
-                handleSearch={handleSearch}                
+                handleDelete={handleDelete}                 
+                handleSearch={handleSearch}
+                itemsHandle={itemsHandle}
             />
            
-            {showform && <DefaultForm form={form} setItem={setItem} item={item} save={ handleSave} cancel={handleCancel} /> }
-
             {
-                !showform &&
+                items.showform && 
+                <DefaultForm 
+                    form={form} 
+                    setItem={setItem}  
+                    item={items.item} 
+                    itemsHandle={itemsHandle}
+                    save={ handleSave} 
+                />
+            }
+            {
+                !items.showform &&
                 <Table 
                     columns={columns}
-                    rows={items} 
-                    handleCheck={handleCheck} 
-                    handleAllCheck={handleAllCheck}  
+                    rows={items.arr} 
+                    itemsHandle={itemsHandle}
                     allCheck={pagination.allCheck}
                  />
             }

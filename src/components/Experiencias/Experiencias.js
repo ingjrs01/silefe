@@ -1,5 +1,5 @@
 import React, {useState,useEffect, useReducer} from 'react';
-import ExperienciaForm from './ExperienciaForm';
+import DefaultForm from '../DefaultForm';
 import Menu from '../Menu';
 import Table from '../Table';
 import ClayAlert from '@clayui/alert';
@@ -7,14 +7,13 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
+import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 
 const spritemap = '../icons.svg';
 
 const Experiencias = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
-    const [items,setItems] = useState([]);
-    const [item,setItem]                 = useState({id:0,descripcion:""});
-    const [showform,setShowform]         = useState(false);
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -35,10 +34,19 @@ const Experiencias = () => {
         },
     ];
 
+    const form = {
+        title: "Experiencias",
+        rows: [
+            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
+            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
+        ]
+    };
+
+
     const handleSave = async () => {
         const postdata = {
-            id:          item.id,
-            descripcion: item.descripcion,
+            id:          items.item.id,
+            descripcion: items.item.descripcion,
             userId:      Liferay.ThemeDisplay.getUserId(),
             userName:    Liferay.ThemeDisplay.getUserName(),
             languageId:  lang
@@ -64,14 +72,15 @@ const Experiencias = () => {
         "method": "POST",
         "mode": "cors"
         });
-        console.log(res);
+        
         fetchData();
-        reset()
-        setShowform(false);
+        reset();
+        itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const reset = () => {
-        setItem({id:0,descripcion:""});
+        //setItem({id:0,descripcion:""});
+        console.log("lalala");
     }
 
     const handleDelete = () => {
@@ -81,7 +90,7 @@ const Experiencias = () => {
 
     const confirmDelete = async () => {
         const endpoint = "/silefe.experiencia/remove-experiencias";
-        let s = items.filter(item => item.checked).map( i => {return i.id});
+        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
         const res = await fetch(url_api, {
             "credentials": "include",
@@ -103,43 +112,23 @@ const Experiencias = () => {
         });
 
         setShowform(false);
+        itemsHandle({type:ITEMS_ACTIONS.HIDE});
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
 
-    }
-
-    const handleEdit = () => {
-        let sel = items.filter(i => i.checked);
-        setItem({id:sel[0].id,descripcion:sel[0].descripcion});
-        setShowform(true);
-    }
-
-    const handleNew = () => {
-        setItem({id:0,descripcion:''});
-        setShowform(true);
     }
 
     const handleSearch = () => {
         console.log("SEARCH");
     }
 
-    const handleCheck = (index) => {
-        let tmp = items.slice();
-        tmp[index].checked = !items[index].checked;
-        setItems(tmp)
-    }
-
-    const handleAllCheck = () => {
-        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,checked:!pagination.checked});
-        setItems( items.map(i => {return ({...i,checked:pagination.allCheck})}));
-    }
 
     const fetchData = async () => {
         const endpoint = "/silefe.experiencia/filter";
         const searchtext = '';
 
         const postdata = {
-            page: pagination.page,
+            page:        pagination.page,
             descripcion: searchtext,
             languageId:  lang
         };
@@ -155,18 +144,16 @@ const Experiencias = () => {
         });
 
         let {data,totalPages} = await JSON.parse (await response.json());
-        await setItems(await data.map(i => {return({...i,id:i.experienciaId,checked:false})}));
+        const tmp = await data.map(i => {return({...i,id:i.experienciaId,checked:false})});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
-    const handleCancel = () => {
-        reset();
-        setItems(items.map(i => {return({...i,checked:false})}));
-        setShowform(false);
+    const setItem = (fieldname,value) => {
+        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
     }
 
     useEffect( ()=> {
-        console.log("Dentro de useEffect");
         fetchData();
     },[pagination.page]);
 
@@ -176,20 +163,26 @@ const Experiencias = () => {
                 paginate={paginate}
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleEdit={handleEdit}
-                handleNew={handleNew}
                 handleSearch={handleSearch}
+                itemsHandle={itemsHandle}
             />
 
-            { showform && (<ExperienciaForm setItem={setItem} item={item} save={handleSave} cancel={handleCancel} /> ) }
+            {   items.showform && 
+                <DefaultForm 
+                    form={form} 
+                    setItem={setItem}  
+                    item={items.item} 
+                    itemsHandle={itemsHandle}
+                    save={ handleSave} 
+            />
+        }
             
             {
-                !showform &&
+                !items.showform &&
                 <Table 
                     columns={columns}
-                    rows={items} 
-                    handleCheck={handleCheck} 
-                    handleAllCheck={handleAllCheck}  
+                    rows={items.arr} 
+                    itemsHandle={itemsHandle}
                     allCheck={pagination.allCheck}
                  />
             }

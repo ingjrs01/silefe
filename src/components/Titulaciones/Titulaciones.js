@@ -1,22 +1,21 @@
 import React, {useState,useEffect,useReducer} from 'react';
 import Table from '../Table';
-import TitulacionForm from './TitulacionForm';
+import DefaultForm from '../DefaultForm';
 import Menu from '../Menu';
 import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId, url_api} from '../../includes/LiferayFunctions';
 import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
+import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 
 const spritemap = '/icons.svg';
 
 const Titulaciones = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [items, setItems] = useState([]);
-    const [toastItems,setToastItems]      = useState([]);
-    const [item, setItem]                 = useState({id:0,codigo:"",descripcion:""});
-    const [showform,setShowform]          = useState(false);
-    const {observer, onOpenChange, open}  = useModal();
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[]}); 
+    const [toastItems,setToastItems]     = useState([]);
+    const {observer, onOpenChange, open} = useModal();
 
     const columns = [
         {
@@ -36,18 +35,25 @@ const Titulaciones = () => {
         },
     ];
 
-    // Inicializando las variables: 
+    const form = {
+        title: "Titulaciones",
+        rows: [
+            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
+            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"descripcion"},
+        ]
+    };
+
     const auth = getAuthToken();
     const lang = getLanguageId();
     const referer = "http://localhost:8080/titulaciones";
 
-    const reset = () => {
-        setItem({id:0,codigo:"",descripcion:""});
-    }
+    //const reset = () => {
+    //    itemsHandle({type:ITEMS_ACTIONS.INIT_ITEM,item:{id:0,codigo:"",descripcion:""}});
+    //}
 
     const confirmDelete = async () => {
         const endpoint = "/silefe.titulacion/remove-titulaciones";
-        let s = items.filter(item => item.checked).map( i => {return i.id});
+        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
         const res = await fetch(url_api, {
             "credentials": "include",
@@ -68,43 +74,17 @@ const Titulaciones = () => {
             "mode": "cors"
         });
 
-        setShowform(false);
+        itemsHandle({type:ITEMS_ACTIONS.HIDE});
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
     }
 
     const handleDelete = () => {
-        if (items.filter(item => item.checked).length > 0)
+        if (items.arr.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
 
-    const handleCheck = (index) => {        
-        let tmp = items.slice();
-        tmp[index].checked = !items[index].checked;
-        setItems(tmp);
-      }
-    
-    const handleAllCheck = () => {
-        paginate({type:PAGINATION_ACTIONS.CHECK_ALL, allCheck:!paginate.allCheck});
-        setItems(items.map(i => {return {...i,checked:paginate.allCheck}}));
-    }
-
-    const handleEdit = () => {
-        let sel = items.filter(i => i.checked);
-        if (sel.length > 0) {
-            setItem(sel[0]);
-            setShowform(true);
-        }
-    }
-
-    const handleNew = () => {
-        reset();
-        setItems(items.map( t => {return ({...t,checked:false})}));
-        setShowform(true);
-    }
-    
     const fetchData = async () => {
-        console.log("Titulaciones: solicitud hecha por fetch");
         const endpoint = "/silefe.titulacion/filter";
         const searchtext = '';
 
@@ -113,7 +93,6 @@ const Titulaciones = () => {
             descripcion: searchtext,
             languageId:  lang
         };
-        console.log(postdata);
 
         const response = await fetch(url_api, {
             "credentials": "include",
@@ -135,23 +114,23 @@ const Titulaciones = () => {
         });
 
         let {data,totalPages} = await JSON.parse (await response.json());
-        console.log(data);
-        await setItems(await data.map(i => {return({...i,id:i.titulacionId,checked:false})}));
+        const tmp = await data.map(i => {return({...i,id:i.titulacionId,checked:false})});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
-        setShowform(false);
+        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const handleSave = async () => {
         const data = {
-            titulacionId:item.id,
-            codigo:      item.codigo,
-            descripcion: item.descripcion,
-            userId:      Liferay.ThemeDisplay.getUserId(),
-            userName:    Liferay.ThemeDisplay.getUserName(),
-            languageId:  lang
+            titulacionId: items.item.id,
+            codigo:       items.item.codigo,
+            descripcion:  items.item.descripcion,
+            userId:       Liferay.ThemeDisplay.getUserId(),
+            userName:     Liferay.ThemeDisplay.getUserName(),
+            languageId:   lang
         }
         let endpoint = "/silefe.titulacion/save-titulacion";
-        if (item.id == 0)
+        if (items.item.id == 0)
             endpoint = "/silefe.titulacion/add-titulacion";
         
         const res = await fetch(url_api, {
@@ -172,20 +151,18 @@ const Titulaciones = () => {
         "method": "POST",
         "mode": "cors"
         });
-        await console.log("Recibidos resutlados: ");
-        await console.log(res);
-
-
         await fetchData();
         await reset()
-        await setShowform(false);
+        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
         await setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento añadido correctamente"}]);
     }
 
-    const handleCancel = () => {
-        console.log("Cancelando el guardado");
-        setShowform(false);
-        setItems( items.map( i => {return ({...i,checked:false})}));
+    const setItem = (fieldname,value) => {
+        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
+    }
+
+    const handleSearch = () => {
+        console.log("handleSearch");
     }
 
     useEffect(()=>{
@@ -201,17 +178,25 @@ const Titulaciones = () => {
                 paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleEdit={handleEdit}
-                handleNew={handleNew}
+                handleSearch={handleSearch}
+                itemsHandle={itemsHandle}
             />
-            { showform && <TitulacionForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} />}
+            { 
+                items.showform && 
+                <DefaultForm 
+                    form={form} 
+                    setItem={setItem}  
+                    item={items.item} 
+                    save={ handleSave} 
+                    itemsHandle={itemsHandle}
+                />
+            }
             {
-                !showform &&
+                !items.showform &&
                 <Table 
                     columns={columns}
-                    rows={items} 
-                    handleCheck={handleCheck} 
-                    handleAllCheck={handleAllCheck}  
+                    rows={items.arr} 
+                    itemsHandle={itemsHandle} 
                     allCheck={pagination.allCheck}
                 />
         }

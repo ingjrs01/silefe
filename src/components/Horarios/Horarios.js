@@ -13,9 +13,7 @@ const spritemap = '../icons.svg';
 
 const Horarios = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [itms,itemsHandle]             = useReducer(red_items,{arr:[]}); 
-    const [item,setItm]                 = useState({id:0,descripcion:""});
-    const [showform,setShowform]         = useState(false);
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -50,15 +48,15 @@ const Horarios = () => {
 
     const handleSave = async () => {
         const postdata = {
-            horarioId:   item.id,
-            descripcion: item.descripcion,
+            horarioId:   items.item.id,
+            descripcion: items.item.descripcion,
             userId:      Liferay.ThemeDisplay.getUserId(),
             userName:    Liferay.ThemeDisplay.getUserName(),
             languageId:  lang            
         }
 
         let endpoint = '/silefe.horario/save-horario';
-        if (item.id == 0)
+        if (items.item.id == 0)
             endpoint = '/silefe.horario/add-horario';
 
         const res = await fetch(url_api, {
@@ -82,12 +80,12 @@ const Horarios = () => {
 
         await fetchData();
         await reset();
-        await setShowform(false);
+        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const handleDelete = () => {
-        if (itms.arr.filter(item => item.checked).length > 0) {
-            let s = itms.arr.filter(item => item.checked).map( i => {return i.id});
+        if (items.arr.filter(item => item.checked).length > 0) {
+            let s = items.arr.filter(item => item.checked).map( i => {return i.id});
             console.log(s);
 
             onOpenChange(true);        
@@ -96,7 +94,7 @@ const Horarios = () => {
 
     const confirmDelete = async () => {
         const endpoint = '/silefe.horario/remove-horarios';
-        let s = itms.arr.filter(item => item.checked).map( i => {return i.id});
+        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
         const res = await fetch(url_api, {
             "credentials": "include",
@@ -120,28 +118,13 @@ const Horarios = () => {
         fetchData();
     }
 
-    const handleEdit = () => { 
-        const sel = itms.arr.filter(i => i.checked)
-        if (sel.length > 0){
-            //setItem({...item,id:sel[0].horarioId,descripcion:sel[0].descripcion});
-            itemsHandle({type:ITEMS_ACTIONS.INIT_ITEM,item:sel[0]});
-            setShowform(true);
-        }
-    }
-
-    const handleNew = () => { 
-        reset();
-
-        setShowform(true);
-    }
-
     const handleSearch = () => { 
         console.log("search");
     }
 
     const fetchData = async () => {
+        console.log("Haciendo el fetch en Horarios");
         const endpoint = "/silefe.horario/filter";  
-        
         const postdata = {
             page:         pagination.page,
             descripcion : '',
@@ -164,24 +147,16 @@ const Horarios = () => {
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES, pages:totalPages});
     }
 
-    const handleCancel = () => {
-        itemsHandle({type:ITEMS_ACTIONS.UNSELECT});
-        setShowform(false);        
-    }
 
     const reset = () => {
         console.log("resetenado");
     }
 
     const setItem = (fieldname,value) => {
-        console.log("EStableciendo ");
-        //itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:e.target.name,  value:e.target.value});
-        console.log(fieldname);
-        console.log(value);
         itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
     }
 
-    if (itms.arr.length == 0) {
+    if (items.arr.length == 0) {
         return (<div>Cargando</div>);
     }
 
@@ -191,27 +166,26 @@ const Horarios = () => {
                 paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleEdit={handleEdit}
-                handleNew={handleNew}
                 handleSearch={handleSearch}
+                itemsHandle={itemsHandle}
             />
 
             {
-                showform && 
+                items.showform && 
                 <DefaultForm 
                     form={form} 
                     setItem={setItem}  
-                    item={itms.item} 
+                    item={items.item} 
                     save={ handleSave} 
-                    cancel={handleCancel} 
+                    itemsHandle={itemsHandle}
                 />
             }
             
             {                
-             !showform &&
+             !items.showform &&
               <Table 
                   columns={columns}
-                  rows={itms.arr} 
+                  rows={items.arr} 
                   itemsHandle={itemsHandle} 
                   allCheck={pagination.allCheck}
               />

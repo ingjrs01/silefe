@@ -1,5 +1,5 @@
 import React, {useState,useEffect,useReducer} from 'react';
-import ColectivoForm from './ColectivoForm';
+import DefaultForm from '../DefaultForm';
 import Menu from '../Menu';
 import Table from '../Table';
 import ClayAlert from '@clayui/alert';
@@ -7,14 +7,13 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
+import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 
 const spritemap = '../icons.svg';
 
 const Colectivos = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
-    const [items,setItems] = useState([]);
-    const [item,setItem]                 = useState({id:0,descripcion:""});
-    const [showform, setShowform]        = useState(false);
+    const [items,itemsHandle]             = useReducer(red_items,{arr:[]}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -27,30 +26,33 @@ const Colectivos = () => {
         {
             columnName: "descripcion",
             columnTitle: "Descripción",
-            columnType: "string",//"localized",
+            columnType: "string",
         },
     ];
 
-    // Inicializando las variables:
+    const form = {
+        title: "Colectivos",
+        rows: [
+            {key:1,label: "ID",     name: "id",               value:"lalala", placeholder:"Identifier"},
+            {key:2,label: "Descripción", name: "descripcion", value:"lelele", placeholder:"descripción"},
+        ]
+    };
+
     const auth    = getAuthToken()
     const lang    = getLanguageId()
     const referer = 'http://localhost:8080/colectivos';
 
-    const reset = () => {
-        setItem({id:0,descripcion:""});
-    }
-
     const handleSave = async () => {
         const postdata = {
-            colectivoId: item.colectivosId,
-            descripcion: item.descripcion,
-            userId: Liferay.ThemeDisplay.getUserId(),
-            userName: Liferay.ThemeDisplay.getUserName(),
-            languageId: lang
+            colectivoId: items.item.id,
+            descripcion: items.item.descripcion,
+            userId:      Liferay.ThemeDisplay.getUserId(),
+            userName:    Liferay.ThemeDisplay.getUserName(),
+            languageId:  lang
         }
 
         let endpoint = '/silefe.colectivo/save-colectivo';
-        if (item.colectivosId == 0)
+        if (items.item.id == 0)
             endpoint = '/silefe.colectivo/add-colectivo';
 
         const res = await fetch(url_api, {
@@ -73,19 +75,19 @@ const Colectivos = () => {
         });
 
         fetchData();
-        reset();
-        setShowform(false);
+        itemsHandle({type:ITEMS_ACTIONS.INIT_ITEM,item:{id:0,codigo:"",descripcion:""}})
+        itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const handleDelete = () => {
-        if (items.filter(item => item.checked).length > 0)
+        if (items.arr.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
 
 
     const confirmDelete = async () => {
         const auth = getAuthToken()
-        let s = items.filter(item => item.checked).map( i => {return i.colectivosId});
+        let s = items.arr.filter(item => item.checked).map( i => {return i.colectivosId});
 
         console.log();
         const res = await fetch(url_api, {
@@ -109,31 +111,6 @@ const Colectivos = () => {
 
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
-}
-
-    const handleEdit = () => {
-        let sel = items.filter(i => i.checked);
-        if (sel.length > 0) {
-            setItem(sel[0]);
-            setShowform(true);
-        }
-    }
-
-    const handleNew = () => {
-        setItem({colectivosId: 0, descripcion: ""})
-        setItems(items.map( t => {return ({...t,checked:false})}));
-        setShowform(true);
-    }
-
-    const handleCheck = (index) => {
-        let tmp = items.slice();
-        tmp[index].checked = !items[index].checked;
-        setItems(tmp);
-    }
-
-    const handleAllCheck = () => {
-        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!pagination.allCheck})
-        setItems(items.map( i => {return ({...i,checked:pagination.allCheck})}));
     }
 
     const handleSearch = () => {
@@ -171,13 +148,13 @@ const Colectivos = () => {
         });
 
         let {data,totalPages} = await JSON.parse (await res.json());
-        await setItems(await data.map(i => {return({...i,id:i.colectivoId,checked:false})}));
+        const tmp = await data.map(i => {return({...i,id:i.colectivosId,checked:false})});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
-    const handleCancel = () => {
-        setShowform(false);
-        setItems(items.map(i => {return ({...i,checked:false})}));
+    const setItem = (fieldname,value) => {
+        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
     }
 
     useEffect(()=>{
@@ -193,19 +170,26 @@ const Colectivos = () => {
                 paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleEdit={handleEdit}
-                handleNew={handleNew}
                 handleSearch={handleSearch}
+                itemsHandle={itemsHandle}
             />
 
-            { showform && <ColectivoForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} />}
             {
-                !showform &&
+                items.showform && 
+                <DefaultForm 
+                    form={form} 
+                    setItem={setItem}  
+                    item={items.item} 
+                    itemsHandle={itemsHandle}
+                    save={ handleSave} 
+                />
+            }
+            {
+                !items.showform &&
                 <Table 
                     columns={columns}
-                    rows={items} 
-                    handleCheck={handleCheck} 
-                    handleAllCheck={handleAllCheck}  
+                    rows={items.arr} 
+                    itemsHandle={itemsHandle} 
                     allCheck={pagination.allCheck}
                 />
             }

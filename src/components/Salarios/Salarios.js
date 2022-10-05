@@ -7,12 +7,13 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
+import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 
 const spritemap = '../icons.svg';
 
 const Salarios = () => {
     const [pagination,paginate]     = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [items,setItems]               = useState([]);
+    const [items,itemsH]               = useState([]);
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [showform,setShowform]         = useState(false);
     const [toastItems,setToastItems]     = useState([]);    

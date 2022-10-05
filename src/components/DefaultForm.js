@@ -2,14 +2,11 @@ import React from "react";
 import ClayForm, {ClayInput} from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-//import {ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 const spritemap = '/icons.svg';
 
-//setItem({ ...item, [e.target.name]: e.target.value })
-//itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:e.target.name,  value:e.target.value});
-
-const DefaultForm = ({form, setItem, item, cancel, save}) => {
+const DefaultForm = ({form, setItem, item, itemsHandle,save }) => {
 
     return (
       <ClayCard>
@@ -35,7 +32,7 @@ const DefaultForm = ({form, setItem, item, cancel, save}) => {
           </ClayCard.Description>
           <div className="btn-group">
             <div className="btn-group-item">
-              <ClayButton onClick={e => cancel()} displayType="secondary">{"Cancelar"}</ClayButton>
+              <ClayButton onClick={e => itemsHandle({type:ITEMS_ACTIONS.CANCEL})} displayType="secondary">{"Cancelar"}</ClayButton>
             </div>
             <div className="btn-group-item">
               <ClayButton onClick={e => save()} displayType="primary">{"Guardar"}</ClayButton>

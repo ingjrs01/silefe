@@ -1,5 +1,5 @@
 import React, {useState,useEffect, useReducer} from 'react';
-import ProvinciaForm from './ProvinciaForm';
+import DefaultForm from '../DefaultForm';
 import Menu from '../Menu';
 import Table from '../Table';
 import ClayAlert from '@clayui/alert';
@@ -7,18 +7,16 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
+import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 
 const spritemap = '../icons.svg';
 
 const Provincias = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
-    const [items,setItems] = useState([]);
-    const [item,setItem]                 = useState({id:0,nombre:""});
-    const [showform,setShowform]         = useState(false);
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
-    // Inicializo las variables principales
     const auth = getAuthToken();
     const lang = getLanguageId();
     const referer = 'http://localhost:8080/provincias';
@@ -36,21 +34,26 @@ const Provincias = () => {
         },
     ];
 
-    const reset = () => {
-        setItem({id:0, nombre: ""})
-    }
+    const form = {
+        title: "Provincias",
+        rows: [
+            {key:1,label: "ID",     name: "id",               value:"lalala", placeholder:"Identifier"},
+            {key:2,label: "Nombre", name: "nombre", value:"lelele", placeholder:"descripción"},
+        ]
+    };
 
     const handleSave = async () => {
         const postdata = {
-            id: item.id,
-            name: item.nombre,
-            userId: Liferay.ThemeDisplay.getUserId(),
-            userName: Liferay.ThemeDisplay.getUserName(),
+            id:         items.item.id,
+            name:       items.item.nombre,
+            userId:     Liferay.ThemeDisplay.getUserId(),
+            userName:   Liferay.ThemeDisplay.getUserName(),
             languageId: lang
         }
 
         let endpoint = '/silefe.provincia/save-provincia'
-        if (item.id == 0) 
+
+        if (items.item.id == 0) 
             endpoint = '/silefe.provincia/add-provincia';
 
         const res = await fetch(url_api, {
@@ -72,10 +75,8 @@ const Provincias = () => {
         "mode": "cors"
         });
 
-            
-        reset()
         fetchData();
-        setShowform(false);
+        itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const handleDelete = () => {
@@ -108,22 +109,7 @@ const Provincias = () => {
 
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
-        setShowform(false);
-    }
-
-    const handleEdit = () => {
-        let sel = items.filter(i => i.checked);
-        if (sel.length > 0) {
-            setItem({id:sel[0].id,nombre:sel[0].nombre});
-            setShowform(true);
-        }
-
-    }
-
-    const handleNew = () => {
-        setItem({id: 0, name: ""})
-        setItems(items.map( t => {return ({...t,checked:false})}));
-        setShowform(true);
+        itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const handleSearch = () => {
@@ -154,25 +140,13 @@ const Provincias = () => {
         });
         
         let {data,totalPages} = await JSON.parse (await response.json());
-        await setItems(await data.map(i => {return({...i,id:i.provinciaId,checked:false})}));
+        const tmp = await data.map(i => {return({...i,id:i.provinciaId,checked:false})});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
-    const handleCheck = (index) => {
-        let tmp = items.slice();
-        tmp[index].checked = !items[index].checked;
-        setItems(tmp);
-    }
-
-    const handleAllCheck = () => {
-        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!pagination.allCheck});
-        setItems(items.map( i => {return ({...i,checked:pagination.allCheck})}));
-    }
-
-    const handleCancel = () => {
-        reset();
-        setShowform(false);
-        setItems(items.map( i => { return ({...i,checked:false})}));
+    const setItem = (fieldname,value) => {
+        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
     }
 
     useEffect(()=>{
@@ -188,22 +162,27 @@ const Provincias = () => {
                 paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleEdit={handleEdit}
-                handleNew={handleNew}
                 handleSearch={handleSearch}
+                itemsHandle={itemsHandle}
             />            
-            { showform && <ProvinciaForm setItem={setItem} item={item} cancel={handleCancel} save={handleSave} />}
+            {   items.showform && 
+                <DefaultForm 
+                    form={form} 
+                    setItem={setItem}  
+                    item={items.item} 
+                    itemsHandle={itemsHandle}
+                    save={ handleSave} 
+            />
+        }
 
             {
-                !showform &&
+                !items.showform &&
                 <Table 
                     columns={columns}
-                    rows={items} 
-                    handleCheck={handleCheck} 
-                    handleAllCheck={handleAllCheck}  
+                    rows={items.arr} 
+                    itemsHandle={itemsHandle} 
                     allCheck={pagination.allCheck}
                  />
-
             }
 
             <ClayAlert.ToastContainer>
@@ -248,8 +227,6 @@ const Provincias = () => {
                     />
                 </ClayModal>
             )}
-
-
         </>
     )
 }

@@ -6,12 +6,13 @@ import {ClayInput} from '@clayui/form';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayToolbar from '@clayui/toolbar';
 import {PAGINATION_ACTIONS} from '../includes/reducers/paginate.reducer';
+import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 //import spritemap from '../icons.svg';
 
 
 const spritemap = '../icons.svg';
 
-const Menu = ({paginate, handleDelete, handleSave, handleEdit,handleNew,handleSearch}) => {
+const Menu = ({paginate, handleDelete, handleSave, handleEdit,handleNew,handleSearch,itemsHandle}) => {
 
 //  const spritemap = "/icons.svg";
 
@@ -71,7 +72,7 @@ const Menu = ({paginate, handleDelete, handleSave, handleEdit,handleNew,handleSe
             </ClayButton>
 
 
-            <ClayButton className="inline-item-after" onClick={() => { handleEdit() }}>
+            <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM}) }}>
               {"Editar"}
             </ClayButton>
 
@@ -79,7 +80,7 @@ const Menu = ({paginate, handleDelete, handleSave, handleEdit,handleNew,handleSe
               {"Guardar"}
             </ClayButton>
 
-            <ClayButton className="inline-item-after" onClick={() => { handleNew() }}>
+            <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEW_ITEM}) }}>
               {"Nuevo"}
             </ClayButton>
 

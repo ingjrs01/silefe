@@ -6,12 +6,17 @@ export const ITEMS_ACTIONS = {
     UNSELECT: 4,
     INIT_ITEM: 5,
     SET: 6,
+    SELECT_ITEM:7,
+    NEW_ITEM: 8,
+    HIDE: 9,
+    CANCEL: 10,
   }
 
 const initialState = {
     arr: [],
+    item: {id:0,checked:false},
     checkall: false,
-    item: {}
+    showform: false,
 }
 
 export const red_items = (state=initialState, action ) => {
@@ -56,9 +61,42 @@ export const red_items = (state=initialState, action ) => {
 
             return {
                 ...state,
-                item: {...item,[action.fieldname]:action.value}
+                item: {...state.item,[action.fieldname]:action.value}
             }
-
+        
+        case ITEMS_ACTIONS.SELECT_ITEM:
+            let sel = state.arr.filter(i => i.checked);
+            console.log("Seleccionando desde el reducer");
+            if (sel.length > 0) {
+                return {
+                    ...state,
+                    item: sel[0],
+                    showform: true
+                }
+            }
+            return state;
+        case ITEMS_ACTIONS.NEW_ITEM:
+            let tmp = state.arr[0];
+            for (let key in tmp) {
+                tmp[key] = "";
+            }
+            tmp.id = 0;
+            return {
+                ...state,
+                item: tmp,
+                showform: true
+            }
+        case ITEMS_ACTIONS.HIDE:
+            return {
+                ...state,
+                showform:false
+            }
+        case ITEMS_ACTIONS.CANCEL:
+            return {
+                ...state,
+                arr: state.arr.map(i => {return {...i,checked:false}}),
+                showform:false,
+            }
         default: 
             throw new Error ("Acción inválida");
     }
