@@ -129,11 +129,6 @@ const Cnos = () => {
         setItem({id:0,codigo:'',descripcion:''});
     }
 
-    const setItem = (fieldname,value) => {
-        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
-    }
-
-
     const fetchData = async () => {
         const endpoint = "/silefe.cno/filter";  
         
@@ -173,7 +168,6 @@ const Cnos = () => {
             {   items.showform && 
                 <DefaultForm 
                     form={form} 
-                    setItem={setItem}  
                     item={items.item} 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}

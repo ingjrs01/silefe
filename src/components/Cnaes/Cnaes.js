@@ -146,10 +146,6 @@ const Cnaes = () => {
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
-    const setItem = (fieldname,value) => {
-        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
-    }
-
     useEffect(()=>{
         fetchData();
     },[pagination.page]);
@@ -170,7 +166,6 @@ const Cnaes = () => {
             { items.showform && 
                 <DefaultForm 
                     form={form} 
-                    setItem={setItem}  
                     item={items.item} 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}

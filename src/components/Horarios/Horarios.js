@@ -152,10 +152,6 @@ const Horarios = () => {
         console.log("resetenado");
     }
 
-    const setItem = (fieldname,value) => {
-        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
-    }
-
     if (items.arr.length == 0) {
         return (<div>Cargando</div>);
     }
@@ -174,7 +170,6 @@ const Horarios = () => {
                 items.showform && 
                 <DefaultForm 
                     form={form} 
-                    setItem={setItem}  
                     item={items.item} 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}

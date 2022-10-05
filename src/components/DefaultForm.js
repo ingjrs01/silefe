@@ -6,6 +6,8 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 const spritemap = '/icons.svg';
 
+//setItem(e.target.name,e.target.value) 
+
 const DefaultForm = ({form, setItem, item, itemsHandle,save }) => {
 
     return (
@@ -22,7 +24,7 @@ const DefaultForm = ({form, setItem, item, itemsHandle,save }) => {
                 return (
                   <ClayForm.Group className="hs-success" key={row.key} >
                     <label htmlFor="basicInput">{row.label}</label>
-                    <ClayInput placeholder={row.placeholder} type="text" name={row.name} value={item[row.name]} onChange={e => { setItem(e.target.name,e.target.value) }}>
+                    <ClayInput placeholder={row.placeholder} type="text" name={row.name} value={item[row.name]} onChange={e => {itemsHandle({type:ITEMS_ACTIONS.SET,fieldname:e.target.name, value:e.target.value}) }}>
                     </ClayInput>
                   </ClayForm.Group>
                 )

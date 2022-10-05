@@ -143,9 +143,6 @@ const MBaja = () => {
         console.log("handleSearch");
     }
 
-    const setItem = (fieldname,value) => {
-        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
-    }
 
     return (
         <>
@@ -161,7 +158,6 @@ const MBaja = () => {
                 items.showform && 
                 <DefaultForm 
                     form={form} 
-                    setItem={setItem}  
                     item={items.item} 
                     itemsHandle={itemsHandle}
                     save={ handleSave} 

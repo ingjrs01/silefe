@@ -190,12 +190,17 @@ const Salarios = () => {
                 paginate={paginate}
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleEdit={handleEdit}
-                handleNew={handleNew}
                 handleSearch={handleSearch}
             />
            
-            {showform && <DefaultForm form={form} setItem={setItem} item={item} save={ handleSave} cancel={handleCancel} /> }
+            {   items.showform && 
+                <DefaultForm 
+                    form={form} 
+                    setItem={setItem} 
+                    item={item} 
+                    save={ handleSave} 
+                /> 
+            }
 
             {
                 !showform &&

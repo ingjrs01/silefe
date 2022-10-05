@@ -153,10 +153,6 @@ const Titulaciones = () => {
         await setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento añadido correctamente"}]);
     }
 
-    const setItem = (fieldname,value) => {
-        itemsHandle({type:ITEMS_ACTIONS.SET, fieldname:fieldname,  value:value})
-    }
-
     const handleSearch = () => {
         console.log("handleSearch");
     }
@@ -181,7 +177,6 @@ const Titulaciones = () => {
                 items.showform && 
                 <DefaultForm 
                     form={form} 
-                    setItem={setItem}  
                     item={items.item} 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}
