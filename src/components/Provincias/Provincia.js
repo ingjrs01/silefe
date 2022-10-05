@@ -13,7 +13,7 @@ const spritemap = '../icons.svg';
 
 const Provincias = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
@@ -80,13 +80,14 @@ const Provincias = () => {
     }
 
     const handleDelete = () => {
-        if (items.filter(item => item.checked).length > 0)
+        console.log("handleDelete");
+        if (items.arr.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
 
     const confirmDelete = async () => {
         const endpoint = '/silefe.provincia/remove-provincias';
-        let s = items.filter(item => item.checked).map( i => {return i.id});
+        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
         const res = await fetch(url_api, {
             "credentials": "include",
