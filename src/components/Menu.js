@@ -7,14 +7,10 @@ import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayToolbar from '@clayui/toolbar';
 import {PAGINATION_ACTIONS} from '../includes/reducers/paginate.reducer';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
-//import spritemap from '../icons.svg';
-
 
 const spritemap = '../icons.svg';
 
-const Menu = ({paginate, handleDelete, handleSave, handleEdit,handleNew,handleSearch,itemsHandle}) => {
-
-//  const spritemap = "/icons.svg";
+const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, showform}) => {
 
   return (
     <ClayToolbar>
@@ -71,18 +67,27 @@ const Menu = ({paginate, handleDelete, handleSave, handleEdit,handleNew,handleSe
               <ClayIcon spritemap={spritemap} symbol="plus" />
             </ClayButton>
 
-
+            {
+              !showform &&
             <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM}) }}>
               {"Editar"}
             </ClayButton>
+            }
 
+            {
+              showform &&
             <ClayButton className="inline-item-after" onClick={() => { handleSave() }}>
               {"Guardar"}
             </ClayButton>
 
+            }
+
+            {
+              !showform &&
             <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEW_ITEM}) }}>
               {"Nuevo"}
             </ClayButton>
+            }
 
           </ClayToolbar.Section>
         </ClayToolbar.Item>

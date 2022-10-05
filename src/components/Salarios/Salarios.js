@@ -191,6 +191,7 @@ const Salarios = () => {
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
+                showform={items.showform}
             />
            
             {   items.showform && 

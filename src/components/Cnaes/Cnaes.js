@@ -161,6 +161,7 @@ const Cnaes = () => {
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
+                showform={items.showform}
             />
            
             { items.showform && 

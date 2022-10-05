@@ -163,6 +163,7 @@ const Cnos = () => {
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
+                showform={items.showform}
             />
 
             {   items.showform && 

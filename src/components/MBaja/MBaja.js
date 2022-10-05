@@ -152,6 +152,7 @@ const MBaja = () => {
                 handleDelete={handleDelete}                 
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
+                showform={items.showform}
             />
            
             {

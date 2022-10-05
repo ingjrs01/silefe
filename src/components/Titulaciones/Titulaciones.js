@@ -14,6 +14,7 @@ const spritemap = '/icons.svg';
 const Titulaciones = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false}); 
+    const [mode, setMode]                = useState("list");
     const [toastItems,setToastItems]     = useState([]);
     const {observer, onOpenChange, open} = useModal();
 
@@ -172,6 +173,7 @@ const Titulaciones = () => {
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
+                showform={items.showform}
             />
             { 
                 items.showform && 

@@ -123,7 +123,6 @@ const Horarios = () => {
     }
 
     const fetchData = async () => {
-        console.log("Haciendo el fetch en Horarios");
         const endpoint = "/silefe.horario/filter";  
         const postdata = {
             page:         pagination.page,
@@ -164,6 +163,7 @@ const Horarios = () => {
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
+                showform={items.showform}
             />
 
             {
