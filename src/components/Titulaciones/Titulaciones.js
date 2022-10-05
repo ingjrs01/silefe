@@ -13,7 +13,7 @@ const spritemap = '/icons.svg';
 
 const Titulaciones = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[]}); 
+    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false}); 
     const [toastItems,setToastItems]     = useState([]);
     const {observer, onOpenChange, open} = useModal();
 
@@ -46,10 +46,6 @@ const Titulaciones = () => {
     const auth = getAuthToken();
     const lang = getLanguageId();
     const referer = "http://localhost:8080/titulaciones";
-
-    //const reset = () => {
-    //    itemsHandle({type:ITEMS_ACTIONS.INIT_ITEM,item:{id:0,codigo:"",descripcion:""}});
-    //}
 
     const confirmDelete = async () => {
         const endpoint = "/silefe.titulacion/remove-titulaciones";
@@ -195,11 +191,10 @@ const Titulaciones = () => {
                 !items.showform &&
                 <Table 
                     columns={columns}
-                    rows={items.arr} 
+                    rows={items} 
                     itemsHandle={itemsHandle} 
-                    allCheck={pagination.allCheck}
                 />
-        }
+            }
 
         <ClayAlert.ToastContainer>
             {toastItems.map(value => (

@@ -200,11 +200,9 @@ const Salarios = () => {
             {
                 !showform &&
                 <Table 
-                    columns={columns}
+                    columns={columns}                    
                     rows={items} 
-                    handleCheck={handleCheck} 
-                    handleAllCheck={handleAllCheck}  
-                    allCheck={pagination.allCheck}
+                    itemsHandle={itemsHandle}
                  />
             }
 

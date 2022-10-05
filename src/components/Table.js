@@ -4,7 +4,7 @@ import {ClayCheckbox} from '@clayui/form';
 import {ClayLabel} from '@clayui/label';
 import {red_items,ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
-const Table = ({columns,rows, itemsHandle,handleAllCheck,allCheck}) => {
+const Table = ({columns,rows, itemsHandle}) => {
 
   return (
     <ClayTable>
@@ -15,7 +15,7 @@ const Table = ({columns,rows, itemsHandle,handleAllCheck,allCheck}) => {
                   if (column.columnType == "string")
                     return (<ClayTable.Cell>{ column.columnTitle }</ClayTable.Cell> )
                   if (column.columnType == "checkbox")
-                    return (<ClayTable.Cell headingCell><ClayCheckbox checked={allCheck} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
+                    return (<ClayTable.Cell headingCell><ClayCheckbox checked={rows.allCheck} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
                 })
             }
           {/*
@@ -26,7 +26,7 @@ const Table = ({columns,rows, itemsHandle,handleAllCheck,allCheck}) => {
       </ClayTable.Head>
       <ClayTable.Body>
         { 
-          rows.map( (row,index )=> {
+          rows.arr.map( (row,index )=> {
             return (
               <ClayTable.Row key={row.titulacionId} >
                 {

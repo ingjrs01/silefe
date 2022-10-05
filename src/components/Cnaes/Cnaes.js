@@ -181,9 +181,8 @@ const Cnaes = () => {
                 !items.showform &&
                 <Table 
                     columns={columns}
-                    rows={items.arr} 
+                    rows={items} 
                     itemsHandle={itemsHandle} 
-                    allCheck={pagination.allCheck}
                  />
             }
 
