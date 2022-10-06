@@ -80,10 +80,10 @@ const Cnaes = () => {
         "mode": "cors"
         });
 
-        await fetchData();
-        await reset()
+        //await reset()
         await itemsHandle({type:ITEMS_ACTIONS.HIDE});
         await onOpenChange(false);
+        await fetchData();
     }
 
     const handleDelete = () => {

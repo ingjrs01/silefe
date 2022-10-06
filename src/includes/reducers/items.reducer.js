@@ -24,7 +24,8 @@ export const red_items = (state=initialState, action ) => {
         case ITEMS_ACTIONS.START: 
             return {
                 ...state,
-                arr: action.items
+                arr: action.items,
+                checkall:false
             }
 
         case ITEMS_ACTIONS.CHECK:
@@ -71,10 +72,6 @@ export const red_items = (state=initialState, action ) => {
             }
             return state;
         case ITEMS_ACTIONS.NEW_ITEM:
-            //let tmp = state.arr[0];
-            //for (let key in tmp) {
-            //    tmp[key] = "";
-            //}
             let tmp = {id:0};
             return {
                 ...state,

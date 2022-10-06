@@ -39,7 +39,7 @@ const VMenu = () => {
         					data-target="#menubarVerticalMdNestedCollapseButton01"
         					type="button"
         				>
-        					Información Básica
+        					Maestros
         					<span className="collapse-icon-closed">
         						<svg
         							className="lexicon-icon lexicon-icon-caret-right"

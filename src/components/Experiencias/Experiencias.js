@@ -73,9 +73,8 @@ const Experiencias = () => {
         "mode": "cors"
         });
         
-        fetchData();
-        reset();
         itemsHandle({type:ITEMS_ACTIONS.HIDE});
+        fetchData();
     }
 
     const reset = () => {
@@ -84,7 +83,7 @@ const Experiencias = () => {
     }
 
     const handleDelete = () => {
-        if (items.filter(item => item.checked).length > 0)
+        if (items.arr.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
 
@@ -111,8 +110,8 @@ const Experiencias = () => {
             "mode": "cors"
         });
 
-        setShowform(false);
-        itemsHandle({type:ITEMS_ACTIONS.HIDE});
+        //setShowform(false);
+        //itemsHandle({type:ITEMS_ACTIONS.HIDE});
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
 

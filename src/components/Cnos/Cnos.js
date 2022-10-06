@@ -85,9 +85,8 @@ const Cnos = () => {
         "mode": "cors"
         });
 
-        await fetchData();
-        await reset();
         await itemsHandle({type:ITEMS_ACTIONS.HIDE});
+        await fetchData();
     }
 
     const handleDelete = () => {
@@ -123,10 +122,6 @@ const Cnos = () => {
 
     const handleSearch = () => { 
         console.log("search");
-    }
-
-    const reset = () => {
-        setItem({id:0,codigo:'',descripcion:''});
     }
 
     const fetchData = async () => {

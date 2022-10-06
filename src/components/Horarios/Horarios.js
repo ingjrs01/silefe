@@ -79,7 +79,6 @@ const Horarios = () => {
         });
 
         await fetchData();
-        await reset();
         await itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
@@ -146,14 +145,8 @@ const Horarios = () => {
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES, pages:totalPages});
     }
 
-
-    const reset = () => {
-        console.log("resetenado");
-    }
-
-    if (items.arr.length == 0) {
-        return (<div>Cargando</div>);
-    }
+    if (!items) 
+        return (<div>Cargando</div>)
 
     return (
         <>

@@ -19,7 +19,7 @@ const Application = () => {
             <div className="row">
                 <div className='col-2'>
                     <div className="sheet-header">
-                        <h2 className="sheet-title">Clay</h2>
+                        <h2 className="sheet-title">Menú</h2>
                         <div className="sheet-text"><VMenu /></div>
                     </div>
                 </div>
