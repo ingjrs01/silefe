@@ -24,11 +24,13 @@ const Salarios = () => {
             columnName: "id",
             columnTitle: "Id",
             columnType: "checkbox",
+            key: "c1",
         },
         {
             columnName: "descripcion",
             columnTitle: "Descripción",
             columnType: "string",
+            key: "c2",
         },
 
     ]

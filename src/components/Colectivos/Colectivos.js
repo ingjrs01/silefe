@@ -22,11 +22,13 @@ const Colectivos = () => {
             columnName: "colectivosId",
             columnTitle: "Id",
             columnType: "checkbox",
+            key: "c1",
         },
         {
             columnName: "descripcion",
             columnTitle: "Descripción",
             columnType: "string",
+            key: "c2",
         },
     ];
 
@@ -88,8 +90,6 @@ const Colectivos = () => {
     const confirmDelete = async () => {
         const auth = getAuthToken()
         let s = items.arr.filter(item => item.checked).map( i => {return i.colectivosId});
-
-        console.log();
         const res = await fetch(url_api, {
             "credentials": "include",
             "headers": {
@@ -114,12 +114,10 @@ const Colectivos = () => {
     }
 
     const handleSearch = () => {
-        console.log("buscando");
         fetchData();
     }
 
     const fetchData = async () => {
-        console.log("Colectivos: solicitud hecha por fetch");
         const endpoint = '/silefe.colectivo/filter';
 
         const postdata = {

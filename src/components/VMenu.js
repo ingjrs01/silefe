@@ -2,6 +2,9 @@ import React from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import MenuItems from '../menu/MenuItems';
 
+//import "@clayui/css/lib/css/atlas.css";
+const spritemap = "icons.svg";
+
 const VMenu = () => {
     const location = useLocation(); 
 
@@ -72,7 +75,7 @@ const VMenu = () => {
 								{/*   Vamos a pintar el menú */}
 								{  MenuItems.map(i => {
 									return (
-										<li className="nav-item">
+										<li className="nav-item" key={i.key}>
 											<Link to={i.url} className={`nav-link ${ location.pathname == i.url ? "active" : "" } `} key={i.key}> {i.caption} </Link> 
 										</li>											
 									);

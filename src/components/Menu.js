@@ -8,7 +8,10 @@ import ClayToolbar from '@clayui/toolbar';
 import {PAGINATION_ACTIONS} from '../includes/reducers/paginate.reducer';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
-const spritemap = '../icons.svg';
+//import "@clayui/css/lib/css/atlas.css";
+
+const spritemap = "icons.svg";
+//const spritemap = '../icons.svg';
 
 const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, showform}) => {
 

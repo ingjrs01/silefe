@@ -26,16 +26,19 @@ const Cnos = () => {
             columnName: "id",
             columnTitle: "Id",
             columnType: "checkbox",
+            key: "c1",
         },
         {
             columnName: "codigo",
             columnTitle: "Código",
             columnType: "string",
+            key: "c2",
         },
         {
             columnName: "descripcion",
             columnTitle: "Descripción",
             columnType: "string",
+            key: "c3",
         },
     ];
 

@@ -21,12 +21,14 @@ const Titulaciones = () => {
         {
             columnName: "titulacionId",
             columnTitle: "Id",
-            columnType: "checkbox",        
+            columnType: "checkbox",
+            key: "c1",
         },
         {
             columnName: "descripcion",
             columnTitle: "Descripción",
             columnType: "string",
+            key: "c2",
         },
     ];
 

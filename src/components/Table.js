@@ -1,8 +1,8 @@
-import React,{ useState } from 'react';
+import React from 'react';
 import ClayTable from '@clayui/table';
 import {ClayCheckbox} from '@clayui/form';
 import {ClayLabel} from '@clayui/label';
-import {red_items,ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
+import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 const Table = ({columns,rows, itemsHandle}) => {
 
@@ -13,15 +13,11 @@ const Table = ({columns,rows, itemsHandle}) => {
             {
                 columns.map( (column) => { 
                   if (column.columnType == "string")
-                    return (<ClayTable.Cell>{ column.columnTitle }</ClayTable.Cell> )
+                    return (<ClayTable.Cell key={column.key}>{ column.columnTitle }</ClayTable.Cell> )
                   if (column.columnType == "checkbox")
-                    return (<ClayTable.Cell headingCell><ClayCheckbox checked={rows.allCheck} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
+                    return (<ClayTable.Cell key={column.key} headingCell><ClayCheckbox checked={rows.allCheck} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
                 })
             }
-          {/*
-            <ClayTable.Cell expanded headingCell> {"Teams"} </ClayTable.Cell>
-            <ClayTable.Cell headingCell>{"Region"}</ClayTable.Cell>
-          */}
         </ClayTable.Row>
       </ClayTable.Head>
       <ClayTable.Body>
@@ -32,10 +28,10 @@ const Table = ({columns,rows, itemsHandle}) => {
                 {
                   columns.map( (column) => { 
                     if (column.columnType == "string")
-                      return (<ClayTable.Cell>{ row[column.columnName] }</ClayTable.Cell> )
+                      return (<ClayTable.Cell key={column.key+row.titulacionId}>{ row[column.columnName] }</ClayTable.Cell> )
                     if (column.columnType == "checkbox")
                       return (
-                        <ClayTable.Cell><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[column.columnName]}  />
+                        <ClayTable.Cell key={column.key+row.titulacionId}><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[column.columnName]}  />
                          <span>{row[column.columnName]}</span> 
                         </ClayTable.Cell>
                       )
@@ -47,11 +43,6 @@ const Table = ({columns,rows, itemsHandle}) => {
                         )
                   })
                 }
-                {/*
-                  <ClayTable.Cell headingTitle><ClayCheckbox checked={row.checked} onChange={()=>{handleCheck(index)}} value={row.titulacionId} name={"lalala"} /></ClayTable.Cell>
-                  <ClayTable.Cell headingTitle>{ row.codigo }</ClayTable.Cell>
-                  <ClayTable.Cell>{ row.descripcion }</ClayTable.Cell>
-                */}
               </ClayTable.Row>
             )
             }) 

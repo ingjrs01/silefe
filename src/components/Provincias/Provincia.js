@@ -26,11 +26,13 @@ const Provincias = () => {
             columnName: "id",
             columnTitle: "Id",
             columnType: "checkbox",
+            key: "c1",
         },
         {
             columnName: "nombre",
             columnTitle: "Nombre",
             columnType: "string",
+            key: "c2",
         },
     ];
 
@@ -80,7 +82,6 @@ const Provincias = () => {
     }
 
     const handleDelete = () => {
-        console.log("handleDelete");
         if (items.arr.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
@@ -119,7 +120,6 @@ const Provincias = () => {
     }
 
     const fetchData = async () => {
-        console.log("Provincia: solicitud hecha por fetch");
         const endpoint   = '/silefe.provincia/filter';
         const searchtext = '';
 
