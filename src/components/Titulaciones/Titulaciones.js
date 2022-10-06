@@ -9,7 +9,8 @@ import {getAuthToken,getLanguageId, url_api} from '../../includes/LiferayFunctio
 import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
 import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 
-const spritemap = '/icons.svg';
+//const spritemap = '../icons.svg';
+const spritemap = "../../icons.svg";
 
 const Titulaciones = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})

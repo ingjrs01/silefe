@@ -10,7 +10,8 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 //import "@clayui/css/lib/css/atlas.css";
 
-const spritemap = "icons.svg";
+//const spritemap = "../icons.svg";
+const spritemap = '/images/icons/icons.svg';
 //const spritemap = '../icons.svg';
 
 const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, showform}) => {
@@ -58,6 +59,11 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
                 small
                 symbol="angle-right"
               />
+              	<svg
+			class="lexicon-icon lexicon-icon-blogs"
+			focusable="false"
+			role="presentation"
+		></svg>
             </ClayButton.Group>
           </ClayToolbar.Section>
         </ClayToolbar.Item>
