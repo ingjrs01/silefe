@@ -60,10 +60,10 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
                 symbol="angle-right"
               />
               	<svg
-			class="lexicon-icon lexicon-icon-blogs"
-			focusable="false"
-			role="presentation"
-		></svg>
+                  className="lexicon-icon lexicon-icon-blogs"
+                  focusable="false"
+                  role="presentation"
+		            ></svg>
             </ClayButton.Group>
           </ClayToolbar.Section>
         </ClayToolbar.Item>

@@ -1,4 +1,4 @@
-import React, {useState,useEffect,useReducer} from 'react';
+import React from "react";
 import Table from '../Table';
 import DefaultForm from '../DefaultForm';
 import Menu from '../Menu';
@@ -11,7 +11,7 @@ import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 
 const spritemap = "../../icons.svg";
 
-const Titulaciones = () => {
+const TitulacionesFam = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false}); 
     const [toastItems,setToastItems]     = useState([]);
@@ -33,7 +33,7 @@ const Titulaciones = () => {
     ];
 
     const form = {
-        title: "Titulaciones",
+        title: "Titulaciones Familias",
         rows: [
             {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
             {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"descripcion"},
@@ -42,7 +42,7 @@ const Titulaciones = () => {
 
     const auth = getAuthToken();
     const lang = getLanguageId();
-    const referer = "http://localhost:8080/titulaciones";
+    const referer = "http://localhost:8080/titulacionesfam";
 
     const confirmDelete = async () => {
         const endpoint = "/silefe.titulacion/remove-titulaciones";
@@ -160,80 +160,80 @@ const Titulaciones = () => {
 
     if (!items) 
     return (<div>Cargando</div>)
-    
+
     return (
         <>
-            <Menu 
-                paginate={paginate} 
-                handleSave={handleSave} 
-                handleDelete={handleDelete} 
+            <Menu
+                paginate={paginate}
+                handleSave={handleSave}
+                handleDelete={handleDelete}
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 showform={items.showform}
             />
-            { 
-                items.showform && 
-                <DefaultForm 
-                    form={form} 
-                    item={items.item} 
-                    save={ handleSave} 
+            {
+                items.showform &&
+                <DefaultForm
+                    form={form}
+                    item={items.item}
+                    save={handleSave}
                     itemsHandle={itemsHandle}
                 />
             }
             {
                 !items.showform &&
-                <Table 
+                <Table
                     columns={columns}
-                    rows={items} 
-                    itemsHandle={itemsHandle} 
+                    rows={items}
+                    itemsHandle={itemsHandle}
                 />
             }
 
-        <ClayAlert.ToastContainer>
-            {toastItems.map(value => (
-            <ClayAlert
-                autoClose={5000}
-                key={value}
-                onClose={() => {
-                    setToastItems(prevItems =>
-                        prevItems.filter(item => item !== value)
-                    );
-                }}
-                spritemap={spritemap}
-                title={`${value.title}`}
-                displayType={value.type}
-            >{`${value.text}`}</ClayAlert>
-            ))}
-        </ClayAlert.ToastContainer>
+            <ClayAlert.ToastContainer>
+                {toastItems.map(value => (
+                    <ClayAlert
+                        autoClose={5000}
+                        key={value}
+                        onClose={() => {
+                            setToastItems(prevItems =>
+                                prevItems.filter(item => item !== value)
+                            );
+                        }}
+                        spritemap={spritemap}
+                        title={`${value.title}`}
+                        displayType={value.type}
+                    >{`${value.text}`}</ClayAlert>
+                ))}
+            </ClayAlert.ToastContainer>
 
-        {open && (
-            <ClayModal
-                observer={observer}
-                size="lg"
-                spritemap={spritemap}
-                status="info"
-            >
-                <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
-                <ClayModal.Body>
-                    <h1>{"Seguro que desea borrar este elemento ?"}</h1>
-                </ClayModal.Body>
-                <ClayModal.Footer
-                    first={
-                        <ClayButton.Group spaced>
-                            <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{"Cancelar"}</ClayButton>
-                        </ClayButton.Group>
-                    }
-                    last={
-                        <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
-                            {"Borrar"}
-                        </ClayButton>
-                    }
-                />
-            </ClayModal>
-        )}
+            {open && (
+                <ClayModal
+                    observer={observer}
+                    size="lg"
+                    spritemap={spritemap}
+                    status="info"
+                >
+                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
+                    <ClayModal.Body>
+                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
+                    </ClayModal.Body>
+                    <ClayModal.Footer
+                        first={
+                            <ClayButton.Group spaced>
+                                <ClayButton displayType="secondary" onClick={() => onOpenChange(false)}>{"Cancelar"}</ClayButton>
+                            </ClayButton.Group>
+                        }
+                        last={
+                            <ClayButton onClick={() => { onOpenChange(false); confirmDelete() }}>
+                                {"Borrar"}
+                            </ClayButton>
+                        }
+                    />
+                </ClayModal>
+            )}
 
         </>
     )
 }
 
-export default Titulaciones;
+export default TitulacionesFam;
