@@ -26,7 +26,7 @@ const MBaja = () => {
         },
         {
             columnName: "descripcion",
-            columnTitle: "Descripción",
+            columnTitle: Liferay.Language.get('Descripcion'),
             columnType: "string",
             key: "c2",
         },
@@ -36,7 +36,7 @@ const MBaja = () => {
         title: "Motivos de baja",
         rows: [
             {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
+            {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre')},
         ]
     };
 
@@ -137,7 +137,7 @@ const MBaja = () => {
             "method": "REMOVE",
             "mode": "cors"
         });
-        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok')  }]);
         fetchData();
     }
 
@@ -199,14 +199,14 @@ const MBaja = () => {
                     spritemap={spritemap}
                     status="info"
                 >
-                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
+                    <ClayModal.Header>{ Liferay.Language.get('Confirmacion') }</ClayModal.Header>
                     <ClayModal.Body>
-                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
+                        <h2>{ Liferay.Language.get('Seguro_borrar') }</h2>
                     </ClayModal.Body>
                     <ClayModal.Footer
                         first={
                             <ClayButton.Group spaced>
-                                <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{"Cancelar"}</ClayButton>
+                                <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{Liferay.Language.get('Cancelar')}</ClayButton>
                             </ClayButton.Group>
                         }
                         last={

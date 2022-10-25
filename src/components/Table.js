@@ -1,7 +1,7 @@
 import React from 'react';
 import ClayTable from '@clayui/table';
 import {ClayCheckbox} from '@clayui/form';
-import {ClayLabel} from '@clayui/label';
+//import {ClayLabel} from '@clayui/label';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 const Table = ({columns,rows, itemsHandle}) => {

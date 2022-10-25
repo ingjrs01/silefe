@@ -72,21 +72,21 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
         <ClayToolbar.Item>
           <ClayToolbar.Section>
             <ClayButton displayType="danger" onClick={() => { handleDelete() }}>
-              {"Borrar"}
+              {Liferay.Language.get('Borrar')}
               <ClayIcon spritemap={spritemap} symbol="plus" />
             </ClayButton>
 
             {
               !showform &&
             <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM}) }}>
-              {"Editar"}
+              {Liferay.Language.get('Editar')}
             </ClayButton>
             }
 
             {
               showform &&
             <ClayButton className="inline-item-after" onClick={() => { handleSave() }}>
-              {"Guardar"}
+              {Liferay.Language.get('Guardar')}
             </ClayButton>
 
             }
@@ -94,7 +94,7 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
             {
               !showform &&
             <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEW_ITEM}) }}>
-              {"Nuevo"}
+              {Liferay.Language.get('Nuevo')}
             </ClayButton>
             }
 

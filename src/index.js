@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Application from './Application';
 
+
 /**
  * This is the main entry point of the portlet.
  *
@@ -17,12 +18,10 @@ export default function main({portletNamespace, contextPath, portletElementId, c
     const root = ReactDOM.createRoot(document.getElementById(portletElementId));
     root.render(
         <Router>
-            <Application />
+            <Application />        
         </Router>
     );
 
   //  reportWebVitals();
 }
 
-
-//

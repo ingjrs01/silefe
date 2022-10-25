@@ -30,7 +30,7 @@ const Experiencias = () => {
         },
         {
             columnName: "descripcion",
-            columnTitle: "Descripción",
+            columnTitle: Liferay.Language.get('Descripcion'),
             columnType: "string",
             key: "c2",
         },
@@ -40,7 +40,7 @@ const Experiencias = () => {
         title: "Experiencias",
         rows: [
             {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
+            {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre')},
         ]
     };
 
@@ -114,7 +114,7 @@ const Experiencias = () => {
 
         //setShowform(false);
         //itemsHandle({type:ITEMS_ACTIONS.HIDE});
-        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
         fetchData();
 
     }
@@ -207,19 +207,19 @@ const Experiencias = () => {
                     spritemap={spritemap}
                     status="info"
                 >
-                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
+                    <ClayModal.Header>{Liferay.Language.get('Confirmacion')}</ClayModal.Header>
                     <ClayModal.Body>
-                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
+                        <h1>{Liferay.Language.get('Seguro_borrar')}</h1>
                     </ClayModal.Body>
                     <ClayModal.Footer
                         first={
                             <ClayButton.Group spaced>
-                                <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{"Cancelar"}</ClayButton>
+                                <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{Liferay.Language.get('Cancelar')}</ClayButton>
                             </ClayButton.Group>
                         }
                         last={
                             <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
-                                {"Borrar"}
+                                { Liferay.Language.get('Borrar') }
                             </ClayButton>
                         }
                     />

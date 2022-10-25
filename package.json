@@ -56,8 +56,12 @@
 		"@clayui/upper-toolbar": "^3.71.0",
 		"atlas-css": "^0.1.0",
 		"axios": "^0.27.2",
+		"i18next": "^21.10.0",
+		"i18next-browser-languagedetector": "^6.1.8",
+		"i18next-http-backend": "^1.4.4",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-i18next": "^11.18.6",
 		"react-router-dom": "^6.3.0",
 		"react-xml-parser": "^1.1.8",
 		"xml2js": "^0.4.23"

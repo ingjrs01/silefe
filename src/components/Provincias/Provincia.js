@@ -37,10 +37,10 @@ const Provincias = () => {
     ];
 
     const form = {
-        title: "Provincias",
+        title: Liferay.Language.get('Provincias'),
         rows: [
-            {key:1,label: "ID",     name: "id",               value:"lalala", placeholder:"Identifier"},
-            {key:2,label: "Nombre", name: "nombre", value:"lelele", placeholder:"descripción"},
+            {key:1,label: "ID",     name: "id",     value:"lalala", placeholder:"Identifier"},
+            {key:2,label: Liferay.Language.get('Nombre'), name: "nombre", value:"lelele", placeholder:"descripción"},
         ]
     };
 
@@ -109,7 +109,7 @@ const Provincias = () => {
             "mode": "cors"
         });
 
-        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
         fetchData();
         itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
@@ -205,9 +205,9 @@ const Provincias = () => {
                     spritemap={spritemap}
                     status="info"
                 >
-                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
+                    <ClayModal.Header>{Liferay.Language.get('Confirmacion')}</ClayModal.Header>
                     <ClayModal.Body>
-                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
+                        <h1>{Liferay.Language.get('Seguro_borrar')}</h1>
                     </ClayModal.Body>
                     <ClayModal.Footer
                         first={
@@ -217,7 +217,7 @@ const Provincias = () => {
                         }
                         last={
                             <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
-                                {"Borrar"}
+                                {Liferay.Language.get('Borrar')}
                             </ClayButton>
                         }
                     />

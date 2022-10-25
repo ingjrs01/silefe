@@ -30,24 +30,24 @@ const Cnos = () => {
         },
         {
             columnName: "codigo",
-            columnTitle: "Código",
+            columnTitle: Liferay.Language.get('Codigo'),
             columnType: "string",
             key: "c2",
         },
         {
             columnName: "descripcion",
-            columnTitle: "Descripción",
+            columnTitle: Liferay.Language.get('Descripcion'),
             columnType: "string",
             key: "c3",
         },
     ];
 
     const form = {
-        title: "Cno's",
+        title: Liferay.Language.get('Cnos'),
         rows: [
-            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: "Código", name: "codigo",      value:"lalala", placeholder:"Código"},
-            {key:3,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre"},
+            {key:1,label: "ID",     name: "id",          value:"lalala",                       placeholder:"Identifier"},
+            {key:2,label: Liferay.Language.get('Codigo'), name: "codigo",      value:"lalala", placeholder:Liferay.Language.get('Codigo')},
+            {key:3,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre')},
         ]
     };
 
@@ -119,7 +119,7 @@ const Cnos = () => {
             "method": "REMOVE",
             "mode": "cors"
         });
-        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
         fetchData();
     }
 
@@ -152,6 +152,9 @@ const Cnos = () => {
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
+
+    if (!items) 
+    return (<div>{Liferay.Language.get('Cargando')}</div>)
 
     return (
         <>
@@ -205,9 +208,9 @@ const Cnos = () => {
                     spritemap={spritemap}
                     status="info"
                 >
-                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
+                    <ClayModal.Header>{Liferay.Language.get('Confirmacion')}</ClayModal.Header>
                     <ClayModal.Body>
-                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
+                        <h1>{Liferay.Language.get('Seguro_borrar')}</h1>
                     </ClayModal.Body>
                     <ClayModal.Footer
                         first={
@@ -217,7 +220,7 @@ const Cnos = () => {
                         }
                         last={
                             <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
-                                {"Borrar"}
+                                {Liferay.Language.get('Borrar')}
                             </ClayButton>
                         }
                     />
