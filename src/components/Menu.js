@@ -97,6 +97,12 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
               {Liferay.Language.get('Nuevo')}
             </ClayButton>
             }
+            {
+              !showform &&
+            <ClayButton className="inline-item-after" onClick={() => { console.log("Cargando datos") }}>
+              {Liferay.Language.get('Carga')}
+            </ClayButton>
+            }
 
           </ClayToolbar.Section>
         </ClayToolbar.Item>

@@ -82,6 +82,7 @@ export const red_items = (state=initialState, action ) => {
             return {
                 ...state,
                 item: tmp,
+                errors: [],
                 showform: true
             }
         case ITEMS_ACTIONS.HIDE:

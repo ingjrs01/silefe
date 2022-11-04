@@ -15,7 +15,6 @@ const Titulaciones = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false}); 
     const [toastItems,setToastItems]     = useState([]);
-    //const [errors,setErrors]             = useState({'id':{classname: 'has-success', messages: []},'descripcion':{classname: 'has-success', messages: []}});
     const {observer, onOpenChange, open} = useModal();
 
     const columns = [
@@ -44,6 +43,12 @@ const Titulaciones = () => {
     const auth = getAuthToken();
     const lang = getLanguageId();
     const referer = "http://localhost:8080/titulaciones";
+
+
+
+    const loadCsv = () => {
+        console.log("Cargando un csv");
+    }
 
     const confirmDelete = async () => {
         const endpoint = "/silefe.titulacion/remove-titulaciones";
@@ -172,6 +177,48 @@ const Titulaciones = () => {
                 itemsHandle={itemsHandle}
                 showform={items.showform}
             />
+            {/*esta es una zona */}
+            <ClayCard>
+      <ClayCard.Body>
+        <ClayCard.Description displayType="title">
+          <h2>Cargando ficheros</h2>
+        </ClayCard.Description>
+
+        <ClayCard.Description truncate={false} displayType="text">
+          <ClayForm>
+                <ClayForm.Group className={'has-error'}>
+                  <label htmlFor="basicInput">{pronbaod}</label>
+                  <ClayInput
+                    placeholder={otros}
+                    type="text"
+                    name={ficheros}
+                    onChange={e => {
+                      console.log("llamando");                      
+                    }}>
+                  </ClayInput>
+
+                </ClayForm.Group>
+              
+            
+            
+                <input type="file" name="files" multiple onChange={(e) => console.log(e.target.files)} />
+
+          </ClayForm>
+        </ClayCard.Description>
+        <div className="btn-group">
+          <div className="btn-group-item">
+          <ClayButton onClick={e => console.log("lalala")} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
+          </div>
+          <div className="btn-group-item">
+          <ClayButton onClick={e => console.log("cancelando")} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+          </div>
+        </div>
+      </ClayCard.Body>
+    </ClayCard>
+
+
+
+            {/* fin*/}
             { 
                 items.showform && 
                 <DefaultForm 

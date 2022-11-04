@@ -80,6 +80,7 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
               )
             })
             }
+            <input type="file" name="files" multiple onChange={(e) => console.log(e.target.files)} />
 
           </ClayForm>
         </ClayCard.Description>
