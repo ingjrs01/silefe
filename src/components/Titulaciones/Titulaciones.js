@@ -15,7 +15,7 @@ const Titulaciones = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false}); 
     const [toastItems,setToastItems]     = useState([]);
-    const [errors,setErrors]             = useState({'id':{classname: 'has-success', messages: []},'descripcion':{classname: 'has-success', messages: []}});
+    //const [errors,setErrors]             = useState({'id':{classname: 'has-success', messages: []},'descripcion':{classname: 'has-success', messages: []}});
     const {observer, onOpenChange, open} = useModal();
 
     const columns = [
@@ -34,11 +34,11 @@ const Titulaciones = () => {
     ];
 
     const form = {
-        title: "Titulaciones",
-        rows: [
-            {key:1,label: "ID",          name: "id",          value:"lalala", placeholder:"Identificador", conditions: ["number"]},
-            {key:2,label: Liferay.Language.get('Descripcion'), name: "descripcion", value:"", placeholder:"Descripción",   conditions: ["text"]},
-        ]
+        title: Liferay.Language.get('Titulaciones'),
+        rows: {
+            id: { key:1,label: "ID", name: "id", value:"lalala", placeholder:"Identificador", conditions: ["number"]},
+            descripcion: {key:2,label: Liferay.Language.get('Descripcion'), name: "descripcion", value:"", placeholder:"Descripción", conditions: ["text"]},
+        }        
     };
 
     const auth = getAuthToken();
@@ -176,11 +176,9 @@ const Titulaciones = () => {
                 items.showform && 
                 <DefaultForm 
                     form={form} 
-                    item={items.item} 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}
-                    errors={errors}
-                    setErrors={setErrors}
+                    items={items}
                 />
             }
             {

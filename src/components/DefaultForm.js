@@ -3,27 +3,30 @@ import ClayForm, {ClayInput} from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
-import { t } from "../includes/Lang";
 
 const spritemap = '/icons.svg';
 
-const DefaultForm = ({form, item, itemsHandle,save,errors,setErrors }) => {
+const DefaultForm = ({form, item, itemsHandle,save, items }) => {
 
     const validate = (name,value) => {
-
-      if (form.rows[1]["conditions"] == "number") {
-        if (isNaN(value)) {
-          setErrors({...errors,[name]:{classname: 'has-error', messages: [t('error-numero')]}});
-          return false;
+      let condicion = "";
+      for (condicion of form.rows[name]["conditions"]) {
+        if ( condicion == "number") {
+          if (isNaN(value)) {
+            itemsHandle({type:ITEMS_ACTIONS.ADDERROR,name:name,value:Liferay.Language.get('error-numero')});
+            return false;
+          }
+        }
+  
+        if ( condicion == "text") {
+          if (!isNaN(value)) {
+            itemsHandle({type:ITEMS_ACTIONS.ADDERROR,name:name,value:Liferay.Language.get('error-texto')});
+            return false;
+          }
         }
       }
-      if (form.rows[1]["conditions"] == "text") {
-        if (!isNaN(value)) {
-          setErrors({...errors,[name]:{classname: 'has-error', messages: [Liferay.Language.get('error-texto')]}});
-          return false;
-        }
-      }
-      setErrors({...errors,[name]:{classname: 'has-success', messages: []}});
+      
+      itemsHandle({type:ITEMS_ACTIONS.CLEARERRORS,name:name});
       return true;
     }
 
@@ -36,38 +39,37 @@ const DefaultForm = ({form, item, itemsHandle,save,errors,setErrors }) => {
 
           <ClayCard.Description truncate={false} displayType="text">
             <ClayForm>
-
-              { form.rows.map( row => {
-                return (
-                  <ClayForm.Group className={`${errors[row.name]['classname']}`} key={row.key} >
-                    <label htmlFor="basicInput">{row.label}</label>
+              { Object.keys(form.rows).map( it => {
+                  return (
+                    <ClayForm.Group className={`${items.errors[form.rows[it].name].length>0?'has-error':'has-success'}`} key={form.rows[it].key} >
+                    <label htmlFor="basicInput">{form.rows[it].label}</label>
                     <ClayInput 
-                      placeholder={row.placeholder} 
+                      placeholder={form.rows[it].placeholder} 
                       type="text" 
-                      name={row.name} 
-                      value={item[row.name]} 
+                      name={form.rows[it].name} 
+                      value={items.item[form.rows[it].name]} 
                       onChange={e => {
                         validate(e.target.name,e.target.value);
                         itemsHandle({type:ITEMS_ACTIONS.SET,fieldname:e.target.name, value:e.target.value}); 
                         }}>
                     </ClayInput>
                     {
-                      errors[row.name]['messages'].length > 0 &&
+                      items.errors[form.rows[it].name].length > 0 &&
                     <ClayForm.FeedbackGroup>
                       <ClayForm.FeedbackItem>
                         <ClayForm.FeedbackIndicator
                           spritemap={spritemap}
                           symbol="check-circle-full"
-                        />
-                        {  errors[row.name]['messages'][0] }
+                        />                        
+                        { items.errors[form.rows[it].name][0] }
                       </ClayForm.FeedbackItem>
                     </ClayForm.FeedbackGroup>
                     }
 
                   </ClayForm.Group> 
-                      
-                )
-              })}
+                  )
+                })  
+              }
 
             </ClayForm>
           </ClayCard.Description>

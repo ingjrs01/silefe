@@ -44,11 +44,12 @@ const Cnos = () => {
 
     const form = {
         title: Liferay.Language.get('Cnos'),
-        rows: [
-            {key:1,label: "ID",     name: "id",          value:"lalala",                       placeholder:"Identifier"},
-            {key:2,label: Liferay.Language.get('Codigo'), name: "codigo",      value:"lalala", placeholder:Liferay.Language.get('Codigo')},
-            {key:3,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre')},
-        ]
+        rows: {
+            id: {key:1,label: "ID",     name: "id",          value:"lalala",                       placeholder:"Identifier",conditions:["number"]},
+            codigo: {key:2,label: Liferay.Language.get('Codigo'), name: "codigo",      value:"lalala", placeholder:Liferay.Language.get('Codigo')},
+            descripcion: {key:3,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre'),conditions:["text"]},
+        }
+        
     };
 
     useEffect(()=>{
@@ -173,6 +174,7 @@ const Cnos = () => {
                     item={items.item} 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}
+                    items={items}
                 />
             }
             

@@ -35,10 +35,10 @@ const Cnaes = () => {
 
     const form = {
         title: Liferay.Language.get('Cnaes'),
-        rows: [
-            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: Liferay.Language.get('Descricion'), name: "descripcion", value:"lelele", placeholder:"nombre"},
-        ]
+        rows: {
+            id: {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier", conditions:["number"]},
+            descripcion: {key:2,label: Liferay.Language.get('Descricion'), name: "descripcion", value:"lelele", placeholder:"nombre", conditions:["text"]},
+        }       
     };
 
     // Inicio las varibles para la api:    
@@ -169,9 +169,9 @@ const Cnaes = () => {
             { items.showform && 
                 <DefaultForm 
                     form={form} 
-                    item={items.item} 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}
+                    items={items}
             />
         }
 

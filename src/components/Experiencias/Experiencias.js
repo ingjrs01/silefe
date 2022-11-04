@@ -38,10 +38,11 @@ const Experiencias = () => {
 
     const form = {
         title: "Experiencias",
-        rows: [
-            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre')},
-        ]
+        rows: {
+            id: {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier",conditions:["number"]},
+            descripcion: {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre'),conditions:["text"]},
+        }
+        
     };
 
 
@@ -168,9 +169,9 @@ const Experiencias = () => {
             {   items.showform && 
                 <DefaultForm 
                     form={form} 
-                    item={items.item} 
                     itemsHandle={itemsHandle}
                     save={ handleSave} 
+                    items={items}
             />
         }
             

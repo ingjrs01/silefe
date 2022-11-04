@@ -34,10 +34,10 @@ const MBaja = () => {
     ]
     const form = {
         title: "Motivos de baja",
-        rows: [
-            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre')},
-        ]
+        rows: {
+            id: {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier", conditions: ["number"]},
+            descripcion: {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre'), conditions: ["text"]}
+        }        
     };
 
     // Inicio las varibles para la api:    
@@ -145,7 +145,6 @@ const MBaja = () => {
         console.log("handleSearch");
     }
 
-
     return (
         <>
             <Menu 
@@ -161,9 +160,9 @@ const MBaja = () => {
                 items.showform && 
                 <DefaultForm 
                     form={form} 
-                    item={items.item} 
                     itemsHandle={itemsHandle}
                     save={ handleSave} 
+                    items= {items}
                 />
             }
             {

@@ -13,7 +13,8 @@ const spritemap = '../icons.svg';
 
 const Salarios = () => {
     const [pagination,paginate]     = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [items,itemsH]               = useState([]);
+    //const [items,itemsH]               = useState([]);
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
     const [item,setItem]                 = useState({id:0,descripcion:""});
     const [showform,setShowform]         = useState(false);
     const [toastItems,setToastItems]     = useState([]);    
@@ -36,10 +37,10 @@ const Salarios = () => {
     ]
     const form = {
         title: Liferay.Language.get('Rangos_salariales'),
-        rows: [
-            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre')},
-        ]
+        rows: {
+            id: {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier",conditions: ["number"]},
+            descripcion: {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre'),conditions:["text"]}
+        }
     };
 
     // Inicio las varibles para la api:    
@@ -199,9 +200,9 @@ const Salarios = () => {
             {   items.showform && 
                 <DefaultForm 
                     form={form} 
-                    setItem={setItem} 
-                    item={item} 
+                    itemsHandle={itemsHandle}
                     save={ handleSave} 
+                    items={items}
                 /> 
             }
 

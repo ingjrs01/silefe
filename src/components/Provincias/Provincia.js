@@ -38,10 +38,10 @@ const Provincias = () => {
 
     const form = {
         title: Liferay.Language.get('Provincias'),
-        rows: [
-            {key:1,label: "ID",     name: "id",     value:"lalala", placeholder:"Identifier"},
-            {key:2,label: Liferay.Language.get('Nombre'), name: "nombre", value:"lelele", placeholder:"descripción"},
-        ]
+        rows: {
+            id: {key:1,label: "ID",     name: "id",     value:"lalala", placeholder:"Identifier",conditions:["number"]},
+            nombre:{key:2,label: Liferay.Language.get('Nombre'), name: "nombre", value:"lelele", placeholder:"descripción",conditions:["text"]},
+        }
     };
 
     const handleSave = async () => {
@@ -166,9 +166,9 @@ const Provincias = () => {
             {   items.showform && 
                 <DefaultForm 
                     form={form} 
-                    item={items.item} 
                     itemsHandle={itemsHandle}
                     save={ handleSave} 
+                    items={items}
             />
         }
 
