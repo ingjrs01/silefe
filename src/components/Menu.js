@@ -14,7 +14,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 const spritemap = '/images/icons/icons.svg';
 //const spritemap = '../icons.svg';
 
-const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, showform}) => {
+const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, showform,loadCsv}) => {
 
   return (
     <ClayToolbar>
@@ -99,7 +99,7 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
             }
             {
               !showform &&
-            <ClayButton className="inline-item-after" onClick={() => { console.log("Cargando datos") }}>
+            <ClayButton className="inline-item-after" onClick={() => { loadCsv();console.log("Cargando datos"); }}>
               {Liferay.Language.get('Carga')}
             </ClayButton>
             }

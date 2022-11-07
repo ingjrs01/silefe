@@ -14,7 +14,6 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
       if (!validate(campo,items.item[campo]))
         return false
     }
-
     return true
   }
 
@@ -80,7 +79,6 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
               )
             })
             }
-            <input type="file" name="files" multiple onChange={(e) => console.log(e.target.files)} />
 
           </ClayForm>
         </ClayCard.Description>
