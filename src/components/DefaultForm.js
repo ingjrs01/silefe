@@ -1,12 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import ClayForm, { ClayInput } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
+import ClayLocalizedInput from '@clayui/localized-input';
 
 const spritemap = '/icons.svg';
 
 const DefaultForm = ({ form, itemsHandle, save, items }) => {
+
+  const  locales = [
+    {
+      label: "es-ES",
+      symbol: "es-es"
+    },
+    {
+      label: "en-US",
+      symbol: "en-us"
+    },
+    {
+      label: "gl-GL",
+      symbol: "gl-gl"
+    }
+  ]
+  const [selectedLocale, setSelectedLocale] = useState(locales[0]);
+  const [translations, setTranslations] = useState({
+    "es-ES": "Manzana",
+    "en-US": "Apple",
+    "gl-GL": "Mazá"
+  })
+
+
 
   const validateAll = () => {
     let campo = "";
@@ -79,6 +103,20 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
               )
             })
             }
+            {/* aqui lo neuvo */}
+            <ClayForm.Group className='has-success'>
+              {/*<label htmlFor="locale1">entrada</label>*/}
+              <ClayLocalizedInput
+                id="locale1"
+                label="Nombre localizado"
+                locales={locales}
+                onSelectedLocaleChange={setSelectedLocale}
+                onTranslationsChange={setTranslations}
+                selectedLocale={selectedLocale}
+                translations={translations}
+              />
+            </ClayForm.Group>
+            {/* hasta aquí */}
 
           </ClayForm>
         </ClayCard.Description>

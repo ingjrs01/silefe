@@ -34,6 +34,7 @@
 		"@clayui/link": "^3.56.0",
 		"@clayui/list": "^3.72.0",
 		"@clayui/loading-indicator": "^3.60.0",
+		"@clayui/localized-input": "^3.78.3",
 		"@clayui/management-toolbar": "^3.65.1",
 		"@clayui/modal": "^3.71.0",
 		"@clayui/multi-select": "^3.72.0",
