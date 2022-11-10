@@ -12,41 +12,47 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
   const  locales = [
     {
       label: "es-ES",
-      symbol: "es-es"
+      symbol: "es-ES"
     },
     {
       label: "en-US",
-      symbol: "en-us"
+      symbol: "en-US"
     },
     {
-      label: "gl-GL",
-      symbol: "gl-gl"
+      label: "gl-ES",
+      symbol: "gl-ES"
     }
   ]
+
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
-  const [translations, setTranslations] = useState({
-    "es-ES": "Manzana",
-    "en-US": "Apple",
-    "gl-GL": "Mazá"
-  })
-
-
 
   const validateAll = () => {
+    console.log("VALIDANDO TODOS");
     let campo = "";
     for (campo of Object.keys(form.rows)) {
-      if (!validate(campo,items.item[campo]))
-        return false
+      console.log(typeof items.item[campo]);
+      if (typeof items.item[campo] == 'object') {
+        console.log("validateLocalized");
+        if (!validateLocalized(campo,items.item[campo]))
+          return false;
+      }
+      else {
+        console.log("validateLocalized");
+        if (!validate(campo,items.item[campo]))
+          return false;
+      }
     }
-    return true
+    return true;
   }
 
   const validate = (name, value) => {
+    console.log("validate: " + name + " -> " + value);
     let condicion = "";
     for (condicion of form.rows[name]["conditions"]) {
       if (condicion == "number") {
         if (isNaN(value)) {
           itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
+          console.log("error número: " + value);
           return false;
         }
       }
@@ -54,6 +60,7 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
       if (condicion == "text") {
         if (!isNaN(value)) {
           itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-texto') });
+          console.log("error texto: " + value);
           return false;
         }
       }
@@ -62,6 +69,22 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
     itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
     return true;
   }
+
+  const validateLocalized = (fieldname,values) => {
+    console.log("Validando localizado");
+    console.log(values);
+    const languages = Object.keys(values);
+
+    let l = "";
+    for (l in languages) {
+      console.log(l);
+      if (!validate(fieldname,values[languages[l]]))
+        return false
+    }
+
+    return true;
+  }
+
 
   return (
     <ClayCard>
@@ -72,20 +95,39 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
 
         <ClayCard.Description truncate={false} displayType="text">
           <ClayForm>
-            {Object.keys(form.rows).map(it => {
+            { Object.keys(form.rows).map(it => {
               return (
                 <ClayForm.Group className={`${items.errors[form.rows[it].name].length > 0 ? 'has-error' : 'has-success'}`} key={form.rows[it].key} >
-                  <label htmlFor="basicInput">{form.rows[it].label}</label>
-                  <ClayInput
-                    placeholder={form.rows[it].placeholder}
-                    type="text"
-                    name={form.rows[it].name}
-                    value={items.item[form.rows[it].name]}
-                    onChange={e => {
-                      validate(e.target.name, e.target.value);
-                      itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
-                    }}>
-                  </ClayInput>
+                  { typeof (items.item[form.rows[it].name]) != 'object' ? 
+                    <>
+                    <label htmlFor="basicInput">{form.rows[it].label}</label>
+                    <ClayInput
+                      placeholder={form.rows[it].placeholder}
+                      type="text"
+                      name={form.rows[it].name}
+                      value={items.item[form.rows[it].name]}
+                      onChange={e => {
+                        validate(e.target.name, e.target.value);
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
+                      }}>
+                    </ClayInput>
+                    </>
+                  : 
+                    <ClayLocalizedInput
+                      id="locale1"
+                      label={form.rows[it].label}
+                      locales={locales}
+                      onSelectedLocaleChange={ setSelectedLocale }
+                      onTranslationsChange={ evt => { 
+                          console.debug(evt);
+                          validateLocalized(it, evt);
+                          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: evt });
+                        }
+                      }
+                      selectedLocale={ selectedLocale }
+                      translations={items.item[form.rows[it].name]}
+                    />
+                  }
                   {
                     items.errors[form.rows[it].name].length > 0 &&
                     <ClayForm.FeedbackGroup>
@@ -103,20 +145,6 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
               )
             })
             }
-            {/* aqui lo neuvo */}
-            <ClayForm.Group className='has-success'>
-              {/*<label htmlFor="locale1">entrada</label>*/}
-              <ClayLocalizedInput
-                id="locale1"
-                label="Nombre localizado"
-                locales={locales}
-                onSelectedLocaleChange={setSelectedLocale}
-                onTranslationsChange={setTranslations}
-                selectedLocale={selectedLocale}
-                translations={translations}
-              />
-            </ClayForm.Group>
-            {/* hasta aquí */}
 
           </ClayForm>
         </ClayCard.Description>

@@ -148,7 +148,7 @@ const Titulaciones = () => {
         });
 
         let { data, totalPages } = await JSON.parse(await response.json());
-        const tmp = await data.map(i => { return ({ ...i, id: i.titulacionId, checked: false }) });
+        const tmp = await data.map(i => {return ({ ...i, id: i.titulacionId,checked: false })});
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp });
         await paginate({ type: PAGINATION_ACTIONS.TOTAL_PAGES, pages: totalPages });
         await itemsHandle({ type: ITEMS_ACTIONS.HIDE });

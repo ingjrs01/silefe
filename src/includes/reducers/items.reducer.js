@@ -57,6 +57,9 @@ export const red_items = (state=initialState, action ) => {
                 item: action.item
             }
         case ITEMS_ACTIONS.SET:
+            console.log("estableciendo datos");
+            console.log(action.fieldname);
+            console.log(action.value);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
