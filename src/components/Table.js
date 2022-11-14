@@ -3,8 +3,11 @@ import ClayTable from '@clayui/table';
 import {ClayCheckbox} from '@clayui/form';
 //import {ClayLabel} from '@clayui/label';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
+import { getLanguageId} from '../includes/LiferayFunctions';
 
 const Table = ({columns,rows, itemsHandle}) => {
+
+  let lang = getLanguageId().replace("_","-");
 
   return (
     <ClayTable>
@@ -28,7 +31,7 @@ const Table = ({columns,rows, itemsHandle}) => {
                 {
                   columns.map( (column) => { 
                     if (column.columnType == "string")
-                      return (<ClayTable.Cell key={column.key+row.titulacionId}>{ row[column.columnName]["es-ES"] }</ClayTable.Cell> )
+                      return (<ClayTable.Cell key={column.key+row.titulacionId}>{ row[column.columnName][lang] }</ClayTable.Cell> )
                     if (column.columnType == "checkbox")
                       return (
                         <ClayTable.Cell key={column.key+row.titulacionId}><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[column.columnName]}  />

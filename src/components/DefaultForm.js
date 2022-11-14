@@ -27,17 +27,13 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
   const validateAll = () => {
-    console.log("VALIDANDO TODOS");
     let campo = "";
     for (campo of Object.keys(form.rows)) {
-      console.log(typeof items.item[campo]);
       if (typeof items.item[campo] == 'object') {
-        console.log("validateLocalized");
         if (!validateLocalized(campo,items.item[campo]))
           return false;
       }
       else {
-        console.log("validateLocalized");
         if (!validate(campo,items.item[campo]))
           return false;
       }
@@ -46,13 +42,11 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
   }
 
   const validate = (name, value) => {
-    console.log("validate: " + name + " -> " + value);
     let condicion = "";
     for (condicion of form.rows[name]["conditions"]) {
       if (condicion == "number") {
         if (isNaN(value)) {
           itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
-          console.log("error número: " + value);
           return false;
         }
       }
@@ -60,7 +54,6 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
       if (condicion == "text") {
         if (!isNaN(value)) {
           itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-texto') });
-          console.log("error texto: " + value);
           return false;
         }
       }
@@ -71,13 +64,9 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
   }
 
   const validateLocalized = (fieldname,values) => {
-    console.log("Validando localizado");
-    console.log(values);
     const languages = Object.keys(values);
-
     let l = "";
     for (l in languages) {
-      console.log(l);
       if (!validate(fieldname,values[languages[l]]))
         return false
     }
