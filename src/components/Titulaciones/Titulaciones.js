@@ -39,9 +39,26 @@ const Titulaciones = () => {
 
     const form = {
         title: Liferay.Language.get('Titulaciones'),
+        languages: ["es-ES","en-EN","gl-ES"],
         rows: {
-            id: { key: 1, label: "ID", name: "id", value: "lalala", placeholder: "Identificador", conditions: ["number"] },
-            descripcion: { key: 2, label: Liferay.Language.get('Descripcion'), name: "descripcion", value: "", placeholder: "Descripción", conditions: ["text"] },
+            id: { 
+                key: 1, 
+                type: "text",
+                label: "ID", 
+                name: "id", 
+                value: "lalala", 
+                placeholder: "Identificador", 
+                conditions: ["number"] 
+            },
+            descripcion: { 
+                key: 2, 
+                type: "multilang",
+                label: Liferay.Language.get('Descripcion'), 
+                name: "descripcion", 
+                value: "", 
+                placeholder: Liferay.Language.get('Descripcion'), 
+                conditions: ["text"] 
+            },
         }
     };
 
@@ -149,7 +166,7 @@ const Titulaciones = () => {
 
         let { data, totalPages } = await JSON.parse(await response.json());
         const tmp = await data.map(i => {return ({ ...i, id: i.titulacionId,checked: false })});
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form });
         await paginate({ type: PAGINATION_ACTIONS.TOTAL_PAGES, pages: totalPages });
         await itemsHandle({ type: ITEMS_ACTIONS.HIDE });
     }

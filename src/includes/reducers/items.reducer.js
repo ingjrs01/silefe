@@ -25,9 +25,32 @@ const initialState = {
 export const red_items = (state=initialState, action ) => {
     switch (action.type) {
         case ITEMS_ACTIONS.START: 
+            console.log("Cargando los datos");
+            console.log(action.fields);
+            //console.log(Object.keys(action.fields));
+            console.log("Fin del cargado");
+            let errores = {};
+            let tmp_item = {};
+            Object.keys(action.fields.rows).forEach(j => {
+                errores[j]=[];
+
+                console.log(action.fields.rows[j]);
+                if (action.fields.rows[j].type === "multilang") {
+                    tmp_item[j] = Object.fromEntries(action.fields.languages.map(l => {return {[l]:""}}));
+                }
+                else 
+                    tmp_item[j] = [];
+            });
+            console.log("Ya cargado del todo");
+            console.log(tmp_item);
+            //console.log(errores);
+            //console.log("fin");
+
             return {
                 ...state,
                 arr: action.items,
+                item: tmp_item,
+                errors: errores,
                 checkall:false
             }
 
@@ -57,9 +80,6 @@ export const red_items = (state=initialState, action ) => {
                 item: action.item
             }
         case ITEMS_ACTIONS.SET:
-            console.log("estableciendo datos");
-            console.log(action.fieldname);
-            console.log(action.value);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
@@ -82,10 +102,10 @@ export const red_items = (state=initialState, action ) => {
             
         case ITEMS_ACTIONS.NEW_ITEM:
             let tmp = {id:0};
+
             return {
                 ...state,
                 item: tmp,
-                errors: [],
                 showform: true
             }
         case ITEMS_ACTIONS.HIDE:

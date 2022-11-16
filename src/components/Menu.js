@@ -99,7 +99,7 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
             }
             {
               !showform &&
-            <ClayButton className="inline-item-after" onClick={() => { loadCsv();console.log("Cargando datos"); }}>
+            <ClayButton className="inline-item-after" onClick={() => { loadCsv(); }}>
               {Liferay.Language.get('Carga')}
             </ClayButton>
             }

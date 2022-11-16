@@ -74,6 +74,9 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
     return true;
   }
 
+  console.debug(items);
+  //console.debug(items.errors);
+  console.log("Ya está mostrado");
 
   return (
     <ClayCard>
@@ -87,7 +90,8 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
             { Object.keys(form.rows).map(it => {
               return (
                 <ClayForm.Group className={`${items.errors[form.rows[it].name].length > 0 ? 'has-error' : 'has-success'}`} key={form.rows[it].key} >
-                  { typeof (items.item[form.rows[it].name]) != 'object' ? 
+                  { /*typeof (items.item[form.rows[it].name]) != 'object' ? */}
+                   { (form.rows[it].type === 'text') &&
                     <>
                     <label htmlFor="basicInput">{form.rows[it].label}</label>
                     <ClayInput
@@ -100,8 +104,8 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
                         itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
                       }}>
                     </ClayInput>
-                    </>
-                  : 
+                    </>}
+                   { form.rows[it].type == 'multilang' &&
                     <ClayLocalizedInput
                       id="locale1"
                       label={form.rows[it].label}
