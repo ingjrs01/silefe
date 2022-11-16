@@ -20,35 +20,30 @@ const initialState = {
     errors: [],
     checkall: false,
     showform: false,
+    fields: {},
 }
 
 export const red_items = (state=initialState, action ) => {
     switch (action.type) {
         case ITEMS_ACTIONS.START: 
-            console.log("Cargando los datos");
-            console.log(action.fields);
-            //console.log(Object.keys(action.fields));
-            console.log("Fin del cargado");
             let errores = {};
             let tmp_item = {};
             Object.keys(action.fields.rows).forEach(j => {
                 errores[j]=[];
 
-                console.log(action.fields.rows[j]);
                 if (action.fields.rows[j].type === "multilang") {
-                    tmp_item[j] = Object.fromEntries(action.fields.languages.map(l => {return {[l]:""}}));
+                    let tt = {}
+                    action.fields.languages.forEach(el => {tt[el]=""});
+                    tmp_item[j] = tt;
                 }
                 else 
                     tmp_item[j] = [];
             });
-            console.log("Ya cargado del todo");
-            console.log(tmp_item);
-            //console.log(errores);
-            //console.log("fin");
 
             return {
                 ...state,
                 arr: action.items,
+                fields: action.fields,
                 item: tmp_item,
                 errors: errores,
                 checkall:false
@@ -102,10 +97,11 @@ export const red_items = (state=initialState, action ) => {
             
         case ITEMS_ACTIONS.NEW_ITEM:
             let tmp = {id:0};
+            // TODO: Asegurarme de que todos los campos quedan vacíos. y errores
 
             return {
                 ...state,
-                item: tmp,
+                //item: tmp,
                 showform: true
             }
         case ITEMS_ACTIONS.HIDE:

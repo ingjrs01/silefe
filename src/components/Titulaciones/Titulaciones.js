@@ -39,7 +39,7 @@ const Titulaciones = () => {
 
     const form = {
         title: Liferay.Language.get('Titulaciones'),
-        languages: ["es-ES","en-EN","gl-ES"],
+        languages: ["es-ES","en-US","gl-ES"],
         rows: {
             id: { 
                 key: 1, 
