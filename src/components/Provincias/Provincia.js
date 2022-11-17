@@ -16,6 +16,8 @@ const Provincias = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
+    const [showfiles,setShowfiles]         = useState(false);
+    const [file,setFile]                   = useState();
 
     const auth = getAuthToken();
     const lang = getLanguageId();
@@ -38,11 +40,33 @@ const Provincias = () => {
 
     const form = {
         title: Liferay.Language.get('Provincias'),
+        languages: ["es-ES","en-US","gl-ES"],
         rows: {
-            id: {key:1,label: "ID",     name: "id",     value:"lalala", placeholder:"Identifier",conditions:["number"]},
-            nombre:{key:2,label: Liferay.Language.get('Nombre'), name: "nombre", value:"lelele", placeholder:"descripción",conditions:["text"]},
+            id: {
+                key:1,
+                type: "text",
+                label: "ID",     
+                name: "id",     
+                value:"lalala", 
+                placeholder:"Identifier",
+                conditions:["number"]
+            },
+            nombre:{
+                key:2,
+                type: "multilang",
+                label: Liferay.Language.get('Nombre'), 
+                name: "nombre", 
+                value:"lelele", 
+                placeholder: Liferay.Language.get('Nombre'), 
+                conditions:["text"]
+            },
         }
     };
+
+    const loadCsv = () => {
+        console.log("Cargando un csv");
+        setShowfiles(true);
+    }
 
     const handleSave = async () => {
         const postdata = {
@@ -142,7 +166,7 @@ const Provincias = () => {
         
         let {data,totalPages} = await JSON.parse (await response.json());
         const tmp = await data.map(i => {return({...i,id:i.provinciaId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
@@ -155,25 +179,65 @@ const Provincias = () => {
 
     return (
         <>
-            <Menu 
-                paginate={paginate} 
-                handleSave={handleSave} 
-                handleDelete={handleDelete} 
+            <Menu
+                paginate={paginate}
+                handleSave={handleSave}
+                handleDelete={handleDelete}
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 showform={items.showform}
-            />            
-            {   items.showform && 
-                <DefaultForm 
-                    form={form} 
-                    itemsHandle={itemsHandle}
-                    save={ handleSave} 
-                    items={items}
+                loadCsv={loadCsv}
             />
-        }
+
+{ showfiles && 
+            <ClayCard>
+                <ClayCard.Body>
+                    <ClayCard.Description displayType="title">
+                        <h2>Cargando ficheros</h2>
+                    </ClayCard.Description>
+
+                    <ClayCard.Description truncate={false} displayType="text">
+                        <ClayForm>
+                            <ClayForm.Group className={'has-success'}>
+                                <label htmlFor="basicInput">{Liferay.Language.get('Selecciona')}</label>
+                                <ClayInput
+                                    type="text"
+                                    name="ficheros"
+                                    onChange={e => {
+                                        console.log("llamando");
+                                    }}>
+                                </ClayInput>
+
+                            </ClayForm.Group>
+
+                            <input type="file" name="files" multiple onChange={(e) => setFile(e.target.files[0])} />
+
+                        </ClayForm>
+                    </ClayCard.Description>
+                    <div className="btn-group">
+                        <div className="btn-group-item">
+                            <ClayButton onClick={e => processCsv()} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
+                        </div>
+                        <div className="btn-group-item">
+                            <ClayButton onClick={e => setShowfiles(false)} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                        </div>
+                    </div>
+                </ClayCard.Body>
+            </ClayCard>}
+
+
+            {   
+                items.showform && !showfiles &&
+                <DefaultForm
+                    form={form}
+                    save={handleSave}
+                    itemsHandle={itemsHandle}
+                    items={items}
+                />
+            }
 
             {
-                !items.showform &&
+                !items.showform && !showfiles &&
                 <Table 
                     columns={columns}
                     rows={items} 

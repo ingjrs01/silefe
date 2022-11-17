@@ -66,8 +66,6 @@ const Titulaciones = () => {
     const lang = getLanguageId();
     const referer = "http://localhost:8080/titulaciones";
 
-
-
     const loadCsv = () => {
         console.log("Cargando un csv");
         setShowfiles(true);
@@ -230,7 +228,7 @@ const Titulaciones = () => {
                 showform={items.showform}
                 loadCsv={loadCsv}
             />
-            {/*esta es una zona */}
+
             { showfiles && 
             <ClayCard>
                 <ClayCard.Body>
@@ -266,8 +264,7 @@ const Titulaciones = () => {
                     </div>
                 </ClayCard.Body>
             </ClayCard>}
-
-            {/* fin*/}
+            
             {
                 items.showform && !showfiles &&
                 <DefaultForm

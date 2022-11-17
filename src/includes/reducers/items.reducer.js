@@ -96,12 +96,24 @@ export const red_items = (state=initialState, action ) => {
             return state;        
             
         case ITEMS_ACTIONS.NEW_ITEM:
-            let tmp = {id:0};
-            // TODO: Asegurarme de que todos los campos quedan vacíos. y errores
+            errores = {};
+            tmp_item = {};
+            Object.keys(state.fields.rows).forEach(j => {
+                errores[j]=[];
 
+                if (state.fields.rows[j].type === "multilang") {
+                    let tt = {}
+                    state.fields.languages.forEach(el => {tt[el]=""});
+                    tmp_item[j] = tt;
+                }
+                else 
+                    tmp_item[j] = null;
+            });
+            tmp_item['id'] = 0;
             return {
                 ...state,
-                //item: tmp,
+                item: tmp_item,
+                errors: errores,
                 showform: true
             }
         case ITEMS_ACTIONS.HIDE:
