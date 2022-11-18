@@ -12,6 +12,8 @@ export const ITEMS_ACTIONS = {
     CANCEL: 10,
     ADDERROR: 11,
     CLEARERRORS:12,
+    LOAD: 13,
+    CANCEL_LOAD:14,
   }
 
 const initialState = {
@@ -19,8 +21,8 @@ const initialState = {
     item: {id:0,checked:false},
     errors: [],
     checkall: false,
-    showform: false,
     fields: {},
+    status: "list", /* values: new, edit, list, load  */
 }
 
 export const red_items = (state=initialState, action ) => {
@@ -46,7 +48,8 @@ export const red_items = (state=initialState, action ) => {
                 fields: action.fields,
                 item: tmp_item,
                 errors: errores,
-                checkall:false
+                checkall:false,
+                status: "list",
             }
 
         case ITEMS_ACTIONS.CHECK:
@@ -90,7 +93,7 @@ export const red_items = (state=initialState, action ) => {
                     ...state,
                     item: sel[0],
                     errors: errores,
-                    showform: true
+                    status: 'edit',
                 }
             }
             return state;        
@@ -114,18 +117,13 @@ export const red_items = (state=initialState, action ) => {
                 ...state,
                 item: tmp_item,
                 errors: errores,
-                showform: true
-            }
-        case ITEMS_ACTIONS.HIDE:
-            return {
-                ...state,
-                showform:false
+                status: 'new',
             }
         case ITEMS_ACTIONS.CANCEL:
             return {
                 ...state,
                 arr: state.arr.map(i => {return {...i,checked:false}}),
-                showform:false,
+                status: 'list',
             }
         case ITEMS_ACTIONS.ADDERROR:
             return {
@@ -137,7 +135,17 @@ export const red_items = (state=initialState, action ) => {
                 ...state,
                 errors: {...state.errors,[action.name]:[]}
             }
+        case ITEMS_ACTIONS.LOAD:
+            return {
+                ...state,
+                status: 'load',
+            }
+        case ITEMS_ACTIONS.CANCEL_LOAD:
+            return {
+                ...state,
+                status: 'list'
+            }
         default: 
-            throw new Error ("Acción inválida");
+            throw new Error ("Accion invalida");
     }
 }

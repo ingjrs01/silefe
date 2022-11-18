@@ -44,19 +44,50 @@ const Cnos = () => {
 
     const form = {
         title: Liferay.Language.get('Cnos'),
+        languages: ["es-ES","en-US","gl-ES"],
         rows: {
-            id: {key:1,label: "ID",     name: "id",          value:"lalala",                       placeholder:"Identifier",conditions:["number"]},
-            codigo: {key:2,label: Liferay.Language.get('Codigo'), name: "codigo",      value:"lalala", placeholder:Liferay.Language.get('Codigo')},
-            descripcion: {key:3,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre'),conditions:["text"]},
-        }
-        
+            id: {
+                key:1,
+                type: "text",
+                label: "ID",     
+                name: "id",          
+                value:"lalala",                       
+                placeholder:"Identifier",
+                conditions:["number"]
+            },
+            codigo: {
+                key:2,
+                type: "text",
+                label: Liferay.Language.get('Codigo'), 
+                name: "codigo",      
+                value:"lalala", 
+                placeholder:Liferay.Language.get('Codigo'),
+                conditions:["number"],
+            },
+            descripcion: {
+                key:3,
+                type: "multilang",
+                label: Liferay.Language.get('Nombre'), 
+                name: "descripcion", 
+                value:"lelele", 
+                placeholder:Liferay.Language.get('Nombre'),
+                conditions:["text"]
+            },
+        }        
     };
+
 
     useEffect(()=>{
         fetchData();
     },[pagination.page]);
 
+    const loadCsv = () => {
+        console.log("Cargando un csv");
+        itemsHandle({type:ITEMS_ACTIONS.LOAD})
+    }
+
     const handleSave = async () => {
+        console.log("llego aquí");
         const data = {
             cnoId:       items.item.id,
             codigo:      items.item.codigo,
@@ -67,7 +98,8 @@ const Cnos = () => {
         }
 
         let endpoint = '/silefe.cno/save-cno';
-        if (items.item.id == 0)
+
+        if (items.status === 'new')
             endpoint = '/silefe.cno/add-cno';
 
         const res = await fetch(url_api, {
@@ -89,8 +121,9 @@ const Cnos = () => {
         "mode": "cors"
         });
 
-        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
         await fetchData();
+        await setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);
+
     }
 
     const handleDelete = () => {
@@ -150,7 +183,7 @@ const Cnos = () => {
 
         let {data,totalPages} = await JSON.parse (await response.json());
         const tmp = await data.map(i => {return({...i,id:i.cnoId,checked:false})});
-        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
@@ -165,21 +198,59 @@ const Cnos = () => {
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
-                showform={items.showform}
+                status={items.status}
             />
 
-            {   items.showform && 
-                <DefaultForm 
-                    form={form} 
-                    item={items.item} 
-                    save={ handleSave} 
+            { (items.status === 'load') && 
+            <ClayCard>
+                <ClayCard.Body>
+                    <ClayCard.Description displayType="title">
+                        <h2>Cargando ficheros</h2>
+                    </ClayCard.Description>
+
+                    <ClayCard.Description truncate={false} displayType="text">
+                        <ClayForm>
+                            <ClayForm.Group className={'has-success'}>
+                                <label htmlFor="basicInput">{Liferay.Language.get('Selecciona')}</label>
+                                <ClayInput
+                                    type="text"
+                                    name="ficheros"
+                                    onChange={e => {
+                                        console.log("llamando");
+                                    }}>
+                                </ClayInput>
+
+                            </ClayForm.Group>
+
+                            <input type="file" name="files" multiple onChange={(e) => setFile(e.target.files[0])} />
+
+                        </ClayForm>
+                    </ClayCard.Description>
+                    <div className="btn-group">
+                        <div className="btn-group-item">
+                            <ClayButton onClick={e => processCsv()} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
+                        </div>
+                        <div className="btn-group-item">
+                            <ClayButton onClick={e => itemsHandle({type:ITEMS_ACTIONS.CANCEL_LOAD})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                        </div>
+                    </div>
+                </ClayCard.Body>
+            </ClayCard>
+            }
+
+
+            {   (items.status === 'edit' || items.status === 'new') && 
+                <DefaultForm
+                    form={form}
+                    save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
                 />
+
             }
             
             {
-                !items.showform &&
+                (items.status === 'list') &&
                 <Table 
                     columns={columns}
                     rows={items} 

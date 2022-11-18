@@ -5,6 +5,8 @@ import Table from '../Table';
 import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
+import ClayCard from "@clayui/card";
+import ClayForm, { ClayInput } from '@clayui/form';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
@@ -17,9 +19,10 @@ const Cnaes = () => {
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
 
+
     const columns = [
         {
-            columnName: "id",
+            columnName: "colectivoId",
             columnTitle: "Id",
             columnType: "checkbox",
             key: "c1",
@@ -30,24 +33,39 @@ const Cnaes = () => {
             columnType: "string",
             key: "c2",
         },
-
-    ]
+    ];
 
     const form = {
         title: Liferay.Language.get('Cnaes'),
+        languages: ["es-ES","en-US","gl-ES"],
         rows: {
-            id: {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier", conditions:["number"]},
-            descripcion: {key:2,label: Liferay.Language.get('Descricion'), name: "descripcion", value:"lelele", placeholder:"nombre", conditions:["text"]},
+            id: {
+                key:1,
+                type: "text",
+                label: "ID",     
+                name: "id",          
+                value:"", 
+                placeholder: "Identifier", 
+                conditions:["number"],
+        },
+            descripcion: {
+                key:2,
+                type: "multilang",
+                label: Liferay.Language.get('Descricion'), 
+                name: "descripcion", value:"lelele", 
+                placeholder: Liferay.Language.get('Descricion'), 
+                conditions:["text"]},
         }       
     };
 
-    // Inicio las varibles para la api:    
     const auth = getAuthToken()
     const lang = getLanguageId();
     const referer = "http://localhost:8080/cnaes";
 
-    const reset = () => {
-        setItem({id:0,descripcion:""});
+    const loadCsv = () => {
+        console.log("Cargando un csv");
+        //setShowfiles(true);
+        itemsHandle({type:ITEMS_ACTIONS.LOAD});
     }
 
     const handleSave = async () => {
@@ -60,7 +78,7 @@ const Cnaes = () => {
         }
 
         let endpoint = '/silefe.cnae/save-cnae';
-        if (items.item.id == 0)
+        if (items.status === 'new')
             endpoint = '/silefe.cnae/add-cnae';
 
         const res = await fetch(url_api, {
@@ -82,8 +100,7 @@ const Cnaes = () => {
         "mode": "cors"
         });
 
-        //await reset()
-        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
+//        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
         await onOpenChange(false);
         await fetchData();
     }
@@ -116,7 +133,7 @@ const Cnaes = () => {
             "mode": "cors"
         });
 
-        itemsHandle({type:ITEMS_ACTIONS.HIDE});
+//        itemsHandle({type:ITEMS_ACTIONS.HIDE});
         setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
         fetchData();
     }
@@ -128,9 +145,9 @@ const Cnaes = () => {
     const fetchData = async () => {
         const endpoint = "/silefe.cnae/filter";
         const postdata = {
-            languageId : lang,
+            page: pagination.page,
             descripcion : '',
-            page: pagination.page
+            languageId : lang,
         }
         let response = await fetch(url_api, {
             "credentials": "include",
@@ -141,10 +158,12 @@ const Cnaes = () => {
             "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
             "method": "POST"
         });
+        console.log("Recibidos los datos");
+        console.log(response);
 
         let {data,totalPages} = await JSON.parse (await response.json());
         const tmp = await data.map(i => {return({...i,id:i.cnaeId,checked:false})});
-        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
@@ -163,20 +182,59 @@ const Cnaes = () => {
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
-                showform={items.showform}
+                status={items.status}
+                loadCsv={loadCsv}
             />
+
+            { (items.status === 'load') && 
+                <ClayCard>
+                    <ClayCard.Body>
+                        <ClayCard.Description displayType="title">
+                            <h2>Cargando ficheros</h2>
+                        </ClayCard.Description>
+
+                        <ClayCard.Description truncate={false} displayType="text">
+                            <ClayForm>
+                                <ClayForm.Group className={'has-success'}>
+                                    <label htmlFor="basicInput">{Liferay.Language.get('Selecciona')}</label>
+                                    <ClayInput
+                                        type="text"
+                                        name="ficheros"
+                                        onChange={e => {
+                                            console.log("llamando");
+                                        }}>
+                                    </ClayInput>
+
+                                </ClayForm.Group>
+
+                                <input type="file" name="files" multiple onChange={(e) => setFile(e.target.files[0])} />
+
+                            </ClayForm>
+                        </ClayCard.Description>
+                        <div className="btn-group">
+                            <div className="btn-group-item">
+                                <ClayButton onClick={e => processCsv()} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
+                            </div>
+                            <div className="btn-group-item">
+                                <ClayButton onClick={e => itemsHandle({type:ITEMS_ACTIONS.CANCEL_LOAD})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                            </div>
+                        </div>
+                    </ClayCard.Body>
+                </ClayCard>
+            }
+
            
-            { items.showform && 
+            { (items.status === 'edit' || items.status === 'new') && 
                 <DefaultForm 
                     form={form} 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}
                     items={items}
-            />
-        }
+                />
+            }
 
             {
-                !items.showform &&
+                (items.status === 'list') &&
                 <Table 
                     columns={columns}
                     rows={items} 

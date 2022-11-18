@@ -14,7 +14,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 const spritemap = '/images/icons/icons.svg';
 //const spritemap = '../icons.svg';
 
-const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, showform,loadCsv}) => {
+const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, status,loadCsv}) => {
 
   return (
     <ClayToolbar>
@@ -77,14 +77,14 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
             </ClayButton>
 
             {
-              !showform &&
+              (status === 'list') &&
             <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM}) }}>
               {Liferay.Language.get('Editar')}
             </ClayButton>
             }
 
             {
-              showform &&
+              (status === 'new' || status === 'edit') &&
             <ClayButton className="inline-item-after" onClick={() => { handleSave() }}>
               {Liferay.Language.get('Guardar')}
             </ClayButton>
@@ -92,13 +92,13 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sho
             }
 
             {
-              !showform &&
+              (status === 'list') &&
             <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEW_ITEM}) }}>
               {Liferay.Language.get('Nuevo')}
             </ClayButton>
             }
             {
-              !showform &&
+              (status === 'list') &&
             <ClayButton className="inline-item-after" onClick={() => { loadCsv(); }}>
               {Liferay.Language.get('Carga')}
             </ClayButton>

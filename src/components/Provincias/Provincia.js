@@ -16,7 +16,6 @@ const Provincias = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
-    const [showfiles,setShowfiles]         = useState(false);
     const [file,setFile]                   = useState();
 
     const auth = getAuthToken();
@@ -65,7 +64,7 @@ const Provincias = () => {
 
     const loadCsv = () => {
         console.log("Cargando un csv");
-        setShowfiles(true);
+        itemsHandle({type:ITEMS_ACTIONS.LOAD});
     }
 
     const handleSave = async () => {
@@ -79,7 +78,7 @@ const Provincias = () => {
 
         let endpoint = '/silefe.provincia/save-provincia'
 
-        if (items.item.id == 0) 
+        if (items.status === 'new') 
             endpoint = '/silefe.provincia/add-provincia';
 
         const res = await fetch(url_api, {
@@ -102,7 +101,6 @@ const Provincias = () => {
         });
 
         fetchData();
-        itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const handleDelete = () => {
@@ -135,7 +133,6 @@ const Provincias = () => {
 
         setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
         fetchData();
-        itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const handleSearch = () => {
@@ -185,11 +182,11 @@ const Provincias = () => {
                 handleDelete={handleDelete}
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
-                showform={items.showform}
+                status={items.status}
                 loadCsv={loadCsv}
             />
 
-{ showfiles && 
+            { (items.status === 'load') && 
             <ClayCard>
                 <ClayCard.Body>
                     <ClayCard.Description displayType="title">
@@ -219,7 +216,7 @@ const Provincias = () => {
                             <ClayButton onClick={e => processCsv()} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
                         </div>
                         <div className="btn-group-item">
-                            <ClayButton onClick={e => setShowfiles(false)} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                            <ClayButton onClick={e => itemsHandle({type:ITEMS_ACTIONS.CANCEL_LOAD})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
                         </div>
                     </div>
                 </ClayCard.Body>
@@ -227,7 +224,7 @@ const Provincias = () => {
 
 
             {   
-                items.showform && !showfiles &&
+                (items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
                     form={form}
                     save={handleSave}
@@ -237,7 +234,7 @@ const Provincias = () => {
             }
 
             {
-                !items.showform && !showfiles &&
+                (items.status === 'list') &&
                 <Table 
                     columns={columns}
                     rows={items} 

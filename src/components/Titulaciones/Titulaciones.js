@@ -17,7 +17,7 @@ const spritemap = "../../icons.svg";
 const Titulaciones = () => {
     const [pagination, paginate]           = useReducer(reducer, { page: 0, totalPages: 0, allCheck: false })
     const [items, itemsHandle]             = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false });
-    const [showfiles,setShowfiles]         = useState(false);
+    //const [showfiles,setShowfiles]         = useState(false);
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
@@ -68,12 +68,13 @@ const Titulaciones = () => {
 
     const loadCsv = () => {
         console.log("Cargando un csv");
-        setShowfiles(true);
+        //setShowfiles(true);
+        itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
     const processCsv = () => {
         console.log("Procesando fichero");
-        setShowfiles(false);
+        //setShowfiles(false);
         console.log(file);
 
         if (file) {
@@ -123,7 +124,6 @@ const Titulaciones = () => {
             "mode": "cors"
         });
 
-        itemsHandle({ type: ITEMS_ACTIONS.HIDE });
         setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
         fetchData();
     }
@@ -166,7 +166,6 @@ const Titulaciones = () => {
         const tmp = await data.map(i => {return ({ ...i, id: i.titulacionId,checked: false })});
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form });
         await paginate({ type: PAGINATION_ACTIONS.TOTAL_PAGES, pages: totalPages });
-        await itemsHandle({ type: ITEMS_ACTIONS.HIDE });
     }
 
     const handleSave = async () => {
@@ -179,7 +178,7 @@ const Titulaciones = () => {
             languageId: lang
         }
         let endpoint = "/silefe.titulacion/save-titulacion";
-        if (items.item.id == 0)
+        if (items.status === 'new')
             endpoint = "/silefe.titulacion/add-titulacion";
 
         const res = await fetch(url_api, {
@@ -201,8 +200,6 @@ const Titulaciones = () => {
             "mode": "cors"
         });
         await fetchData();
-        await reset()
-        await itemsHandle({ type: ITEMS_ACTIONS.HIDE });
         await setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);
     }
 
@@ -225,11 +222,11 @@ const Titulaciones = () => {
                 handleDelete={handleDelete}
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
-                showform={items.showform}
+                status={items.status}
                 loadCsv={loadCsv}
             />
 
-            { showfiles && 
+            { (items.status === 'load') && 
             <ClayCard>
                 <ClayCard.Body>
                     <ClayCard.Description displayType="title">
@@ -259,14 +256,14 @@ const Titulaciones = () => {
                             <ClayButton onClick={e => processCsv()} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
                         </div>
                         <div className="btn-group-item">
-                            <ClayButton onClick={e => setShowfiles(false)} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                            <ClayButton onClick={e => itemsHandle({type:ITEMS_ACTIONS.CANCEL_LOAD})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
                         </div>
                     </div>
                 </ClayCard.Body>
             </ClayCard>}
             
             {
-                items.showform && !showfiles &&
+                (items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
                     form={form}
                     save={handleSave}
@@ -275,7 +272,7 @@ const Titulaciones = () => {
                 />
             }
             {
-                !items.showform && !showfiles &&
+                (items.status === 'list') &&
                 <Table
                     columns={columns}
                     rows={items}
