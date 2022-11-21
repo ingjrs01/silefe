@@ -78,10 +78,11 @@ const Experiencias = () => {
             languageId:  lang
         }
 
-        let endpoint =  "/silefe.experiencia/add-experiencia";
+        let endpoint =  "/silefe.experiencia/save-experiencia";
 
         if (items.status === 'new')
-            endpoint = "/silefe.experiencia/save-experiencia";
+            endpoint = "/silefe.experiencia/add-experiencia";
+
         console.log("guardnado");
         console.log(endpoint);
 

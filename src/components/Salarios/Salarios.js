@@ -12,13 +12,11 @@ import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 const spritemap = '../icons.svg';
 
 const Salarios = () => {
-    const [pagination,paginate]     = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    //const [items,itemsH]               = useState([]);
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
-    const [item,setItem]                 = useState({id:0,descripcion:""});
-    const [showform,setShowform]         = useState(false);
+    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
+    const [items, itemsHandle]           = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false });
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
+    const [file,setFile]                 = useState();
 
     const columns = [
         {
@@ -37,9 +35,26 @@ const Salarios = () => {
     ]
     const form = {
         title: Liferay.Language.get('Rangos_salariales'),
+        languages: ["es-ES","en-US","gl-ES"],
         rows: {
-            id: {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier",conditions: ["number"]},
-            descripcion: {key:2,label: Liferay.Language.get('Nombre'), name: "descripcion", value:"lelele", placeholder:Liferay.Language.get('Nombre'),conditions:["text"]}
+            id: {
+                key:1,
+                type: "text",
+                label: "ID",     
+                name: "id",          
+                value:"lalala", 
+                placeholder:"Identifier",
+                conditions: ["number"]
+            },
+            descripcion: {
+                key:2,
+                type: "multilang",
+                label: Liferay.Language.get('Nombre'), 
+                name: "descripcion", 
+                value:"lelele", 
+                placeholder:Liferay.Language.get('Nombre'),
+                conditions:["text"]
+            }
         }
     };
 
@@ -48,32 +63,23 @@ const Salarios = () => {
     const lang = getLanguageId();
     const referer = "http://localhost:8080/salarios";
 
-    const reset = () => {
-        setItem({id:0,descripcion:""});
-    }
-
-    const handleCheck = (index) => {
-        let tmp = items.slice();
-        tmp[index].checked = !items[index].checked;
-        setItems(tmp);
-    }
-
-    const handleAllCheck =  () => {
-        paginate({type:PAGINATION_ACTIONS.CHECK_ALL,allCheck:!pagination.allCheck});
-        setItems(items.map(i => {return({...i,checked:pagination.allCheck})}));
+    const loadCsv = () => {
+        console.log("Cargando un csv");
+        itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
     const handleSave = async () => {
-        const data = {
-            id: item.id,
-            descripcion: item.descripcion,
-            userId: Liferay.ThemeDisplay.getUserId(),
-            userName: Liferay.ThemeDisplay.getUserName(),
-            languageId: lang            
+        const postdata = {
+            id:          items.item.id,
+            descripcion: items.item.descripcion,
+            userId:      Liferay.ThemeDisplay.getUserId(),
+            userName:    Liferay.ThemeDisplay.getUserName(),
+            languageId:  lang            
         }
 
         let endpoint = '/silefe.salario/save-salario';
-        if (item.id == 0)
+
+        if (items.status  === 'new')
             endpoint = '/silefe.salario/add-salario';
 
         const res = await fetch(url_api, {
@@ -90,16 +96,13 @@ const Salarios = () => {
             "Sec-Fetch-Site": "same-origin"
         },
         "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
+        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
         "method": "POST",
         "mode": "cors"
         });
 
         await fetchData();
-        await handleNew();
-        await reset()
-        await setShowform(false);
-        await onOpenChange(false);
+        await setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);
     }
 
     const handleDelete = () => {
@@ -135,18 +138,6 @@ const Salarios = () => {
         fetchData();
     }
 
-    const handleEdit = (index) => {
-        const sel = items.filter(i => i.checked);
-
-        setItem({id:sel[0].id,descripcion:sel[0].descripcion});
-        setShowform(true);
-    }
-
-    const handleNew = () => {
-        reset();
-        setShowform(true);
-    }
-
     const handleSearch = () => {
         console.log("handlesearch");
     }
@@ -168,15 +159,12 @@ const Salarios = () => {
             "method": "POST"
         });
 
-        let {data,totalPages} = await JSON.parse (await response.json());
-        await setItems(await data.map(i => {return({...i,id:i.salariosId,checked:false})}));
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
-    }
 
-    const handleCancel = () => {
-        reset();
-        setShowform(false);
-        setItems(items.map(i => {return ({...i,checked:false})}));
+        let {data,totalPages} = await JSON.parse (await response.json());
+        const tmp = await data.map(i => {return({...i,id:i.salarioId,checked:false})});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form});
+        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
+
     }
 
 
@@ -194,10 +182,48 @@ const Salarios = () => {
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
-                showform={items.showform}
+                itemsHandle={itemsHandle}
+                status={items.status}
+                loadCsv={loadCsv}
             />
            
-            {   items.showform && 
+           { (items.status === 'load') && 
+            <ClayCard>
+                <ClayCard.Body>
+                    <ClayCard.Description displayType="title">
+                        <h2>Cargando ficheros</h2>
+                    </ClayCard.Description>
+
+                    <ClayCard.Description truncate={false} displayType="text">
+                        <ClayForm>
+                            <ClayForm.Group className={'has-success'}>
+                                <label htmlFor="basicInput">{Liferay.Language.get('Selecciona')}</label>
+                                <ClayInput
+                                    type="text"
+                                    name="ficheros"
+                                    onChange={e => {
+                                        console.log("llamando");
+                                    }}>
+                                </ClayInput>
+
+                            </ClayForm.Group>
+
+                            <input type="file" name="files" multiple onChange={(e) => setFile(e.target.files[0])} />
+
+                        </ClayForm>
+                    </ClayCard.Description>
+                    <div className="btn-group">
+                        <div className="btn-group-item">
+                            <ClayButton onClick={e => processCsv()} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
+                        </div>
+                        <div className="btn-group-item">
+                            <ClayButton onClick={e => itemsHandle({type:ITEMS_ACTIONS.CANCEL_LOAD})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                        </div>
+                    </div>
+                </ClayCard.Body>
+            </ClayCard>}
+
+            {   (items.status === 'edit' || items.status ==='new') && 
                 <DefaultForm 
                     form={form} 
                     itemsHandle={itemsHandle}
@@ -207,7 +233,7 @@ const Salarios = () => {
             }
 
             {
-                !showform &&
+                items.status === 'list' &&
                 <Table 
                     columns={columns}                    
                     rows={items} 

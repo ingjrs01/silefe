@@ -38,15 +38,39 @@ const Horarios = () => {
 
     const form = {
         title: "Título del formulario",
+        languages: ["es-ES","en-US","gl-ES"],
         rows: {
-            id: {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier",conditions: ["number"]},
-            descripcion: {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"nombre",conditions: ["text"]}
+            id: {                
+                key:1,
+                type: "text",
+                label: "ID",     
+                name: "id",          
+                value:"lalala", 
+                placeholder:"Identifier",
+                conditions: ["number"]
+            },
+            descripcion: {
+                key:2,
+                type: "multilang",
+                label: "nombre", 
+                name: "descripcion", 
+                value:"lelele", 
+                placeholder:"nombre",
+                conditions: ["text"]
+            }
         }
     };
 
     useEffect(()=>{
         fetchData();
     },[pagination.page]);
+
+
+    const loadCsv = () => {
+        console.log("Cargando un csv");
+        //setShowfiles(true);
+        itemsHandle({type:ITEMS_ACTIONS.LOAD})
+    }
 
     const handleSave = async () => {
         const postdata = {
@@ -58,7 +82,8 @@ const Horarios = () => {
         }
 
         let endpoint = '/silefe.horario/save-horario';
-        if (items.item.id == 0)
+
+        if (items.status === 'new')
             endpoint = '/silefe.horario/add-horario';
 
         const res = await fetch(url_api, {
@@ -81,7 +106,6 @@ const Horarios = () => {
         });
 
         await fetchData();
-        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
     }
 
     const handleDelete = () => {
@@ -143,7 +167,7 @@ const Horarios = () => {
 
         let {data, totalPages} = await JSON.parse (await response.json());
         let tmp = await data.map(i => {return({...i,id:i.horarioId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES, pages:totalPages});
     }
 
@@ -158,11 +182,48 @@ const Horarios = () => {
                 handleDelete={handleDelete} 
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
-                showform={items.showform}
+                status={items.status}
+                loadCsv={loadCsv}                
             />
 
+            { (items.status === 'load') && 
+            <ClayCard>
+                <ClayCard.Body>
+                    <ClayCard.Description displayType="title">
+                        <h2>Cargando ficheros</h2>
+                    </ClayCard.Description>
+
+                    <ClayCard.Description truncate={false} displayType="text">
+                        <ClayForm>
+                            <ClayForm.Group className={'has-success'}>
+                                <label htmlFor="basicInput">{Liferay.Language.get('Selecciona')}</label>
+                                <ClayInput
+                                    type="text"
+                                    name="ficheros"
+                                    onChange={e => {
+                                        console.log("llamando");
+                                    }}>
+                                </ClayInput>
+
+                            </ClayForm.Group>
+
+                            <input type="file" name="files" multiple onChange={(e) => setFile(e.target.files[0])} />
+
+                        </ClayForm>
+                    </ClayCard.Description>
+                    <div className="btn-group">
+                        <div className="btn-group-item">
+                            <ClayButton onClick={e => processCsv()} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
+                        </div>
+                        <div className="btn-group-item">
+                            <ClayButton onClick={e => itemsHandle({type:ITEMS_ACTIONS.CANCEL_LOAD})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                        </div>
+                    </div>
+                </ClayCard.Body>
+            </ClayCard>}
+
             {
-                items.showform && 
+                (items.status === 'edit' || items.status === 'new') && 
                 <DefaultForm 
                     form={form} 
                     save={ handleSave} 
@@ -172,7 +233,7 @@ const Horarios = () => {
             }
             
             {                
-             !items.showform &&
+             items.status === 'list' &&
               <Table 
                   columns={columns}
                   rows={items} 
