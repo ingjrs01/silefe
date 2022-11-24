@@ -74,7 +74,6 @@ const Titulaciones = () => {
 
     const processCsv = () => {
         console.log("Procesando fichero");
-        //setShowfiles(false);
         console.log(file);
 
         if (file) {
@@ -83,13 +82,47 @@ const Titulaciones = () => {
             reader.onload = async ({ target }) => {
                 console.log("cargando");
                 console.log(target);
-                const csv = Papa.parse(target.result, { header: true });
+                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 console.log("quiero mi csv");
                 console.log(csv);
                 const parsedData = csv?.data;
+                                
                 console.log(parsedData);
 
-                parsedData.forEach(item => {console.log(item.Nombre)});
+                //************************************************************************************ */
+                let end = '/silefe.titulacion/add-multiple';
+                let ttmp = {titulaciones:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+
+                const res2 = await fetch(url_api, {
+                    "credentials": "include",
+                    "headers": {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                        "Accept": "*/*",
+                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                        "contenttype": "undefined",
+                        "x-csrf-token": auth,
+                        "Content-Type": "text/plain;charset=UTF-8",
+                        "Sec-Fetch-Dest": "empty",
+                        "Sec-Fetch-Mode": "cors",
+                        "Sec-Fetch-Site": "same-origin"
+                    },
+                    "referrer": `\"${referer}\"`,
+                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
+                    "method": "POST",
+                    "mode": "cors"
+                });
+            
+                console.debug(res2);
+
+                console.log("Y ahora lo demas");
+
+                //********************************************************************************************* */
+
+                //parsedData.forEach(item => {
+                //    console.log(item.Nombre);
+//
+//
+                //});
                 //const columnas = Object.keys(parsedData[0]);
                 //console.log(columnas);
                 //setData(columns);
@@ -165,6 +198,7 @@ const Titulaciones = () => {
         let { data, totalPages } = await JSON.parse(await response.json());
         const tmp = await data.map(i => {return ({ ...i, id: i.titulacionId,checked: false })});
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form });
+        console.log("Pages: " + totalPages);
         await paginate({ type: PAGINATION_ACTIONS.TOTAL_PAGES, pages: totalPages });
     }
 
@@ -173,10 +207,37 @@ const Titulaciones = () => {
             titulacionId: items.item.id,
             codigo: items.item.codigo,
             descripcion: items.item.descripcion,
-            userId: Liferay.ThemeDisplay.getUserId(),
-            userName: Liferay.ThemeDisplay.getUserName(),
-            languageId: lang
+            userId: Liferay.ThemeDisplay.getUserId()
         }
+
+//        let end = '/group/get-user-group';
+//        let ttmp = {companyId:20097,userId:20125}
+//
+//        const res2 = await fetch(url_api, {
+//            "credentials": "include",
+//            "headers": {
+//                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+//                "Accept": "*/*",
+//                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+//                "contenttype": "undefined",
+//                "x-csrf-token": auth,
+//                "Content-Type": "text/plain;charset=UTF-8",
+//                "Sec-Fetch-Dest": "empty",
+//                "Sec-Fetch-Mode": "cors",
+//                "Sec-Fetch-Site": "same-origin"
+//            },
+//            "referrer": `\"${referer}\"`,
+//            "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
+//            "method": "POST",
+//            "mode": "cors"
+//        });
+//
+//        console.debug(res2);
+//        let { descriptiveName } = await res2.json();
+//        console.log(descriptiveName);
+//        
+//        console.log("Y hoara lo demás");
+
         let endpoint = "/silefe.titulacion/save-titulacion";
         if (items.status === 'new')
             endpoint = "/silefe.titulacion/add-titulacion";

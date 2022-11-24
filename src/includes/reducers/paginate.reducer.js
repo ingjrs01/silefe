@@ -3,10 +3,13 @@ export const PAGINATION_ACTIONS = {
     NEXT_PAGE: 1,
     PREV_PAGE: 2,
     TOTAL_PAGES: 3,
-    CHECK_ALL: 4,
   }
+const initialState = {
+    page: 0,
+    totalPages: 0,
+}
 
-export const reducer = (state, action ) => {
+export const reducer = (state=initialState, action ) => {
     switch (action.type) {
         case PAGINATION_ACTIONS.NEXT_PAGE:
             if (state.page < state.totalPages - 1) {
@@ -31,11 +34,6 @@ export const reducer = (state, action ) => {
             return {
                 ...state,
                 totalPages: action.pages
-            }
-        case PAGINATION_ACTIONS.CHECK_ALL:
-            return {
-                ...state,
-                allCheck: action.allCheck
             }
         default: 
             throw new Error ("Acción inválida");
