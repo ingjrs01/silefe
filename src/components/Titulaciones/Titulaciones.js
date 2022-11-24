@@ -68,7 +68,6 @@ const Titulaciones = () => {
 
     const loadCsv = () => {
         console.log("Cargando un csv");
-        //setShowfiles(true);
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
@@ -81,12 +80,8 @@ const Titulaciones = () => {
          
             reader.onload = async ({ target }) => {
                 console.log("cargando");
-                console.log(target);
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                console.log("quiero mi csv");
-                console.log(csv);
-                const parsedData = csv?.data;
-                                
+                const parsedData = csv?.data;                                
                 console.log(parsedData);
 
                 //************************************************************************************ */
@@ -113,19 +108,7 @@ const Titulaciones = () => {
                 });
             
                 console.debug(res2);
-
                 console.log("Y ahora lo demas");
-
-                //********************************************************************************************* */
-
-                //parsedData.forEach(item => {
-                //    console.log(item.Nombre);
-//
-//
-                //});
-                //const columnas = Object.keys(parsedData[0]);
-                //console.log(columnas);
-                //setData(columns);
             };
             reader.readAsText(file);
         }
