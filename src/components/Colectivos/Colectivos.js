@@ -120,8 +120,8 @@ const Colectivos = () => {
             colectivoId: items.item.id,
             descripcion: items.item.descripcion,
             userId:      Liferay.ThemeDisplay.getUserId(),
-            userName:    Liferay.ThemeDisplay.getUserName(),
-            languageId:  lang
+//            userName:    Liferay.ThemeDisplay.getUserName(),
+//            languageId:  lang
         }
 
         let endpoint = '/silefe.colectivo/save-colectivo';
@@ -191,7 +191,6 @@ const Colectivos = () => {
         const postdata = {
             page: pagination.page,
             descripcion: '',
-            languageId:  lang
         };
 
         const res = await fetch(url_api, {

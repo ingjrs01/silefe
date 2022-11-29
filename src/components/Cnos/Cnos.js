@@ -137,14 +137,11 @@ const Cnos = () => {
     }
 
     const handleSave = async () => {
-        console.log("llego aquí");
         const data = {
             cnoId:       items.item.id,
             //codigo:      items.item.codigo,
             descripcion: items.item.descripcion,
             userId:      Liferay.ThemeDisplay.getUserId(),
-            userName:    Liferay.ThemeDisplay.getUserName(),
-            languageId:  lang            
         }
 
         let endpoint = '/silefe.cno/save-cno';
@@ -217,8 +214,7 @@ const Cnos = () => {
         const postdata = {
             page:         pagination.page,
             codigo :      '',
-            descripcion : '',
-            languageId :  lang
+            descripcion : ''
         }
 
         let response = await fetch(url_api, {

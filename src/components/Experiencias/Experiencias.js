@@ -73,9 +73,7 @@ const Experiencias = () => {
         const postdata = {
             id:          items.item.id,
             descripcion: items.item.descripcion,
-            userId:      Liferay.ThemeDisplay.getUserId(),
-            userName:    Liferay.ThemeDisplay.getUserName(),
-            languageId:  lang
+            userId:      Liferay.ThemeDisplay.getUserId()
         }
 
         let endpoint =  "/silefe.experiencia/save-experiencia";
@@ -152,8 +150,7 @@ const Experiencias = () => {
 
         const postdata = {
             page:        pagination.page,
-            descripcion: searchtext,
-            languageId:  lang
+            descripcion: searchtext
         };
 
         let response = await fetch(url_api, {

@@ -119,7 +119,6 @@ const MBaja = () => {
     const fetchData = async () => {
         const endpoint = "/silefe.mbaja/filter";
         const postdata = {
-            languageId : lang,
             descripcion : '',
             page: pagination.page
         }
@@ -149,8 +148,6 @@ const MBaja = () => {
             mbajaId:     items.item.id,
             descripcion: items.item.descripcion,
             userId:      Liferay.ThemeDisplay.getUserId(),
-            userName:    Liferay.ThemeDisplay.getUserName(),
-            languageId:  lang            
         }
 
         let endpoint = '/silefe.mbaja/save-m-baja';

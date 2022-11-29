@@ -108,7 +108,7 @@ const Provincias = () => {
 
                 if (res2.ok) {
                     setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
-                    
+
                     fetchData();
                 }
                 else {
@@ -131,8 +131,6 @@ const Provincias = () => {
             id:         items.item.id,
             name:       items.item.nombre,
             userId:     Liferay.ThemeDisplay.getUserId(),
-            userName:   Liferay.ThemeDisplay.getUserName(),
-            languageId: lang
         }
 
         let endpoint = '/silefe.provincia/save-provincia'
@@ -206,7 +204,6 @@ const Provincias = () => {
         const postdata = {
             name: searchtext,
             page: pagination.page,
-            languageId: lang
         };
 
         let response = await fetch(url_api, {
@@ -280,7 +277,6 @@ const Provincias = () => {
                     </div>
                 </ClayCard.Body>
             </ClayCard>}
-
 
             {   
                 (items.status === 'edit' || items.status === 'new') &&

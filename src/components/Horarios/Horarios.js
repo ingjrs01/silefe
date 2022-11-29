@@ -200,8 +200,7 @@ const Horarios = () => {
         const endpoint = "/silefe.horario/filter";  
         const postdata = {
             page:         pagination.page,
-            descripcion : '',
-            languageId :  lang
+            descripcion : ''
         }
 
         let response = await fetch(url_api, {

@@ -66,8 +66,6 @@ const Cnaes = () => {
     const referer = "http://localhost:8080/cnaes";
 
     const loadCsv = () => {
-        console.log("Cargando un csv");
-        //setShowfiles(true);
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
     }
 
@@ -120,9 +118,7 @@ const Cnaes = () => {
         const data = {
             id:          items.item.id,
             descripcion: items.item.descripcion,
-            userId:      Liferay.ThemeDisplay.getUserId(),
-            userName:    Liferay.ThemeDisplay.getUserName(),
-            languageId:  lang            
+            userId:      Liferay.ThemeDisplay.getUserId()
         }
 
         let endpoint = '/silefe.cnae/save-cnae';
@@ -181,7 +177,6 @@ const Cnaes = () => {
             "mode": "cors"
         });
 
-//        itemsHandle({type:ITEMS_ACTIONS.HIDE});
         setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
         fetchData();
     }
@@ -194,8 +189,7 @@ const Cnaes = () => {
         const endpoint = "/silefe.cnae/filter";
         const postdata = {
             page: pagination.page,
-            descripcion : '',
-            languageId : lang,
+            descripcion : ''
         }
         let response = await fetch(url_api, {
             "credentials": "include",

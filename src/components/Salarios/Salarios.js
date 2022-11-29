@@ -190,7 +190,6 @@ const Salarios = () => {
     const fetchData = async () => {
         const endpoint = "/silefe.salario/filter";
         const postdata = {
-            languageId : lang,
             descripcion : '',
             page: pagination.page
         }
