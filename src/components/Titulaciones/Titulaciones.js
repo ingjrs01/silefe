@@ -67,24 +67,16 @@ const Titulaciones = () => {
     const referer = "http://localhost:8080/titulaciones";
 
     const loadCsv = () => {
-        console.log("Cargando un csv");
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
     const processCsv = () => {
-        console.log("Procesando fichero");
-        console.log(file);
-
         if (file) {
             const reader = new FileReader();
          
             reader.onload = async ({ target }) => {
-                console.log("cargando");
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
-                console.log(parsedData);
-
-                //************************************************************************************ */
                 let end = '/silefe.titulacion/add-multiple';
                 let ttmp = {titulaciones:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
 
@@ -107,8 +99,6 @@ const Titulaciones = () => {
                     "mode": "cors"
                 });
             
-                console.debug(res2);
-                console.log("Y ahora lo demas");
             };
             reader.readAsText(file);
         }
@@ -156,7 +146,7 @@ const Titulaciones = () => {
         const postdata = {
             page: pagination.page,
             descripcion: searchtext,
-            languageId: lang
+//            languageId: lang
         };
 
         const response = await fetch(url_api, {
@@ -181,7 +171,6 @@ const Titulaciones = () => {
         let { data, totalPages } = await JSON.parse(await response.json());
         const tmp = await data.map(i => {return ({ ...i, id: i.titulacionId,checked: false })});
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form });
-        console.log("Pages: " + totalPages);
         await paginate({ type: PAGINATION_ACTIONS.TOTAL_PAGES, pages: totalPages });
     }
 
