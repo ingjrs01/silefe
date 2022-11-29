@@ -19,7 +19,7 @@ const Table = ({columns,rows, itemsHandle}) => {
                   if (column.columnType == "string")
                     return (<ClayTable.Cell key={column.key}>{ column.columnTitle }</ClayTable.Cell> )
                   if (column.columnType == "checkbox")
-                    return (<ClayTable.Cell key={column.key} headingCell><ClayCheckbox checked={rows.allCheck} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
+                    return (<ClayTable.Cell key={column.key} headingCell><ClayCheckbox checked={rows.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
                 })
             }
         </ClayTable.Row>

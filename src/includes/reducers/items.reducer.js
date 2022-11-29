@@ -53,12 +53,14 @@ export const red_items = (state=initialState, action ) => {
             }
 
         case ITEMS_ACTIONS.CHECK:
+            console.log("hacemos check");
             const newArr = [...state.arr];
             newArr[action.index].checked = !newArr[action.index].checked;
 
             return {
                 ...state,
-                arr: newArr
+                arr: newArr,
+                checkall: false
             }
         case ITEMS_ACTIONS.CHECKALL:
             return  {
