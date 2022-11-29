@@ -4,10 +4,13 @@ import Menu from '../Menu';
 import Table from '../Table';
 import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
+import ClayForm, { ClayInput } from '@clayui/form';
+import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import Papa from "papaparse";
 
 const spritemap = '../icons.svg';
 
@@ -16,8 +19,9 @@ const Cnos = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
+    const [file,setFile]                 = useState();
 
-    const referrer = "http://localhost:8080/cnos";
+    const referer = "http://localhost:8080/cnos";
     const auth = getAuthToken();
     const lang = getLanguageId();
 
@@ -28,12 +32,12 @@ const Cnos = () => {
             columnType: "checkbox",
             key: "c1",
         },
-        {
-            columnName: "codigo",
-            columnTitle: Liferay.Language.get('Codigo'),
-            columnType: "string",
-            key: "c2",
-        },
+//        {
+//            columnName: "codigo",
+//            columnTitle: Liferay.Language.get('Codigo'),
+//            columnType: "string",
+//            key: "c2",
+//        },
         {
             columnName: "descripcion",
             columnTitle: Liferay.Language.get('Descripcion'),
@@ -55,15 +59,15 @@ const Cnos = () => {
                 placeholder:"Identifier",
                 conditions:["number"]
             },
-            codigo: {
-                key:2,
-                type: "text",
-                label: Liferay.Language.get('Codigo'), 
-                name: "codigo",      
-                value:"lalala", 
-                placeholder:Liferay.Language.get('Codigo'),
-                conditions:["number"],
-            },
+//            codigo: {
+//                key:2,
+//                type: "text",
+//                label: Liferay.Language.get('Codigo'), 
+//                name: "codigo",      
+//                value:"lalala", 
+//                placeholder:Liferay.Language.get('Codigo'),
+//                conditions:["number"],
+//            },
             descripcion: {
                 key:3,
                 type: "multilang",
@@ -86,11 +90,57 @@ const Cnos = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
+    const processCsv = () => {
+        if (file) {
+            const reader = new FileReader();
+         
+            reader.onload = async ({ target }) => {
+                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+                const parsedData = csv?.data;                                
+                let end = '/silefe.cno/add-multiple';
+                let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+
+                const res2 = await fetch(url_api, {
+                    "credentials": "include",
+                    "headers": {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                        "Accept": "*/*",
+                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                        "contenttype": "undefined",
+                        "x-csrf-token": auth,
+                        "Content-Type": "text/plain;charset=UTF-8",
+                        "Sec-Fetch-Dest": "empty",
+                        "Sec-Fetch-Mode": "cors",
+                        "Sec-Fetch-Site": "same-origin"
+                    },
+                    "referrer": `\"${referer}\"`,
+                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
+                    "method": "POST",
+                    "mode": "cors"
+                });
+
+                if (res2.ok) {
+                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
+                    
+                    fetchData();
+                }
+                else {
+                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
+                }                
+                console.debug(res2);
+            };
+            reader.readAsText(file);
+        }
+        else {
+            console.log("fichero no cargado")
+        }
+    }
+
     const handleSave = async () => {
         console.log("llego aquí");
         const data = {
             cnoId:       items.item.id,
-            codigo:      items.item.codigo,
+            //codigo:      items.item.codigo,
             descripcion: items.item.descripcion,
             userId:      Liferay.ThemeDisplay.getUserId(),
             userName:    Liferay.ThemeDisplay.getUserName(),
@@ -115,7 +165,7 @@ const Cnos = () => {
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "same-origin"
         },
-        "referrer": `\"${referrer}\"`,
+        "referrer": `\"${referer}\"`,
         "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
         "method": "POST",
         "mode": "cors"
@@ -148,7 +198,7 @@ const Cnos = () => {
                 "Sec-Fetch-Mode": "cors",
                 "Sec-Fetch-Site": "same-origin"
             },
-            "referrer": `\"${referrer}\"`,
+            "referrer": `\"${referer}\"`,
             "body": `{\"${endpoint}\":{\"cnos\":[${s}]}}`,
             "method": "REMOVE",
             "mode": "cors"
@@ -176,7 +226,7 @@ const Cnos = () => {
             "headers": {
                 "x-csrf-token": auth,
             },
-            "referrer": `\"${referrer}\"`,
+            "referrer": `\"${referer}\"`,
             "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
             "method": "POST"
         });
@@ -199,6 +249,7 @@ const Cnos = () => {
                 handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 status={items.status}
+                loadCsv={loadCsv}
             />
 
             { (items.status === 'load') && 

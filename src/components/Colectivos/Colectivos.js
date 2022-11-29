@@ -10,6 +10,7 @@ import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
 import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
+import Papa from "papaparse";
 
 const spritemap = '../icons.svg';
 
@@ -70,6 +71,7 @@ const Colectivos = () => {
     }
 
     const processCsv = () => {
+        console.log("processCSV");
         if (file) {
             const reader = new FileReader();
          
@@ -77,7 +79,7 @@ const Colectivos = () => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
                 let end = '/silefe.colectivo/add-multiple';
-                let ttmp = {provincias:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+                let ttmp = {colectivos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
                 const res2 = await fetch(url_api, {
                     "credentials": "include",
                     "headers": {
@@ -153,10 +155,9 @@ const Colectivos = () => {
             onOpenChange(true);        
     }
 
-
     const confirmDelete = async () => {
         const auth = getAuthToken()
-        let s = items.arr.filter(item => item.checked).map( i => {return i.colectivosId});
+        let s = items.arr.filter(item => item.checked).map( i => {return i.colectivoId});
         const res = await fetch(url_api, {
             "credentials": "include",
             "headers": {

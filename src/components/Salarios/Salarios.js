@@ -4,16 +4,19 @@ import Menu from '../Menu';
 import Table from '../Table';
 import ClayAlert from '@clayui/alert';
 import ClayModal, {useModal} from '@clayui/modal';
+import ClayForm, { ClayInput } from '@clayui/form';
+import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
 import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import Papa from "papaparse";
 
 const spritemap = '../icons.svg';
 
 const Salarios = () => {
     const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
-    const [items, itemsHandle]           = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false });
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -64,8 +67,53 @@ const Salarios = () => {
     const referer = "http://localhost:8080/salarios";
 
     const loadCsv = () => {
-        console.log("Cargando un csv");
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
+    }
+
+    const processCsv = () => {
+        if (file) {
+            const reader = new FileReader();
+         
+            reader.onload = async ({ target }) => {
+                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+                const parsedData = csv?.data;                                
+                let end = '/silefe.salario/add-multiple';
+                let ttmp = {salarios:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+
+                const res2 = await fetch(url_api, {
+                    "credentials": "include",
+                    "headers": {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                        "Accept": "*/*",
+                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                        "contenttype": "undefined",
+                        "x-csrf-token": auth,
+                        "Content-Type": "text/plain;charset=UTF-8",
+                        "Sec-Fetch-Dest": "empty",
+                        "Sec-Fetch-Mode": "cors",
+                        "Sec-Fetch-Site": "same-origin"
+                    },
+                    "referrer": `\"${referer}\"`,
+                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
+                    "method": "POST",
+                    "mode": "cors"
+                });
+
+                if (res2.ok) {
+                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
+                    
+                    fetchData();
+                }
+                else {
+                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
+                }                
+                console.debug(res2);
+            };
+            reader.readAsText(file);
+        }
+        else {
+            console.log("fichero no cargado")
+        }
     }
 
     const handleSave = async () => {
@@ -73,8 +121,6 @@ const Salarios = () => {
             id:          items.item.id,
             descripcion: items.item.descripcion,
             userId:      Liferay.ThemeDisplay.getUserId(),
-            userName:    Liferay.ThemeDisplay.getUserName(),
-            languageId:  lang            
         }
 
         let endpoint = '/silefe.salario/save-salario';
@@ -104,15 +150,15 @@ const Salarios = () => {
         await fetchData();
         await setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);
     }
-
+    
     const handleDelete = () => {
-        if (items.filter(item => item.checked).length > 0)
+        if (items.arr.filter(item => item.checked).length > 0)
             onOpenChange(true);        
     }
 
     const confirmDelete = async () => {
         const endpoint = "/silefe.salario/remove-salarios";
-        let s = items.filter(item => item.checked).map( i => {return i.id});
+        let s = items.arr.filter(item => item.checked).map( i => {return i.id});        
 
         const res = await fetch(url_api, {
             "credentials": "include",
@@ -133,7 +179,6 @@ const Salarios = () => {
             "mode": "cors"
         });
 
-        setShowform(false);
         setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
         fetchData();
     }
