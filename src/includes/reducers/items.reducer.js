@@ -14,6 +14,7 @@ export const ITEMS_ACTIONS = {
     CLEARERRORS:12,
     LOAD: 13,
     CANCEL_LOAD:14,
+    SEARCH: 15,
   }
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
     checkall: false,
     fields: {},
     status: "list", /* values: new, edit, list, load  */
+    search: "",
 }
 
 export const red_items = (state=initialState, action ) => {
@@ -145,6 +147,11 @@ export const red_items = (state=initialState, action ) => {
             return {
                 ...state,
                 status: 'list'
+            }
+        case ITEMS_ACTIONS.SEARCH:
+            return {
+                ...state,
+                search: action.value
             }
         default: 
             throw new Error ("Accion invalida");

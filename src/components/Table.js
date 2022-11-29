@@ -8,8 +8,7 @@ import { getLanguageId} from '../includes/LiferayFunctions';
 const Table = ({columns,rows, itemsHandle}) => {
 
   let lang = getLanguageId().replace("_","-");
-  console.debug(columns);
-
+  
   return (
     <ClayTable>
       <ClayTable.Head>

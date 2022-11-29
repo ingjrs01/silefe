@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 import Table from '../Table';
 import DefaultForm from '../DefaultForm';
 import Menu from '../Menu';
@@ -10,17 +10,18 @@ import ClayButton from '@clayui/button';
 import { getAuthToken, getLanguageId, url_api } from '../../includes/LiferayFunctions';
 import { PAGINATION_ACTIONS, reducer } from '../../includes/reducers/paginate.reducer';
 import { ITEMS_ACTIONS, red_items } from '../../includes/reducers/items.reducer';
-import Papa, { parse } from "papaparse";
+import Papa from "papaparse";
 
 const spritemap = "../../icons.svg";
 
 const Titulaciones = () => {
     const [pagination, paginate]           = useReducer(reducer, { page: 0, totalPages: 0, allCheck: false })
     const [items, itemsHandle]             = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false });
-    //const [showfiles,setShowfiles]         = useState(false);
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
+    const controllerRef = useRef();
+    const isInitialized = useRef();
 
     const columns = [
         {
@@ -141,15 +142,22 @@ const Titulaciones = () => {
 
     const fetchData = async () => {
         const endpoint = "/silefe.titulacion/filter";
-        const searchtext = '';
+        //const searchtext = '';
 
         const postdata = {
             page: pagination.page,
-            descripcion: searchtext,
-//            languageId: lang
+            descripcion: items.search
         };
 
+        if (controllerRef.current) {
+            controllerRef.current.abort();
+        }
+
+        const controller = new AbortController();
+        controllerRef.current = controller;
+
         const response = await fetch(url_api, {
+            signal: controllerRef.current?.signal,
             "credentials": "include",
             "headers": {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
@@ -167,6 +175,7 @@ const Titulaciones = () => {
             "method": "POST",
             "mode": "cors"
         });
+        //controllerRef.current.abort();
 
         let { data, totalPages } = await JSON.parse(await response.json());
         const tmp = await data.map(i => {return ({ ...i, id: i.titulacionId,checked: false })});
@@ -238,11 +247,29 @@ const Titulaciones = () => {
 
     const handleSearch = () => {
         console.log("handleSearch");
+        console.log("haciendo aquí la consulta");
     }
 
     useEffect(() => {
+        console.log("Buscando los datos por paginacion");
         fetchData();
     }, [pagination.page]);
+
+    useEffect(() => {
+
+        console.log("Buscando los datos por la barra de busqueda");
+
+		if (!isInitialized.current) {
+            fetchData();
+			isInitialized.current = true;
+		} else {
+			const timeoutId = setTimeout(fetchData, 350);
+			return () => clearTimeout(timeoutId);
+		}
+
+    }, [items.search]);
+
+
 
     if (!items)
         return (<div>Cargando</div>)
@@ -257,6 +284,7 @@ const Titulaciones = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
+                items={items}
             />
 
             { (items.status === 'load') && 

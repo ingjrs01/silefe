@@ -14,7 +14,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 const spritemap = '/images/icons/icons.svg';
 //const spritemap = '../icons.svg';
 
-const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, status,loadCsv}) => {
+const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, status,loadCsv,items}) => {
 
   return (
     <ClayToolbar>
@@ -34,7 +34,7 @@ const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, sta
               <ClayInput
                 className="form-control-inline"
                 placeholder="Buscar..."
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                onChange={e => itemsHandle({type:ITEMS_ACTIONS.SEARCH,value:e.target.value})}
               />
             </ClayInput.GroupItem>
           </ClayInput.Group>
