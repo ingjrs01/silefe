@@ -7,9 +7,10 @@ import ClayModal, { useModal } from '@clayui/modal';
 import ClayForm, { ClayInput } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import { getAuthToken, getLanguageId, url_api } from '../../includes/LiferayFunctions';
+import { getUserId } from '../../includes/LiferayFunctions';
 import { PAGINATION_ACTIONS, reducer } from '../../includes/reducers/paginate.reducer';
 import { ITEMS_ACTIONS, red_items } from '../../includes/reducers/items.reducer';
+import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
 import Papa from "papaparse";
 
 const spritemap = "../../icons.svg";
@@ -20,7 +21,7 @@ const Titulaciones = () => {
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const controllerRef = useRef();
+//    const controllerRef = useRef();
     const isInitialized = useRef();
 
     const columns = [
@@ -63,8 +64,6 @@ const Titulaciones = () => {
         }
     };
 
-    const auth = getAuthToken();
-    const lang = getLanguageId();
     const referer = "http://localhost:8080/titulaciones";
 
     const loadCsv = () => {
@@ -79,27 +78,8 @@ const Titulaciones = () => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
                 let end = '/silefe.titulacion/add-multiple';
-                let ttmp = {titulaciones:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
-
-                const res2 = await fetch(url_api, {
-                    "credentials": "include",
-                    "headers": {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                        "Accept": "*/*",
-                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                        "contenttype": "undefined",
-                        "x-csrf-token": auth,
-                        "Content-Type": "text/plain;charset=UTF-8",
-                        "Sec-Fetch-Dest": "empty",
-                        "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin"
-                    },
-                    "referrer": `\"${referer}\"`,
-                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
-                    "method": "POST",
-                    "mode": "cors"
-                });
-            
+                let ttmp = {titulaciones:parsedData,userId:getUserId()};
+                let res = await batchAPI(end,ttmp,reader);
             };
             reader.readAsText(file);
         }
@@ -111,28 +91,10 @@ const Titulaciones = () => {
     const confirmDelete = async () => {
         const endpoint = "/silefe.titulacion/remove-titulaciones";
         let s = items.arr.filter(item => item.checked).map(i => { return i.id });
-
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":{\"titulaciones\":[${s}]}}`,
-            "method": "REMOVE",
-            "mode": "cors"
-        });
-
-        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
-        fetchData();
+        let res = await deleteAPI(endpoint,s,referer);
+        await setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
+        await console.log("cargando los datos de nuevo");
+        await fetchData();
     }
 
     const handleDelete = () => {
@@ -142,42 +104,12 @@ const Titulaciones = () => {
 
     const fetchData = async () => {
         const endpoint = "/silefe.titulacion/filter";
-        //const searchtext = '';
-
         const postdata = {
             page: pagination.page,
-            descripcion: items.search
+            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
 
-        if (controllerRef.current) {
-            controllerRef.current.abort();
-        }
-
-        const controller = new AbortController();
-        controllerRef.current = controller;
-
-        const response = await fetch(url_api, {
-            signal: controllerRef.current?.signal,
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-            "method": "POST",
-            "mode": "cors"
-        });
-        //controllerRef.current.abort();
-
-        let { data, totalPages } = await JSON.parse(await response.json());
+        let {data,totalPages} = await fetchAPIData(endpoint, postdata,referer);
         const tmp = await data.map(i => {return ({ ...i, id: i.titulacionId,checked: false })});
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form });
         await paginate({ type: PAGINATION_ACTIONS.TOTAL_PAGES, pages: totalPages });
@@ -188,66 +120,16 @@ const Titulaciones = () => {
             titulacionId: items.item.id,
             codigo: items.item.codigo,
             descripcion: items.item.descripcion,
-            userId: Liferay.ThemeDisplay.getUserId()
+            userId: getUserId()
         }
-
-//        let end = '/group/get-user-group';
-//        let ttmp = {companyId:20097,userId:20125}
-//
-//        const res2 = await fetch(url_api, {
-//            "credentials": "include",
-//            "headers": {
-//                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-//                "Accept": "*/*",
-//                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-//                "contenttype": "undefined",
-//                "x-csrf-token": auth,
-//                "Content-Type": "text/plain;charset=UTF-8",
-//                "Sec-Fetch-Dest": "empty",
-//                "Sec-Fetch-Mode": "cors",
-//                "Sec-Fetch-Site": "same-origin"
-//            },
-//            "referrer": `\"${referer}\"`,
-//            "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
-//            "method": "POST",
-//            "mode": "cors"
-//        });
-//
-//        console.debug(res2);
-//        let { descriptiveName } = await res2.json();
-//        console.log(descriptiveName);
-//        
-//        console.log("Y hoara lo demás");
 
         let endpoint = "/silefe.titulacion/save-titulacion";
         if (items.status === 'new')
             endpoint = "/silefe.titulacion/add-titulacion";
-
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
-            "method": "POST",
-            "mode": "cors"
-        });
+        
+        let res = await saveAPI(endpoint,data,referer);
         await fetchData();
         await setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);
-    }
-
-    const handleSearch = () => {
-        console.log("handleSearch");
-        console.log("haciendo aquí la consulta");
     }
 
     useEffect(() => {
@@ -256,7 +138,6 @@ const Titulaciones = () => {
     }, [pagination.page]);
 
     useEffect(() => {
-
         console.log("Buscando los datos por la barra de busqueda");
 
 		if (!isInitialized.current) {
@@ -269,8 +150,6 @@ const Titulaciones = () => {
 
     }, [items.search]);
 
-
-
     if (!items)
         return (<div>Cargando</div>)
 
@@ -280,7 +159,6 @@ const Titulaciones = () => {
                 paginate={paginate}
                 handleSave={handleSave}
                 handleDelete={handleDelete}
-                handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}

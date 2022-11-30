@@ -14,7 +14,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 const spritemap = '/images/icons/icons.svg';
 //const spritemap = '../icons.svg';
 
-const Menu = ({paginate, handleDelete, handleSave, handleSearch,itemsHandle, status,loadCsv,items}) => {
+const Menu = ({paginate, handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => {
 
   return (
     <ClayToolbar>

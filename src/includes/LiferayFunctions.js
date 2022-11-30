@@ -1,14 +1,16 @@
-import React from "react";
+//import React from "react";
 
-const url_api = "http://localhost:8080/api/jsonws/invoke";
+export const url_api = "http://localhost:8080/api/jsonws/invoke";
 
-function getAuthToken() {
+export function getAuthToken() {
     return Liferay.authToken;
 }
 
-function getLanguageId() {
+export function getLanguageId() {
     return Liferay.ThemeDisplay.getLanguageId();
 }
 
+export const getUserId = () => Liferay.ThemeDisplay.getUserId();
 
-export {getAuthToken, getLanguageId,url_api};
+
+//export {getAuthToken, getLanguageId,url_api};

@@ -1,4 +1,4 @@
-import React, {useState,useEffect,useReducer} from 'react';
+import React, {useState,useEffect,useReducer, useRef} from 'react';
 import DefaultForm from '../DefaultForm';
 import Menu from '../Menu';
 import Table from '../Table';
@@ -7,7 +7,8 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayForm, { ClayInput } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
+import {getUserId} from '../../includes/LiferayFunctions';
+import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
 import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
 import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
@@ -19,7 +20,9 @@ const Colectivos = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
-    const [file,setFile]                   = useState();
+    const [file,setFile]                 = useState();
+    const controllerRef                  = useRef();
+    const isInitialized                  = useRef;
 
     const columns = [
         {
@@ -61,8 +64,6 @@ const Colectivos = () => {
         }
     };
 
-    const auth    = getAuthToken()
-    const lang    = getLanguageId()
     const referer = 'http://localhost:8080/colectivos';
 
     const loadCsv = () => {
@@ -79,33 +80,17 @@ const Colectivos = () => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
                 let end = '/silefe.colectivo/add-multiple';
-                let ttmp = {colectivos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
-                const res2 = await fetch(url_api, {
-                    "credentials": "include",
-                    "headers": {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                        "Accept": "*/*",
-                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                        "contenttype": "undefined",
-                        "x-csrf-token": auth,
-                        "Content-Type": "text/plain;charset=UTF-8",
-                        "Sec-Fetch-Dest": "empty",
-                        "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin"
-                    },
-                    "referrer": `\"${referer}\"`,
-                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
-                    "method": "POST",
-                    "mode": "cors"
-                });
+                let ttmp = {colectivos:parsedData,userId:getUserId()};
 
-                if (res2.ok) {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
-                    fetchData();
-                }
-                else {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
-                }                
+                batchAPI(end,ttmp,referer).then(res => {
+                    if (res2.ok) {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
+                        fetchData();
+                    }
+                    else {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
+                    }                    
+                });
             };
             reader.readAsText(file);
         }
@@ -114,40 +99,26 @@ const Colectivos = () => {
         }
     }
 
-
     const handleSave = async () => {
         const postdata = {
             colectivoId: items.item.id,
             descripcion: items.item.descripcion,
-            userId:      Liferay.ThemeDisplay.getUserId(),
-//            userName:    Liferay.ThemeDisplay.getUserName(),
-//            languageId:  lang
+            userId:      getUserId(),
         }
 
         let endpoint = '/silefe.colectivo/save-colectivo';
         if (items.status === 'new' )
             endpoint = '/silefe.colectivo/add-colectivo';
 
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-            "x-csrf-token": auth,
-            "Content-Type": "text/plain;charset=UTF-8",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin"
-        },
-        "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-        "method": "POST",
-        "mode": "cors"
-        });
-
-        fetchData();
+        saveAPI(endpoint,postdata,referer).then(res => {
+            if (res) {
+                setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);  
+                fetchData();
+            }
+            else {
+                setToastItems([...toastItems, { title: "Error", type: "error", text: "Error guardando elemento" }]);
+            }
+        })        
     }
 
     const handleDelete = () => {
@@ -156,63 +127,27 @@ const Colectivos = () => {
     }
 
     const confirmDelete = async () => {
-        const auth = getAuthToken()
         let s = items.arr.filter(item => item.checked).map( i => {return i.colectivoId});
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"/silefe.colectivo/remove-colectivos\":{\"colectivos\":[${s}]}}`,
-            "method": "POST",
-            "mode": "cors"
-        });
+        const endpoint = "/silefe.colectivo/remove-colectivos";
 
-        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
-        fetchData();
-    }
-
-    const handleSearch = () => {
-        fetchData();
+        deleteAPI(endpoint,s,referer).then(res => {
+            if (res) {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+                fetchData();
+            }
+            else {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);                            
+            }
+        })
     }
 
     const fetchData = async () => {
         const endpoint = '/silefe.colectivo/filter';
-
         const postdata = {
             page: pagination.page,
-            descripcion: '',
+            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
-
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-            "method": "POST",
-            "mode": "cors"
-        });
-
-        let {data,totalPages} = await JSON.parse (await res.json());
+        let {data,totalPages} = await fetchAPIData(endpoint, postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.colectivoId,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form });
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
@@ -220,7 +155,18 @@ const Colectivos = () => {
 
     useEffect(()=>{
         fetchData();
-    },[pagination.page])
+    },[pagination.page]);
+
+    useEffect(() => {
+		if (!isInitialized.current) {
+            fetchData();
+			isInitialized.current = true;
+		} else {
+			const timeoutId = setTimeout(fetchData, 350);
+			return () => clearTimeout(timeoutId);
+		}
+    }, [items.search]);
+
 
     if (!items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
@@ -231,7 +177,6 @@ const Colectivos = () => {
                 paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}

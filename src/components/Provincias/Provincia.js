@@ -1,4 +1,4 @@
-import React, {useState,useEffect, useReducer} from 'react';
+import React, {useState,useEffect, useReducer, useRef} from 'react';
 import DefaultForm from '../DefaultForm';
 import Menu from '../Menu';
 import Table from '../Table';
@@ -7,10 +7,11 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayForm, { ClayInput } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
+import {getUserId} from '../../includes/LiferayFunctions';
 import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
 
 const spritemap = '../icons.svg';
 
@@ -20,9 +21,8 @@ const Provincias = () => {
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                   = useState();
+    const isInitialized = useRef;
 
-    const auth = getAuthToken();
-    const lang = getLanguageId();
     const referer = 'http://localhost:8080/provincias';
 
     const columns = [
@@ -75,48 +75,21 @@ const Provincias = () => {
         console.log(file);
 
         if (file) {
-            const reader = new FileReader();
-         
+            const reader = new FileReader();         
             reader.onload = async ({ target }) => {
-                console.log("cargando");
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
-                console.log(parsedData);
-
-                //************************************************************************************ */
                 let end = '/silefe.provincia/add-multiple';
-                let ttmp = {provincias:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
-
-                const res2 = await fetch(url_api, {
-                    "credentials": "include",
-                    "headers": {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                        "Accept": "*/*",
-                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                        "contenttype": "undefined",
-                        "x-csrf-token": auth,
-                        "Content-Type": "text/plain;charset=UTF-8",
-                        "Sec-Fetch-Dest": "empty",
-                        "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin"
-                    },
-                    "referrer": `\"${referer}\"`,
-                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
-                    "method": "POST",
-                    "mode": "cors"
-                });
-
-                if (res2.ok) {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
-
-                    fetchData();
-                }
-                else {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
-                }                
-                console.debug(res2);
-
-                
+                let ttmp = {provincias:parsedData,userId:getUserId()};
+                batchAPI(end,ttmp,reader).then(res => {
+                    if (res.ok) {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);    
+                        fetchData();
+                    }
+                    else {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
+                    }
+                });               
             };
             reader.readAsText(file);
         }
@@ -130,7 +103,7 @@ const Provincias = () => {
         const postdata = {
             id:         items.item.id,
             name:       items.item.nombre,
-            userId:     Liferay.ThemeDisplay.getUserId(),
+            userId:     getUserId(),
         }
 
         let endpoint = '/silefe.provincia/save-provincia'
@@ -138,26 +111,15 @@ const Provincias = () => {
         if (items.status === 'new') 
             endpoint = '/silefe.provincia/add-provincia';
 
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-            "x-csrf-token": auth,
-            "Content-Type": "text/plain;charset=UTF-8",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin"
-        },
-        "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-        "method": "POST",
-        "mode": "cors"
+        saveAPI(endpoint,postdata,referer).then( res => {
+            if (res) {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Guardar'), type: "info", text: Liferay.Language.get('Elemento añadido correctamente') }]);
+                fetchData();
+            }
+            else {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Guardar'), type: "info", text: Liferay.Language.get('No se ha podido guardar') }]);
+            }
         });
-
-        fetchData();
     }
 
     const handleDelete = () => {
@@ -169,55 +131,26 @@ const Provincias = () => {
         const endpoint = '/silefe.provincia/remove-provincias';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":{\"provincias\":[${s}]}}`,
-            "method": "REMOVE",
-            "mode": "cors"
+        deleteAPI(endpoint,s,referer).then(res =>{
+            if (res) {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+                fetchData();
+            }
+            else {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
+            }
+
         });
-
-        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
-        fetchData();
-    }
-
-    const handleSearch = () => {
-        console.log("handleSearch");
-
     }
 
     const fetchData = async () => {
         const endpoint   = '/silefe.provincia/filter';
-        const searchtext = '';
-
         const postdata = {
-            name: searchtext,
+            name: (items.search && typeof items.search !== 'undefined')?items.search:"",
             page: pagination.page,
         };
 
-        let response = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "x-csrf-token": auth,
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-            "method": "POST"
-
-        });
-        
-        let {data,totalPages} = await JSON.parse (await response.json());
+        let {data,totalPages}  = await fetchAPIData(endpoint,postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.provinciaId,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form});
         await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
@@ -226,6 +159,16 @@ const Provincias = () => {
     useEffect(()=>{
         fetchData();
     },[pagination.page])
+
+    useEffect( ()=> {
+		if (!isInitialized.current) {
+            fetchData();
+			isInitialized.current = true;
+		} else {
+			const timeoutId = setTimeout(fetchData, 350);
+			return () => clearTimeout(timeoutId);
+		}
+    },[items.search]);
 
     if (!items) 
         return (<div>Cargando</div>)
@@ -236,7 +179,6 @@ const Provincias = () => {
                 paginate={paginate}
                 handleSave={handleSave}
                 handleDelete={handleDelete}
-                handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}

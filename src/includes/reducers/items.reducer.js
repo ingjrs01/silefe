@@ -15,6 +15,7 @@ export const ITEMS_ACTIONS = {
     LOAD: 13,
     CANCEL_LOAD:14,
     SEARCH: 15,
+    FETCH: 16,
   }
 
 const initialState = {
@@ -24,7 +25,7 @@ const initialState = {
     checkall: false,
     fields: {},
     status: "list", /* values: new, edit, list, load  */
-    search: "",
+    search: "",    
 }
 
 export const red_items = (state=initialState, action ) => {
