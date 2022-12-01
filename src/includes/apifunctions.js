@@ -29,8 +29,8 @@ export const fetchAPIData = async (endpoint, postdata, referer) => {
         "mode": "cors"
     });
 
-    let { data, totalPages } = await JSON.parse(await response.json());
-    return {data,totalPages}
+    let { data, totalPages, page } = await JSON.parse(await response.json());
+    return {data,totalPages, page}
 }
 
 

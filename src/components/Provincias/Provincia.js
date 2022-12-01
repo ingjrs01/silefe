@@ -8,7 +8,6 @@ import ClayForm, { ClayInput } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import {getUserId} from '../../includes/LiferayFunctions';
-import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
@@ -16,11 +15,10 @@ import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifu
 const spritemap = '../icons.svg';
 
 const Provincias = () => {
-    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false,page:0,load:0});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
-    const [file,setFile]                   = useState();
+    const [file,setFile]                 = useState();
     const isInitialized = useRef;
 
     const referer = 'http://localhost:8080/provincias';
@@ -147,18 +145,13 @@ const Provincias = () => {
         const endpoint   = '/silefe.provincia/filter';
         const postdata = {
             name: (items.search && typeof items.search !== 'undefined')?items.search:"",
-            page: pagination.page,
+            page: items.page,
         };
 
-        let {data,totalPages}  = await fetchAPIData(endpoint,postdata,referer);
+        let {data,totalPages, page}  = await fetchAPIData(endpoint,postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.provinciaId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form});
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
     }
-
-    useEffect(()=>{
-        fetchData();
-    },[pagination.page])
 
     useEffect( ()=> {
 		if (!isInitialized.current) {
@@ -168,7 +161,7 @@ const Provincias = () => {
 			const timeoutId = setTimeout(fetchData, 350);
 			return () => clearTimeout(timeoutId);
 		}
-    },[items.search]);
+    },[items.load]);
 
     if (!items) 
         return (<div>Cargando</div>)
@@ -176,7 +169,6 @@ const Provincias = () => {
     return (
         <>
             <Menu
-                paginate={paginate}
                 handleSave={handleSave}
                 handleDelete={handleDelete}
                 itemsHandle={itemsHandle}

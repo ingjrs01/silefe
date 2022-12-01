@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from "react";
+import React, {useEffect, useReducer, useRef, useState} from "react";
 import DefaultForm from "../DefaultForm";
 import Menu from '../Menu';
 import Table from '../Table';
@@ -7,21 +7,21 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayButton from '@clayui/button';
 import ClayCard from "@clayui/card";
 import ClayForm, { ClayInput } from '@clayui/form';
-import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
-import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
+import { getUserId} from '../../includes/LiferayFunctions';
+//import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
-
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 
 const spritemap = '../icons.svg';
 
 const Cnaes = () => {
-    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
+    //const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},page:0,totalPages:0,load:0});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
-    const [file,setFile]                   = useState();
-
+    const [file,setFile]                 = useState();
+    const isInitialized                  = useRef;
 
     const columns = [
         {
@@ -61,8 +61,6 @@ const Cnaes = () => {
         }       
     };
 
-    const auth = getAuthToken()
-    const lang = getLanguageId();
     const referer = "http://localhost:8080/cnaes";
 
     const loadCsv = () => {
@@ -78,34 +76,18 @@ const Cnaes = () => {
                 console.log(parsedData);
 
                 let end = '/silefe.cnae/add-multiple';
-                let ttmp = { cnaes:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+                let ttmp = { cnaes:parsedData,userId:getUserId()};
 
-                const res2 = await fetch(url_api, {
-                    "credentials": "include",
-                    "headers": {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                        "Accept": "*/*",
-                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                        "contenttype": "undefined",
-                        "x-csrf-token": auth,
-                        "Content-Type": "text/plain;charset=UTF-8",
-                        "Sec-Fetch-Dest": "empty",
-                        "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin"
-                    },
-                    "referrer": `\"${referer}\"`,
-                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
-                    "method": "POST",
-                    "mode": "cors"
+                batchAPI(end,ttmp,referer).then( res2 => {
+                    if (res2.ok) {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);                    
+                        fetchData();
+                    }
+                    else {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
+                    }                            
                 });
 
-                if (res2.ok) {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);                    
-                    fetchData();
-                }
-                else {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
-                }                            
             };
             reader.readAsText(file);
         }
@@ -118,35 +100,22 @@ const Cnaes = () => {
         const data = {
             id:          items.item.id,
             descripcion: items.item.descripcion,
-            userId:      Liferay.ThemeDisplay.getUserId()
+            userId:      getUserId()
         }
 
         let endpoint = '/silefe.cnae/save-cnae';
         if (items.status === 'new')
             endpoint = '/silefe.cnae/add-cnae';
 
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-            "x-csrf-token": auth,
-            "Content-Type": "text/plain;charset=UTF-8",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin"
-        },
-        "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
-        "method": "POST",
-        "mode": "cors"
-        });
-
-//        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
-        await onOpenChange(false);
-        await fetchData();
+            res = saveAPI(endpoint,data,referer).then(res => {
+                if (res) {
+                    fetchData();
+                    setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);            
+                }
+                else {
+                    setToastItems([...toastItems, { title: "Guardar", type: "error", text: "Error" }]);            
+                }
+        })
     }
 
     const handleDelete = () => {
@@ -158,60 +127,52 @@ const Cnaes = () => {
         const endpoint = "/silefe.cnae/remove-cnaes";
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":{\"cnaes\":[${s}]}}`,
-            "method": "REMOVE",
-            "mode": "cors"
-        });
 
-        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
-        fetchData();
-    }
+        deleteAPI(endpoint,s,referer).then(res => {
+            if (res) {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
+                fetchData();        
+            }
+            else {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_no') }]);
+            }
+        })
 
-    const handleSearch = () => {
-        console.log("handlesearch");
     }
 
     const fetchData = async () => {
         const endpoint = "/silefe.cnae/filter";
         const postdata = {
-            page: pagination.page,
-            descripcion : ''
+            page: (items.page>0)?items.page:0,
+            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
-        let response = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "x-csrf-token": auth,
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-            "method": "POST"
-        });
-        console.log("Recibidos los datos");
-        console.log(response);
+        let {data,totalPages,page} = await fetchAPIData(endpoint,postdata,referer);
 
-        let {data,totalPages} = await JSON.parse (await response.json());
         const tmp = await data.map(i => {return({...i,id:i.cnaeId,checked:false})});
-        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form});
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
+        //await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
     }
 
     useEffect(()=>{
-        fetchData();
-    },[pagination.page]);
+		if (!isInitialized.current) {
+            fetchData();
+			isInitialized.current = true;
+		} else {
+			const timeoutId = setTimeout(fetchData, 350);
+			return () => clearTimeout(timeoutId);
+		}
+    },[items.load]);
+
+//    useEffect(() => {
+//		if (!isInitialized.current) {
+//            fetchData();
+//			isInitialized.current = true;
+//		} else {
+//			const timeoutId = setTimeout(fetchData, 350);
+//			return () => clearTimeout(timeoutId);
+//		}
+//    }, [items.search]);
+
 
     if (!items) 
         return (<div>Liferay.Language.get('Cargando')</div>)
@@ -219,10 +180,8 @@ const Cnaes = () => {
     return (
         <>
             <Menu 
-                paginate={paginate}
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
@@ -264,7 +223,6 @@ const Cnaes = () => {
                     </ClayCard.Body>
                 </ClayCard>
             }
-
            
             { (items.status === 'edit' || items.status === 'new') && 
                 <DefaultForm 

@@ -1,4 +1,4 @@
-import React,{useEffect,useReducer,useState} from "react";
+import React,{useEffect,useReducer,useRef,useState} from "react";
 import DefaultForm from "../DefaultForm";
 import Menu from '../Menu';
 import Table from '../Table';
@@ -7,22 +7,20 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayForm, { ClayInput } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
-import {PAGINATION_ACTIONS, reducer} from '../../includes/reducers/paginate.reducer';
+import {url_api, getUserId} from '../../includes/LiferayFunctions';
 import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 
 const spritemap = '../icons.svg';
 
 const Horarios = () => {
-    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}}); 
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
+    const isInitialized                  = useRef;
 
     const referrer = "http://localhost:8080/horarios";
-    const auth = getAuthToken();
-    const lang = getLanguageId();
 
     const columns = [
         {
@@ -65,8 +63,14 @@ const Horarios = () => {
     };
 
     useEffect(()=>{
-        fetchData();
-    },[pagination.page]);
+		if (!isInitialized.current) {
+            fetchData();
+			isInitialized.current = true;
+		} else {
+			const timeoutId = setTimeout(fetchData, 350);
+			return () => clearTimeout(timeoutId);
+		}
+    },[items.load]);
 
 
     const loadCsv = () => {
@@ -84,33 +88,15 @@ const Horarios = () => {
                 let end = '/silefe.horario/add-multiple';
                 let ttmp = {horarios:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
 
-                const res2 = await fetch(url_api, {
-                    "credentials": "include",
-                    "headers": {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                        "Accept": "*/*",
-                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                        "contenttype": "undefined",
-                        "x-csrf-token": auth,
-                        "Content-Type": "text/plain;charset=UTF-8",
-                        "Sec-Fetch-Dest": "empty",
-                        "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin"
-                    },
-                    "referrer": `\"${referer}\"`,
-                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
-                    "method": "POST",
-                    "mode": "cors"
+                batchAPI(end,ttmp,referrer).then(res => {
+                    if (res2.ok) {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
+                        fetchData();
+                    }
+                    else {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
+                    }                
                 });
-
-                if (res2.ok) {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
-                    fetchData();
-                }
-                else {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
-                }                
-                console.debug(res2);
             };
             reader.readAsText(file);
         }
@@ -119,15 +105,11 @@ const Horarios = () => {
         }
     }
 
-
-
     const handleSave = async () => {
         const postdata = {
             horarioId:   items.item.id,
             descripcion: items.item.descripcion,
-            userId:      Liferay.ThemeDisplay.getUserId(),
-            userName:    Liferay.ThemeDisplay.getUserName(),
-            languageId:  lang            
+            userId:      getUserId(),
         }
 
         let endpoint = '/silefe.horario/save-horario';
@@ -135,26 +117,14 @@ const Horarios = () => {
         if (items.status === 'new')
             endpoint = '/silefe.horario/add-horario';
 
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-            "x-csrf-token": auth,
-            "Content-Type": "text/plain;charset=UTF-8",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin"
-        },
-        "referrer": `\"${referrer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-        "method": "POST",
-        "mode": "cors"
-        });
-
-        await fetchData();
+        saveAPI(endpoint,postdata,referrer).then(res => {
+            if (res) {
+                setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Datos guardados correctamente" }]);
+                fetchData();
+            }
+            else
+                setToastItems([...toastItems, { title: "Guardar", type: "error", text: "Problemas al guardar" }]);
+        })
     }
 
     const handleDelete = () => {
@@ -170,53 +140,25 @@ const Horarios = () => {
         const endpoint = '/silefe.horario/remove-horarios';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referrer}\"`,
-            "body": `{\"${endpoint}\":{\"horarios\":[${s}]}}`,
-            "method": "REMOVE",
-            "mode": "cors"
+        deleteAPI(endpoint,s,referrer).then(res => {
+            if (res ) {
+                setToastItems([...toastItems, { title: "Borrar", type: "info", text: "Elemento borrado correctamente" }]);
+                fetchData();
+            }
+            else
+                setToastItems([...toastItems, { title: "Borrar", type: "error", text: "No se puede borrar" }]);
         });
-        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
-        fetchData();
-    }
-
-    const handleSearch = () => { 
-        console.log("search");
     }
 
     const fetchData = async () => {
         const endpoint = "/silefe.horario/filter";  
         const postdata = {
-            page:         pagination.page,
-            descripcion : ''
+            page:         items.page,
+            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
-
-        let response = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "x-csrf-token": auth,
-            },
-            "referrer": `\"${referrer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-            "method": "POST"
-        });
-
-        let {data, totalPages} = await JSON.parse (await response.json());
+        let {data, totalPages,page} = await fetchAPIData(endpoint,postdata,referrer);
         let tmp = await data.map(i => {return({...i,id:i.horarioId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form});
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES, pages:totalPages});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
     }
 
     if (!items) 
@@ -225,10 +167,8 @@ const Horarios = () => {
     return (
         <>
             <Menu 
-                paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}                

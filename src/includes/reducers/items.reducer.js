@@ -16,16 +16,21 @@ export const ITEMS_ACTIONS = {
     CANCEL_LOAD:14,
     SEARCH: 15,
     FETCH: 16,
+    NEXTPAG: 17,
+    PREVPAG:18,
   }
 
 const initialState = {
     arr: [],
     item: {id:0,checked:false},
+    page: 0,
+    totalPages:0,
     errors: [],
     checkall: false,
     fields: {},
     status: "list", /* values: new, edit, list, load  */
-    search: "",    
+    search: "",
+    load: 0,
 }
 
 export const red_items = (state=initialState, action ) => {
@@ -48,6 +53,8 @@ export const red_items = (state=initialState, action ) => {
             return {
                 ...state,
                 arr: action.items,
+                page:action.page,
+                totalPages:action.totalPages,
                 fields: action.fields,
                 item: tmp_item,
                 errors: errores,
@@ -152,8 +159,34 @@ export const red_items = (state=initialState, action ) => {
         case ITEMS_ACTIONS.SEARCH:
             return {
                 ...state,
-                search: action.value
+                search: action.value,
+                page: 0,
+                load: (state.load + 1) % 17
             }
+        case ITEMS_ACTIONS.NEXTPAG:
+            if (state.page < state.totalPages - 1) {
+                return {
+                    ...state,
+                    page: state.page + 1,
+                    load: (state.load + 1) % 17
+                }                
+            }
+            return {
+                ...state,
+                }                
+
+        case ITEMS_ACTIONS.PREVPAG:
+            if (state.page > 0) {
+                return {
+                    ...state,
+                    page: state.page - 1,
+                    load: (state.load + 1) % 17
+                }
+            }
+            return {
+                ...state
+            }
+
         default: 
             throw new Error ("Accion invalida");
     }

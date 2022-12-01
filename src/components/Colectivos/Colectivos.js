@@ -9,15 +9,13 @@ import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import {getUserId} from '../../includes/LiferayFunctions';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
-import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
 import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 
 const spritemap = '../icons.svg';
 
 const Colectivos = () => {
-    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
-    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false}); 
+    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -144,18 +142,13 @@ const Colectivos = () => {
     const fetchData = async () => {
         const endpoint = '/silefe.colectivo/filter';
         const postdata = {
-            page: pagination.page,
+            page: items.page,
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
-        let {data,totalPages} = await fetchAPIData(endpoint, postdata,referer);
+        let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.colectivoId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form });
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
     }
-
-    useEffect(()=>{
-        fetchData();
-    },[pagination.page]);
 
     useEffect(() => {
 		if (!isInitialized.current) {
@@ -165,7 +158,7 @@ const Colectivos = () => {
 			const timeoutId = setTimeout(fetchData, 350);
 			return () => clearTimeout(timeoutId);
 		}
-    }, [items.search]);
+    }, [items.load]);
 
 
     if (!items) 
@@ -174,7 +167,6 @@ const Colectivos = () => {
     return (
         <>
             <Menu 
-                paginate={paginate} 
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
                 itemsHandle={itemsHandle}

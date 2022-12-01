@@ -1,4 +1,4 @@
-import React,{useEffect,useReducer,useState} from "react";
+import React,{useEffect,useReducer,useRef,useState} from "react";
 import DefaultForm from "../DefaultForm";
 import Menu from '../Menu';
 import Table from '../Table';
@@ -7,23 +7,21 @@ import ClayModal, {useModal} from '@clayui/modal';
 import ClayForm, { ClayInput } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import {getAuthToken,getLanguageId,url_api} from '../../includes/LiferayFunctions';
-import {reducer,PAGINATION_ACTIONS} from '../../includes/reducers/paginate.reducer';
+import { getUserId} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 
 const spritemap = '../icons.svg';
 
 const Cnos = () => {
-    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false});
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0}});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
+    const isInitialized                  = useRef;
 
     const referer = "http://localhost:8080/cnos";
-    const auth = getAuthToken();
-    const lang = getLanguageId();
 
     const columns = [
         {
@@ -32,12 +30,6 @@ const Cnos = () => {
             columnType: "checkbox",
             key: "c1",
         },
-//        {
-//            columnName: "codigo",
-//            columnTitle: Liferay.Language.get('Codigo'),
-//            columnType: "string",
-//            key: "c2",
-//        },
         {
             columnName: "descripcion",
             columnTitle: Liferay.Language.get('Descripcion'),
@@ -59,15 +51,6 @@ const Cnos = () => {
                 placeholder:"Identifier",
                 conditions:["number"]
             },
-//            codigo: {
-//                key:2,
-//                type: "text",
-//                label: Liferay.Language.get('Codigo'), 
-//                name: "codigo",      
-//                value:"lalala", 
-//                placeholder:Liferay.Language.get('Codigo'),
-//                conditions:["number"],
-//            },
             descripcion: {
                 key:3,
                 type: "multilang",
@@ -82,8 +65,14 @@ const Cnos = () => {
 
 
     useEffect(()=>{
-        fetchData();
-    },[pagination.page]);
+		if (!isInitialized.current) {
+            fetchData();
+			isInitialized.current = true;
+		} else {
+			const timeoutId = setTimeout(fetchData, 350);
+			return () => clearTimeout(timeoutId);
+		}
+    },[items.load]);
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -100,34 +89,16 @@ const Cnos = () => {
                 let end = '/silefe.cno/add-multiple';
                 let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
 
-                const res2 = await fetch(url_api, {
-                    "credentials": "include",
-                    "headers": {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                        "Accept": "*/*",
-                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                        "contenttype": "undefined",
-                        "x-csrf-token": auth,
-                        "Content-Type": "text/plain;charset=UTF-8",
-                        "Sec-Fetch-Dest": "empty",
-                        "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin"
-                    },
-                    "referrer": `\"${referer}\"`,
-                    "body": `{\"${end}\":${JSON.stringify(ttmp)}}`,
-                    "method": "POST",
-                    "mode": "cors"
+                batchAPI(end,ttmp,referer).then(res2 => {
+                    if (res2.ok) {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
+                        
+                        fetchData();
+                    }
+                    else {
+                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
+                    }                    
                 });
-
-                if (res2.ok) {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: Liferay.Language.get('Elementos_cargados') }]);
-                    
-                    fetchData();
-                }
-                else {
-                    setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
-                }                
-                console.debug(res2);
             };
             reader.readAsText(file);
         }
@@ -139,38 +110,21 @@ const Cnos = () => {
     const handleSave = async () => {
         const data = {
             cnoId:       items.item.id,
-            //codigo:      items.item.codigo,
             descripcion: items.item.descripcion,
-            userId:      Liferay.ThemeDisplay.getUserId(),
+            userId:      getUserId(),
         }
-
         let endpoint = '/silefe.cno/save-cno';
-
         if (items.status === 'new')
             endpoint = '/silefe.cno/add-cno';
-
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-            "x-csrf-token": auth,
-            "Content-Type": "text/plain;charset=UTF-8",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin"
-        },
-        "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
-        "method": "POST",
-        "mode": "cors"
+        saveAPI(endpoint,data,referer).then(res => {
+            if (res) {
+                fetchData();
+                setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);        
+            }
+            else {
+                setToastItems([...toastItems, { title: "Guardar", type: "error", text: "Error" }]);        
+            }
         });
-
-        await fetchData();
-        await setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Elemento añadido correctamente" }]);
-
     }
 
     const handleDelete = () => {
@@ -181,56 +135,29 @@ const Cnos = () => {
     const confirmDelete = async () => {
         const endpoint = '/silefe.cno/remove-cnos';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
-
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":{\"cnos\":[${s}]}}`,
-            "method": "REMOVE",
-            "mode": "cors"
-        });
-        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_ok') }]);
-        fetchData();
-    }
-
-    const handleSearch = () => { 
-        console.log("search");
+        deleteAPI(endpoint,s,referer).then(res => {
+            if (res) {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+                fetchData();        
+            }
+            else {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "error", text: Liferay.Language.get('Borrado_no') }]);
+            }
+        })
     }
 
     const fetchData = async () => {
-        const endpoint = "/silefe.cno/filter";  
-        
+        const endpoint = "/silefe.cno/filter";          
         const postdata = {
-            page:         pagination.page,
-            codigo :      '',
-            descripcion : ''
+            page:         items.page,
+            codigo:       0,
+            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
-
-        let response = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "x-csrf-token": auth,
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-            "method": "POST"
-        });
-
-        let {data,totalPages} = await JSON.parse (await response.json());
+        console.log("fetchData");
+        let {data,totalPages,page} = await fetchAPIData(endpoint,postdata,referer);
+        await console.debug(data);
         const tmp = await data.map(i => {return({...i,id:i.cnoId,checked:false})});
-        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form});
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
     }
 
     if (!items) 
@@ -239,10 +166,8 @@ const Cnos = () => {
     return (
         <>
             <Menu 
-                paginate={paginate}
                 handleSave={handleSave} 
                 handleDelete={handleDelete} 
-                handleSearch={handleSearch}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
@@ -285,7 +210,6 @@ const Cnos = () => {
             </ClayCard>
             }
 
-
             {   (items.status === 'edit' || items.status === 'new') && 
                 <DefaultForm
                     form={form}
@@ -293,7 +217,6 @@ const Cnos = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                 />
-
             }
             
             {

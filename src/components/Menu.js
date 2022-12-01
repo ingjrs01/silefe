@@ -1,11 +1,9 @@
 import React from 'react';
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-//import ClayButton from 'clay';
 import ClayIcon from '@clayui/icon';
 import {ClayInput} from '@clayui/form';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayToolbar from '@clayui/toolbar';
-import {PAGINATION_ACTIONS} from '../includes/reducers/paginate.reducer';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 //import "@clayui/css/lib/css/atlas.css";
@@ -14,7 +12,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 const spritemap = '/images/icons/icons.svg';
 //const spritemap = '../icons.svg';
 
-const Menu = ({paginate, handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => {
+const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => {
 
   return (
     <ClayToolbar>
@@ -46,7 +44,7 @@ const Menu = ({paginate, handleDelete, handleSave, itemsHandle, status,loadCsv,i
             <ClayButton.Group>
               <ClayButtonWithIcon
                 displayType="secondary"
-                onClick={() => { paginate({type:PAGINATION_ACTIONS.PREV_PAGE})}}
+                onClick={() => {   itemsHandle({type:ITEMS_ACTIONS.PREVPAG})/*paginate({type:PAGINATION_ACTIONS.PREV_PAGE})*/}}
                 small
                 symbol="user"
               />
@@ -54,7 +52,7 @@ const Menu = ({paginate, handleDelete, handleSave, itemsHandle, status,loadCsv,i
 
               <ClayButtonWithIcon
                 displayType="secondary"
-                onClick={() => { paginate({type:PAGINATION_ACTIONS.NEXT_PAGE}) }}
+                onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEXTPAG}) }}
                 spritemap={spritemap}
                 small
                 symbol="angle-right"
