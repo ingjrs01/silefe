@@ -10,6 +10,7 @@ import Experiencias from './components/Experiencias/Experiencias';
 import Salarios from './components/Salarios/Salarios';
 import MBaja from './components/MBaja/MBaja';
 import Horarios from './components/Horarios/Horarios';
+import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
 
 const Application = () => {
 
@@ -35,6 +36,7 @@ const Application = () => {
                             <Route path='/salarios'     element={ <Salarios /> }   />
                             <Route path='/mbaja'        element={ <MBaja /> }   />
                             <Route path='/horarios'     element={ <Horarios /> }   />
+                            <Route path='/titulacionesf' element={ <TitulacionesFam /> }   />
                         </Routes>
                     </div>
                 </div>

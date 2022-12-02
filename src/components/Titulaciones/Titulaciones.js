@@ -8,15 +8,13 @@ import ClayForm, { ClayInput } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import { getUserId } from '../../includes/LiferayFunctions';
-//import { PAGINATION_ACTIONS, reducer } from '../../includes/reducers/paginate.reducer';
 import { ITEMS_ACTIONS, red_items } from '../../includes/reducers/items.reducer';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
 import Papa from "papaparse";
 
-const spritemap = "../../icons.svg";
+const spritemap = "./icons.svg";
 
 const Titulaciones = () => {
-    //const [pagination, paginate]           = useReducer(reducer, { page: 0, totalPages: 0, allCheck: false })
     const [items, itemsHandle]             = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,page:0, load: 0 });
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);

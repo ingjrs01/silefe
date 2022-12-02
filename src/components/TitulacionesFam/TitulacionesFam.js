@@ -1,90 +1,17 @@
-import React from "react";
-import Table from '../Table';
-import DefaultForm from '../DefaultForm';
-import Menu from '../Menu';
-import ClayAlert from '@clayui/alert';
-import ClayModal, {useModal} from '@clayui/modal';
-import ClayButton from '@clayui/button';
-import {getAuthToken,getLanguageId, url_api} from '../../includes/LiferayFunctions';
-import {PAGINATION_ACTIONS,reducer} from '../../includes/reducers/paginate.reducer';
-import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
+import React, { useEffect } from "react";
+import { getUserId,getAuthToken, url_api } from '../../includes/LiferayFunctions';
 
-const spritemap = "../../icons.svg";
 
 const TitulacionesFam = () => {
-    const [pagination,paginate]          = useReducer(reducer,{page:0,totalPages:0,allCheck:false})
-    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false}); 
-    const [toastItems,setToastItems]     = useState([]);
-    const {observer, onOpenChange, open} = useModal();
 
-    const columns = [
-        {
-            columnName: "titulacionId",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        {
-            columnName: "descripcion",
-            columnTitle: "Descripción",
-            columnType: "string",
-            key: "c2",
-        },
-    ];
 
-    const form = {
-        title: "Titulaciones Familias",
-        rows: [
-            {key:1,label: "ID",     name: "id",          value:"lalala", placeholder:"Identifier"},
-            {key:2,label: "nombre", name: "descripcion", value:"lelele", placeholder:"descripcion"},
-        ]
-    };
-
-    const auth = getAuthToken();
-    const lang = getLanguageId();
-    const referer = "http://localhost:8080/titulacionesfam";
-
-    const confirmDelete = async () => {
-        const endpoint = "/silefe.titulacion/remove-titulaciones";
-        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
-
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":{\"titulaciones\":[${s}]}}`,
-            "method": "REMOVE",
-            "mode": "cors"
-        });
-
-        itemsHandle({type:ITEMS_ACTIONS.HIDE});
-        setToastItems([...toastItems, { title: "Borrar", type: "error", text: "Elemento borrado correctamente" }]);
-        fetchData();
-    }
-
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
-    }
-
-    const fetchData = async () => {
-        const endpoint = "/silefe.titulacion/filter";
-        const searchtext = '';
-
+    const fetchAPIData = async () => {
+        const auth = getAuthToken();
+        const referer = 'lalala';
+        const endpoint = "/silefe.titulacionfam/filter";
         const postdata = {
-            page:        pagination.page,
-            descripcion: searchtext,
-            languageId:  lang
+            page: 0,
+            descripcion: ""
         };
 
         const response = await fetch(url_api, {
@@ -105,133 +32,22 @@ const TitulacionesFam = () => {
             "method": "POST",
             "mode": "cors"
         });
-
-        let {data,totalPages} = await JSON.parse (await response.json());
-        const tmp = await data.map(i => {return({...i,id:i.titulacionId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp});
-        await paginate({type:PAGINATION_ACTIONS.TOTAL_PAGES,pages:totalPages});
-        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
-    }
-
-    const handleSave = async () => {
-        const data = {
-            titulacionId: items.item.id,
-            codigo:       items.item.codigo,
-            descripcion:  items.item.descripcion,
-            userId:       Liferay.ThemeDisplay.getUserId(),
-            userName:     Liferay.ThemeDisplay.getUserName(),
-            languageId:   lang
-        }
-        let endpoint = "/silefe.titulacion/save-titulacion";
-        if (items.item.id == 0)
-            endpoint = "/silefe.titulacion/add-titulacion";
-        
-        const res = await fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-            "x-csrf-token": auth,
-            "Content-Type": "text/plain;charset=UTF-8",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin"
-        },
-        "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
-        "method": "POST",
-        "mode": "cors"
-        });
-        await fetchData();
-        await reset()
-        await itemsHandle({type:ITEMS_ACTIONS.HIDE});
-        await setToastItems([...toastItems,{title: "Guardar", type:"info", text:"Elemento añadido correctamente"}]);
-    }
-
-    const handleSearch = () => {
-        console.log("handleSearch");
+        await console.debug(response);
+    
+        //let { data, totalPages, page } = await JSON.parse(await response.json());
+        //return {data,totalPages, page}
     }
 
     useEffect(()=>{
-        fetchData();
-    },[pagination.page]);
-
-    if (!items) 
-    return (<div>Cargando</div>)
+        fetchAPIData().then(res=>{
+            console.log("lalala");
+        })
+    },[]);
+        
 
     return (
         <>
-            <Menu
-                paginate={paginate}
-                handleSave={handleSave}
-                handleDelete={handleDelete}
-                handleSearch={handleSearch}
-                itemsHandle={itemsHandle}
-                showform={items.showform}
-            />
-            {
-                items.showform &&
-                <DefaultForm
-                    form={form}
-                    item={items.item}
-                    save={handleSave}
-                    itemsHandle={itemsHandle}
-                />
-            }
-            {
-                !items.showform &&
-                <Table
-                    columns={columns}
-                    rows={items}
-                    itemsHandle={itemsHandle}
-                />
-            }
-
-            <ClayAlert.ToastContainer>
-                {toastItems.map(value => (
-                    <ClayAlert
-                        autoClose={5000}
-                        key={value}
-                        onClose={() => {
-                            setToastItems(prevItems =>
-                                prevItems.filter(item => item !== value)
-                            );
-                        }}
-                        spritemap={spritemap}
-                        title={`${value.title}`}
-                        displayType={value.type}
-                    >{`${value.text}`}</ClayAlert>
-                ))}
-            </ClayAlert.ToastContainer>
-
-            {open && (
-                <ClayModal
-                    observer={observer}
-                    size="lg"
-                    spritemap={spritemap}
-                    status="info"
-                >
-                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
-                    <ClayModal.Body>
-                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
-                    </ClayModal.Body>
-                    <ClayModal.Footer
-                        first={
-                            <ClayButton.Group spaced>
-                                <ClayButton displayType="secondary" onClick={() => onOpenChange(false)}>{"Cancelar"}</ClayButton>
-                            </ClayButton.Group>
-                        }
-                        last={
-                            <ClayButton onClick={() => { onOpenChange(false); confirmDelete() }}>
-                                {"Borrar"}
-                            </ClayButton>
-                        }
-                    />
-                </ClayModal>
-            )}
-
+            <p>only for your eyes</p>
         </>
     )
 }

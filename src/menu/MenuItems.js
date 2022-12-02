@@ -10,6 +10,7 @@ const MenuItems = [
     {key: 7, url: '/salarios',     caption: 'Rangos Sal.'},
     {key: 8, url: '/mbaja',        caption: 'Mot. Baja'},
     {key: 9, url: '/horarios',     caption: 'Horarios'},
+    {key:10, url: '/titulacionesf',caption: 'Familias'},
 ]
 
 

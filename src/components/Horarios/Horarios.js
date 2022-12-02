@@ -118,13 +118,17 @@ const Horarios = () => {
             endpoint = '/silefe.horario/add-horario';
 
         saveAPI(endpoint,postdata,referrer).then(res => {
+            console.log("saveAPI");
             if (res) {
+                console.log("todo ha ido guay");
                 setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Datos guardados correctamente" }]);
                 fetchData();
             }
-            else
+            else {
                 setToastItems([...toastItems, { title: "Guardar", type: "error", text: "Problemas al guardar" }]);
-        })
+                console.log("Hubo problemas");
+            }
+        });
     }
 
     const handleDelete = () => {

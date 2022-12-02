@@ -79,6 +79,7 @@ export const saveAPI = async (endpoint,data,referer) => {
         "method": "POST",
         "mode": "cors"
     });
+    console.debug(res);
     return res.ok;
 }
 

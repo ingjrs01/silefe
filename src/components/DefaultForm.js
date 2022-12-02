@@ -74,9 +74,9 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
     return true;
   }
 
-  console.debug(items);
+  //console.debug(items);
   //console.debug(items.errors);
-  console.log("Ya está mostrado");
+  //console.log("Ya está mostrado");
 
   return (
     <ClayCard>
@@ -112,7 +112,6 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
                       locales={locales}
                       onSelectedLocaleChange={ setSelectedLocale }
                       onTranslationsChange={ evt => { 
-                          console.debug(evt);
                           validateLocalized(it, evt);
                           itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: evt });
                         }
