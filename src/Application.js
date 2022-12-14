@@ -11,6 +11,7 @@ import Salarios from './components/Salarios/Salarios';
 import MBaja from './components/MBaja/MBaja';
 import Horarios from './components/Horarios/Horarios';
 import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
+import DGeografica from './components/DGeografica/DGeografica';
 
 const Application = () => {
 
@@ -27,16 +28,17 @@ const Application = () => {
                 <div className='col-8'>
                     <div className="sheet-section">
                         <Routes>
-                            <Route path='/titulaciones' element={ <Titulaciones /> } />
-                            <Route path='/colectivos'   element={ <Colectivos /> }   />
-                            <Route path='/provincias'   element={ <Provincias /> }   />
-                            <Route path='/cnaes'        element={ <Cnaes /> }   />
-                            <Route path='/cnos'         element={ <Cnos /> }   />
-                            <Route path='/experiencias' element={ <Experiencias /> }   />
-                            <Route path='/salarios'     element={ <Salarios /> }   />
-                            <Route path='/mbaja'        element={ <MBaja /> }   />
-                            <Route path='/horarios'     element={ <Horarios /> }   />
+                            <Route path='/titulaciones'  element={ <Titulaciones /> } />
+                            <Route path='/colectivos'    element={ <Colectivos /> }   />
+                            <Route path='/provincias'    element={ <Provincias /> }   />
+                            <Route path='/cnaes'         element={ <Cnaes /> }   />
+                            <Route path='/cnos'          element={ <Cnos /> }   />
+                            <Route path='/experiencias'  element={ <Experiencias /> }   />
+                            <Route path='/salarios'      element={ <Salarios /> }   />
+                            <Route path='/mbaja'         element={ <MBaja /> }   />
+                            <Route path='/horarios'      element={ <Horarios /> }   />
                             <Route path='/titulacionesf' element={ <TitulacionesFam /> }   />
+                            <Route path='/dgeografica'   element={ <DGeografica /> }   />                            
                         </Routes>
                     </div>
                 </div>

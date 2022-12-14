@@ -102,6 +102,7 @@ const Titulaciones = () => {
     }
 
     const fetchData = async () => {
+        console.log("fetchData");
         const endpoint = "/silefe.titulacion/filter";
         const postdata = {
             page: items.page,

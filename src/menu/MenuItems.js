@@ -11,6 +11,7 @@ const MenuItems = [
     {key: 8, url: '/mbaja',        caption: 'Mot. Baja'},
     {key: 9, url: '/horarios',     caption: 'Horarios'},
     {key:10, url: '/titulacionesf',caption: 'Familias'},
+    {key:11, url: '/dgeografica',  caption: 'Geográficas'},
 ]
 
 

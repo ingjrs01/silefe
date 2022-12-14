@@ -8,9 +8,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 //import "@clayui/css/lib/css/atlas.css";
 
-//const spritemap = "../icons.svg";
 const spritemap = '/images/icons/icons.svg';
-//const spritemap = '../icons.svg';
 
 const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => {
 
