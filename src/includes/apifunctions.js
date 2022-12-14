@@ -29,8 +29,8 @@ export const fetchAPIData = async (endpoint, postdata, referer) => {
         "mode": "cors"
     });
 
-    let { data, totalPages, page } = await JSON.parse(await response.json());
-    return {data,totalPages, page}
+    let { data, totalPages, page, error } = await JSON.parse(await response.json());
+    return {data, error,totalPages, page}
 }
 
 
@@ -59,9 +59,9 @@ export const deleteAPI = async (endpoint,ids,referer) => {
     return res.ok;
 }
 
-export const saveAPI = async (endpoint,data,referer) => {
+export const saveAPI = async (endpoint,postdata,referer) => {
     const auth = getAuthToken();
-    const res = await fetch(url_api, {
+    const response = await fetch(url_api, {
         "credentials": "include",
         "headers": {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
@@ -75,12 +75,12 @@ export const saveAPI = async (endpoint,data,referer) => {
             "Sec-Fetch-Site": "same-origin"
         },
         "referrer": `\"${referer}\"`,
-        "body": `{\"${endpoint}\":${JSON.stringify(data)}}`,
+        "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
         "method": "POST",
         "mode": "cors"
     });
-    console.debug(res);
-    return res.ok;
+    let { data, status, error } = await response.json();
+    return { data, status, error };
 }
 
 export const batchAPI = async (endpoint,ttmp,referer) => {

@@ -2,17 +2,15 @@ import React,{useEffect,useReducer,useRef,useState} from "react";
 import DefaultForm from "../DefaultForm";
 import Menu from '../Menu';
 import Table from '../Table';
-import ClayAlert from '@clayui/alert';
-import ClayModal, {useModal} from '@clayui/modal';
-import ClayForm, { ClayInput } from '@clayui/form';
-import ClayCard from "@clayui/card";
-import ClayButton from '@clayui/button';
-import {url_api, getUserId} from '../../includes/LiferayFunctions';
+import {useModal} from '@clayui/modal';
+import {getUserId} from '../../includes/LiferayFunctions';
 import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
-
-const spritemap = '../icons.svg';
+import {LoadFiles} from '../../includes/interface/LoadFiles'
+import {FAvisos} from '../../includes/interface/FAvisos'
+import { FModal } from '../../includes/interface/FModal';
+import { Errors } from '../../includes/Errors';
 
 const Horarios = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0}); 
@@ -31,14 +29,14 @@ const Horarios = () => {
         },
         {
             columnName: "descripcion",
-            columnTitle: "Descripción",
+            columnTitle: Liferay.Language.get("Descripcion"),
             columnType: "string",
             key: "c2",
         },
     ];
 
     const form = {
-        title: "Título del formulario",
+        title: Liferay.Language.get("Horarios"),
         languages: ["es-ES","en-US","gl-ES"],
         rows: {
             id: {                
@@ -72,16 +70,13 @@ const Horarios = () => {
 		}
     },[items.load]);
 
-
     const loadCsv = () => {
-        console.log("Cargando un csv");
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
     const processCsv = () => {
         if (file) {
-            const reader = new FileReader();
-         
+            const reader = new FileReader();         
             reader.onload = async ({ target }) => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
@@ -90,12 +85,11 @@ const Horarios = () => {
 
                 batchAPI(end,ttmp,referrer).then(res => {
                     if (res2.ok) {
-                        setToastItems([...toastItems, { title: "Carga Masiva", type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
+                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
                         fetchData();
                     }
-                    else {
-                        setToastItems([...toastItems, { title: "Carga Masiva", type: "error", text: "No se han podido cargar los datos" }]);
-                    }                
+                    else 
+                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
                 });
             };
             reader.readAsText(file);
@@ -113,29 +107,22 @@ const Horarios = () => {
         }
 
         let endpoint = '/silefe.horario/save-horario';
-
         if (items.status === 'new')
             endpoint = '/silefe.horario/add-horario';
 
-        saveAPI(endpoint,postdata,referrer).then(res => {
-            console.log("saveAPI");
-            if (res) {
-                console.log("todo ha ido guay");
-                setToastItems([...toastItems, { title: "Guardar", type: "info", text: "Datos guardados correctamente" }]);
-                fetchData();
-            }
-            else {
-                setToastItems([...toastItems, { title: "Guardar", type: "error", text: "Problemas al guardar" }]);
-                console.log("Hubo problemas");
-            }
-        });
+        let {status,error} = await saveAPI(endpoint,postdata,referrer);
+        if (status) {
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
+            fetchData();
+        }
+        else 
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
     }
 
     const handleDelete = () => {
         if (items.arr.filter(item => item.checked).length > 0) {
             let s = items.arr.filter(item => item.checked).map( i => {return i.id});
             console.log(s);
-
             onOpenChange(true);        
         }
     }
@@ -146,11 +133,11 @@ const Horarios = () => {
 
         deleteAPI(endpoint,s,referrer).then(res => {
             if (res ) {
-                setToastItems([...toastItems, { title: "Borrar", type: "info", text: "Elemento borrado correctamente" }]);
+                setToastItems([...toastItems, { title: Liferay.Language.get("Borrar"), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();
             }
             else
-                setToastItems([...toastItems, { title: "Borrar", type: "error", text: "No se puede borrar" }]);
+                setToastItems([...toastItems, { title: Liferay.Language.get("Borrar"), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
         });
     }
 
@@ -166,7 +153,7 @@ const Horarios = () => {
     }
 
     if (!items) 
-        return (<div>Cargando</div>)
+        return (<div>{Liferay.Language.get("Cargando")}</div>)
 
     return (
         <>
@@ -177,43 +164,12 @@ const Horarios = () => {
                 status={items.status}
                 loadCsv={loadCsv}                
             />
-
             { (items.status === 'load') && 
-            <ClayCard>
-                <ClayCard.Body>
-                    <ClayCard.Description displayType="title">
-                        <h2>Cargando ficheros</h2>
-                    </ClayCard.Description>
-
-                    <ClayCard.Description truncate={false} displayType="text">
-                        <ClayForm>
-                            <ClayForm.Group className={'has-success'}>
-                                <label htmlFor="basicInput">{Liferay.Language.get('Selecciona')}</label>
-                                <ClayInput
-                                    type="text"
-                                    name="ficheros"
-                                    onChange={e => {
-                                        console.log("llamando");
-                                    }}>
-                                </ClayInput>
-
-                            </ClayForm.Group>
-
-                            <input type="file" name="files" multiple onChange={(e) => setFile(e.target.files[0])} />
-
-                        </ClayForm>
-                    </ClayCard.Description>
-                    <div className="btn-group">
-                        <div className="btn-group-item">
-                            <ClayButton onClick={e => processCsv()} displayType="secondary">{Liferay.Language.get('Guardar')}</ClayButton>
-                        </div>
-                        <div className="btn-group-item">
-                            <ClayButton onClick={e => itemsHandle({type:ITEMS_ACTIONS.CANCEL_LOAD})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
-                        </div>
-                    </div>
-                </ClayCard.Body>
-            </ClayCard>}
-
+            <LoadFiles 
+                setFile={setFile}
+                processCsv={processCsv}
+                itemsHandle={itemsHandle}
+            />}
             {
                 (items.status === 'edit' || items.status === 'new') && 
                 <DefaultForm 
@@ -222,8 +178,7 @@ const Horarios = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                 />
-            }
-            
+            }            
             {                
              items.status === 'list' &&
               <Table 
@@ -232,49 +187,8 @@ const Horarios = () => {
                   itemsHandle={itemsHandle} 
               />
             }
-            <ClayAlert.ToastContainer>
-                {toastItems.map(value => (
-                <ClayAlert
-                    autoClose={5000}
-                    key={value}
-                    onClose={() => {
-                        setToastItems(prevItems =>
-                            prevItems.filter(item => item !== value)
-                        );
-                    }}
-                    spritemap={spritemap}
-                    title={`${value.title}`}
-                    displayType={value.type}
-                >{`${value.text}`}</ClayAlert>
-                ))}
-            </ClayAlert.ToastContainer>
-
-            {open && (
-                <ClayModal
-                    observer={observer}
-                    size="lg"
-                    spritemap={spritemap}
-                    status="info"
-                >
-                    <ClayModal.Header>{"Confirmación"}</ClayModal.Header>
-                    <ClayModal.Body>
-                        <h1>{"Seguro que desea borrar este elemento ?"}</h1>
-                    </ClayModal.Body>
-                    <ClayModal.Footer
-                        first={
-                            <ClayButton.Group spaced>
-                                <ClayButton displayType="secondary" onClick={()=>onOpenChange(false)}>{"Cancelar"}</ClayButton>
-                            </ClayButton.Group>
-                        }
-                        last={
-                            <ClayButton onClick={() => {onOpenChange(false);confirmDelete()}}>
-                                {"Borrar"}
-                            </ClayButton>
-                        }
-                    />
-                </ClayModal>
-            )}
-
+            <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
+            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>
     )
 }
