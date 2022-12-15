@@ -21,7 +21,7 @@ const DGeografica = () => {
 
     const columns = [
         {
-            columnName: "colectivoId",
+            columnName: "dGeograficaId",
             columnTitle: "Id",
             columnType: "checkbox",
             key: "c1",
@@ -74,7 +74,7 @@ const DGeografica = () => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
                 let end = '/silefe.dgeografica/add-multiple';
-                let ttmp = {colectivos:parsedData,userId:getUserId()};
+                let ttmp = {dgeograficas:parsedData,userId:getUserId()};
 
                 batchAPI(end,ttmp,referer).then(res => {
                     if (res2.ok) {
@@ -95,7 +95,7 @@ const DGeografica = () => {
 
     const handleSave = async () => {
         const postdata = {
-            colectivoId: items.item.id,
+            dGeograficaId: items.item.id,
             descripcion: items.item.descripcion,
             userId:      getUserId(),
         }
@@ -120,18 +120,16 @@ const DGeografica = () => {
     }
 
     const confirmDelete = async () => {
-        let s = items.arr.filter(item => item.checked).map( i => {return i.colectivoId});
-        const endpoint = "/silefe.dgeografica/remove-geografica";
+        let s = items.arr.filter(item => item.checked).map( i => {return i.dGeograficaId});
+        const endpoint = "/silefe.dgeografica/remove-geograficas";
 
-        deleteAPI(endpoint,s,referer).then(res => {
-            if (res) {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
-                fetchData();
-            }
-            else {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);                            
-            }
-        })
+        let {status,error,msg} = await deleteAPI(endpoint,s,referer);
+        if (status) {
+            setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+            fetchData();
+        }
+        else 
+            setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') + ": " + Errors[error] }]);                            
     }
 
     const fetchData = async () => {
@@ -144,7 +142,7 @@ const DGeografica = () => {
         let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
         await console.log("Datos recibidos");
         await console.debug(data);
-        const tmp = await data.map(i => {return({...i,id:i.colectivoId,checked:false})});
+        const tmp = await data.map(i => {return({...i,id:i.dGeograficaId,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
     }
 

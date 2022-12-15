@@ -37,7 +37,7 @@ export const fetchAPIData = async (endpoint, postdata, referer) => {
 export const deleteAPI = async (endpoint,ids,referer) => {
     const auth = getAuthToken();
 
-    const res = await fetch(url_api, {
+    let response = await fetch(url_api, {
         "credentials": "include",
         "headers": {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
@@ -55,8 +55,9 @@ export const deleteAPI = async (endpoint,ids,referer) => {
     "method": "REMOVE",
     "mode": "cors"
     });
-    
-    return res.ok;
+
+    const {status,error,msg} = await response.json();
+    return {status,error,msg};
 }
 
 export const saveAPI = async (endpoint,postdata,referer) => {
