@@ -12,7 +12,7 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
 
-const TitulacionesFam = () => {
+const TitulacionesTipo = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
@@ -21,7 +21,7 @@ const TitulacionesFam = () => {
 
     const columns = [
         {
-            columnName: "titulacionFamId",
+            columnName: "titulacionTipoId",
             columnTitle: "Id",
             columnType: "checkbox",
             key: "c1",
@@ -35,7 +35,7 @@ const TitulacionesFam = () => {
     ];
 
     const form = {
-        title: Liferay.Language.get('Titulaciones'),
+        title: Liferay.Language.get('Titulaciones_tipo'),
         languages: ["es-ES","en-US","gl-ES"],
         rows: {
             id: {
@@ -59,7 +59,7 @@ const TitulacionesFam = () => {
         }
     };
 
-    const referer = 'http://localhost:8080/titulacionesf';
+    const referer = 'http://localhost:8080/tittipo';
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -73,8 +73,8 @@ const TitulacionesFam = () => {
             reader.onload = async ({ target }) => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
-                let end = '/silefe.titulacionfam/add-multiple';
-                let ttmp = {titulacionesf:parsedData,userId:getUserId()};
+                let end = '/silefe.titulaciontipo/add-multiple';
+                let ttmp = {titulacionestipo:parsedData,userId:getUserId()};
 
                 batchAPI(end,ttmp,referer).then(res => {
                     if (res2.ok) {
@@ -100,17 +100,18 @@ const TitulacionesFam = () => {
             userId:      getUserId(),
         }
 
-        let endpoint = '/silefe.titulacionfam/save-titulacion-fam';
+        let endpoint = '/silefe.titulaciontipo/save-titulaciones-tipo';
         if (items.status === 'new' )
-            endpoint = '/silefe.titulacionfam/add-titulacion-fam';
+            endpoint = '/silefe.titulaciontipo/add-titulaciones-tipo';
 
         let {status,error} = await saveAPI(endpoint,postdata,referer);    
         if (status) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);  
             fetchData();
         }
-        else             
+        else {
             setToastItems([...toastItems, { title: Liferay.Language.get("Error"), type: "danger", text:  Errors[error]}]);
+        }
     }
 
     const handleDelete = () => {
@@ -119,27 +120,28 @@ const TitulacionesFam = () => {
     }
 
     const confirmDelete = async () => {
-        let s = items.arr.filter(item => item.checked).map( i => {return i.titulacionFamId});
-        const endpoint = "/silefe.titulacionfam/remove-fam-titulaciones";
+        let s = items.arr.filter(item => item.checked).map( i => {return i.titulacionTipoId});
+        const endpoint = "/silefe.titulaciontipo/remove-titulaciones-tipo";
 
-        let {status,error,msg} = await deleteAPI(endpoint,s,referer); 
-        if (status) {
-            setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
-            fetchData();
-        }
-        else {
-            setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') + ": " + Errors[error] }]); 
-        }
+        deleteAPI(endpoint,s,referer).then(res => {
+            if (res) {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+                fetchData();
+            }
+            else {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);                            
+            }
+        })
     }
 
     const fetchData = async () => {
-        const endpoint = '/silefe.titulacionfam/filter';
+        const endpoint = '/silefe.titulaciontipo/filter';
         const postdata = {
             page: items.page,
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
         let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
-        const tmp = await data.map(i => {return({...i,id:i.titulacionFamId,checked:false})});
+        const tmp = await data.map(i => {return({...i,id:i.titulacionTipoId,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
     }
 
@@ -194,4 +196,4 @@ const TitulacionesFam = () => {
     );
 }
 
-export default TitulacionesFam;
+export default TitulacionesTipo;

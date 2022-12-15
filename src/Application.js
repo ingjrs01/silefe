@@ -12,6 +12,7 @@ import MBaja from './components/MBaja/MBaja';
 import Horarios from './components/Horarios/Horarios';
 import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
 import DGeografica from './components/DGeografica/DGeografica';
+import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
 
 const Application = () => {
 
@@ -39,6 +40,7 @@ const Application = () => {
                             <Route path='/horarios'      element={ <Horarios /> }   />
                             <Route path='/titulacionesf' element={ <TitulacionesFam /> }   />
                             <Route path='/dgeografica'   element={ <DGeografica /> }   />                            
+                            <Route path='/tittipo'       element={ <TitulacionesTipo /> } />
                         </Routes>
                     </div>
                 </div>
