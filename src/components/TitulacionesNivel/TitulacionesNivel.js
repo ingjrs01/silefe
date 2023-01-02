@@ -12,7 +12,7 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
 
-const TitulacionesTipo = () => {
+const TitulacionesNivel = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
@@ -21,7 +21,7 @@ const TitulacionesTipo = () => {
 
     const columns = [
         {
-            columnName: "titulacionTipoId",
+            columnName: "titulacionNivelId",
             columnTitle: "Id",
             columnType: "checkbox",
             key: "c1",
@@ -35,7 +35,7 @@ const TitulacionesTipo = () => {
     ];
 
     const form = {
-        title: Liferay.Language.get('Titulaciones_tipo'),
+        title: Liferay.Language.get('Titulaciones_nivel'),
         languages: ["es-ES","en-US","gl-ES"],
         rows: {
             id: {
@@ -47,8 +47,17 @@ const TitulacionesTipo = () => {
                 placeholder:"Identifier", 
                 conditions: ["number"]
             },
+            tipo: {
+                key:2,
+                type: "multilang",
+                label: Liferay.Language.get('Tipo'), 
+                name: "descripcion", 
+                value:"ta ta ta", 
+                placeholder: Liferay.Language.get('Tipo'), 
+                conditions: ["text"]    
+            },
             descripcion: {
-                key:3,
+                key:2,
                 type: "multilang",
                 label: Liferay.Language.get('Descripcion'), 
                 name: "descripcion", 
@@ -59,7 +68,7 @@ const TitulacionesTipo = () => {
         }
     };
 
-    const referer = 'http://localhost:8080/tittipo';
+    const referer = 'http://localhost:8080/titnivel';
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -73,7 +82,7 @@ const TitulacionesTipo = () => {
             reader.onload = async ({ target }) => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
-                let end = '/silefe.titulaciontipo/add-multiple';
+                let end = '/silefe.titulacionnivel/add-multiple';
                 let ttmp = {titulacionestipo:parsedData,userId:getUserId()};
 
                 batchAPI(end,ttmp,referer).then(res => {
@@ -100,9 +109,9 @@ const TitulacionesTipo = () => {
             userId:      getUserId(),
         }
 
-        let endpoint = '/silefe.titulaciontipo/save-titulaciones-tipo';
+        let endpoint = '/silefe.titulacionnivel/save-titulacion-nivel';
         if (items.status === 'new' )
-            endpoint = '/silefe.titulaciontipo/add-titulaciones-tipo';
+            endpoint = '/silefe.titulacionnivel/add-titulacion-nivel';
 
         let {status,error} = await saveAPI(endpoint,postdata,referer);    
         if (status) {
@@ -121,7 +130,7 @@ const TitulacionesTipo = () => {
 
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map( i => {return i.titulacionTipoId});
-        const endpoint = "/silefe.titulaciontipo/remove-titulaciones-tipo";
+        const endpoint = "/silefe.titulacionnivel/remove-titulaciones-nivel";
 
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
@@ -135,7 +144,7 @@ const TitulacionesTipo = () => {
     }
 
     const fetchData = async () => {
-        const endpoint = '/silefe.titulaciontipo/filter';
+        const endpoint = '/silefe.titulacionnivel/filter';
         const postdata = {
             page: items.page,
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
@@ -196,4 +205,4 @@ const TitulacionesTipo = () => {
     );
 }
 
-export default TitulacionesTipo;
+export default TitulacionesNivel;

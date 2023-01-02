@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import VMenu from './components/VMenu';
 import Titulaciones from './components/Titulaciones/Titulaciones';
@@ -13,6 +13,7 @@ import Horarios from './components/Horarios/Horarios';
 import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
 import DGeografica from './components/DGeografica/DGeografica';
 import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
+import TitulacionesNivel from './components/TitulacionesNivel/TitulacionesNivel';
 
 const Application = () => {
 
@@ -29,6 +30,8 @@ const Application = () => {
                 <div className='col-8'>
                     <div className="sheet-section">
                         <Routes>
+                            <Route path='/titnivel'      element={ <TitulacionesNivel /> } />
+                            <Route path='/tittipo'       element={ <TitulacionesTipo /> } />
                             <Route path='/titulaciones'  element={ <Titulaciones /> } />
                             <Route path='/colectivos'    element={ <Colectivos /> }   />
                             <Route path='/provincias'    element={ <Provincias /> }   />
@@ -40,7 +43,6 @@ const Application = () => {
                             <Route path='/horarios'      element={ <Horarios /> }   />
                             <Route path='/titulacionesf' element={ <TitulacionesFam /> }   />
                             <Route path='/dgeografica'   element={ <DGeografica /> }   />                            
-                            <Route path='/tittipo'       element={ <TitulacionesTipo /> } />
                         </Routes>
                     </div>
                 </div>
