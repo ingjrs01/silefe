@@ -10,6 +10,7 @@ import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
+import { getLanguageId } from '../../includes/LiferayFunctions';
 import Papa from "papaparse";
 
 const TitulacionesNivel = () => {
@@ -29,12 +30,18 @@ const TitulacionesNivel = () => {
         {
             columnName: "descripcion",
             columnTitle: Liferay.Language.get('Descripcion'),
+            columnType: "multilang",
+            key: "c3",
+        },
+        {
+            columnName: "titulacionNivelDescripcion",
+            columnTitle: Liferay.Language.get('Tipo'),
             columnType: "string",
             key: "c2",
         },
     ];
 
-    const form = {
+    let form = {
         title: Liferay.Language.get('Titulaciones_nivel'),
         languages: ["es-ES","en-US","gl-ES"],
         rows: {
@@ -47,23 +54,24 @@ const TitulacionesNivel = () => {
                 placeholder:"Identifier", 
                 conditions: ["number"]
             },
-            tipo: {
+            titulacionTipoId : {
                 key:2,
-                type: "multilang",
+                type: "select",
                 label: Liferay.Language.get('Tipo'), 
-                name: "descripcion", 
+                name: "titulacionTipoId", 
                 value:"ta ta ta", 
                 placeholder: Liferay.Language.get('Tipo'), 
-                conditions: ["text"]    
+                conditions: [],
+                options: []  
             },
             descripcion: {
-                key:2,
+                key:3,
                 type: "multilang",
                 label: Liferay.Language.get('Descripcion'), 
                 name: "descripcion", 
                 value:"lelele", 
                 placeholder: Liferay.Language.get('Descripcion'), 
-                conditions: ["text"]
+                conditions: []
             }
         }
     };
@@ -104,9 +112,10 @@ const TitulacionesNivel = () => {
 
     const handleSave = async () => {
         const postdata = {
-            id: items.item.id,
-            descripcion: items.item.descripcion,
-            userId:      getUserId(),
+            id:               items.item.id,
+            descripcion:      items.item.descripcion,
+            titulacionTipoId: items.item.titulacionTipoId,
+            userId:           getUserId(),
         }
 
         let endpoint = '/silefe.titulacionnivel/save-titulacion-nivel';
@@ -150,8 +159,26 @@ const TitulacionesNivel = () => {
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
         let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
-        const tmp = await data.map(i => {return({...i,id:i.titulacionTipoId,checked:false})});
+        const options = await getNivelesTitulaciones();
+
+        const tmp = await data.map(i => {
+            return({...i,titulacionNivelDescripcion:options.filter(o => o.value == i.titulacionTipoId)[0].label,checked:false});
+        });
+        form.rows.titulacionTipoId.options = options;
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
+    }
+
+    const getNivelesTitulaciones = async () => {
+        console.log("vamos a por lo stipos");
+        const endpoint = '/silefe.titulaciontipo/all';
+        const postdata = {
+            descripcion: "",
+            lang: getLanguageId()
+
+        };
+        let {data} = await fetchAPIData(endpoint, postdata,referer);
+        const options = await data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+        return options 
     }
 
     useEffect(() => {
@@ -185,7 +212,6 @@ const TitulacionesNivel = () => {
             {
                 (items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
-                    form={form}
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}

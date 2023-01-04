@@ -168,7 +168,6 @@ const MBaja = () => {
             {
                 (items.status === 'edit' || items.status === 'new') && 
                 <DefaultForm 
-                    form={form} 
                     itemsHandle={itemsHandle}
                     save={ handleSave} 
                     items= {items}

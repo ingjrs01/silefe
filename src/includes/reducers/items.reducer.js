@@ -96,7 +96,6 @@ export const red_items = (state=initialState, action ) => {
         
         case ITEMS_ACTIONS.SELECT_ITEM:
             let sel = state.arr.filter(i => i.checked);
-            
             if (sel.length > 0) {
                 let errores = {};
                 Object.keys(sel[0]).forEach(j => errores[j]=[]);

@@ -10,6 +10,7 @@ import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
+import { getLanguageId } from '../../includes/LiferayFunctions';
 import Papa from "papaparse";
 
 const TitulacionesFam = () => {
@@ -29,9 +30,16 @@ const TitulacionesFam = () => {
         {
             columnName: "descripcion",
             columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "string",
+            columnType: "multilang",
             key: "c2",
         },
+        {
+            columnName: "titulacionNivelDescripcion",
+            columnTitle: Liferay.Language.get('Nivel'),
+            columnType: "string",
+            key: "c3",
+        },
+
     ];
 
     const form = {
@@ -47,8 +55,18 @@ const TitulacionesFam = () => {
                 placeholder:"Identifier", 
                 conditions: ["number"]
             },
-            descripcion: {
+            titulacionNivelId : {
                 key:2,
+                type: "select",
+                label: Liferay.Language.get('Nivel'), 
+                name: "titulacionNivelId", 
+                value:"ta ta ta", 
+                placeholder: Liferay.Language.get('Nivel'), 
+                conditions: [],
+                options: []  
+            },
+            descripcion: {
+                key:3,
                 type: "multilang",
                 label: Liferay.Language.get('Descripcion'), 
                 name: "descripcion", 
@@ -97,6 +115,7 @@ const TitulacionesFam = () => {
         const postdata = {
             id: items.item.id,
             descripcion: items.item.descripcion,
+            titulacionNivelId: items.item.titulacionNivelId,
             userId:      getUserId(),
         }
 
@@ -139,8 +158,26 @@ const TitulacionesFam = () => {
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
         let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
-        const tmp = await data.map(i => {return({...i,id:i.titulacionFamId,checked:false})});
+        const options = await getNivelesTitulaciones();
+        const tmp = await data.map(i => {
+            console.log(i);
+            return({...i,id:i.titulacionFamId, titulacionNivelDescripcion:options.filter(o => o.value == i.titulacionNivelId)[0].label   ,checked:false})
+        });
+        form.rows.titulacionNivelId.options = options;
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
+    }
+
+    const getNivelesTitulaciones = async () => {
+        console.log("vamos a por los niveles");
+        const endpoint = '/silefe.titulacionnivel/all';
+        const postdata = {
+            descripcion: "",
+            lang: getLanguageId()
+
+        };
+        let {data} = await fetchAPIData(endpoint, postdata,referer);
+        const options = await data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+        return options 
     }
 
     useEffect(() => {

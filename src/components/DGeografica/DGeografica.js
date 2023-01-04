@@ -178,7 +178,6 @@ const DGeografica = () => {
             {
                 (items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
-                    form={form}
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}

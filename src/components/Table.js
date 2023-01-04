@@ -15,7 +15,7 @@ const Table = ({columns,rows, itemsHandle}) => {
         <ClayTable.Row>
             {
                 columns.map( (column) => { 
-                  if (column.columnType == "string")
+                  if (column.columnType == "string" || column.columnType == "multilang")
                     return (<ClayTable.Cell key={column.key}>{ column.columnTitle }</ClayTable.Cell> )
                   if (column.columnType == "checkbox")
                     return (<ClayTable.Cell key={column.key} headingCell><ClayCheckbox checked={rows.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
@@ -27,14 +27,16 @@ const Table = ({columns,rows, itemsHandle}) => {
         { 
           rows.arr.map( (row,index )=> {
             return (
-              <ClayTable.Row key={row.titulacionId} >
+              <ClayTable.Row key={row.id} >
                 {
                   columns.map( (column) => { 
+                    if (column.columnType == "multilang")
+                      return (<ClayTable.Cell key={column.key+row.id}>{ row[column.columnName][lang] }</ClayTable.Cell> )
                     if (column.columnType == "string")
-                      return (<ClayTable.Cell key={column.key+row.titulacionId}>{ row[column.columnName][lang] }</ClayTable.Cell> )
+                      return (<ClayTable.Cell key={column.key+row.id}>{ row[column.columnName] }</ClayTable.Cell> )
                     if (column.columnType == "checkbox")
                       return (
-                        <ClayTable.Cell key={column.key+row.titulacionId}><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[column.columnName]}  />
+                        <ClayTable.Cell key={column.key+row.id}><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[column.columnName]}  />
                          <span>{row[column.columnName]}</span> 
                         </ClayTable.Cell>
                       )

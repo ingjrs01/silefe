@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ClayForm, { ClayInput } from '@clayui/form';
+import ClayForm, { ClayInput, ClaySelect } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
@@ -7,7 +7,7 @@ import ClayLocalizedInput from '@clayui/localized-input';
 
 const spritemap = '/icons.svg';
 
-const DefaultForm = ({ form, itemsHandle, save, items }) => {
+const DefaultForm = ({ itemsHandle, save, items }) => {
 
   const  locales = [
     {
@@ -28,7 +28,7 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
 
   const validateAll = () => {
     let campo = "";
-    for (campo of Object.keys(form.rows)) {
+    for (campo of Object.keys(items.fields.rows)) {
       if (typeof items.item[campo] == 'object') {
         if (!validateLocalized(campo,items.item[campo]))
           return false;
@@ -43,7 +43,7 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
 
   const validate = (name, value) => {
     let condicion = "";
-    for (condicion of form.rows[name]["conditions"]) {
+    for (condicion of items.fields.rows[name]["conditions"]) {
       if (condicion == "number") {
         if (isNaN(value)) {
           itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
@@ -70,45 +70,41 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
       if (!validate(fieldname,values[languages[l]]))
         return false
     }
-
     return true;
   }
-
-  //console.debug(items);
-  //console.debug(items.errors);
-  //console.log("Ya está mostrado");
+  //debugger;
+  console.log("llego aqui");
 
   return (
     <ClayCard>
       <ClayCard.Body>
         <ClayCard.Description displayType="title">
-          <h2>{form.title}</h2>
+          <h2>{items.fields.title}</h2>
         </ClayCard.Description>
 
         <ClayCard.Description truncate={false} displayType="text">
           <ClayForm>
-            { Object.keys(form.rows).map(it => {
+            { Object.keys(items.fields.rows).map(it => {
               return (
-                <ClayForm.Group className={`${items.errors[form.rows[it].name].length > 0 ? 'has-error' : 'has-success'}`} key={form.rows[it].key} >
-                  { /*typeof (items.item[form.rows[it].name]) != 'object' ? */}
-                   { (form.rows[it].type === 'text') &&
+                <ClayForm.Group className={`${items.errors[items.fields.rows[it].name].length > 0 ? 'has-error' : 'has-success'}`} key={items.fields.rows[it].key} >
+                   { (items.fields.rows[it].type === 'text') &&
                     <>
-                    <label htmlFor="basicInput">{form.rows[it].label}</label>
+                    <label htmlFor="basicInput">{items.fields.rows[it].label}</label>
                     <ClayInput
-                      placeholder={form.rows[it].placeholder}
+                      placeholder={items.fields.rows[it].placeholder}
                       type="text"
-                      name={form.rows[it].name}
-                      value={items.item[form.rows[it].name]}
+                      name={items.fields.rows[it].name}
+                      value={items.item[items.fields.rows[it].name]}
                       onChange={e => {
                         validate(e.target.name, e.target.value);
                         itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
                       }}>
                     </ClayInput>
                     </>}
-                   { form.rows[it].type == 'multilang' &&
+                   { items.fields.rows[it].type == 'multilang' &&
                     <ClayLocalizedInput
-                      id="locale1"
-                      label={form.rows[it].label}
+                      id={items.fields.rows[it].name}
+                      label={items.fields.rows[it].label}
                       locales={locales}
                       onSelectedLocaleChange={ setSelectedLocale }
                       onTranslationsChange={ evt => { 
@@ -117,18 +113,35 @@ const DefaultForm = ({ form, itemsHandle, save, items }) => {
                         }
                       }
                       selectedLocale={ selectedLocale }
-                      translations={items.item[form.rows[it].name]}
+                      translations={items.item[items.fields.rows[it].name]}
                     />
                   }
+                  { items.fields.rows[it].type == 'select' &&
+                    <ClaySelect aria-label="Select Label" 
+                      id={items.fields.rows[it].name} 
+                      name={items.fields.rows[it].name} 
+                      onChange={evt => {
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                      }} 
+                      value={items.item[items.fields.rows[it].name]} >
+                      {items.fields.rows[it].options.map(item => (
+                        <ClaySelect.Option
+                          key={item.value}
+                          label={item.label}
+                          value={item.value}
+                        />
+                      ))}
+                    </ClaySelect>
+                  }
                   {
-                    items.errors[form.rows[it].name].length > 0 &&
+                    items.errors[items.fields.rows[it].name].length > 0 &&
                     <ClayForm.FeedbackGroup>
                       <ClayForm.FeedbackItem>
                         <ClayForm.FeedbackIndicator
                           spritemap={spritemap}
                           symbol="check-circle-full"
                         />
-                        {items.errors[form.rows[it].name][0]}
+                        {items.errors[items.fields.rows[it].name][0]}
                       </ClayForm.FeedbackItem>
                     </ClayForm.FeedbackGroup>
                   }

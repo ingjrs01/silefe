@@ -143,7 +143,6 @@ const Experiencias = () => {
             />}
             {   (items.status === 'edit' || items.status === 'new') && 
                 <DefaultForm 
-                    form={form} 
                     itemsHandle={itemsHandle}
                     save={ handleSave} 
                     items={items}
