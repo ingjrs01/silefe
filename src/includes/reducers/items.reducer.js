@@ -33,21 +33,43 @@ const initialState = {
     load: 0,
 }
 
+const resetErrors = (fields) => {
+    let errores = {};
+    let tmp_item = {};
+    //console.debug(action);
+    fields.rows.forEach(r => {
+        Object.keys(r.cols).forEach( j => {
+            errores[j]=[];    
+            if (r.cols[j].type === "multilang") {
+                let tt = {}
+                fields.languages.forEach(el => {tt[el]=""});
+                tmp_item[j] = tt;
+            }
+            else 
+                tmp_item[j] = [];
+        })
+    });
+
+    return errores;
+}
+
 export const red_items = (state=initialState, action ) => {
     switch (action.type) {
         case ITEMS_ACTIONS.START: 
-            let errores = {};
+            //let errores = {};
             let tmp_item = {};
-            Object.keys(action.fields.rows).forEach(j => {
-                errores[j]=[];
-
-                if (action.fields.rows[j].type === "multilang") {
-                    let tt = {}
-                    action.fields.languages.forEach(el => {tt[el]=""});
-                    tmp_item[j] = tt;
-                }
-                else 
-                    tmp_item[j] = [];
+            //console.debug(action);
+            action.fields.rows.forEach(r => {
+                Object.keys(r.cols).forEach( j => {
+                    //errores[j]=[];    
+                    if (r.cols[j].type === "multilang") {
+                        let tt = {}
+                        action.fields.languages.forEach(el => {tt[el]=""});
+                        tmp_item[j] = tt;
+                    }
+                    else 
+                        tmp_item[j] = [];
+                })
             });
 
             return {
@@ -57,7 +79,7 @@ export const red_items = (state=initialState, action ) => {
                 totalPages:action.totalPages,
                 fields: action.fields,
                 item: tmp_item,
-                errors: errores,
+                errors: resetErrors(action.fields),
                 checkall:false,
                 status: "list",
             }
@@ -97,36 +119,39 @@ export const red_items = (state=initialState, action ) => {
         case ITEMS_ACTIONS.SELECT_ITEM:
             let sel = state.arr.filter(i => i.checked);
             if (sel.length > 0) {
-                let errores = {};
-                Object.keys(sel[0]).forEach(j => errores[j]=[]);
+                let e2 = resetErrors(state.fields);
+                //Object.keys(sel[0]).forEach(j => errores[j]=[]);
                 return {
                     ...state,
                     item: sel[0],
-                    errors: errores,
+                    errors: e2,
                     status: 'edit',
                 }
             }
             return state;        
             
         case ITEMS_ACTIONS.NEW_ITEM:
-            errores = {};
+            //errores = {};
             tmp_item = {};
-            Object.keys(state.fields.rows).forEach(j => {
-                errores[j]=[];
-
-                if (state.fields.rows[j].type === "multilang") {
-                    let tt = {}
-                    state.fields.languages.forEach(el => {tt[el]=""});
-                    tmp_item[j] = tt;
-                }
-                else 
-                    tmp_item[j] = null;
+            
+            state.fields.rows.forEach(fila => {
+                Object.keys(fila.cols).forEach(j => {
+                    //errores[j]=[];
+                    if (fila.cols[j].type === "multilang") {
+                        let tt = {}
+                        state.fields.languages.forEach(el => {tt[el]=""});
+                        tmp_item[j] = tt;
+                    }
+                    else 
+                        tmp_item[j] = null;
+                });
             });
+
             tmp_item['id'] = 0;
             return {
                 ...state,
                 item: tmp_item,
-                errors: errores,
+                errors: resetErrors(state.fields),
                 status: 'new',
             }
         case ITEMS_ACTIONS.CANCEL:

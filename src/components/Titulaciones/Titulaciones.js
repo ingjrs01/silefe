@@ -44,36 +44,69 @@ const Titulaciones = () => {
     const form = {
         title: Liferay.Language.get('Titulaciones'),
         languages: ["es-ES","en-US","gl-ES"],
-        rows: {
-            id: { 
-                key: 1, 
-                type: "text",
-                label: "ID", 
-                name: "id", 
-                value: "lalala", 
-                placeholder: "Identificador", 
-                conditions: ["number"] 
+        rows: [
+            {
+                key:9,
+                type: "row",
+                classname: "", 
+                cols: {
+                    id: { 
+                        key: 1, 
+                        type: "text",
+                        label: "ID", 
+                        name: "id", 
+                        value: "lalala", 
+                        placeholder: "Identificador", 
+                        conditions: ["number"] 
+                    },
+                }
             },
-            titulacionFamiliaId : {
-                key:2,
-                type: "select",
-                label: Liferay.Language.get('Familia'), 
-                name: "titulacionFamiliaId", 
-                value:"ta ta ta", 
-                placeholder: Liferay.Language.get('Familia'), 
-                conditions: [],
-                options: []  
+            {
+                key:8,
+                type: "row",
+                classname: "", 
+                cols: {
+                    titulacionNivelId : {
+                        key:2,
+                        type: "select",
+                        label: Liferay.Language.get('TitNivel'), 
+                        name: "titulacionNivelId", 
+                        value:"ta ta ta", 
+                        conditions: [],
+                        options: [
+                            {value:1,label:"Nivel 1"},
+                            {value:2,label:"Nivel 2"}
+                        ]  
+                    },
+                    titulacionFamiliaId : {
+                        key:2,
+                        type: "select",
+                        label: Liferay.Language.get('TitFamilia'), 
+                        name: "titulacionFamiliaId", 
+                        value:"ta ta ta", 
+                        placeholder: Liferay.Language.get('TitFamilia'), 
+                        conditions: [],
+                        options: []  
+                    },
+                }
             },
-            descripcion: { 
-                key: 3, 
-                type: "multilang",
-                label: Liferay.Language.get('Descripcion'), 
-                name: "descripcion", 
-                value: "", 
-                placeholder: Liferay.Language.get('Descripcion'), 
-                conditions: ["text"] 
-            },
-        }
+            {
+                key: 11,
+                type:"row",
+                classname:"",
+                cols: {
+                    descripcion: { 
+                        key: 3, 
+                        type: "multilang",
+                        label: Liferay.Language.get('Descripcion'), 
+                        name: "descripcion", 
+                        value: "", 
+                        placeholder: Liferay.Language.get('Descripcion'), 
+                        conditions: ["text"] 
+                    },
+                }
+            }
+        ]
     };
 
     const referer = "http://localhost:8080/titulaciones";
@@ -138,7 +171,7 @@ const Titulaciones = () => {
                 tFamilia = filtered[0].label ;
             return ({ ...i, id: i.titulacionId,titulacionFamiliaDescripcion: tFamilia,checked: false })
         });
-        form.rows.titulacionFamiliaId.options = options;
+        form.rows[1].cols.titulacionFamiliaId.options = options;
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages,page:page });
     }
 
