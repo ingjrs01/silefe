@@ -10,6 +10,7 @@ import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
+import { getLanguageId } from '../../includes/LiferayFunctions';
 import Papa from "papaparse";
 
 const Titulaciones = () => {
@@ -29,8 +30,14 @@ const Titulaciones = () => {
         {
             columnName: "descripcion",
             columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "string",
+            columnType: "multilang",
             key: "c2",
+        },
+        {
+            columnName: "titulacionFamiliaDescripcion",
+            columnTitle: Liferay.Language.get('Familia'),
+            columnType: "string",
+            key: "c3",
         },
     ];
 
@@ -47,8 +54,18 @@ const Titulaciones = () => {
                 placeholder: "Identificador", 
                 conditions: ["number"] 
             },
+            titulacionFamiliaId : {
+                key:2,
+                type: "select",
+                label: Liferay.Language.get('Familia'), 
+                name: "titulacionFamiliaId", 
+                value:"ta ta ta", 
+                placeholder: Liferay.Language.get('Familia'), 
+                conditions: [],
+                options: []  
+            },
             descripcion: { 
-                key: 2, 
+                key: 3, 
                 type: "multilang",
                 label: Liferay.Language.get('Descripcion'), 
                 name: "descripcion", 
@@ -113,15 +130,38 @@ const Titulaciones = () => {
         if (error == 1) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
         }
-        const tmp = await data.map(i => {return ({ ...i, id: i.titulacionId,checked: false })});
+        const options = await getFamiliasTitulaciones();
+        const tmp = await data.map(i => {
+            let tFamilia = "";
+            let filtered = options.filter(o => o.value == i.titulacionFamiliaId);
+            if (filtered.length > 0)
+                tFamilia = filtered[0].label ;
+            return ({ ...i, id: i.titulacionId,titulacionFamiliaDescripcion: tFamilia,checked: false })
+        });
+        form.rows.titulacionFamiliaId.options = options;
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages,page:page });
     }
+
+    const getFamiliasTitulaciones = async () => {
+        const endpoint = '/silefe.titulacionfam/all';
+        const postdata = {
+            descripcion: "",
+            lang: getLanguageId()
+
+        };
+        let {data} = await fetchAPIData(endpoint, postdata,referer);
+        const options = await data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+        return options 
+    }
+
+
 
     const handleSave = async () => {
         const postdata = {
             titulacionId: items.item.id,
             codigo: items.item.codigo,
             descripcion: items.item.descripcion,
+            titulacionFamiliaId: items.item.titulacionFamiliaId,
             userId: getUserId()
         }
 

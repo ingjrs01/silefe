@@ -31,7 +31,7 @@ const Provincias = () => {
         {
             columnName: "nombre",
             columnTitle: "Nombre",
-            columnType: "string",
+            columnType: "multilang",
             key: "c2",
         },
     ];

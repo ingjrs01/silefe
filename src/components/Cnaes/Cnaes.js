@@ -29,7 +29,7 @@ const Cnaes = () => {
         {
             columnName: "descripcion",
             columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "string",
+            columnType: "multilang",
             key: "c2",
         },
     ];
