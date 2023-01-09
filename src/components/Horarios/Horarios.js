@@ -38,26 +38,40 @@ const Horarios = () => {
     const form = {
         title: Liferay.Language.get("Horarios"),
         languages: ["es-ES","en-US","gl-ES"],
-        rows: {
-            id: {                
-                key:1,
-                type: "text",
-                label: "ID",     
-                name: "id",          
-                value:"lalala", 
-                placeholder:"Identifier",
-                conditions: ["number"]
+        rows: [
+            {
+                key: 5,
+                type:"row",
+                classname:"",
+                cols: {
+                    id: {
+                        key:1,
+                        type: "text",
+                        label: "ID", 
+                        name: "id", 
+                        value:"lalala", 
+                        placeholder:"Identifier", 
+                        conditions: ["number"]
+                    },
+                }
             },
-            descripcion: {
-                key:2,
-                type: "multilang",
-                label: "nombre", 
-                name: "descripcion", 
-                value:"lelele", 
-                placeholder:"nombre",
-                conditions: ["text"]
+            {
+                key: 6,
+                type:"row",
+                classname:"",
+                cols: {
+                    descripcion: {
+                        key:2,
+                        type: "multilang",
+                        label: "nombre", 
+                        name: "descripcion", 
+                        value:"lelele", 
+                        placeholder:"nombre",
+                        conditions: ["text"]
+                    }
+                }
             }
-        }
+        ]
     };
 
     useEffect(()=>{

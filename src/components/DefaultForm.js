@@ -7,7 +7,7 @@ import ClayLocalizedInput from '@clayui/localized-input';
 
 const spritemap = '/icons.svg';
 
-const DefaultForm = ({ itemsHandle, save, items }) => {
+const DefaultForm = ({ itemsHandle, save, items, notify }) => {
   const locales = [
     {
       label: "es-ES",
@@ -94,8 +94,8 @@ const DefaultForm = ({ itemsHandle, save, items }) => {
               return (
                 <div className="row">
                   {Object.keys(row.cols).map(it => {
-                    console.log("pasito4: " + it);
-                    console.debug(items);
+                    //console.log("pasito4: " + it);
+                    //console.debug(items);
                     return (
                       <>
                         <ClayForm.Group className={`${items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={row.cols[it].key} >
@@ -136,6 +136,7 @@ const DefaultForm = ({ itemsHandle, save, items }) => {
                                 name={row.cols[it].name}
                                 onChange={evt => {
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                                  notify(evt.target.name,evt.target.value);
                                 }}
                                 value={items.item[row.cols[it].name]} >
                                 {row.cols[it].options.map(item => (

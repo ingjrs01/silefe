@@ -37,26 +37,40 @@ const TitulacionesTipo = () => {
     const form = {
         title: Liferay.Language.get('Titulaciones_tipo'),
         languages: ["es-ES","en-US","gl-ES"],
-        rows: {
-            id: {
-                key:1,
-                type: "text",
-                label: "ID", 
-                name: "id", 
-                value:"lalala", 
-                placeholder:"Identifier", 
-                conditions: ["number"]
+        rows: [
+            {
+                key:9,
+                type: "row",
+                classname: "", 
+                cols: {
+                    id: {
+                        key:1,
+                        type: "text",
+                        label: "ID", 
+                        name: "id", 
+                        value:"lalala", 
+                        placeholder:"Identifier", 
+                        conditions: ["number"]
+                    },
+                }
             },
-            descripcion: {
-                key:3,
-                type: "multilang",
-                label: Liferay.Language.get('Descripcion'), 
-                name: "descripcion", 
-                value:"lelele", 
-                placeholder: Liferay.Language.get('Descripcion'), 
-                conditions: ["text"]
-            }
-        }
+            {
+                key:7,
+                type: "row",
+                classname: "", 
+                cols: {
+                    descripcion: {
+                        key:3,
+                        type: "multilang",
+                        label: Liferay.Language.get('Descripcion'), 
+                        name: "descripcion", 
+                        value:"lelele", 
+                        placeholder: Liferay.Language.get('Descripcion'), 
+                        conditions: ["text"]
+                    }
+                }
+            },
+        ]
     };
 
     const referer = 'http://localhost:8080/tittipo';

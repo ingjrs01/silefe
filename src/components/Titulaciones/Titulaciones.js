@@ -18,7 +18,7 @@ const Titulaciones = () => {
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const isInitialized = useRef();
+    const isInitialized = useRef();    
 
     const columns = [
         {
@@ -41,7 +41,7 @@ const Titulaciones = () => {
         },
     ];
 
-    const form = {
+    let form = {
         title: Liferay.Language.get('Titulaciones'),
         languages: ["es-ES","en-US","gl-ES"],
         rows: [
@@ -66,6 +66,15 @@ const Titulaciones = () => {
                 type: "row",
                 classname: "", 
                 cols: {
+                    titulacionTipoId : {
+                        key:2,
+                        type: "select",
+                        label: Liferay.Language.get('TitTipo'), 
+                        name: "titulacionTipoId", 
+                        value:"ta ta ta", 
+                        conditions: [],
+                        options: []  
+                    },
                     titulacionNivelId : {
                         key:2,
                         type: "select",
@@ -73,10 +82,7 @@ const Titulaciones = () => {
                         name: "titulacionNivelId", 
                         value:"ta ta ta", 
                         conditions: [],
-                        options: [
-                            {value:1,label:"Nivel 1"},
-                            {value:2,label:"Nivel 2"}
-                        ]  
+                        options: []  
                     },
                     titulacionFamiliaId : {
                         key:2,
@@ -163,7 +169,8 @@ const Titulaciones = () => {
         if (error == 1) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
         }
-        const options = await getFamiliasTitulaciones();
+        //const options_nivel = await getFamiliasNivel();
+        const options = titulacionesFamiliaOptions; // await getFamiliasTitulaciones();
         const tmp = await data.map(i => {
             let tFamilia = "";
             let filtered = options.filter(o => o.value == i.titulacionFamiliaId);
@@ -171,23 +178,75 @@ const Titulaciones = () => {
                 tFamilia = filtered[0].label ;
             return ({ ...i, id: i.titulacionId,titulacionFamiliaDescripcion: tFamilia,checked: false })
         });
-        form.rows[1].cols.titulacionFamiliaId.options = options;
+
+        //form.rows[1].cols.titulacionTipoId.options = await getFamiliasTipo();
+        //form.rows[1].cols.titulacionNivelId.options = options_nivel;
+        //form.rows[1].cols.titulacionFamiliaId.options = options;
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages,page:page });
     }
 
-    const getFamiliasTitulaciones = async () => {
-        const endpoint = '/silefe.titulacionfam/all';
-        const postdata = {
-            descripcion: "",
-            lang: getLanguageId()
+//    const getFamiliasTipo = async () => {
+//        const endpoint = '/silefe.titulaciontipo/all';
+//        const postdata = {
+//            descripcion: "",
+//            lang: getLanguageId()
+//
+//        };
+//        let {data} = await fetchAPIData(endpoint, postdata,referer);
+//        const options = await data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+//        return options 
+//    }
+//
+//    const getFamiliasNivel = async (tipo) => {
+//        const endpoint = '/silefe.titulacionnivel/all';
+//        const postdata = {
+//            descripcion: "",
+//            lang: getLanguageId()
+//        };
+//        let {data} = await fetchAPIData(endpoint, postdata,referer);
+//        const blabla = await data.filter(i => i.titulacionTipoId == tipo  );
+//        
+//        const options = await blabla.map(obj => {return {value:obj.titulacionNivelId,label:obj.descripcion}});
+//        await console.log(options)
+//        return options;
+//    }
+//
+//    const getFamiliasTitulaciones = async () => {
+//        const endpoint = '/silefe.titulacionfam/all';
+//        const postdata = {
+//            descripcion: "",
+//            lang: getLanguageId()
+//        };
+//        let {data} = await fetchAPIData(endpoint, postdata,referer);
+//        const options = await data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+//        return options;
+//    }
 
-        };
-        let {data} = await fetchAPIData(endpoint, postdata,referer);
-        const options = await data.map(obj => {return {value:obj.id,label:obj.descripcion}});
-        return options 
+    const notify= (fieldname,value) => {
+        console.log("Estoy en notify: " + fieldname);
+
+        if (fieldname == 'titulacionTipoId') {
+            console.log("Voy a cambiar los niveles");
+            let llll = titulacionesNivelOptions.filter(i => i.titulacionTipoId == value).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}})
+            form.rows[1].cols.titulacionNivelId.options = llll;
+            console.log("Y ahora las familias->" + items.item.titulacionNivelId);
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,row: 1,fieldname: 'titulacionNivelId', options: llll});
+            
+            //let lll2 = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == items.item.titulacionNivelId).map(l => {return {value:l.titulacionFamId,label:l.descripcion}})
+            //form.rows[1].cols.titulacionFamiliaId.options = lll2;
+
+        }
+        if (fieldname == 'titulacionNivelId') {
+            console.log("Y ahora las familias");
+            console.log(titulacionesFamiliaOptions);
+            let tt = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == value).map(l => {return {value:l.titulacionFamId,label:l.descripcion}})
+            console.log(tt);
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,row: 1,fieldname: 'titulacionFamiliaId', options: tt});
+            //form.rows[1].cols.titulacionFamiliaId.options = tt;
+        }
+
+        
     }
-
-
 
     const handleSave = async () => {
         const postdata = {
@@ -211,6 +270,31 @@ const Titulaciones = () => {
             await setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
         }
     }
+
+    // ESto se debería ejecutar una sola vez
+    const postdata = {
+        descripcion: "",
+        lang: getLanguageId()
+    };
+    
+    let titulacionesTipoOptions    = [];
+    let titulacionesNivelOptions   = [];
+    let titulacionesFamiliaOptions = [];
+    fetchAPIData('/silefe.titulaciontipo/all', postdata,referer).then(response => {
+        console.log("Pidiendo desde aquí una sola vez");        
+        const l = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})
+        titulacionesTipoOptions = l;
+        form.rows[1].cols.titulacionTipoId.options = l;        
+     });
+     fetchAPIData('/silefe.titulacionnivel/all', postdata,referer).then(response => {
+        console.log("Pidiendo desde aquí una sola vez 2");
+        titulacionesNivelOptions = response.data;
+     });
+     fetchAPIData('/silefe.titulacionfam/all', postdata,referer).then(response => {
+        console.log("Pidiendo desde aquí una sola vez 3");
+        titulacionesFamiliaOptions = response.data;
+     });
+
 
     useEffect(() => {
 		if (!isInitialized.current) {
@@ -248,6 +332,7 @@ const Titulaciones = () => {
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
+                    notify={notify}
                 />
             }
             {

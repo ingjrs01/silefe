@@ -18,6 +18,7 @@ export const ITEMS_ACTIONS = {
     FETCH: 16,
     NEXTPAG: 17,
     PREVPAG:18,
+    SET_FORMOPTIONS: 19,
   }
 
 const initialState = {
@@ -56,9 +57,7 @@ const resetErrors = (fields) => {
 export const red_items = (state=initialState, action ) => {
     switch (action.type) {
         case ITEMS_ACTIONS.START: 
-            //let errores = {};
             let tmp_item = {};
-            //console.debug(action);
             action.fields.rows.forEach(r => {
                 Object.keys(r.cols).forEach( j => {
                     //errores[j]=[];    
@@ -131,7 +130,6 @@ export const red_items = (state=initialState, action ) => {
             return state;        
             
         case ITEMS_ACTIONS.NEW_ITEM:
-            //errores = {};
             tmp_item = {};
             
             state.fields.rows.forEach(fila => {
@@ -197,8 +195,17 @@ export const red_items = (state=initialState, action ) => {
             }
             return {
                 ...state,
-                }                
-
+                } 
+        case ITEMS_ACTIONS.SET_FORMOPTIONS:
+            let narray = [...state.fields.rows];
+            console.log(action.fieldname);
+            narray[action.row].cols[action.fieldname].options = action.options;
+            console.log("Y así ha quedado");
+            console.log(narray);
+            return {
+                ...state,
+                fields: {...state.fields,rows: narray}
+            }
         case ITEMS_ACTIONS.PREVPAG:
             if (state.page > 0) {
                 return {

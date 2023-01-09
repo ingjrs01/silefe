@@ -44,36 +44,57 @@ const TitulacionesNivel = () => {
     let form = {
         title: Liferay.Language.get('Titulaciones_nivel'),
         languages: ["es-ES","en-US","gl-ES"],
-        rows: {
-            id: {
-                key:1,
-                type: "text",
-                label: "ID", 
-                name: "id", 
-                value:"lalala", 
-                placeholder:"Identifier", 
-                conditions: ["number"]
+        rows: [
+            {
+                key:7,
+                type: "row",
+                classname: "", 
+                cols: {
+                    id: {
+                        key:1,
+                        type: "text",
+                        label: "ID", 
+                        name: "id", 
+                        value:"lalala", 
+                        placeholder:"Identifier", 
+                        conditions: ["number"]
+                    },
+                }
             },
-            titulacionTipoId : {
-                key:2,
-                type: "select",
-                label: Liferay.Language.get('Tipo'), 
-                name: "titulacionTipoId", 
-                value:"ta ta ta", 
-                placeholder: Liferay.Language.get('Tipo'), 
-                conditions: [],
-                options: []  
+            {
+                key:8,
+                type: "row",
+                classname: "", 
+                cols: {
+                    titulacionTipoId : {
+                        key:2,
+                        type: "select",
+                        label: Liferay.Language.get('Tipo'), 
+                        name: "titulacionTipoId", 
+                        value:"ta ta ta", 
+                        placeholder: Liferay.Language.get('Tipo'), 
+                        conditions: [],
+                        options: []  
+                    },        
+                }
             },
-            descripcion: {
-                key:3,
-                type: "multilang",
-                label: Liferay.Language.get('Descripcion'), 
-                name: "descripcion", 
-                value:"lelele", 
-                placeholder: Liferay.Language.get('Descripcion'), 
-                conditions: []
-            }
-        }
+            {
+                key:9,
+                type: "row",
+                classname: "", 
+                cols: {
+                    descripcion: {
+                        key:3,
+                        type: "multilang",
+                        label: Liferay.Language.get('Descripcion'), 
+                        name: "descripcion", 
+                        value:"lelele", 
+                        placeholder: Liferay.Language.get('Descripcion'), 
+                        conditions: []
+                    }
+                }
+            },
+        ]
     };
 
     const referer = 'http://localhost:8080/titnivel';
@@ -164,7 +185,7 @@ const TitulacionesNivel = () => {
         const tmp = await data.map(i => {
             return({...i,titulacionNivelDescripcion:options.filter(o => o.value == i.titulacionTipoId)[0].label,checked:false});
         });
-        form.rows.titulacionTipoId.options = options;
+        form.rows[1].cols.titulacionTipoId.options = options;
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
     }
 

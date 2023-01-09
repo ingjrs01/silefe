@@ -39,26 +39,40 @@ const Provincias = () => {
     const form = {
         title: Liferay.Language.get('Provincias'),
         languages: ["es-ES","en-US","gl-ES"],
-        rows: {
-            id: {
-                key:1,
-                type: "text",
-                label: "ID",     
-                name: "id",     
-                value:"lalala", 
-                placeholder:"Identifier",
-                conditions:["number"]
+        rows: [
+            {
+                key: 5,
+                type:"row",
+                classname:"",
+                cols: {
+                    id: {
+                        key:1,
+                        type: "text",
+                        label: "ID", 
+                        name: "id", 
+                        value:"lalala", 
+                        placeholder:"Identifier", 
+                        conditions: ["number"]
+                    },
+                }
             },
-            nombre:{
-                key:2,
-                type: "multilang",
-                label: Liferay.Language.get('Nombre'), 
-                name: "nombre", 
-                value:"lelele", 
-                placeholder: Liferay.Language.get('Nombre'), 
-                conditions:["text"]
-            },
-        }
+            {
+                key: 6,
+                type:"row",
+                classname:"",
+                cols: {
+                    nombre:{
+                        key:2,
+                        type: "multilang",
+                        label: Liferay.Language.get('Nombre'), 
+                        name: "nombre", 
+                        value:"lelele", 
+                        placeholder: Liferay.Language.get('Nombre'), 
+                        conditions:["text"]
+                    },
+                }
+            }
+        ]
     };
 
     const loadCsv = () => {
