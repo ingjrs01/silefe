@@ -27,7 +27,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
 
   const validateAll = () => {
     let campo = "";
-    for (let fila of items.fiels.rows) {
+    for (let fila of items.fields.rows) {
       for (campo of Object.keys(fila.cols)) {
         if (typeof items.item[campo] == 'object') {
           if (!validateLocalized(campo, items.item[campo]))
@@ -90,7 +90,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
           <ClayForm>
             { /* Recorremos las filas*/}
             {items.fields.rows.map(row => {
-              console.log(row.key);
+              // console.log(row.key);
               return (
                 <div className="row">
                   {Object.keys(row.cols).map(it => {

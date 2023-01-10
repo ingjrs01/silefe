@@ -10,7 +10,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 const spritemap = '/images/icons/icons.svg';
 
-const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => {
+const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, loadSelects}) => {
 
   return (
     <ClayToolbar>
@@ -22,7 +22,6 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => 
             <ClayIcon  symbol="lock" />
           </ClayToolbar.Section>
         </ClayToolbar.Item>
-
 
         <ClayToolbar.Item>
           <ClayInput.Group>
@@ -36,7 +35,6 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => 
           </ClayInput.Group>
         </ClayToolbar.Item>
 
-
         <ClayToolbar.Item>
           <ClayToolbar.Section>
             <ClayButton.Group>
@@ -46,7 +44,6 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => 
                 small
                 symbol="user"
               />
-
 
               <ClayButtonWithIcon
                 displayType="secondary"
@@ -64,7 +61,6 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => 
           </ClayToolbar.Section>
         </ClayToolbar.Item>
 
-
         <ClayToolbar.Item>
           <ClayToolbar.Section>
             <ClayButton displayType="danger" onClick={() => { handleDelete() }}>
@@ -74,7 +70,10 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items}) => 
 
             {
               (status === 'list') &&
-            <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM}) }}>
+            <ClayButton className="inline-item-after" onClick={() => { 
+              itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM});
+              loadSelects();
+            }}>
               {Liferay.Language.get('Editar')}
             </ClayButton>
             }

@@ -60,7 +60,6 @@ export const red_items = (state=initialState, action ) => {
             let tmp_item = {};
             action.fields.rows.forEach(r => {
                 Object.keys(r.cols).forEach( j => {
-                    //errores[j]=[];    
                     if (r.cols[j].type === "multilang") {
                         let tt = {}
                         action.fields.languages.forEach(el => {tt[el]=""});
@@ -119,7 +118,6 @@ export const red_items = (state=initialState, action ) => {
             let sel = state.arr.filter(i => i.checked);
             if (sel.length > 0) {
                 let e2 = resetErrors(state.fields);
-                //Object.keys(sel[0]).forEach(j => errores[j]=[]);
                 return {
                     ...state,
                     item: sel[0],
@@ -127,8 +125,7 @@ export const red_items = (state=initialState, action ) => {
                     status: 'edit',
                 }
             }
-            return state;        
-            
+            return state;                    
         case ITEMS_ACTIONS.NEW_ITEM:
             tmp_item = {};
             
@@ -198,12 +195,11 @@ export const red_items = (state=initialState, action ) => {
                 } 
         case ITEMS_ACTIONS.SET_FORMOPTIONS:
             let narray = [...state.fields.rows];
-            console.log(action.fieldname);
             narray[action.row].cols[action.fieldname].options = action.options;
-            console.log("Y así ha quedado");
-            console.log(narray);
+            const fieldvalue = (action.options.length > 0)?action.options[0].value:""
             return {
                 ...state,
+                item: {...state.item,[action.fieldname]:fieldvalue},
                 fields: {...state.fields,rows: narray}
             }
         case ITEMS_ACTIONS.PREVPAG:
