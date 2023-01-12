@@ -109,6 +109,9 @@ export const red_items = (state=initialState, action ) => {
                 item: action.item
             }
         case ITEMS_ACTIONS.SET:
+            console.log("entrando en SET");
+            console.log("fieldname: " + action.fieldname);
+            console.log("value: " + action.value);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}

@@ -14,6 +14,10 @@ import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
 import DGeografica from './components/DGeografica/DGeografica';
 import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
 import TitulacionesNivel from './components/TitulacionesNivel/TitulacionesNivel';
+import Cofinanciadas from './components/Cofinanciadas/Cofinanciadas';
+import Tecnicos from './components/Tecnicos/Tecnicos';
+import Convocatorias from './components/Convocatorias/Convocatorias';
+import Proyectos from './components/Proyectos/Proyectos';
 
 const Application = () => {
 
@@ -43,6 +47,10 @@ const Application = () => {
                             <Route path='/horarios'      element={ <Horarios /> }   />
                             <Route path='/titulacionesf' element={ <TitulacionesFam /> }   />
                             <Route path='/dgeografica'   element={ <DGeografica /> }   />                            
+                            <Route path='/cofinanciadas' element={ <Cofinanciadas /> }   />
+                            <Route path='/tecnicos'      element={ <Tecnicos /> }   />
+                            <Route path='/convocatorias' element={ <Convocatorias /> }   />
+                            <Route path='/proyectos'     element={ <Proyectos /> }   />
                         </Routes>
                     </div>
                 </div>

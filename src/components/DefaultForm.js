@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect } from '@clayui/form';
+import ClayForm, { ClayInput, ClaySelect, ClayToggle } from '@clayui/form';
+import ClayDatePicker from '@clayui/date-picker';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
@@ -29,13 +30,17 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
     let campo = "";
     for (let fila of items.fields.rows) {
       for (campo of Object.keys(fila.cols)) {
-        if (typeof items.item[campo] == 'object') {
-          if (!validateLocalized(campo, items.item[campo]))
-            return false;
-        }
-        else {
-          if (!validate(campo, items.item[campo]))
-            return false;
+        switch (fila.cols[campo].type) {
+          case "text": 
+            if (!validate(campo, items.item[campo]))
+              return false;
+            break;
+          case "multilang":
+            if (!validateLocalized(campo, items.item[campo]))
+              return false;
+            break;
+          case "toggle":
+            break;
         }
       }
     }
@@ -149,6 +154,47 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                               </ClaySelect>
                             </>
                           }
+                          {row.cols[it].type == 'toggle' &&
+                            <>
+                              <ClayToggle 
+                                label={row.cols[it].label} 
+                                onToggle={val => {itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: row.cols[it].name, value: val });}} 
+                                toggled={items.item[row.cols[it].name]}
+                              />
+                            </>
+                          }
+                          {(row.cols[it].type === 'date') &&
+                            <>
+                              <label htmlFor="basicInput">{row.cols[it].label}</label>
+                              <ClayDatePicker
+                                onChange={val => { itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: row.cols[it].name, value: val });}}
+                                placeholder="YYYY-MM-DD"
+                                firstDayOfWeek={1}
+                                months={[
+                                  "Enero",
+                                  "Febero",
+                                  "Marzo",
+                                  "Abril",
+                                  "Mayo",
+                                  "Junio",
+                                  "Julio",
+                                  "Agosto",
+                                  "Septiembre",
+                                  "Octubre",
+                                  "Noviembre",
+                                  "Diciembre"
+                                ]}
+                                spritemap={spritemap}
+                                timezone="GMT+01:00"
+                                value={items.item[row.cols[it].name]}
+                                weekdaysShort={["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]}
+                                years={{
+                                  end: 2024,
+                                  start: 2008
+                                }}
+                              />
+                            </>}
+
                           {
                             items.errors[it].length > 0 && //  -> items.fields.rows[it].name
                             <ClayForm.FeedbackGroup>
