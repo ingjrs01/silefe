@@ -5,6 +5,8 @@ import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
 import ClayLocalizedInput from '@clayui/localized-input';
+import {getMonths, getDays} from '../includes/interface/DatesLang';
+import {getLanguageId} from '../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
@@ -170,24 +172,11 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                                 onChange={val => { itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: row.cols[it].name, value: val });}}
                                 placeholder="YYYY-MM-DD"
                                 firstDayOfWeek={1}
-                                months={[
-                                  "Enero",
-                                  "Febero",
-                                  "Marzo",
-                                  "Abril",
-                                  "Mayo",
-                                  "Junio",
-                                  "Julio",
-                                  "Agosto",
-                                  "Septiembre",
-                                  "Octubre",
-                                  "Noviembre",
-                                  "Diciembre"
-                                ]}
+                                months={getMonths(getLanguageId())}
                                 spritemap={spritemap}
                                 timezone="GMT+01:00"
                                 value={items.item[row.cols[it].name]}
-                                weekdaysShort={["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]}
+                                weekdaysShort={getDays(getLanguageId())}
                                 years={{
                                   end: 2024,
                                   start: 2008
