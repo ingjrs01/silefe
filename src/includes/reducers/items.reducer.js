@@ -37,18 +37,18 @@ const initialState = {
 const resetErrors = (fields) => {
     let errores = {};
     let tmp_item = {};
-    //console.debug(action);
-    fields.rows.forEach(r => {
-        Object.keys(r.cols).forEach( j => {
+    //fields.fields.forEach(r => {
+    Object.keys(fields.fields).forEach( j => {
+        //Object.keys(fields.fields[r]).forEach( j => {
             errores[j]=[];    
-            if (r.cols[j].type === "multilang") {
+            if (fields.fields[j].type === "multilang") {
                 let tt = {}
                 fields.languages.forEach(el => {tt[el]=""});
                 tmp_item[j] = tt;
             }
             else 
                 tmp_item[j] = [];
-        })
+        //})
     });
 
     return errores;
@@ -58,16 +58,16 @@ export const red_items = (state=initialState, action ) => {
     switch (action.type) {
         case ITEMS_ACTIONS.START: 
             let tmp_item = {};
-            action.fields.rows.forEach(r => {
-                Object.keys(r.cols).forEach( j => {
-                    if (r.cols[j].type === "multilang") {
+            Object.keys(action.fields.fields).forEach(j => {
+                //Object.keys(r.cols).forEach( j => {
+                    if (action.fields.fields[j].type === "multilang") {
                         let tt = {}
                         action.fields.languages.forEach(el => {tt[el]=""});
                         tmp_item[j] = tt;
                     }
                     else 
                         tmp_item[j] = [];
-                })
+                //})
             });
 
             return {
@@ -109,9 +109,6 @@ export const red_items = (state=initialState, action ) => {
                 item: action.item
             }
         case ITEMS_ACTIONS.SET:
-            console.log("entrando en SET");
-            console.log("fieldname: " + action.fieldname);
-            console.log("value: " + action.value);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
@@ -205,6 +202,16 @@ export const red_items = (state=initialState, action ) => {
                 item: {...state.item,[action.fieldname]:fieldvalue},
                 fields: {...state.fields,rows: narray}
             }
+        case ITEMS_ACTIONS.SET_FIELDENABLE:
+            // let narray = [...state.fields.rows];
+            // narray[action.row].cols[action.fieldname].options = action.options;
+            // const fieldvalue = (action.options.length > 0)?action.options[0].value:""
+            return {
+                ...state,
+                item: {...state.item,[action.fieldname]:fieldvalue},
+                fields: {...state.fields,rows: narray}
+            }
+    
         case ITEMS_ACTIONS.PREVPAG:
             if (state.page > 0) {
                 return {

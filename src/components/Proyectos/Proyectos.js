@@ -1,17 +1,19 @@
 import React,{useEffect,useReducer,useRef,useState} from "react";
-import DefaultForm from "../DefaultForm";
+import DefaultForm from "../../includes/interface/DefaultForm";
 import Menu from '../Menu';
 import Table from '../Table';
 import {useModal} from '@clayui/modal';
 import { getUserId} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import { getLanguageId } from '../../includes/LiferayFunctions';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
-import { form as f2 } from './ProyectoForm';
+//import { form as f2 } from './ProyectoForm';
+import {form as formulario} from './ProyectoForm2';
 
 const Proyectos = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
@@ -37,7 +39,7 @@ const Proyectos = () => {
         },
     ];
 
-    const form = f2;
+    const form = formulario;
 
     useEffect(()=>{
 		if (!isInitialized.current) {
@@ -90,7 +92,7 @@ const Proyectos = () => {
             //id                       : 0,
             //inicio                   : 0,
             //fin                      : 0,
-            entidadId                : 2, // de momento ponemos a todos XUNTA
+            //entidadId                : 2, // de momento ponemos a todos XUNTA
             presupuesto              : 10000,
             //fondos_propios           : true,
             //cofinanciacion           : true,
@@ -136,7 +138,27 @@ const Proyectos = () => {
         console.log("loadSelects");
     }
 
+    const miEvento = () => {
+        console.log("Soy una cuchara");
+    }
+    const cofinanciacionChange = (value) => {
+        console.log("Cambiando cofinanciación");
+        console.log(value);
+        if (value == false) {
+            // cambiamos el estado
+        }
+    }
+
     const fetchData = async () => {
+        fetchAPIData('/silefe.cofinanciadas/all', {lang: getLanguageId() },referer).then(response => {
+            //const l = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})
+            //form.rows[3].cols.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
+            form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
+        });
+
+        form.fields.entidadId.change = miEvento;
+        form.fields.cofinanciacion.change = cofinanciacionChange;
+
         const postdata = {
             page:         items.page,
             codigo:       0,
@@ -150,7 +172,7 @@ const Proyectos = () => {
                 id                       : i.proyectoId,
                 //inicio                   : '',
                 //fin                      : '',
-                entidadId                : 2, // de momento ponemos a todos XUNTA
+                //entidadId                : 2, // de momento ponemos a todos XUNTA
                 presupuesto              : 10000,
                 //fondos_propios           : false,
                 //cofinanciacion           : true,

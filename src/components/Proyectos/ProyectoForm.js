@@ -45,6 +45,7 @@ export const form = {
                     label: Liferay.Language.get('Inicio'), 
                     name: "inicio", 
                     value:"lelele", 
+                    placeholder:Liferay.Language.get('YYYY-MM-DD'),
                 },
                 fin: {
                     key:22,
@@ -53,6 +54,7 @@ export const form = {
                     name: "fin", 
                     value:"lelele", 
                     placeholder:Liferay.Language.get('Fin'),
+                    placeholder:Liferay.Language.get('YYYY-MM-DD'),
                 },
             }
         },
@@ -67,7 +69,7 @@ export const form = {
                     label: Liferay.Language.get('FondosPropios'), 
                     name: "fondos_propios", 
                     value:"lelele", 
-                    //conditions:["text"]
+                    change: ()=>{console.log("cambia fondos propios");}
                 },
                 cofinanciacion: {
                     key:72,
@@ -76,9 +78,26 @@ export const form = {
                     name: "cofinanciacion", 
                     value:"lelele", 
                     placeholder:Liferay.Language.get('Cofinanciacion'),
-                    //conditions:["text"]
+                    change: ()=>{console.log("cambia cofinanciacion");}
+                },
+                entidadId: {
+                    key:73,
+                    type: "select",
+                    label: Liferay.Language.get('Entidad'), 
+                    name: "entidadId", 
+                    value:"lelele", 
+                    enabled:true,
+                    change: ()=>{console.log("cambia el select");}
                 },
             }
+        },
+        {
+            key: 8,
+            type:"row",
+            classname:"",
+            cols: {
+            }
         }
+
     ]           
 };
