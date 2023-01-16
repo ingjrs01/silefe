@@ -1,7 +1,7 @@
 import React, {useState,useEffect,useReducer, useRef} from 'react';
-import DefaultForm from '../DefaultForm';
+import DefaultForm from '../../includes/interface/DefaultForm';
+import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
-import Table from '../Table';
 import {useModal} from '@clayui/modal';
 import {getUserId} from '../../includes/LiferayFunctions';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
@@ -11,6 +11,7 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
+import {form as formulario} from './Form';
 
 const DGeografica = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false},status:'list',fields:form, checkall: false, showform: false, page:0,load:0}); 
@@ -19,61 +20,62 @@ const DGeografica = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
 
-    const columns = [
-        {
-            columnName: "dGeograficaId",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        {
-            columnName: "descripcion",
-            columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "multilang",
-            key: "c2",
-        },
-    ];
+//    const columns = [
+//        {
+//            columnName: "dGeograficaId",
+//            columnTitle: "Id",
+//            columnType: "checkbox",
+//            key: "c1",
+//        },
+//        {
+//            columnName: "descripcion",
+//            columnTitle: Liferay.Language.get('Descripcion'),
+//            columnType: "multilang",
+//            key: "c2",
+//        },
+//    ];
 
-    const form = {
-        title: Liferay.Language.get('Disposicion_Geografica'),
-        languages: ["es-ES","en-US","gl-ES"],
-        rows: [
-            {
-                key: 5,
-                type:"row",
-                classname:"",
-                cols: {
-                    id: {
-                        key:1,
-                        type: "text",
-                        label: "ID", 
-                        name: "id", 
-                        value:"lalala", 
-                        placeholder:"Identifier", 
-                        conditions: ["number"]
-                    },
-                }
-            },
-            {
-                key: 5,
-                type:"row",
-                classname:"",
-                cols: {
-                    descripcion: {
-                        key:2,
-                        type: "multilang",
-                        label: Liferay.Language.get('Descripcion'), 
-                        name: "descripcion", 
-                        value:"lelele", 
-                        placeholder: Liferay.Language.get('Descripcion'), 
-                        conditions: ["text"]
-                    }
-                }
-            }
-
-
-        ]
-    };
+    const form = formulario;
+//    {
+//        title: Liferay.Language.get('Disposicion_Geografica'),
+//        languages: ["es-ES","en-US","gl-ES"],
+//        rows: [
+//            {
+//                key: 5,
+//                type:"row",
+//                classname:"",
+//                cols: {
+//                    id: {
+//                        key:1,
+//                        type: "text",
+//                        label: "ID", 
+//                        name: "id", 
+//                        value:"lalala", 
+//                        placeholder:"Identifier", 
+//                        conditions: ["number"]
+//                    },
+//                }
+//            },
+//            {
+//                key: 5,
+//                type:"row",
+//                classname:"",
+//                cols: {
+//                    descripcion: {
+//                        key:2,
+//                        type: "multilang",
+//                        label: Liferay.Language.get('Descripcion'), 
+//                        name: "descripcion", 
+//                        value:"lelele", 
+//                        placeholder: Liferay.Language.get('Descripcion'), 
+//                        conditions: ["text"]
+//                    }
+//                }
+//            }
+//
+//
+//        ]
+//    };
 
     const referer = 'http://localhost:8080/dgeografica';
 
@@ -162,6 +164,8 @@ const DGeografica = () => {
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
     }
 
+    console.log("Cargando DGEo");
+    
     useEffect(() => {
         console.log("useEffect");
 		if (!isInitialized.current) {
@@ -202,8 +206,7 @@ const DGeografica = () => {
             {
                 (items.status === 'list') &&
                 <Table 
-                    columns={columns}
-                    rows={items} 
+                    items={items} 
                     itemsHandle={itemsHandle} 
                 />
             }

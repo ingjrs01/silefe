@@ -1,7 +1,7 @@
 import React, {useState,useEffect, useReducer, useRef} from 'react';
-import DefaultForm from '../DefaultForm';
+import DefaultForm from '../../includes/interface/DefaultForm';
+import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
-import Table from '../Table';
 import {useModal} from '@clayui/modal';
 import {getUserId} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
@@ -10,6 +10,7 @@ import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
+import { form as formulario } from './Form';
 
 const Experiencias = () => {
     const [items, itemsHandle]           = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,totalPages:0,page:0,load:0});
@@ -19,59 +20,7 @@ const Experiencias = () => {
     const referer = "http://localhost:8080/experiencias";
     const isInitialized = useRef;
 
-    const columns = [
-        {
-            columnName: "id",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        {
-            columnName: "descripcion",
-            columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "multilang",
-            key: "c2",
-        },
-    ];
-
-    const form = {
-        title: Liferay.Language.get("Experiencias"),
-        languages: ["es-ES","en-US","gl-ES"],
-        rows: [
-            {
-                key: 5,
-                type:"row",
-                classname:"",
-                cols: {
-                    id: {
-                        key:1,
-                        type: "text",
-                        label: "ID", 
-                        name: "id", 
-                        value:"lalala", 
-                        placeholder:"Identifier", 
-                        conditions: ["number"]
-                    },
-                }
-            },
-            {
-                key: 6,
-                type:"row",
-                classname:"",
-                cols: {
-                    descripcion: {
-                        key:2,
-                        type: "multilang",
-                        label: Liferay.Language.get('Nombre'), 
-                        name: "descripcion", 
-                        value:"lelele", 
-                        placeholder:Liferay.Language.get('Nombre'),
-                        conditions:["text"]
-                    },
-                }
-            }
-        ]        
-    };
+    const form = formulario;
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
@@ -164,8 +113,7 @@ const Experiencias = () => {
             {
                 items.status === 'list' &&
                 <Table 
-                    columns={columns}
-                    rows={items} 
+                    items={items} 
                     itemsHandle={itemsHandle}
                  />
             }

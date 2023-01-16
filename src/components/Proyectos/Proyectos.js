@@ -1,7 +1,7 @@
 import React,{useEffect,useReducer,useRef,useState} from "react";
 import DefaultForm from "../../includes/interface/DefaultForm";
 import Menu from '../Menu';
-import Table from '../Table';
+import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import { getUserId} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
@@ -12,7 +12,6 @@ import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
-//import { form as f2 } from './ProyectoForm';
 import {form as formulario} from './ProyectoForm2';
 
 const Proyectos = () => {
@@ -23,22 +22,6 @@ const Proyectos = () => {
     const isInitialized                  = useRef;
 
     const referer = "http://localhost:8080/proyectos";
-
-    const columns = [
-        {
-            columnName: "id",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        {
-            columnName: "descripcion",
-            columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "multilang",
-            key: "c3",
-        },
-    ];
-
     const form = formulario;
 
     useEffect(()=>{
@@ -216,8 +199,7 @@ const Proyectos = () => {
             {
                 (items.status === 'list') &&
                 <Table 
-                    columns={columns}
-                    rows={items} 
+                    items={items} 
                     itemsHandle={itemsHandle} 
                 />
             }

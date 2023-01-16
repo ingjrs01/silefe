@@ -14,42 +14,41 @@ const Table = ({ items, itemsHandle}) => {
       <ClayTable.Head>
         <ClayTable.Row>
             {
-              Object.keys(items.table).map(tableCol => {
-                if (items.table[tableCol].columnType == "string" || items.table[tableCol].columnType == "multilang")
-                  return (<ClayTable.Cell key={items.table[tableCol].key}><strong>{ tableCol }</strong></ClayTable.Cell> )
-                if (items.table[tableCol].columnType == "string")
-                  return (<ClayTable.Cell key={items.table[tableCol].key} headingCell><ClayCheckbox checked={items.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
+              Object.keys(items.fields.table).map(tableCol => {
+                if (items.fields.table[tableCol].columnType == "string" || items.fields.table[tableCol].columnType == "multilang")
+                  return (<ClayTable.Cell key={items.fields.table[tableCol].key}><strong>{ items.fields.table[tableCol].columnTitle }</strong></ClayTable.Cell> )
+                if (items.fields.table[tableCol].columnType == "checkbox")
+                  return (<ClayTable.Cell key={items.fields.table[tableCol].key} headingCell><ClayCheckbox checked={items.fields.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
               })
             }
         </ClayTable.Row>
       </ClayTable.Head>
-
-            ESTAMOS AQUI: Hay que cambiar para abajo <----------------------------------------------
-
-
       <ClayTable.Body>
         { 
-          rows.arr.map( (row,index )=> {
+          items.arr.map( (row,index )=> {
+            console.log(row);
             return (
               <ClayTable.Row key={row.id} >
                 {
-                  columns.map( (column) => { 
-                    if (column.columnType == "multilang")
-                      return (<ClayTable.Cell key={column.key+row.id}>{ row[column.columnName][lang] }</ClayTable.Cell> )
-                    if (column.columnType == "string")
-                      return (<ClayTable.Cell key={column.key+row.id}>{ row[column.columnName] }</ClayTable.Cell> )
-                    if (column.columnType == "checkbox")
-                      return (
-                        <ClayTable.Cell key={column.key+row.id}><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[column.columnName]}  />
-                         <span>{row[column.columnName]}</span> 
-                        </ClayTable.Cell>
-                      )
-                    if (column.columnType == "localized")
+                  Object.keys(items.fields.table).map(columName => {
+                    switch (items.fields.table[columName].columnType) {
+                      case "multilang":
+                        return (<ClayTable.Cell key={items.fields.table[columName]+row.id}>{ row[columName][lang] }</ClayTable.Cell> )
+                      case "string":
+                        return (<ClayTable.Cell key={items.fields.table[columName]+row.id}>{ row[columName] }</ClayTable.Cell> )
+                      case "checkbox":
                         return (
-                          <ClayTable.Cell><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index})}} value={row[column.columnName]}  />
-                          <span>{ row[column.columnName].children[0].value  }</span> 
+                          <ClayTable.Cell key={items.fields.table[columName].key+row.id}><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[columName]}  />
+                          <span>{row[columName]}</span> 
+                          </ClayTable.Cell>
+                        )
+                      case "localized":
+                        return (
+                          <ClayTable.Cell><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index})}} value={row[columName]}  />
+                          <span>{ row[columName].children[0].value  }</span> 
                          </ClayTable.Cell> 
                         )
+                      }
                   })
                 }
               </ClayTable.Row>

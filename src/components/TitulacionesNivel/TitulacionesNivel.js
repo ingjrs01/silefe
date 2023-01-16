@@ -1,7 +1,7 @@
 import React, {useState,useEffect,useReducer, useRef} from 'react';
-import DefaultForm from '../DefaultForm';
+import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
-import Table from '../Table';
+import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import {getUserId} from '../../includes/LiferayFunctions';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
@@ -11,6 +11,7 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId } from '../../includes/LiferayFunctions';
+import { form as formulario} from './Form';
 import Papa from "papaparse";
 
 const TitulacionesNivel = () => {
@@ -20,83 +21,7 @@ const TitulacionesNivel = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
 
-    const columns = [
-        {
-            columnName: "titulacionNivelId",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        {
-            columnName: "descripcion",
-            columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "multilang",
-            key: "c3",
-        },
-        {
-            columnName: "titulacionNivelDescripcion",
-            columnTitle: Liferay.Language.get('Tipo'),
-            columnType: "string",
-            key: "c2",
-        },
-    ];
-
-    let form = {
-        title: Liferay.Language.get('Titulaciones_nivel'),
-        languages: ["es-ES","en-US","gl-ES"],
-        rows: [
-            {
-                key:7,
-                type: "row",
-                classname: "", 
-                cols: {
-                    id: {
-                        key:1,
-                        type: "text",
-                        label: "ID", 
-                        name: "id", 
-                        value:"lalala", 
-                        placeholder:"Identifier", 
-                        conditions: ["number"]
-                    },
-                }
-            },
-            {
-                key:8,
-                type: "row",
-                classname: "", 
-                cols: {
-                    titulacionTipoId : {
-                        key:2,
-                        type: "select",
-                        label: Liferay.Language.get('Tipo'), 
-                        name: "titulacionTipoId", 
-                        value:"ta ta ta", 
-                        placeholder: Liferay.Language.get('Tipo'), 
-                        conditions: [],
-                        options: []  
-                    },        
-                }
-            },
-            {
-                key:9,
-                type: "row",
-                classname: "", 
-                cols: {
-                    descripcion: {
-                        key:3,
-                        type: "multilang",
-                        label: Liferay.Language.get('Descripcion'), 
-                        name: "descripcion", 
-                        value:"lelele", 
-                        placeholder: Liferay.Language.get('Descripcion'), 
-                        conditions: []
-                    }
-                }
-            },
-        ]
-    };
-
+    let form = formulario;
     const referer = 'http://localhost:8080/titnivel';
 
     const loadCsv = () => {
@@ -185,7 +110,7 @@ const TitulacionesNivel = () => {
         const tmp = await data.map(i => {
             return({...i,titulacionNivelDescripcion:options.filter(o => o.value == i.titulacionTipoId)[0].label,checked:false});
         });
-        form.rows[1].cols.titulacionTipoId.options = options;
+        form.fields.titulacionTipoId.options = options;
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
     }
 
@@ -241,8 +166,7 @@ const TitulacionesNivel = () => {
             {
                 (items.status === 'list') &&
                 <Table 
-                    columns={columns}
-                    rows={items} 
+                    items={items} 
                     itemsHandle={itemsHandle} 
                 />
             }

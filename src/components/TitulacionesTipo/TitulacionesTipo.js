@@ -1,7 +1,7 @@
 import React, {useState,useEffect,useReducer, useRef} from 'react';
-import DefaultForm from '../DefaultForm';
+import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
-import Table from '../Table';
+import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import {getUserId} from '../../includes/LiferayFunctions';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
@@ -11,6 +11,7 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
+import { form as formulario} from './Form';
 
 const TitulacionesTipo = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0}); 
@@ -19,60 +20,7 @@ const TitulacionesTipo = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
 
-    const columns = [
-        {
-            columnName: "titulacionTipoId",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        {
-            columnName: "descripcion",
-            columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "multilang",
-            key: "c2",
-        },
-    ];
-
-    const form = {
-        title: Liferay.Language.get('Titulaciones_tipo'),
-        languages: ["es-ES","en-US","gl-ES"],
-        rows: [
-            {
-                key:9,
-                type: "row",
-                classname: "", 
-                cols: {
-                    id: {
-                        key:1,
-                        type: "text",
-                        label: "ID", 
-                        name: "id", 
-                        value:"lalala", 
-                        placeholder:"Identifier", 
-                        conditions: ["number"]
-                    },
-                }
-            },
-            {
-                key:7,
-                type: "row",
-                classname: "", 
-                cols: {
-                    descripcion: {
-                        key:3,
-                        type: "multilang",
-                        label: Liferay.Language.get('Descripcion'), 
-                        name: "descripcion", 
-                        value:"lelele", 
-                        placeholder: Liferay.Language.get('Descripcion'), 
-                        conditions: ["text"]
-                    }
-                }
-            },
-        ]
-    };
-
+    const form = formulario;
     const referer = 'http://localhost:8080/tittipo';
 
     const loadCsv = () => {
@@ -199,8 +147,7 @@ const TitulacionesTipo = () => {
             {
                 (items.status === 'list') &&
                 <Table 
-                    columns={columns}
-                    rows={items} 
+                    items={items} 
                     itemsHandle={itemsHandle} 
                 />
             }
