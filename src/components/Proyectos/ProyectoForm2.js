@@ -1,3 +1,5 @@
+//import { text } from "stream/consumers";
+
 export const form = {
     title: Liferay.Language.get('Proyectos'),
     languages: ["es-ES","en-US","gl-ES"],
@@ -27,6 +29,7 @@ export const form = {
             name: "inicio", 
             value:"lelele", 
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
+            conditions:[]
         },
         fin: {
             key:22,
@@ -36,6 +39,7 @@ export const form = {
             value:"lelele", 
             placeholder:Liferay.Language.get('Fin'),
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
+            conditions:[]
         },
         fondos_propios: {
             key:71,
@@ -63,6 +67,41 @@ export const form = {
             enabled:true,
             change: ()=>{console.log("cambia el select");}
         },
+        presupuesto: {
+            key: 80,
+            type: "text",
+            label: Liferay.Language.get("Presupuesto"),
+            name: "presupuesto",
+            placeholder: "presupuesto",
+            enabled: true,
+            conditions:["number"]
+        },
+        porcentaje_total: {
+            key: 81,
+            type: "text",
+            label: Liferay.Language.get("Porcentaje"),
+            name: "porcentaje_total",
+            placeholder: "",
+            enabled: true,
+            conditions:["number"]
+        },
+        porcentaje_cofinanciacion: {
+            key: 82,
+            type: "text",
+            label: Liferay.Language.get("Porcentaje_cofinanciacion"),
+            name: "porcentaje_cofinanciacion",
+            placeholder: "",
+            enabled: true,
+            conditions:["number"]
+        },
+        colectivos: {
+            key: 83,
+            type: "multilist",
+            label: Liferay.Language.get("Colectivos"),
+            name: 'colectivos',
+            placeholder: 'lalala',
+            enabled: true
+        }
     },
     rows: [
         {
@@ -81,6 +120,14 @@ export const form = {
             key: 7,
             cols: ['fondos_propios', 'cofinanciacion', 'entidadId']
         },
+        {
+            key: 10,
+            cols: ['presupuesto','porcentaje_total','porcentaje_cofinanciacion']
+        },
+        {
+            key: 11,
+            cols: ['colectivos']
+        }
     ],
     table: {
         id: {

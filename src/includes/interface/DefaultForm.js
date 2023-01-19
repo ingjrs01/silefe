@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle } from '@clayui/form';
+import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox } from '@clayui/form';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
@@ -29,8 +29,9 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
   const validateAll = () => {
+    console.log("validando todo");
     Object.keys(items.fields.fields).forEach( campo => {
-      console.log("comprobando: " + campo);
+      console.log(campo);
       switch (items.fields.fields[campo].type) {
         case "text": 
           if (!validate(campo, items.item[campo]))
@@ -45,6 +46,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
       }
 
     });
+    console.log("todo ok");
     return true;
   }
 
@@ -178,7 +180,18 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                                 }}
                               />
                             </>}
-
+                            {(items.fields.fields[it].type === 'multilist') &&
+                            <>                            
+                              <ClaySelectBox
+                                items={items.fields.fields[it].options}
+                                label={items.fields.fields[it].label}
+                                multiple
+                                onItemsChange={console.log("Cambiando los items")}
+                                onSelectChange={val => {itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
+                                spritemap={spritemap}
+                                value={items.item[it]}
+                              />                            
+                            </>}
                           {
                             items.errors[it].length > 0 && //  -> items.fields.rows[it].name
                             <ClayForm.FeedbackGroup>

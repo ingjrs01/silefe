@@ -26,7 +26,6 @@ const Table = ({ items, itemsHandle}) => {
       <ClayTable.Body>
         { 
           items.arr.map( (row,index )=> {
-            console.log(row);
             return (
               <ClayTable.Row key={row.id} >
                 {

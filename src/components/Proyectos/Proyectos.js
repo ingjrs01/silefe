@@ -1,7 +1,7 @@
 import React,{useEffect,useReducer,useRef,useState} from "react";
-import DefaultForm from "../../includes/interface/DefaultForm";
-import Menu from '../Menu';
+import DefaultForm from '../../includes/interface/DefaultForm';
 import Table from '../../includes/interface/Table';
+import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
 import { getUserId} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
@@ -134,9 +134,12 @@ const Proyectos = () => {
 
     const fetchData = async () => {
         fetchAPIData('/silefe.cofinanciadas/all', {lang: getLanguageId() },referer).then(response => {
-            //const l = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})
-            //form.rows[3].cols.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
             form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
+        });
+
+        fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+            form.fields.colectivos.options = opts;
         });
 
         form.fields.entidadId.change = miEvento;
@@ -148,13 +151,18 @@ const Proyectos = () => {
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
         let {data,totalPages,page} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
+        console.log("Procesando los elementos");
         const tmp = await data.map(i => {            
             //console.log("-->");console.log(i);
+            const options = {  year: 'numeric', month: 'numeric', day: 'numeric', literal: '-' };
+            console.log("la fecha");
+            console.log(i.inicio);
+            
             return({
                 ...i,
                 id                       : i.proyectoId,
-                //inicio                   : '',
-                //fin                      : '',
+                inicio                   : new Date(i.inicio).toISOString(options).substring(0, 10),
+                fin                      : new Date(i.fin).toISOString(options).substring(0, 10),
                 //entidadId                : 2, // de momento ponemos a todos XUNTA
                 presupuesto              : 10000,
                 //fondos_propios           : false,
