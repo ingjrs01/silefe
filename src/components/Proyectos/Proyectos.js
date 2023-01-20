@@ -81,9 +81,9 @@ const Proyectos = () => {
             //cofinanciacion           : true,
             porcentaje_cofinanciacion: 0,
             porcentaje_total         : 100,
-            participantes            : 100,
-            ambito_geo               : 2, // TODO: le estamos poniendo Provincial a todos
-            objetivos                : '',
+            //participantes            : 100,
+            //ambito_geo               : 2, // TODO: le estamos poniendo Provincial a todos
+            //objetivos                : '',
             userId                   :      getUserId(),
         }
         let endpoint = '/silefe.proyecto/save-proyecto';
@@ -142,6 +142,11 @@ const Proyectos = () => {
             form.fields.colectivos.options = opts;
         });
 
+        fetchAPIData('/silefe.convocatoria/all', {lang: getLanguageId()},referer).then(response => {
+            form.fields.convocatoriaId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
+        });
+
+
         form.fields.entidadId.change = miEvento;
         form.fields.cofinanciacion.change = cofinanciacionChange;
 
@@ -151,27 +156,22 @@ const Proyectos = () => {
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
         let {data,totalPages,page} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
-        console.log("Procesando los elementos");
         const tmp = await data.map(i => {            
-            //console.log("-->");console.log(i);
-            const options = {  year: 'numeric', month: 'numeric', day: 'numeric', literal: '-' };
-            console.log("la fecha");
-            console.log(i.inicio);
             
             return({
                 ...i,
                 id                       : i.proyectoId,
-                inicio                   : new Date(i.inicio).toISOString(options).substring(0, 10),
-                fin                      : new Date(i.fin).toISOString(options).substring(0, 10),
+                inicio                   : (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
+                fin                      : (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
                 //entidadId                : 2, // de momento ponemos a todos XUNTA
-                presupuesto              : 10000,
+                //presupuesto              : 10000,
                 //fondos_propios           : false,
                 //cofinanciacion           : true,
                 porcentaje_cofinanciacion: 0,
                 porcentaje_total         : 100,
-                participantes            : 100,
-                ambito_geo               : 2, // TODO: le estamos poniendo Provincial a todos
-                objetivos                : '',
+                //participantes            : 100,
+                //ambito_geo               : 2, // TODO: le estamos poniendo Provincial a todos
+                //objetivos                : '',
                 checked                  : false
             });
         });

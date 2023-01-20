@@ -18,6 +18,7 @@ const MenuItems = [
     {key:14, url: '/cofinanciadas',caption: 'Cofinanciadas'},
     {key:15, url: '/tecnicos',     caption: 'Tecnicos'},
     {key:16, url: '/convocatorias',caption: 'Convocatorias'},
+    {key:17, url: '/ambitos' ,     caption: 'Ámbitos Geográficos'},
 ]
 
 

@@ -1,4 +1,3 @@
-//import { text } from "stream/consumers";
 
 export const form = {
     title: Liferay.Language.get('Proyectos'),
@@ -12,6 +11,15 @@ export const form = {
             value:"lalala", 
             placeholder:"Identifier", 
             conditions: ["number"]
+        },
+        codigo: {
+            key:1,
+            type: "text",
+            label: Liferay.Language.get('Codigo'), 
+            name: "codigo", 
+            value:"lalala", 
+            placeholder:"Identifier", 
+            conditions: ["text"]
         },
         descripcion: {
             key:3,
@@ -41,6 +49,14 @@ export const form = {
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             conditions:[]
         },
+        participantes: {
+            key:22,
+            type: "text",
+            label: Liferay.Language.get('Participantes'), 
+            name: "participantes", 
+            placeholder: "0",
+            conditions:["number"]
+        },
         fondos_propios: {
             key:71,
             type: "toggle",
@@ -57,6 +73,14 @@ export const form = {
             value:"lelele", 
             placeholder:Liferay.Language.get('Cofinanciacion'),
             change: ()=>{console.log("cambia cofinanciacion");}
+        },        
+        convocatoriaId: {
+            key:77,
+            type: "select",
+            label: Liferay.Language.get('Convocatoria'), 
+            name: "convocatoriaId", 
+            enabled:true,
+            change: ()=>{console.log("cambia el select");}
         },
         entidadId: {
             key:73,
@@ -66,6 +90,15 @@ export const form = {
             value:"lelele", 
             enabled:true,
             change: ()=>{console.log("cambia el select");}
+        },
+        ambito_geo: {
+            key:73,
+            type: "text",
+            label: Liferay.Language.get('Ambito'), 
+            name: "ambito_geo", 
+            value:"lelele", 
+            enabled:true,
+            conditions: []
         },
         presupuesto: {
             key: 80,
@@ -101,20 +134,29 @@ export const form = {
             name: 'colectivos',
             placeholder: 'lalala',
             enabled: true
+        },
+        objetivos: {
+            key:55,
+            type: "textarea",
+            label: Liferay.Language.get('Objetivos'), 
+            name: "objetivos", 
+            value:"lelele", 
+            placeholder:Liferay.Language.get('Objetivos'),
+            conditions:["text"]
         }
     },
     rows: [
         {
             key: 5,
-            cols: ['id']
+            cols: ['id','codigo', 'convocatoriaId']
         },
         {
             key: 6,
-            cols: ['descripcion']
+            cols: ['descripcion', 'ambito_geo' ]
         },
         {
             key: 5,
-            cols: [ 'inicio','fin' ]
+            cols: [ 'inicio','fin', 'participantes' ]
         },
         {
             key: 7,
@@ -127,7 +169,11 @@ export const form = {
         {
             key: 11,
             cols: ['colectivos']
-        }
+        },
+        {
+            key: 12,
+            cols: ['objetivos']
+        },
     ],
     table: {
         id: {
@@ -141,4 +187,5 @@ export const form = {
             key: "c3",
         },
     }
+
 };

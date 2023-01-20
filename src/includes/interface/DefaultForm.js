@@ -192,6 +192,23 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                                 value={items.item[it]}
                               />                            
                             </>}
+                            {(items.fields.fields[it].type === 'textarea') &&
+                            <>                            
+                              <label htmlFor="basicInputText">{items.fields.fields[it].label}</label>
+                              <ClayInput
+                                component="textarea"
+                                id={items.fields.fields[it].name + items.fields.fields[it].key}
+                                placeholder={items.fields.fields[it].placeholder}
+                                type="text"
+                                value={items.item[it]}
+                                onChange={e => { 
+                                  console.debug(e);
+                                  console.log(e.target.name);
+                                  console.log(e.target.value);
+                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value }); 
+                                }}
+                              />
+                            </>}
                           {
                             items.errors[it].length > 0 && //  -> items.fields.rows[it].name
                             <ClayForm.FeedbackGroup>

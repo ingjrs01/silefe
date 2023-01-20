@@ -128,18 +128,14 @@ export const red_items = (state=initialState, action ) => {
             return state;                    
         case ITEMS_ACTIONS.NEW_ITEM:
             tmp_item = {};
-            
-            state.fields.rows.forEach(fila => {
-                Object.keys(fila.cols).forEach(j => {
-                    //errores[j]=[];
-                    if (fila.cols[j].type === "multilang") {
-                        let tt = {}
-                        state.fields.languages.forEach(el => {tt[el]=""});
-                        tmp_item[j] = tt;
-                    }
-                    else 
-                        tmp_item[j] = null;
-                });
+            Object.keys(state.fields.fields).forEach(fila => {
+                if (state.fields.fields[fila].type === "multilang") {
+                    let tt = {}
+                    state.fields.languages.forEach(el => {tt[el]=""});
+                    tmp_item[fila] = tt;
+                }
+                else 
+                    tmp_item[fila] = null;
             });
 
             tmp_item['id'] = 0;
