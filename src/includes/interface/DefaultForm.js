@@ -186,7 +186,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                                 items={items.fields.fields[it].options}
                                 label={items.fields.fields[it].label}
                                 multiple
-                                onItemsChange={console.log("Cambiando los items")}
+                                onItemsChange={console.log("Cambiando los items dentro de ClaySelecBox")}
                                 onSelectChange={val => {itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
                                 spritemap={spritemap}
                                 value={items.item[it]}

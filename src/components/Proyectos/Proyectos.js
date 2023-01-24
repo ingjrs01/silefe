@@ -146,6 +146,12 @@ const Proyectos = () => {
             form.fields.convocatoriaId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
 
+        fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
+            console.log("viendo los tecnicos");
+            form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 
+            console.debug(form.fields.tecnicos.options);
+        });
+
 
         form.fields.entidadId.change = miEvento;
         form.fields.cofinanciacion.change = cofinanciacionChange;

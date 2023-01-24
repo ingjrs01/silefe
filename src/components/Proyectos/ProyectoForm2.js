@@ -135,6 +135,14 @@ export const form = {
             placeholder: 'lalala',
             enabled: true
         },
+        tecnicos: {
+            key: 88,
+            type: "multilist",
+            label: Liferay.Language.get("Tecnicos"),
+            name: 'tecnicos',
+            //placeholder: 'lalala',
+            enabled: true
+        },
         objetivos: {
             key:55,
             type: "textarea",
@@ -172,6 +180,10 @@ export const form = {
         },
         {
             key: 12,
+            cols: ['tecnicos']
+        },
+        {
+            key: 13,
             cols: ['objetivos']
         },
     ],

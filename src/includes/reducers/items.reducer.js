@@ -37,7 +37,7 @@ const initialState = {
 const resetErrors = (fields) => {
     let errores = {};
     let tmp_item = {};
-    //fields.fields.forEach(r => {
+    //fields.fields.forEach(r => {    
     Object.keys(fields.fields).forEach( j => {
         //Object.keys(fields.fields[r]).forEach( j => {
             errores[j]=[];    
@@ -115,7 +115,9 @@ export const red_items = (state=initialState, action ) => {
             }
         
         case ITEMS_ACTIONS.SELECT_ITEM:
+            console.log("seleccionando elelemento");
             let sel = state.arr.filter(i => i.checked);
+            console.log(sel);
             if (sel.length > 0) {
                 let e2 = resetErrors(state.fields);
                 return {

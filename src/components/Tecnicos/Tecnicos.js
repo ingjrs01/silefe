@@ -1,7 +1,7 @@
 import React, {useState,useEffect,useReducer, useRef} from 'react';
-import DefaultForm from '../DefaultForm';
+import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
-import Table from '../Table';
+import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import {getUserId} from '../../includes/LiferayFunctions';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
@@ -12,6 +12,7 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
 import { url_api, getAuthToken } from "../../includes/LiferayFunctions";
+import {form as formulario} from './Form';
 
 
 const Tecnicos = () => {
@@ -21,99 +22,8 @@ const Tecnicos = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
 
-    const columns = [
-        {
-            columnName: "userId",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        {
-            columnName: "firstName",
-            columnTitle: Liferay.Language.get('Nombre'),
-            columnType: "string",
-            key: "c2",
-        },
-        {
-            columnName: "lastName",
-            columnTitle: Liferay.Language.get('Apellidos'),
-            columnType: "string",
-            key: "c2",
-        },
-        {
-            columnName: "emailAddress",
-            columnTitle: Liferay.Language.get('Nombre'),
-            columnType: "string",
-            key: "c2",
-        },
-    ];
-
-    const form = {
-        title: Liferay.Language.get('Tecnicos'),
-        languages: ["es-ES","en-US","gl-ES"],
-        rows: [
-            {
-                key: 5,
-                type:"row",
-                classname:"",
-                cols: {
-                    id: {
-                        key:1,
-                        type: "text",
-                        label: "ID", 
-                        name: "id", 
-                        value:"lalala", 
-                        placeholder:"Identifier", 
-                        conditions: ["number"]
-                    },
-                }
-            },
-            {
-                key: 6,
-                type:"row",
-                classname:"",
-                cols: {
-                    firstName: {
-                        key:2,
-                        type: "text",
-                        label: Liferay.Language.get('Nombre'), 
-                        name: "firstName", 
-                        value:"lelele", 
-                        placeholder: Liferay.Language.get('Nombre'), 
-                        conditions: ["text"]
-                    },
-                    lastName: {
-                        key:3,
-                        type: "text",
-                        label: Liferay.Language.get('Apellido'), 
-                        name: "lastName", 
-                        value:"lelele", 
-                        placeholder: Liferay.Language.get('Apellido'), 
-                        conditions: ["text"]
-                    }
-                }
-            },
-            {
-                key: 7,
-                type:"row",
-                classname:"",
-                cols: {
-                    emailAddress: {
-                        key:4,
-                        type: "text",
-                        label: "correo", 
-                        name: "emailAddress", 
-                        value:"lalala", 
-                        placeholder:"correo", 
-                        conditions: ["text"]
-                    },
-                }
-            },
-
-        ]
-    };
-
-    const referer = 'http://localhost:8080/colectivos';
+    const form = formulario;
+    const referer = 'http://localhost:8080/tecnicos';
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -191,12 +101,14 @@ const Tecnicos = () => {
     const fetchData = async () => {
         //const endpoint = '/silefe.colectivo/filter';
         console.log("Probnaod mis cossas");
-        const endpoint = "/user/get-user-group-users";
+        //const endpoint = "/user/get-user-group-users";
+        //userGroupId: 52272
+        const endpoint = '/silefe.tecnico/filter'
         const postdata = {
-            userGroupId: 52272
+            page: 0,
+            descripcion: ''
         };
 
-        //const url = "http://localhost:8080/api/jsonws/user/get-user-group-users/user-group-id/52272";
         const auth = getAuthToken();
         //debugger;
         const response = await fetch(url_api, {
@@ -217,14 +129,18 @@ const Tecnicos = () => {
             "method": "POST",
             "mode": "cors"
         });
+
+        let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
+
+
         console.log("Hecha la consulta");
         //console.log(response);
-        let data = await response.json();
+        //let data = await response.json();
         //console.debug(data);
     
         //let { data, totalPages, page, error } = await JSON.parse(await response.json());
-        let totalPages = 1;
-        let page = 0;
+        //let totalPages = 1;
+        //let page = 0;
         //return {data, error,totalPages, page}
         const tmp = await data.map(i => {return({id:i.userId,firstName:i.firstName,lastName:i.lastName,emailAddress:i.emailAddress,checked:false})});
         await console.log("los datos procesados");
@@ -273,8 +189,7 @@ const Tecnicos = () => {
             {
                 (items.status === 'list') &&
                 <Table 
-                    columns={columns}
-                    rows={items} 
+                    items={items} 
                     itemsHandle={itemsHandle} 
                 />
             }
