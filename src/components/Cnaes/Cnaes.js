@@ -20,60 +20,7 @@ const Cnaes = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
 
-//    const columns = [
-//        {
-//            columnName: "cnaeId",
-//            columnTitle: "Id",
-//            columnType: "checkbox",
-//            key: "c1",
-//        },
-//        {
-//            columnName: "descripcion",
-//            columnTitle: Liferay.Language.get('Descripcion'),
-//            columnType: "multilang",
-//            key: "c2",
-//        },
-//    ];
-
     const form = formulario;
-//    {        
-//        title: Liferay.Language.get('Cnaes'),
-//        languages: ["es-ES","en-US","gl-ES"],
-//        rows: [
-//            {
-//                key: 5,
-//                type:"row",
-//                classname:"",
-//                cols: {
-//                    id: {
-//                        key:1,
-//                        type: "text",
-//                        label: "ID", 
-//                        name: "id", 
-//                        value:"lalala", 
-//                        placeholder:"Identifier", 
-//                        conditions: ["number"]
-//                    },
-//                }
-//            },
-//            {
-//                key: 6,
-//                type:"row",
-//                classname:"",
-//                cols: {
-//                    descripcion: {
-//                        key:2,
-//                        type: "multilang",
-//                        label: Liferay.Language.get('Descricion'), 
-//                        name: "descripcion", value:"lelele", 
-//                        placeholder: Liferay.Language.get('Descricion'), 
-//                        conditions:["text"]
-//                    },
-//                }
-//            }
-//        ]
-//    };
-
     const referer = "http://localhost:8080/cnaes";
 
     const loadCsv = () => {
@@ -145,12 +92,14 @@ const Cnaes = () => {
     }
 
     const fetchData = async () => {
-        const endpoint = "/silefe.cnae/filter";
+        //const endpoint = "/silefe.cnae/filter";
+        console.log("Objeniendo los cnaes");
         const postdata = {
             page: (items.page>0)?items.page:0,
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
-        let {data,totalPages,page} = await fetchAPIData(endpoint,postdata,referer);
+        let {data,totalPages,page} = await fetchAPIData('/silefe.cnae/filter',postdata,referer);
+        await console.debug(data);
 
         const tmp = await data.map(i => {return({...i,id:i.cnaeId,checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});

@@ -2,6 +2,7 @@
 
 const MenuItems = [
     {key:18, url: '/proyectos',    caption: 'Proyectos'},
+    {key:19, url: '/participantes',caption: 'Participantes'},
     {key: 1, url: '/tittipo',      caption: 'Titulaciones Tipo'},
     {key: 2, url: '/titnivel',     caption: 'Titulaciones Nivel'},
     {key: 3, url: '/titulacionesf',caption: 'Titulaciones Familias'},

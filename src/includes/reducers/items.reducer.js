@@ -109,15 +109,16 @@ export const red_items = (state=initialState, action ) => {
                 item: action.item
             }
         case ITEMS_ACTIONS.SET:
+            console.log("Estableciendo el dato: " + action.fieldname);
+            console.log(typeof(action.value));
+            console.log("Valor: " + action.value);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
             }
         
         case ITEMS_ACTIONS.SELECT_ITEM:
-            console.log("seleccionando elelemento");
             let sel = state.arr.filter(i => i.checked);
-            console.log(sel);
             if (sel.length > 0) {
                 let e2 = resetErrors(state.fields);
                 return {
@@ -131,13 +132,22 @@ export const red_items = (state=initialState, action ) => {
         case ITEMS_ACTIONS.NEW_ITEM:
             tmp_item = {};
             Object.keys(state.fields.fields).forEach(fila => {
-                if (state.fields.fields[fila].type === "multilang") {
-                    let tt = {}
-                    state.fields.languages.forEach(el => {tt[el]=""});
-                    tmp_item[fila] = tt;
+                switch (state.fields.fields[fila].type) {
+                    case 'multilang':
+                        let tt = {}
+                        state.fields.languages.forEach(el => {tt[el]=""});
+                        tmp_item[fila] = tt;
+                        break;
+                    case 'toggle':
+                        tmp_item[fila] = false;
+                        break;
+                    case 'select':
+                        tmp_item[fila] = "0"; // por defecto
+                        break;
+                    default:
+                        tmp_item[fila] = null;
+                        break;
                 }
-                else 
-                    tmp_item[fila] = null;
             });
 
             tmp_item['id'] = 0;

@@ -19,6 +19,7 @@ import Tecnicos from './components/Tecnicos/Tecnicos';
 import Convocatorias from './components/Convocatorias/Convocatorias';
 import Proyectos from './components/Proyectos/Proyectos';
 import Ambitos from './components/Ambitos/Ambitos';
+import Participantes from './components/Participantes/Participantes';
 
 const Application = () => {
 
@@ -53,6 +54,7 @@ const Application = () => {
                             <Route path='/convocatorias' element={ <Convocatorias /> }   />
                             <Route path='/proyectos'     element={ <Proyectos /> }   />
                             <Route path='/ambitos'       element={ <Ambitos /> }   />
+                            <Route path='/participantes' element={ <Participantes /> }   />
                         </Routes>
                     </div>
                 </div>

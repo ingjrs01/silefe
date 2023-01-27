@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox } from '@clayui/form';
+import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup } from '@clayui/form';
 import ClayDatePicker from '@clayui/date-picker';
-import ClayCard from "@clayui/card";
-import ClayButton from '@clayui/button';
+//import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import ClayLocalizedInput from '@clayui/localized-input';
-import {getMonths, getDays} from './DatesLang';
-import {getLanguageId } from '../LiferayFunctions'
+import { getMonths, getDays } from './DatesLang';
+import { getLanguageId } from '../LiferayFunctions'
 
-const spritemap = '/icons.svg';
+const RenderFields =  ({ rows,  itemsHandle, items }) => {
 
-const DefaultForm = ({ itemsHandle, save, items, notify }) => {
-  const locales = [
+    const [selectedLocale, setSelectedLocale] = useState(locales[0]);
+    const [act2,setAct2] = useState(0);
+    debugger;
+    
+    const locales = [
     {
       label: "es-ES",
       symbol: "es-ES"
@@ -26,72 +28,9 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
     }
   ]
 
-  const [selectedLocale, setSelectedLocale] = useState(locales[0]);
-
-  const validateAll = () => {
-    console.log("validando todo");
-    Object.keys(items.fields.fields).forEach( campo => {
-      console.log(campo);
-      switch (items.fields.fields[campo].type) {
-        case "text": 
-          if (!validate(campo, items.item[campo]))
-            return false;
-          break;
-        case "multilang":
-          if (!validateLocalized(campo, items.item[campo]))
-            return false;
-          break;
-        case "toggle":
-          break;
-      }
-
-    });
-    console.log("todo ok");
-    return true;
-  }
-
-  const validate = (name, value) => {
-    let condicion = "";
-    
-    for (condicion of items.fields.fields[name]["conditions"]) {
-      if (condicion == "number") {
-        if (isNaN(value)) {
-          itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
-          return false;
-        }
-      }
-
-      if (condicion == "text") {
-        if (!isNaN(value)) {
-          itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-texto') });
-          return false;
-        }
-      }
-    }    
-    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
-    return true;
-  }
-
-  const validateLocalized = (fieldname, values) => {
-    const languages = Object.keys(values);
-    let l = "";
-    for (l in languages) {
-      if (!validate(fieldname, values[languages[l]]))
-        return false;
-    }
-    return true;
-  }
-
-  return (
-    <ClayCard>
-      <ClayCard.Body>
-        <ClayCard.Description displayType="title">
-          <h2>{items.fields.title}</h2>
-        </ClayCard.Description>
-
-        <ClayCard.Description truncate={false} displayType="text">
-          <ClayForm>
-            {items.fields.rows.map(row => {
+    return (
+        <>
+            {rows.map(row => {
               return (
                 <div className="row">
                   { row.cols.map(it => {
@@ -135,9 +74,11 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                                 name={it}
                                 disabled={ !items.fields.fields[it].enabled }
                                 onChange={evt => {
-                                  items.fields.fields[it].change();
+                                  console.log("Cambiando select");
+                                  if (Object.hasOwnProperty('change')) {
+                                    items.fields.fields[it].change();
+                                  }
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
-                                  notify(evt.target.name,evt.target.value);
                                 }}
                                 value={items.item[it]} >
                                 {items.fields.fields[it].options.map(item => (
@@ -175,11 +116,37 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                                 value={items.item[it]}
                                 weekdaysShort={getDays(getLanguageId())}
                                 years={{
-                                  end: 2024,
-                                  start: 2008
+                                  end:  (((new Date().getFullYear()) +  items.fields.fields[it].yearmax) ),
+                                  start: (( new Date().getFullYear() - items.fields.fields[it].yearmin))
                                 }}
                               />
                             </>}
+
+                            {items.fields.fields[it].type == 'radio' &&
+                            <>
+                              <ClayRadioGroup
+                                active={act2}
+                                defaultValue="H"
+                                onActiveChange={setAct2}
+                                onChange={ evt => {console.log("este es el general")}}
+                                inline
+                              >
+                                {items.fields.fields[it].options.map(it5 => {
+                                  return (
+                                    <ClayRadio 
+                                      key={items.fields.fields[it].name + it5.key}
+                                      label={it5.label}
+                                      value={it5.value}
+                                      onClick={a => {console.log("man hecho click")}}
+                                    />
+                                  )
+
+                                })}
+
+                              </ClayRadioGroup>
+                            </>
+                            }
+
                             {(items.fields.fields[it].type === 'multilist') &&
                             <>                            
                               <ClaySelectBox
@@ -192,27 +159,6 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                                 value={items.item[it]}
                               />                            
                             </>}
-
-                            {items.fields.fields[it].type == 'radio' &&
-                            <>
-                              <ClayRadioGroup
-                                defaultValue="H"
-                                inline
-                              >
-                                {items.fields.fields[it].options.map(item => (
-
-                                  <ClayRadio 
-                                    label={item.label}
-                                    value={item.value}
-                                  />
-
-                                ))}
-
-                              </ClayRadioGroup>
-                            </>
-                            }
-
-
                             {(items.fields.fields[it].type === 'textarea') &&
                             <>                            
                               <label htmlFor="basicInputText">{items.fields.fields[it].label}</label>
@@ -223,9 +169,6 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                                 type="text"
                                 value={items.item[it]}
                                 onChange={e => { 
-                                  console.debug(e);
-                                  console.log(e.target.name);
-                                  console.log(e.target.value);
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value }); 
                                 }}
                               />
@@ -252,23 +195,9 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
               )
             })}
 
-          </ClayForm>
-        </ClayCard.Description>
-        <div className="btn-group">
-          <div className="btn-group-item">
-            <ClayButton onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
-          </div>
-          <div className="btn-group-item">
-            <ClayButton onClick={e => { 
-              validateAll() && save() 
-            }} 
-              displayType="primary">{Liferay.Language.get('Guardar')}
-            </ClayButton>
-          </div>
-        </div>
-      </ClayCard.Body>
-    </ClayCard>
-  );
+        </>
+    );
+
 }
 
-export default DefaultForm;
+export default RenderFields;

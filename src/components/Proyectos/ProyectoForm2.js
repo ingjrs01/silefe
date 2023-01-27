@@ -36,6 +36,8 @@ export const form = {
             label: Liferay.Language.get('Inicio'), 
             name: "inicio", 
             value:"lelele", 
+            yearmin: 5,
+            yearmax: 5,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             conditions:[]
         },
@@ -44,6 +46,8 @@ export const form = {
             type: "date",
             label: Liferay.Language.get('Fin'), 
             name: "fin", 
+            yearmin: 5,
+            yearmax: 5,
             value:"lelele", 
             placeholder:Liferay.Language.get('Fin'),
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
