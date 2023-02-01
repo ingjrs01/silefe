@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
-import Table from '../Table';
-import DefaultForm from '../DefaultForm';
+import Table from '../../includes/interface/Table';
+import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
 import { useModal } from '@clayui/modal';
 import { getUserId } from '../../includes/LiferayFunctions';
@@ -11,6 +11,7 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId } from '../../includes/LiferayFunctions';
+import {form as f2} from './Form';
 import Papa from "papaparse";
 
 const Titulaciones = () => {
@@ -22,102 +23,8 @@ const Titulaciones = () => {
     const [titulacionesTipoOptions ,setTipoOptions] = useState([]);
     const [titulacionesNivelOptions ,setNivelOptions] = useState([]);
     const [titulacionesFamiliaOptions,setFamiliaOptions] = useState([]);
-
-    const columns = [
-        {
-            columnName: "titulacionId",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        {
-            columnName: "descripcion",
-            columnTitle: Liferay.Language.get('Descripcion'),
-            columnType: "multilang",
-            key: "c2",
-        },
-        {
-            columnName: "titulacionFamiliaDescripcion",
-            columnTitle: Liferay.Language.get('Familia'),
-            columnType: "string",
-            key: "c3",
-        },
-    ];
-
-    let form = {
-        title: Liferay.Language.get('Titulaciones'),
-        languages: ["es-ES","en-US","gl-ES"],
-        rows: [
-            {
-                key:9,
-                type: "row",
-                classname: "", 
-                cols: {
-                    id: { 
-                        key: 1, 
-                        type: "text",
-                        label: "ID", 
-                        name: "id", 
-                        value: "lalala", 
-                        placeholder: "Identificador", 
-                        conditions: ["number"] 
-                    },
-                }
-            },
-            {
-                key:8,
-                type: "row",
-                classname: "", 
-                cols: {
-                    titulacionTipoId : {
-                        key:2,
-                        type: "select",
-                        label: Liferay.Language.get('TitTipo'), 
-                        name: "titulacionTipoId", 
-                        value:"ta ta ta", 
-                        conditions: [],
-                        options: []  
-                    },
-                    titulacionNivelId : {
-                        key:2,
-                        type: "select",
-                        label: Liferay.Language.get('TitNivel'), 
-                        name: "titulacionNivelId", 
-                        value:"ta ta ta", 
-                        conditions: [],
-                        options: []  
-                    },
-                    titulacionFamiliaId : {
-                        key:2,
-                        type: "select",
-                        label: Liferay.Language.get('TitFamilia'), 
-                        name: "titulacionFamiliaId", 
-                        value:"ta ta ta", 
-                        placeholder: Liferay.Language.get('TitFamilia'), 
-                        conditions: [],
-                        options: []  
-                    },
-                }
-            },
-            {
-                key: 11,
-                type:"row",
-                classname:"",
-                cols: {
-                    descripcion: { 
-                        key: 3, 
-                        type: "multilang",
-                        label: Liferay.Language.get('Descripcion'), 
-                        name: "descripcion", 
-                        value: "", 
-                        placeholder: Liferay.Language.get('Descripcion'), 
-                        conditions: ["text"] 
-                    },
-                }
-            }
-        ]
-    };
-
+    
+    let form = f2;
     const referer = "http://localhost:8080/titulaciones";
 
     const loadCsv = () => {
@@ -170,20 +77,22 @@ const Titulaciones = () => {
             console.log("Pidiendo desde aquí una sola vez");        
             const l = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})
             setTipoOptions(l);
-            form.rows[1].cols.titulacionTipoId.options = l;        
+            form.fields.titulacionTipoId.options = l;        
          });
         let r2 = await fetchAPIData('/silefe.titulacionnivel/all', postdata,referer);
+        console.log(r2);
         await setNivelOptions(r2.data);
 
         const res = await fetchAPIData('/silefe.titulacionfam/all', postdata,referer);
         await setFamiliaOptions(res.data);
-
+        
         postdata = {
             page: items.page,
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
 
         let {data, error,totalPages, page} = await fetchAPIData('/silefe.titulacion/filter', postdata,referer);
+        
         if (error == 1) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
         }
@@ -223,11 +132,16 @@ const Titulaciones = () => {
     }
 
     const loadSelects = () => {
+        console.log("loadSelects");
         let seleccionado = items.arr.filter(item => item.checked)[0];
         const opt_nivel = titulacionesNivelOptions.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
         const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,row: 1,fieldname: 'titulacionNivelId', options: opt_nivel});
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,row: 1,fieldname: 'titulacionFamiliaId', options: opt_fam});
+        console.log(opt_nivel);
+        console.log("medio");
+        console.log(opt_fam);
+        //debugger;
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: opt_fam});
     }
 
     const handleSave = async () => {
@@ -286,19 +200,16 @@ const Titulaciones = () => {
             {
                 (items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
-                    form={form}
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                    notify={notify}
                 />
             }
             {
                 (items.status === 'list') &&
                 <Table
-                    columns={columns}
-                    rows={items}
-                    itemsHandle={itemsHandle}
+                    items={items} 
+                    itemsHandle={itemsHandle} 
                 />
             }            
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />

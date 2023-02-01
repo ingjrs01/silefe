@@ -106,6 +106,7 @@ export const batchAPI = async (endpoint,ttmp,referer) => {
         "mode": "cors"
     });
 
-    return res2.ok
+    let { status, error } = await res2.json();
+    return {status,error};
 
 }

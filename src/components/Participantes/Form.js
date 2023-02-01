@@ -84,6 +84,15 @@ export const form = {
             enabled:true,
             conditions: []
         },
+        localidadId: {
+            key:16,
+            type: "autocomplete",
+            label: Liferay.Language.get('Municipio'), 
+            name: "localidadId", 
+            value:"", 
+            enabled:true,
+            conditions: []
+        },
         situacionLaboral: {
             key:6,
             type: "select",
@@ -169,7 +178,7 @@ export const form = {
                 },        
                 {
                     key:44,
-                    cols: ['provinciaId']
+                    cols: ['provinciaId', 'localidadId']
                 },        
             ]
         },

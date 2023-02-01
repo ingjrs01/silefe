@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup } from '@clayui/form';
 import ClayDatePicker from '@clayui/date-picker';
+import ClayAutocomplete from '@clayui/autocomplete';
 //import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import ClayLocalizedInput from '@clayui/localized-input';
 import { getMonths, getDays } from './DatesLang';
 import { getLanguageId } from '../LiferayFunctions'
 
+const spritemap = '/icons.svg';
+
 const RenderFields =  ({ rows,  itemsHandle, items }) => {
 
-    const [selectedLocale, setSelectedLocale] = useState(locales[0]);
-    const [act2,setAct2] = useState(0);
-    debugger;
-    
     const locales = [
     {
       label: "es-ES",
@@ -26,7 +25,66 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
       label: "gl-ES",
       symbol: "gl-ES"
     }
-  ]
+    ]
+    const [selectedLocale, setSelectedLocale] = useState(locales[0]);
+    const [act2,setAct2] = useState(0);
+    //debugger;
+    
+    const validateAll = () => {
+      console.log("validando todo");
+      Object.keys(items.fields.fields).forEach( campo => {
+        console.log(campo);
+        switch (items.fields.fields[campo].type) {
+          case "text": 
+            if (!validate(campo, items.item[campo]))
+              return false;
+            break;
+          case "multilang":
+            if (!validateLocalized(campo, items.item[campo]))
+              return false;
+            break;
+          case "toggle":
+            break;
+        }
+  
+      });
+      console.log("todo ok");
+      return true;
+    }
+  
+    const validate = (name, value) => {
+      let condicion = "";
+      
+      for (condicion of items.fields.fields[name]["conditions"]) {
+        if (condicion == "number") {
+          if (isNaN(value)) {
+            itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
+            return false;
+          }
+        }
+  
+        if (condicion == "text") {
+          if (!isNaN(value)) {
+            itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-texto') });
+            return false;
+          }
+        }
+      }    
+      itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+      return true;
+    }
+  
+    const validateLocalized = (fieldname, values) => {
+      const languages = Object.keys(values);
+      let l = "";
+      for (l in languages) {
+        if (!validate(fieldname, values[languages[l]]))
+          return false;
+      }
+      return true;
+    }
+  
+
 
     return (
         <>
@@ -76,6 +134,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 onChange={evt => {
                                   console.log("Cambiando select");
                                   if (Object.hasOwnProperty('change')) {
+                                    console.log("tiene change");
                                     items.fields.fields[it].change();
                                   }
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
@@ -90,6 +149,21 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 ))}
                               </ClaySelect>
                             </>
+                          }
+                          {items.fields.fields[it].type == 'autocomplete' &&
+                          <>
+                            <label htmlFor="clay-autocomplete-1" id="clay-autocomplete-label-1"> {items.fields.fields[it].label} </label>
+                            <ClayAutocomplete
+                              aria-labelledby="clay-autocomplete-label-1"
+                              id="clay-autocomplete-1"
+                              onChange={val => {console.log("cambiando el elemento auto") }}
+                              onItemsChange={console.log("cambiando el estado")}
+                              value={items.item[it]}
+                              placeholder="Introduzca las primeras letras"
+                            >
+                                {items.fields.fields[it].options.map(item => (<ClayAutocomplete.Item key={item.value}>{item.label}</ClayAutocomplete.Item>))}
+                            </ClayAutocomplete>
+                          </>
                           }
                           {items.fields.fields[it].type == 'toggle' &&
                             <>

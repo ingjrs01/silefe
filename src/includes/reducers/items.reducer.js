@@ -202,13 +202,16 @@ export const red_items = (state=initialState, action ) => {
                 ...state,
                 } 
         case ITEMS_ACTIONS.SET_FORMOPTIONS:
-            let narray = [...state.fields.rows];
-            narray[action.row].cols[action.fieldname].options = action.options;
-            const fieldvalue = (action.options.length > 0)?action.options[0].value:""
+            let newFields = state.fields;
+            //debugger;
+            //console.log("superado");
+            //console.log(newFields);
+            newFields.fields[action.fieldname]=action.options;
+
             return {
                 ...state,
-                item: {...state.item,[action.fieldname]:fieldvalue},
-                fields: {...state.fields,rows: narray}
+                //item: {...state.item,[action.fieldname]:fieldvalue},
+                fields: newFields//{...state.fields,[fields[action.fieldname].options]: action.options}
             }
         case ITEMS_ACTIONS.SET_FIELDENABLE:
             // let narray = [...state.fields.rows];
@@ -216,7 +219,7 @@ export const red_items = (state=initialState, action ) => {
             // const fieldvalue = (action.options.length > 0)?action.options[0].value:""
             return {
                 ...state,
-                item: {...state.item,[action.fieldname]:fieldvalue},
+                //item: {...state.item,[action.fieldname]:fieldvalue},
                 fields: {...state.fields,rows: narray}
             }
     

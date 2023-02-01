@@ -125,7 +125,13 @@ const Participantes = () => {
 
         fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.provinciaId.options = opts;
+            form.fields.provinciaId.options = opts;            
+        });
+        
+        fetchAPIData('/silefe.localidad/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
+            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.localidad}})];
+            form.fields.localidadId.options = opts;            
+            form.fields.localidadId.change = change2;
         });
 
         form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];        
@@ -141,6 +147,14 @@ const Participantes = () => {
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
     }
 
+    const change2 = () => {
+        console.log("change propio");
+    }
+
+    const loadSelects = () => {
+        console.log("loadSelects");
+    }
+
     if (!items) 
     return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -152,6 +166,7 @@ const Participantes = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
+                loadSelects={loadSelects}
             />
             { (items.status === 'load') && 
             <LoadFiles 

@@ -1,5 +1,5 @@
 export const form = {
-    title: Liferay.Language.get('Titulaciones_nivel'),
+    title: Liferay.Language.get('Localidad'),
     languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
@@ -11,24 +11,27 @@ export const form = {
             placeholder:"Identifier", 
             conditions: ["number"]
         },
-        descripcion: {
-            key:3,
-            type: "multilang",
-            label: Liferay.Language.get('Descripcion'), 
-            name: "descripcion", 
-            value:"lelele", 
-            placeholder: Liferay.Language.get('Descripcion'), 
-            conditions: ["text"]
-        },
-        titulacionNivelId : {
+        provinciaId: {
             key:2,
             type: "select",
-            label: Liferay.Language.get('Nivel'), 
-            name: "titulacionNivelId", 
+            label: Liferay.Language.get('Provincia'), 
+            name: "provinciaId", 
+            value:"ta ta ta", 
             enabled:true,
+            placeholder: Liferay.Language.get('Provincia'), 
             conditions: [],
             options: []  
+
         },
+        localidad: {
+            key:3,
+            type: "multilang",
+            label: Liferay.Language.get('Localidad'), 
+            name: "localidad", 
+            value:"lelele",             
+            placeholder: Liferay.Language.get('Localidad'), 
+            conditions: ["text"]
+        }
     },
     rows: [
         {
@@ -36,13 +39,8 @@ export const form = {
             cols: ['id']
         },
         {
-            key:8,
-            cols: ['titulacionNivelId']
-        },
-
-        {
             key:7,
-            cols: ['descripcion']
+            cols: ['provinciaId','localidad']
         },
     ],
     table: {
@@ -51,14 +49,14 @@ export const form = {
             columnType: "checkbox",
             key: "c1",
         },
-        descripcion: {
-            columnTitle: Liferay.Language.get('Descripcion'),
+        localidad: {
+            columnTitle: Liferay.Language.get('Localidad'),
             columnType: "multilang",
             key: "c3",
         },
-        titulacionNivelDescripcion: {
-            columnTitle: Liferay.Language.get('Nivel'),
-            columnType: "string",
+        provinciaId: {
+            columnTitle: Liferay.Language.get('Provincia'),
+            columnType: "String",
             key: "c3",
         },
     }    

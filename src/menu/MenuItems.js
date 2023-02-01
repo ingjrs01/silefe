@@ -9,6 +9,7 @@ const MenuItems = [
     {key: 4, url: '/titulaciones', caption: 'Titulaciones'},
     {key: 5, url: '/colectivos',   caption: 'Colectivos'},
     {key: 6, url: '/provincias',   caption: 'Provincias'},
+    {key:20, url: '/localidades',  caption: 'Localidades' },
     {key: 7, url: '/cnaes',        caption: 'Cnae\'s'},
     {key: 8, url: '/cnos',         caption: 'Cno\'s'},
     {key: 9, url: '/experiencias', caption: 'Experiencia'},
