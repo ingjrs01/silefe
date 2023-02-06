@@ -20,9 +20,9 @@ const Titulaciones = () => {
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const isInitialized = useRef();    
-    const [titulacionesTipoOptions ,setTipoOptions] = useState([]);
-    const [titulacionesNivelOptions ,setNivelOptions] = useState([]);
-    const [titulacionesFamiliaOptions,setFamiliaOptions] = useState([]);
+    //const [titulacionesNivelOptions ,setTitulacionesNivelOptions] = useState([]);
+    let opciones_nivel = [];
+    let titulacionesFamiliaOptions = [];
     
     let form = f2;
     const referer = "http://localhost:8080/titulaciones";
@@ -74,17 +74,23 @@ const Titulaciones = () => {
         };
     
         fetchAPIData('/silefe.titulaciontipo/all', postdata,referer).then(response => {
-            console.log("Pidiendo desde aquí una sola vez");        
             const l = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})
-            setTipoOptions(l);
-            form.fields.titulacionTipoId.options = l;        
-         });
-        let r2 = await fetchAPIData('/silefe.titulacionnivel/all', postdata,referer);
-        console.log(r2);
-        await setNivelOptions(r2.data);
+            form.fields.titulacionTipoId.options = l;    
+            form.fields.titulacionTipoId.change = cambiaTitulacionTipo;    
+        });
 
-        const res = await fetchAPIData('/silefe.titulacionfam/all', postdata,referer);
-        await setFamiliaOptions(res.data);
+        fetchAPIData('/silefe.titulacionnivel/all', postdata,referer).then( response => {
+            //debugger;
+            opciones_nivel = [...response.data];
+            //console.log("Niveles cargados");
+            //console.log(opciones_nivel);
+            form.fields.titulacionNivelId.change = cambiaTitulacionNivel;
+        });
+
+        fetchAPIData('/silefe.titulacionfam/all', postdata,referer).then(response => {
+            titulacionesFamiliaOptions = response.data;
+            form.fields.titulacionFamiliaId.change = cambiaTitulacionFamilia;
+        })
         
         postdata = {
             page: items.page,
@@ -97,49 +103,57 @@ const Titulaciones = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
         }
         
-        const options = await res.data;
         const tmp = await data.map(i => {
             let tFamilia = "";
             let nivelId = 0;
             let tipoId = 0;
-            let filtered = options.filter(o => o.titulacionFamId == i.titulacionFamiliaId);
+            let filtered = titulacionesFamiliaOptions.filter(o => o.titulacionFamId == i.titulacionFamiliaId);
             if (filtered.length > 0) {
                 tFamilia = filtered[0].descripcion ;
                 nivelId = filtered[0].titulacionNivelId;                
             } 
             if (nivelId != 0) {
-                tipoId = r2.data.filter(t => t.titulacionNivelId == nivelId)[0].titulacionTipoId;
-            }            
+                tipoId = opciones_nivel.filter(t => t.titulacionNivelId == nivelId)[0].titulacionTipoId;
+            }
             return ({ ...i, id: i.titulacionId,titulacionFamiliaDescripcion: tFamilia, titulacionNivelId: nivelId,titulacionTipoId:tipoId,checked: false })
         });
 
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages,page:page });
     }
 
-    const notify= (fieldname,value) => {
-        if (fieldname == 'titulacionTipoId') {            
-            let llll = titulacionesNivelOptions.filter(i => i.titulacionTipoId == value);
-            const opt_nivel = llll.map(l => {return {value:l.titulacionNivelId,label:l.descripcion}})
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,row: 1,fieldname: 'titulacionNivelId', options: opt_nivel});
-            const titnval = llll[0].titulacionNivelId;
-            let lll2 = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == titnval).map(l => {return {value:l.titulacionFamId,label:l.descripcion}})
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,row: 1,fieldname: 'titulacionFamiliaId', options: lll2});
-        }
-        if (fieldname == 'titulacionNivelId') {
-            let tt = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == value).map(l => {return {value:l.titulacionFamId,label:l.descripcion}})
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,row: 1,fieldname: 'titulacionFamiliaId', options: tt});
-        }        
+    const cambiaTitulacionTipo = (value) => {
+        console.log("opciones nivel");
+        console.log(opciones_nivel);
+        let llll = opciones_nivel.filter(i => i.titulacionTipoId == value);
+        const opt_nivel = llll.map(l => {return {value:l.titulacionNivelId,label:l.descripcion}})
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
+        
+        const titnval = llll[0].titulacionNivelId;
+        let lll2 = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == titnval).map(l => {return {value:l.titulacionFamId,label:l.descripcion}})
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: lll2});
     }
 
-    const loadSelects = () => {
-        console.log("loadSelects");
+    const cambiaTitulacionNivel = (value) => {
+        let tt = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == value).map(l => {return {value:l.titulacionFamId,label:l.descripcion}})
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: tt});
+    }
+
+    const cambiaTitulacionFamilia = (value) => {
+        console.log("no hago nada");
+    }
+
+    // Esto se llama al editar un elemento
+    const beforeEdit = (val) => {
+        //await console.log("loadSelects esperando");
+        //await console.log(opciones_nivel);
+        //await console.log(titulacionesFamiliaOptions);
+        //await console.log("todo cargado");
         let seleccionado = items.arr.filter(item => item.checked)[0];
-        const opt_nivel = titulacionesNivelOptions.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
+        //cambiaTitulacionTipo(seleccionado.titulacionTipoId);
+        console.debug(items);        
+        debugger;
+        const opt_nivel = opciones_nivel.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
         const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
-        console.log(opt_nivel);
-        console.log("medio");
-        console.log(opt_fam);
-        //debugger;
         itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
         itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: opt_fam});
     }
@@ -189,7 +203,7 @@ const Titulaciones = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
-                loadSelects={loadSelects}
+                beforeEdit={beforeEdit}
             />
             { (items.status === 'load') && 
             <LoadFiles 

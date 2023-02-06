@@ -19,6 +19,9 @@ export const ITEMS_ACTIONS = {
     NEXTPAG: 17,
     PREVPAG:18,
     SET_FORMOPTIONS: 19,
+    ADD_MULTIFIELD: 20,
+    REMOVE_MULTIFIELD: 21,
+    SET_MULTIFIELD: 22,
   }
 
 const initialState = {
@@ -37,18 +40,15 @@ const initialState = {
 const resetErrors = (fields) => {
     let errores = {};
     let tmp_item = {};
-    //fields.fields.forEach(r => {    
     Object.keys(fields.fields).forEach( j => {
-        //Object.keys(fields.fields[r]).forEach( j => {
-            errores[j]=[];    
-            if (fields.fields[j].type === "multilang") {
-                let tt = {}
-                fields.languages.forEach(el => {tt[el]=""});
-                tmp_item[j] = tt;
-            }
-            else 
-                tmp_item[j] = [];
-        //})
+        errores[j]=[];    
+        if (fields.fields[j].type === "multilang") {
+            let tt = {}
+            fields.languages.forEach(el => {tt[el]=""});
+            tmp_item[j] = tt;
+        }
+        else 
+            tmp_item[j] = [];
     });
 
     return errores;
@@ -59,15 +59,13 @@ export const red_items = (state=initialState, action ) => {
         case ITEMS_ACTIONS.START: 
             let tmp_item = {};
             Object.keys(action.fields.fields).forEach(j => {
-                //Object.keys(r.cols).forEach( j => {
-                    if (action.fields.fields[j].type === "multilang") {
-                        let tt = {}
-                        action.fields.languages.forEach(el => {tt[el]=""});
-                        tmp_item[j] = tt;
-                    }
-                    else 
-                        tmp_item[j] = [];
-                //})
+                if (action.fields.fields[j].type === "multilang") {
+                    let tt = {}
+                    action.fields.languages.forEach(el => {tt[el]=""});
+                    tmp_item[j] = tt;
+                }
+                else 
+                    tmp_item[j] = [];
             });
 
             return {
@@ -203,23 +201,15 @@ export const red_items = (state=initialState, action ) => {
                 } 
         case ITEMS_ACTIONS.SET_FORMOPTIONS:
             let newFields = state.fields;
-            //debugger;
-            //console.log("superado");
-            //console.log(newFields);
-            newFields.fields[action.fieldname]=action.options;
+            newFields.fields[action.fieldname].options=action.options;
 
             return {
                 ...state,
-                //item: {...state.item,[action.fieldname]:fieldvalue},
-                fields: newFields//{...state.fields,[fields[action.fieldname].options]: action.options}
+                fields: newFields
             }
         case ITEMS_ACTIONS.SET_FIELDENABLE:
-            // let narray = [...state.fields.rows];
-            // narray[action.row].cols[action.fieldname].options = action.options;
-            // const fieldvalue = (action.options.length > 0)?action.options[0].value:""
             return {
                 ...state,
-                //item: {...state.item,[action.fieldname]:fieldvalue},
                 fields: {...state.fields,rows: narray}
             }
     
@@ -235,7 +225,31 @@ export const red_items = (state=initialState, action ) => {
                 ...state
             }
 
+        case ITEMS_ACTIONS.ADD_MULTIFIELD:
+            let newField = state.fields;
+            newField.fields[action.fieldname].values.push({key: 4,value:"lalala",default:false})  ;
+
+            return {
+                ...state,
+                fields: newField
+            }
+        case ITEMS_ACTIONS.REMOVE_MULTIFIELD:
+            let delField = state.fields;
+            delField.fields[action.fieldname].values.splice(action.pos,1);
+
+            return {
+                ...state,
+                fields: delField
+            }
+        case ITEMS_ACTIONS.SET_MULTIFIELD:
+            newField = state.fields;
+            newField.fields[action.fieldname].values[action.pos].value = action.value;
+
+            return {
+                ...state,
+                fields: newField
+            }
         default: 
-            throw new Error ("Accion invalida");
+        throw new Error ("Accion invalida");
     }
 }

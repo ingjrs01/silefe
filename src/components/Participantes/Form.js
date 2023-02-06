@@ -84,14 +84,68 @@ export const form = {
             enabled:true,
             conditions: []
         },
-        localidadId: {
+        municipioId: {
             key:16,
             type: "autocomplete",
             label: Liferay.Language.get('Municipio'), 
-            name: "localidadId", 
+            name: "municipioId", 
             value:"", 
             enabled:true,
             conditions: []
+        },
+        localidad: {
+            key:17,
+            type: "text",
+            label: Liferay.Language.get('Localidad'), 
+            name: "Localidad", 
+            value:"localidad", 
+            placeholder: Liferay.Language.get('Localidad'), 
+            conditions: ["text"]
+        },
+        tipoviaId: {
+            key:6,
+            type: "select",
+            label: Liferay.Language.get('TipoVia'), 
+            name: "tipoviaId", 
+            value:"", 
+            enabled:true,
+            conditions: []
+        },
+        nombreVia: {
+            key: 18,
+            type: "text",
+            label: Liferay.Language.get('NombreVia'), 
+            name: "nombreVia", 
+            value:"", 
+            placeholder: Liferay.Language.get('NombreVia'), 
+            conditions: ["text"]
+        },
+        numero: {
+            key: 19,
+            type: "text",
+            label: Liferay.Language.get('Numero'), 
+            name: "numero", 
+            value:"", 
+            placeholder: Liferay.Language.get('Numero'), 
+            conditions: ["number"]
+        },
+        piso: {
+            key: 20,
+            type: "text",
+            label: Liferay.Language.get('Piso'), 
+            name: "piso", 
+            value:"", 
+            placeholder: Liferay.Language.get('Piso'), 
+            conditions: ["text"]
+        },
+        email: {
+            key: 22,
+            type: "multitext",
+            label: Liferay.Language.get('Email'), 
+            name: "email", 
+            values: [{key:1,value:"hola@micorreo.es",default:false}, {key:2,value:"adios@micorreo.es",default:true}], 
+            placeholder: Liferay.Language.get('Email'), 
+            conditions: ["text"]
         },
         situacionLaboral: {
             key:6,
@@ -178,8 +232,16 @@ export const form = {
                 },        
                 {
                     key:44,
-                    cols: ['provinciaId', 'localidadId']
-                },        
+                    cols: ['provinciaId', 'municipioId','localidad']
+                },
+                {
+                    key:45,
+                    cols: ['tipoviaId','nombreVia','numero','piso']
+                },               
+                {
+                    key:46,
+                    cols: ['email']
+                },               
             ]
         },
         {

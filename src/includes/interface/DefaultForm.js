@@ -1,34 +1,13 @@
 import React, { useState } from "react";
-//import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox } from '@clayui/form';
 import ClayForm from '@clayui/form';
-//import ClayDatePicker from '@clayui/date-picker';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
-//import ClayLocalizedInput from '@clayui/localized-input';
-//import {getMonths, getDays} from './DatesLang';
-//import {getLanguageId } from '../LiferayFunctions';
 import RenderFields from "./RenderFields";
 
 const spritemap = '/icons.svg';
 
 const DefaultForm = ({ itemsHandle, save, items, notify }) => {
-  const locales = [
-    {
-      label: "es-ES",
-      symbol: "es-ES"
-    },
-    {
-      label: "en-US",
-      symbol: "en-US"
-    },
-    {
-      label: "gl-ES",
-      symbol: "gl-ES"
-    }
-  ]
-
-//  const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
   const validateAll = () => {
     console.log("validando todo");

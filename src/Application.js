@@ -21,6 +21,7 @@ import Proyectos from './components/Proyectos/Proyectos';
 import Ambitos from './components/Ambitos/Ambitos';
 import Participantes from './components/Participantes/Participantes';
 import Localidades from './components/Localidades/Localidades';
+import TiposVia from './components/TiposVia/TiposVia';
 
 const Application = () => {
 
@@ -34,7 +35,7 @@ const Application = () => {
                         <div className="sheet-text"><VMenu /></div>
                     </div>
                 </div>
-                <div className='col-8'>
+                <div className='col-10'>
                     <div className="sheet-section">
                         <Routes>
                             <Route path='/titnivel'      element={ <TitulacionesNivel /> } />
@@ -57,6 +58,7 @@ const Application = () => {
                             <Route path='/ambitos'       element={ <Ambitos /> }   />
                             <Route path='/participantes' element={ <Participantes /> }   />
                             <Route path='/localidades'   element={ <Localidades /> } />
+                            <Route path='/tiposvia'      element={ <TiposVia /> } />
                         </Routes>
                     </div>
                 </div>

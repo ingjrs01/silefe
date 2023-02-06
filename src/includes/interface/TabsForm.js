@@ -7,8 +7,6 @@ import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
 const TabsForm = ({ itemsHandle, save, items, notify }) => {
-
-  //debugger;
   const [active, setActive] = useState(0);
 
   const validateAll = () => {

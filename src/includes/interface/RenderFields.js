@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup } from '@clayui/form';
+import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayAutocomplete from '@clayui/autocomplete';
-//import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import ClayLocalizedInput from '@clayui/localized-input';
 import { getMonths, getDays } from './DatesLang';
@@ -28,7 +28,6 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
     ]
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
     const [act2,setAct2] = useState(0);
-    //debugger;
     
     const validateAll = () => {
       console.log("validando todo");
@@ -109,6 +108,39 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 }}>
                               </ClayInput>
                             </>}
+
+                            {(items.fields.fields[it].type === 'multitext') &&
+                            <>
+                              <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
+                              {
+                                items.fields.fields[it].values.map( (v,k) => {return(
+                                  <>
+                                  <ClayInput
+                                    className="col-6"
+                                    type="text"
+                                    name={it}
+                                    value={v.value}
+                                    onChange={e => {
+                                      //validate(e.target.name, e.target.value);
+                                      itemsHandle({ type: ITEMS_ACTIONS.SET_MULTIFIELD, fieldname: e.target.name,pos: k, value: e.target.value });
+                                    }}
+                                  /><ClayButtonWithIcon className="col-1" aria-label="Close" displayType="secondary" spritemap={spritemap} symbol="times" title="Close"
+                                    onClick={e => {
+                                      console.log("borrando" + k);
+                                      itemsHandle({ type: ITEMS_ACTIONS.REMOVE_MULTIFIELD, fieldname: it, pos:k });
+                                    }}
+                                  />
+                                </>
+                                )})
+                              }
+                              <ClayButton size={"xs"} displayType={"secondary"} onClick={evt => {
+                                console.log("direccion");
+                                itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: it });
+                                
+                              }}>{"Añadir"}</ClayButton>
+                            </>}
+
+
                             {items.fields.fields[it].type == 'multilang' &&
                             <ClayLocalizedInput
                               id={it}
@@ -132,7 +164,10 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 name={it}
                                 disabled={ !items.fields.fields[it].enabled }
                                 onChange={evt => {
-                                  console.log("Cambiando select");
+                                  //console.log("Cambiando select");
+                                  //debugger;
+                                  items.fields.fields[it].change(evt.target.value);
+                                  // TODO: Revisar, parece que no se entra nunca
                                   if (Object.hasOwnProperty('change')) {
                                     console.log("tiene change");
                                     items.fields.fields[it].change();

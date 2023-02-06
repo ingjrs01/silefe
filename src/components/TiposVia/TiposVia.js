@@ -14,7 +14,7 @@ import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifu
 import {form as formulario} from './Form';
 import { getLanguageId } from '../../includes/LiferayFunctions';
 
-const Localidades = () => {
+const TiposVia = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false,page:0,load:0});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
@@ -72,16 +72,11 @@ const Localidades = () => {
     }
 
     const handleSave = async () => {
-        //const postdata = {
-        //    id:         items.item.id,
-        //    name:       items.item.nombre,
-        //    userId:     getUserId(),
-        //}
-        let endpoint = '/silefe.municipio/save-municipio'
+        let endpoint = '/silefe.tiposvia/save-tipo-via';
         if (items.status === 'new') 
-            endpoint = '/silefe.municipio/add-municipio';
+            endpoint = '/silefe.tiposvia/add-tipo-via';
 
-        let obj = {obj: {...items.item, id:items.item.participanteId, userId: getUserId()}};
+        let obj = {obj: {...items.item, id:items.item.tiposViaId, userId: getUserId()},userId:getUserId()};
         let {status, error} = await saveAPI(endpoint,obj,referer); 
 
         if (status) {
@@ -98,10 +93,8 @@ const Localidades = () => {
     }
 
     const confirmDelete = async () => {
-        const endpoint = '/silefe.municipio/remove-municipios';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
-
-        deleteAPI(endpoint,s,referer).then(res =>{
+        deleteAPI('/silefe.tiposvia/remove-tipos-via',s,referer).then(res =>{
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();
@@ -113,20 +106,12 @@ const Localidades = () => {
     }
 
     const fetchData = async () => {
-        const endpoint   = '/silefe.municipio/filter';
         const postdata = {
             nombre: (items.search && typeof items.search !== 'undefined')?items.search:"",
             page: items.page,
         };
 
-        fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
-            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            console.debug(opts);
-            form.fields.provinciaId.options = opts;
-        });
-
-
-        let {data,totalPages, page}  = await fetchAPIData(endpoint,postdata,referer);
+        let {data,totalPages, page}  = await fetchAPIData('/silefe.tiposvia/filter',postdata,referer);
         const tmp = await data.map(i => {return({...i,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
     }
@@ -180,4 +165,4 @@ const Localidades = () => {
     )
 }
 
-export default Localidades;
+export default TiposVia;

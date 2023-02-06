@@ -55,19 +55,11 @@ export const form = {
             cols: ['id']
         },
         {
-            key:43,
-            cols: ['titulacionTipoId']
-        },        
-        {
             key:42,
-            cols: ['titulacionNivelId']
+            cols: ['titulacionTipoId','titulacionNivelId','titulacionFamiliaId']
         },        
         {
-            key:44,
-            cols: ['titulacionFamiliaId']
-        },
-        {
-            key: 45,
+            key: 43,
             cols: ['descripcion']
         }
     ],
@@ -82,10 +74,10 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
-//        titulacionFamiliaDescripcion: {
-//            columnTitle: Liferay.Language.get('Familia'),
-//            columnType: "string",
-//            key: "c4",
-//        },
+        titulacionFamiliaDescripcion: {
+            columnTitle: Liferay.Language.get('Familia'),
+            columnType: "string",
+            key: "c4",
+        },
     }    
 };

@@ -128,10 +128,16 @@ const Participantes = () => {
             form.fields.provinciaId.options = opts;            
         });
         
-        fetchAPIData('/silefe.localidad/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
-            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.localidad}})];
-            form.fields.localidadId.options = opts;            
-            form.fields.localidadId.change = change2;
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
+            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            form.fields.municipioId.options = opts;            
+            form.fields.municipioId.change = change2;
+        });
+
+        fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
+            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            form.fields.tipoviaId.options = opts;            
+            form.fields.tipoviaId.change = console.log("cambiando el tipo de via");
         });
 
         form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];        

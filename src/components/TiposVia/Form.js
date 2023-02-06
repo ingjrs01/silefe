@@ -1,5 +1,5 @@
 export const form = {
-    title: Liferay.Language.get('Municipios'),
+    title: Liferay.Language.get('TiposVia'),
     languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
@@ -11,25 +11,13 @@ export const form = {
             placeholder:"Identifier", 
             conditions: ["number"]
         },
-        provinciaId: {
-            key:2,
-            type: "select",
-            label: Liferay.Language.get('Provincia'), 
-            name: "provinciaId", 
-            value:"ta ta ta", 
-            enabled:true,
-            placeholder: Liferay.Language.get('Provincia'), 
-            conditions: [],
-            options: []  
-
-        },
         nombre: {
             key:3,
             type: "multilang",
-            label: Liferay.Language.get('Municipios'), 
+            label: Liferay.Language.get('TipoVia'), 
             name: "nombre", 
             value:"lelele",             
-            placeholder: Liferay.Language.get('Municipio'), 
+            placeholder: Liferay.Language.get('TipoVia'), 
             conditions: ["text"]
         }
     },
@@ -40,7 +28,7 @@ export const form = {
         },
         {
             key:7,
-            cols: ['provinciaId','nombre']
+            cols: ['nombre']
         },
     ],
     table: {
@@ -50,13 +38,8 @@ export const form = {
             key: "c1",
         },
         nombre: {
-            columnTitle: Liferay.Language.get('Municipio'),
+            columnTitle: Liferay.Language.get('TipoVia'),
             columnType: "multilang",
-            key: "c3",
-        },
-        provinciaId: {
-            columnTitle: Liferay.Language.get('Provincia'),
-            columnType: "String",
             key: "c3",
         },
     }    

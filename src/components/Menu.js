@@ -10,7 +10,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 const spritemap = '/images/icons/icons.svg';
 
-const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, loadSelects}) => {
+const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit}) => {
 
   return (
     <ClayToolbar>
@@ -40,7 +40,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, load
             <ClayButton.Group>
               <ClayButtonWithIcon
                 displayType="secondary"
-                onClick={() => {   itemsHandle({type:ITEMS_ACTIONS.PREVPAG})/*paginate({type:PAGINATION_ACTIONS.PREV_PAGE})*/}}
+                onClick={() => {   itemsHandle({type:ITEMS_ACTIONS.PREVPAG})}}
                 small
                 symbol="user"
               />
@@ -72,7 +72,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, load
               (status === 'list') &&
             <ClayButton className="inline-item-after" onClick={() => { 
               itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM});
-              loadSelects();
+              beforeEdit();
             }}>
               {Liferay.Language.get('Editar')}
             </ClayButton>
