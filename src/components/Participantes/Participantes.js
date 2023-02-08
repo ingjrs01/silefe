@@ -22,7 +22,7 @@ const Participantes = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
 
-    const referer = "http://localhost:8080/ambitos";
+    const referer = "http://localhost:8080/participantes";
     const form = formulario;
 
     useEffect(()=>{
@@ -47,7 +47,7 @@ const Participantes = () => {
             reader.onload = async ({ target }) => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
                 const parsedData = csv?.data;                                
-                let end = '/silefe.cno/add-multiple';
+                let end = '/silefe.participante/add-multiple';
                 let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
 
                 batchAPI(end,ttmp,referer).then(res2 => {
@@ -126,6 +126,7 @@ const Participantes = () => {
         fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             form.fields.provinciaId.options = opts;            
+            form.fields.provinciaId.change = changeProvince;
         });
         
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
@@ -137,7 +138,7 @@ const Participantes = () => {
         fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             form.fields.tipoviaId.options = opts;            
-            form.fields.tipoviaId.change = console.log("cambiando el tipo de via");
+            form.fields.tipoviaId.change = () => {console.log("cambiando el tipo de via")};
         });
 
         form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];        
@@ -148,17 +149,37 @@ const Participantes = () => {
             nombre : (items.nombre && typeof items.search !== 'undefined')?items.nombre:""
         }
         let {data,totalPages,page} = await fetchAPIData('/silefe.participante/filter',postdata,referer);
-        const tmp = await data.map(i => {return({...i,id:i.participanteId,checked:false})});
-
+        
+        const tmp = await data.map(i => {
+            return({
+                ...i,
+                id:i.participanteId,
+                fechaNacimiento: (i.fechaNacimiento != null)?new Date(i.fechaNacimiento).toISOString().substring(0, 10):"",
+                email: (i.email != null && i.email.length > 0)?JSON.parse(i.email):[],//[{key: 100,value:"correoinicial@gmail.com",default:false}],
+                telefono: [{key: 200,value:"656665566",default:false}],
+                checked:false
+            })});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
+    }
+
+    const changeProvince = (id) => {
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: id},referer).then(response => {
+            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
+        });
+
     }
 
     const change2 = () => {
         console.log("change propio");
     }
 
-    const loadSelects = () => {
-        console.log("loadSelects");
+    const beforeEdit = () => {
+        let sel = items.arr.filter(i => i.checked)[0]['provinciaId'];
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel},referer).then(response => {
+            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
+        });
     }
 
     if (!items) 
@@ -172,7 +193,7 @@ const Participantes = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
-                loadSelects={loadSelects}
+                beforeEdit={beforeEdit}
             />
             { (items.status === 'load') && 
             <LoadFiles 

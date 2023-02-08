@@ -86,7 +86,7 @@ export const form = {
         },
         municipioId: {
             key:16,
-            type: "autocomplete",
+            type: "select",//"autocomplete",
             label: Liferay.Language.get('Municipio'), 
             name: "municipioId", 
             value:"", 
@@ -108,6 +108,7 @@ export const form = {
             label: Liferay.Language.get('TipoVia'), 
             name: "tipoviaId", 
             value:"", 
+            change: () => {console.log("tipoViaId")},
             enabled:true,
             conditions: []
         },
@@ -136,7 +137,7 @@ export const form = {
             name: "piso", 
             value:"", 
             placeholder: Liferay.Language.get('Piso'), 
-            conditions: ["text"]
+            conditions: []
         },
         email: {
             key: 22,
@@ -145,6 +146,15 @@ export const form = {
             name: "email", 
             values: [{key:1,value:"hola@micorreo.es",default:false}, {key:2,value:"adios@micorreo.es",default:true}], 
             placeholder: Liferay.Language.get('Email'), 
+            conditions: ["text"]
+        },
+        telefono: {
+            key: 23,
+            type: "multitext",
+            label: Liferay.Language.get('Telefono'), 
+            name: "telefono", 
+            values: [{key:1,value:"666666666",default:false}, {key:2,value:"777777777",default:true}], 
+            placeholder: Liferay.Language.get('Telefono'), 
             conditions: ["text"]
         },
         situacionLaboral: {
@@ -162,7 +172,6 @@ export const form = {
             label: Liferay.Language.get('Insercion'), 
             name: "insercion", 
             value:"", 
-            change: ()=>{console.log("cambia insercion");},
             conditions: []
         },
         busca_empleo: {
@@ -171,7 +180,6 @@ export const form = {
             label: Liferay.Language.get('BuscaEmpleo'), 
             name: "busca_empleo", 
             value:"", 
-            change: ()=>{console.log("cambia buscaEmpleo");},
             conditions: []
         },
         autoempleo: {
@@ -180,7 +188,6 @@ export const form = {
             label: Liferay.Language.get('Autoempleo'), 
             name: "autoempleo", 
             value:"", 
-            change: ()=>{console.log("cambia buscaEmpleo");},
             conditions: []
         },
         rangoSalarialId: {
@@ -188,7 +195,7 @@ export const form = {
             type: "select",
             label: Liferay.Language.get('RangoSalarial'), 
             name: "rangoSalarialId", 
-            value:"", 
+            value:"",
             enabled:true,
             conditions: []
         },
@@ -216,6 +223,7 @@ export const form = {
     tabs : [
         {
             caption: "Datos",
+            key: 1,
             ariacontrols: "tabpanel-1",
             rows: [
                 {
@@ -240,12 +248,13 @@ export const form = {
                 },               
                 {
                     key:46,
-                    cols: ['email']
+                    cols: ['email','telefono']
                 },               
             ]
         },
         {
             caption: "Formacion",
+            key: 2,
             ariacontrols: "tabpanel-2",
             rows: [
                 {
@@ -256,6 +265,7 @@ export const form = {
         },
         {
             caption: "Experiencia",
+            key: 3,
             ariacontrols: "tabpanel-3",
             rows: [
                 {
@@ -270,6 +280,7 @@ export const form = {
         },
         {
             caption: "Empleabilidad",
+            key:4,
             ariacontrols: "tabpanel-4",
             rows: [
                 {

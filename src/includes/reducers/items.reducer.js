@@ -4,15 +4,12 @@ export const ITEMS_ACTIONS = {
     CHECK: 2,
     CHECKALL: 3,
     UNSELECT: 4,
-    INIT_ITEM: 5,
     SET: 6,
     SELECT_ITEM:7,
     NEW_ITEM: 8,
-    HIDE: 9,
     CANCEL: 10,
     ADDERROR: 11,
     CLEARERRORS:12,
-    LOAD: 13,
     CANCEL_LOAD:14,
     SEARCH: 15,
     FETCH: 16,
@@ -38,6 +35,7 @@ const initialState = {
 }
 
 const resetErrors = (fields) => {
+    //debugger;
     let errores = {};
     let tmp_item = {};
     Object.keys(fields.fields).forEach( j => {
@@ -59,15 +57,31 @@ export const red_items = (state=initialState, action ) => {
         case ITEMS_ACTIONS.START: 
             let tmp_item = {};
             Object.keys(action.fields.fields).forEach(j => {
-                if (action.fields.fields[j].type === "multilang") {
-                    let tt = {}
-                    action.fields.languages.forEach(el => {tt[el]=""});
-                    tmp_item[j] = tt;
+                switch (action.fields.fields[j].type) {
+                    case "multilang":
+                        let tt = {}
+                        action.fields.languages.forEach(el => {tt[el]=""});
+                        tmp_item[j] = tt;
+                        break;
+                    case "multitext": 
+                        let tt2 = []
+                        //action.fields.languages.forEach(el => {tt2[el]=""});
+                        tt2.push({key:8,value:"correo",default:false});
+                        tt2.push({key:9,value:"correo@correo.es",default:false});
+                        tmp_item[j] = tt2;
+                        break;
+                    default:
+                        tmp_item[j] = [];
+                        break;
                 }
-                else 
-                    tmp_item[j] = [];
+                //if (action.fields.fields[j].type === "multilang") {
+                //    let tt = {}
+                //    action.fields.languages.forEach(el => {tt[el]=""});
+                //    tmp_item[j] = tt;
+                //}
+                //else 
+                //    tmp_item[j] = [];
             });
-
             return {
                 ...state,
                 arr: action.items,
@@ -101,21 +115,17 @@ export const red_items = (state=initialState, action ) => {
                 arr: state.arr.map(i => {return {...i,checked:false}}),
                 checkall: false
             }
-        case ITEMS_ACTIONS.INIT_ITEM: 
-            return {
-                ...state,
-                item: action.item
-            }
         case ITEMS_ACTIONS.SET:
-            console.log("Estableciendo el dato: " + action.fieldname);
-            console.log(typeof(action.value));
-            console.log("Valor: " + action.value);
+            //console.log("Estableciendo el dato: " + action.fieldname);
+            //console.log(typeof(action.value));
+            //console.log("Valor: " + action.value);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
             }
         
         case ITEMS_ACTIONS.SELECT_ITEM:
+            //debugger;
             let sel = state.arr.filter(i => i.checked);
             if (sel.length > 0) {
                 let e2 = resetErrors(state.fields);
@@ -132,8 +142,13 @@ export const red_items = (state=initialState, action ) => {
             Object.keys(state.fields.fields).forEach(fila => {
                 switch (state.fields.fields[fila].type) {
                     case 'multilang':
-                        let tt = {}
+                        let tt = {};
                         state.fields.languages.forEach(el => {tt[el]=""});
+                        tmp_item[fila] = tt;
+                        break;
+                    case 'multitext': 
+                        tt = [];
+                        tt.push({key: 1,value:"",default:false})
                         tmp_item[fila] = tt;
                         break;
                     case 'toggle':
@@ -226,28 +241,29 @@ export const red_items = (state=initialState, action ) => {
             }
 
         case ITEMS_ACTIONS.ADD_MULTIFIELD:
-            let newField = state.fields;
-            newField.fields[action.fieldname].values.push({key: 4,value:"lalala",default:false})  ;
+            let newItem = state.item;
+            let key = newItem[action.fieldname].length + 1;
+            newItem[action.fieldname].push({key: key,value:"",default:false});
 
             return {
                 ...state,
-                fields: newField
+                item: newItem,
             }
         case ITEMS_ACTIONS.REMOVE_MULTIFIELD:
-            let delField = state.fields;
-            delField.fields[action.fieldname].values.splice(action.pos,1);
+            let delField = state.item;
+            delField[action.fieldname].splice(action.pos,1);
 
             return {
                 ...state,
-                fields: delField
+                item: delField
             }
         case ITEMS_ACTIONS.SET_MULTIFIELD:
-            newField = state.fields;
-            newField.fields[action.fieldname].values[action.pos].value = action.value;
+            let newField = state.item;
+            newField[action.fieldname][action.pos].value = action.value;
 
             return {
                 ...state,
-                fields: newField
+                item:newField
             }
         default: 
         throw new Error ("Accion invalida");

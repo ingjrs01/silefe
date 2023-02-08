@@ -67,7 +67,7 @@ const TabsForm = ({ itemsHandle, save, items, notify }) => {
     <ClayCard>
       <ClayCard.Body>
         <ClayCard.Description displayType="title">
-          <h2>{items.fields.title}</h2>
+          {items.fields.title}
         </ClayCard.Description>
 
         <ClayCard.Description truncate={false} displayType="text">
@@ -77,6 +77,7 @@ const TabsForm = ({ itemsHandle, save, items, notify }) => {
           { items.fields.tabs.map((tab,index) => {
             return (
               <ClayTabs.Item
+                key={"tab-item" + tab.key}
                 innerProps={{
                   "aria-controls": "tabpanel-2"
                 }}
@@ -90,7 +91,7 @@ const TabsForm = ({ itemsHandle, save, items, notify }) => {
       <ClayTabs.Content activeIndex={active} fade>
           { items.fields.tabs.map( tab => {
             return (
-              <ClayTabs.TabPane aria-labelledby="tab-1">
+              <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-" + tab.key}>                
                 <RenderFields 
                 rows={tab.rows}
                 itemsHandle={itemsHandle} 
@@ -107,10 +108,10 @@ const TabsForm = ({ itemsHandle, save, items, notify }) => {
         </ClayCard.Description>
         <div className="btn-group">
           <div className="btn-group-item">
-            <ClayButton onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+            <ClayButton aria-label="Cancel" onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
           </div>
           <div className="btn-group-item">
-            <ClayButton onClick={e => {
+            <ClayButton aria-label="Save" onClick={e => {
               validateAll() && save()
             }}
               displayType="primary">{Liferay.Language.get('Guardar')}

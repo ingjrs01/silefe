@@ -8,7 +8,7 @@ import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
 
 //import "@clayui/css/lib/css/atlas.css";
 
-const spritemap = '/images/icons/icons.svg';
+const spritemap = './icons.svg';
 
 const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit}) => {
 
@@ -19,7 +19,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
           <ClayToolbar.Section>
             <label className="component-title">{"SiLeFe "}</label>
 
-            <ClayIcon  symbol="lock" />
+            <ClayIcon symbol="lock" />
           </ClayToolbar.Section>
         </ClayToolbar.Item>
 
@@ -40,6 +40,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
             <ClayButton.Group>
               <ClayButtonWithIcon
                 displayType="secondary"
+                aria-label="Previous"
                 onClick={() => {   itemsHandle({type:ITEMS_ACTIONS.PREVPAG})}}
                 small
                 symbol="user"
@@ -47,6 +48,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
 
               <ClayButtonWithIcon
                 displayType="secondary"
+                aria-label="Next"
                 onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEXTPAG}) }}
                 spritemap={spritemap}
                 small
@@ -63,14 +65,14 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
 
         <ClayToolbar.Item>
           <ClayToolbar.Section>
-            <ClayButton displayType="danger" onClick={() => { handleDelete() }}>
+            <ClayButton aria-label="Delete" displayType="danger" onClick={() => { handleDelete() }}>
               {Liferay.Language.get('Borrar')}
               <ClayIcon spritemap={spritemap} symbol="plus" />
             </ClayButton>
 
             {
               (status === 'list') &&
-            <ClayButton className="inline-item-after" onClick={() => { 
+            <ClayButton aria-label="Edit" className="inline-item-after" onClick={() => { 
               itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM});
               beforeEdit();
             }}>
@@ -80,21 +82,20 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
 
             {
               (status === 'new' || status === 'edit') &&
-            <ClayButton className="inline-item-after" onClick={() => { handleSave() }}>
+            <ClayButton aria-label="Save" className="inline-item-after" onClick={() => { handleSave() }}>
               {Liferay.Language.get('Guardar')}
             </ClayButton>
-
             }
 
             {
               (status === 'list') &&
-            <ClayButton className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEW_ITEM}) }}>
+            <ClayButton aria-label="New" className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEW_ITEM}) }}>
               {Liferay.Language.get('Nuevo')}
             </ClayButton>
             }
             {
               (status === 'list') &&
-            <ClayButton className="inline-item-after" onClick={() => { loadCsv(); }}>
+            <ClayButton aria-label="Load" className="inline-item-after" onClick={() => { loadCsv(); }}>
               {Liferay.Language.get('Carga')}
             </ClayButton>
             }
@@ -103,23 +104,6 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
         </ClayToolbar.Item>
 
 
-        <ClayToolbar.Item>
-          <ClayDropDownWithItems
-            items={[
-              { href: "#one", label: "one" },
-              { href: "#two", label: "two" },
-              { disabled: true, href: "#three", label: "three" },
-              { href: "#four", label: "four" }
-            ]}
-            trigger={
-              <ClayButtonWithIcon
-                displayType="unstyled"
-                small
-                symbol="ellipsis-v"
-              />
-            }
-          />
-        </ClayToolbar.Item>
       </ClayToolbar.Nav>
     </ClayToolbar>
   );

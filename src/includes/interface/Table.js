@@ -34,7 +34,7 @@ const Table = ({ items, itemsHandle}) => {
                       case "multilang":
                         return (<ClayTable.Cell key={items.fields.table[columName]+row.id}>{ row[columName][lang] }</ClayTable.Cell> )
                       case "string":
-                        return (<ClayTable.Cell key={items.fields.table[columName]+row.id}>{ row[columName] }</ClayTable.Cell> )
+                        return (<ClayTable.Cell key={items.fields.table[columName].columnTitle+row.id}>{ row[columName] }</ClayTable.Cell> )
                       case "checkbox":
                         return (
                           <ClayTable.Cell key={items.fields.table[columName].key+row.id}><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[columName]}  />

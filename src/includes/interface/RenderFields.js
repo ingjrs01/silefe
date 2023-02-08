@@ -82,8 +82,6 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
       }
       return true;
     }
-  
-
 
     return (
         <>
@@ -93,7 +91,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                   { row.cols.map(it => {
                     return (
                       <>
-                        <ClayForm.Group className={`${items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ items.fields.fields[it].key} >
+                        <ClayForm.Group className={`${items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ "Group-" + items.fields.fields[it].key} >
                           {(items.fields.fields[it].type === 'text') &&
                             <>
                               <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
@@ -101,6 +99,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 placeholder={items.fields.fields[it].placeholder}
                                 type="text"
                                 name={it}
+                                key={it}
                                 value={items.item[it]}
                                 onChange={e => {
                                   validate(e.target.name, e.target.value);
@@ -113,14 +112,15 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                             <>
                               <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
                               {
-                                items.fields.fields[it].values.map( (v,k) => {return(
+                                items.item[it].map( (v,k) => {return ( 
                                   <>
                                   <ClayInput
                                     className="col-6"
+                                    key={it + v.key}
                                     type="text"
                                     name={it}
                                     value={v.value}
-                                    onChange={e => {
+                                    onChange={e =>   {
                                       //validate(e.target.name, e.target.value);
                                       itemsHandle({ type: ITEMS_ACTIONS.SET_MULTIFIELD, fieldname: e.target.name,pos: k, value: e.target.value });
                                     }}
@@ -144,6 +144,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                             {items.fields.fields[it].type == 'multilang' &&
                             <ClayLocalizedInput
                               id={it}
+                              key={it}
                               label={items.fields.fields[it].label}
                               locales={locales}
                               onSelectedLocaleChange={setSelectedLocale}
@@ -162,22 +163,22 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                               <ClaySelect aria-label="Select Label"
                                 id={it}
                                 name={it}
+                                key={it}
                                 disabled={ !items.fields.fields[it].enabled }
                                 onChange={evt => {
-                                  //console.log("Cambiando select");
-                                  //debugger;
-                                  items.fields.fields[it].change(evt.target.value);
-                                  // TODO: Revisar, parece que no se entra nunca
-                                  if (Object.hasOwnProperty('change')) {
+                                  if (items.fields.fields[it].hasOwnProperty('change')) {
                                     console.log("tiene change");
-                                    items.fields.fields[it].change();
+                                    items.fields.fields[it].change(evt.target.value);
                                   }
+                                  else
+                                    console.log("no tiene change");
+                                  
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
                                 }}
                                 value={items.item[it]} >
                                 {items.fields.fields[it].options.map(item => (
                                   <ClaySelect.Option
-                                    key={item.value}
+                                    key={it + "option-" + item.value}
                                     label={item.label}
                                     value={item.value}
                                   />
@@ -187,16 +188,19 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                           }
                           {items.fields.fields[it].type == 'autocomplete' &&
                           <>
-                            <label htmlFor="clay-autocomplete-1" id="clay-autocomplete-label-1"> {items.fields.fields[it].label} </label>
+                            <label htmlFor={it} id={it+"label"}> {items.fields.fields[it].label} </label>
                             <ClayAutocomplete
-                              aria-labelledby="clay-autocomplete-label-1"
-                              id="clay-autocomplete-1"
-                              onChange={val => {console.log("cambiando el elemento auto") }}
-                              onItemsChange={console.log("cambiando el estado")}
+                              aria-labelledby={it+"label"}
+                              id={it}
+                              key={it}
+                              onChange={(evt) => {itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: evt }); }}
                               value={items.item[it]}
                               placeholder="Introduzca las primeras letras"
                             >
-                                {items.fields.fields[it].options.map(item => (<ClayAutocomplete.Item key={item.value}>{item.label}</ClayAutocomplete.Item>))}
+                            {items.fields.fields[it].options.map(item => { 
+                              return(
+                                <ClayAutocomplete.Item key={it + "option-" + item.value}>{item.label}</ClayAutocomplete.Item>
+                              )})}
                             </ClayAutocomplete>
                           </>
                           }
@@ -205,7 +209,8 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                               <ClayToggle 
                                 label={items.fields.fields[it].label} 
                                 onToggle={val => {
-                                  items.fields.fields[it].change(val);
+                                  if (items.fields.fields[it].hasOwnProperty("change"))
+                                    items.fields.fields[it].change(val);
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });
                                 }} 
                                 toggled={items.item[it]}
@@ -236,7 +241,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                               <ClayRadioGroup
                                 active={act2}
                                 defaultValue="H"
-                                onActiveChange={setAct2}
+                                //onActiveChange={setAct2}
                                 onChange={ evt => {console.log("este es el general")}}
                                 inline
                               >
@@ -249,7 +254,6 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                       onClick={a => {console.log("man hecho click")}}
                                     />
                                   )
-
                                 })}
 
                               </ClayRadioGroup>
