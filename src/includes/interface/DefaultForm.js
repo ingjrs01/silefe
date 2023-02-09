@@ -67,7 +67,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
     <ClayCard>
       <ClayCard.Body>
         <ClayCard.Description displayType="title">
-          <h2>{items.fields.title}</h2>
+          {items.fields.title}
         </ClayCard.Description>
 
         <ClayCard.Description truncate={false} displayType="text">

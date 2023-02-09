@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup } from '@clayui/form';
+import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
+import ClayTable from '@clayui/table';
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayAutocomplete from '@clayui/autocomplete';
@@ -32,7 +33,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
     const validateAll = () => {
       console.log("validando todo");
       Object.keys(items.fields.fields).forEach( campo => {
-        console.log(campo);
+        //console.log(campo);
         switch (items.fields.fields[campo].type) {
           case "text": 
             if (!validate(campo, items.item[campo]))
@@ -114,8 +115,9 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                               {
                                 items.item[it].map( (v,k) => {return ( 
                                   <>
+                                  <ClayInput.Group spaced={"any"}>
                                   <ClayInput
-                                    className="col-6"
+                                    //className="col-6"
                                     key={it + v.key}
                                     type="text"
                                     name={it}
@@ -124,12 +126,19 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                       //validate(e.target.name, e.target.value);
                                       itemsHandle({ type: ITEMS_ACTIONS.SET_MULTIFIELD, fieldname: e.target.name,pos: k, value: e.target.value });
                                     }}
-                                  /><ClayButtonWithIcon className="col-1" aria-label="Close" displayType="secondary" spritemap={spritemap} symbol="times" title="Close"
-                                    onClick={e => {
-                                      console.log("borrando" + k);
-                                      itemsHandle({ type: ITEMS_ACTIONS.REMOVE_MULTIFIELD, fieldname: it, pos:k });
-                                    }}
                                   />
+                                  <ClayCheckbox
+                                    aria-label="I'm checked indefinitely"
+                                    checked={ v.default}
+                                    containerProps={{ id: "test"}}
+                                    onChange={() => itemsHandle({ type: ITEMS_ACTIONS.SET_MULTIFIELDCHECK, fieldname: it,pos: k})}
+                                  />
+                                  <ClayButtonWithIcon 
+                                    //className="col-1" 
+                                    aria-label="Close" displayType="secondary" spritemap={spritemap} symbol="times" title="Close"
+                                    onClick={e => itemsHandle({ type: ITEMS_ACTIONS.REMOVE_MULTIFIELD, fieldname: it, pos:k })}
+                                  />
+                                  </ClayInput.Group>
                                 </>
                                 )})
                               }
@@ -286,6 +295,43 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 }}
                               />
                             </>}
+                            {(items.fields.fields[it].type === 'table') &&
+                            <>                            
+                              {/*<label htmlFor="basicInputText">{items.fields.fields[it].label}</label>*/}
+                              <ClayTable>
+                                <caption>Table caption</caption>
+                                <ClayTable.Head>
+                                  <ClayTable.Row>
+                                    <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
+                                    </ClayTable.Cell>
+                                    <ClayTable.Cell expanded headingCell>
+                                      {"Teams"}
+                                    </ClayTable.Cell>
+                                    <ClayTable.Cell headingCell>{"Inicio"}</ClayTable.Cell>
+                                    <ClayTable.Cell headingCell>{"Fin"}</ClayTable.Cell>
+                                    <ClayTable.Cell headingCell>{"Titulacion"}</ClayTable.Cell>
+                                  </ClayTable.Row>
+                                </ClayTable.Head>
+                                <ClayTable.Body>
+                                  <ClayTable.Row>
+                                    <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
+                                    </ClayTable.Cell>
+                                    <ClayTable.Cell headingTitle>{"White and Red"}</ClayTable.Cell>
+                                    <ClayTable.Cell>{"South America"}</ClayTable.Cell>
+                                    <ClayTable.Cell>{"Brazil"}</ClayTable.Cell>
+                                    <ClayTable.Cell>{"Ingeniería industrial"}</ClayTable.Cell>
+                                  </ClayTable.Row>
+                                  <ClayTable.Row>
+                                    <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} /></ClayTable.Cell>
+                                    <ClayTable.Cell headingTitle>{"White and Purple"}</ClayTable.Cell>
+                                    <ClayTable.Cell>{"Europe"}</ClayTable.Cell>
+                                    <ClayTable.Cell>{"Spain"}</ClayTable.Cell>
+                                    <ClayTable.Cell>{"Ingeniería informática"}</ClayTable.Cell>
+                                  </ClayTable.Row>
+                                </ClayTable.Body>
+                              </ClayTable>                            
+                            </>
+                            }
                           {
                             items.errors[it].length > 0 && //  -> items.fields.rows[it].name
                             <ClayForm.FeedbackGroup>

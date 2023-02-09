@@ -99,19 +99,18 @@ const Tecnicos = () => {
     }
 
     const fetchData = async () => {
-        //const endpoint = '/silefe.colectivo/filter';
-        console.log("Probnaod mis cossas");
+        console.log("Entrada de tecnicos");
         //const endpoint = "/user/get-user-group-users";
         //userGroupId: 52272
-        const endpoint = '/silefe.tecnico/filter'
+        const endpoint = '/silefe.tecnico/filter';
+        debugger;
         const postdata = {
             page: 0,
             descripcion: ''
         };
 
         const auth = getAuthToken();
-        //debugger;
-        const response = await fetch(url_api, {
+        const response = fetch(url_api, {
             "credentials": "include",
             "headers": {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
@@ -128,10 +127,14 @@ const Tecnicos = () => {
             "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
             "method": "POST",
             "mode": "cors"
+        }).then( response => {
+            console.log("peticion a tenicos");
+            console.log(response);
         });
 
-        let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
-
+        //let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
+        //console.log("los datos");
+        //console.log(data);
 
         console.log("Hecha la consulta");
         //console.log(response);

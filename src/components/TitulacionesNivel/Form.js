@@ -60,7 +60,7 @@ export const form = {
         titulacionNivelDescripcion: {
             columnTitle: Liferay.Language.get('Tipo'),
             columnType: "string",
-            key: "c3",
+            key: "c4",
         },
     }    
 };

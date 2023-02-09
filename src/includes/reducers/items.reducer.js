@@ -19,6 +19,7 @@ export const ITEMS_ACTIONS = {
     ADD_MULTIFIELD: 20,
     REMOVE_MULTIFIELD: 21,
     SET_MULTIFIELD: 22,
+    SET_MULTIFIELDCHECK: 23,
   }
 
 const initialState = {
@@ -261,6 +262,14 @@ export const red_items = (state=initialState, action ) => {
             let newField = state.item;
             newField[action.fieldname][action.pos].value = action.value;
 
+            return {
+                ...state,
+                item:newField
+            }
+        case ITEMS_ACTIONS.SET_MULTIFIELDCHECK:
+            newField = state.item;
+            newField[action.fieldname][action.pos].default = !newField[action.fieldname][action.pos].default;
+            //console.log(newField);
             return {
                 ...state,
                 item:newField

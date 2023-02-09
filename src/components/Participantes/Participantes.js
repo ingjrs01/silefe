@@ -156,7 +156,7 @@ const Participantes = () => {
                 id:i.participanteId,
                 fechaNacimiento: (i.fechaNacimiento != null)?new Date(i.fechaNacimiento).toISOString().substring(0, 10):"",
                 email: (i.email != null && i.email.length > 0)?JSON.parse(i.email):[],//[{key: 100,value:"correoinicial@gmail.com",default:false}],
-                telefono: [{key: 200,value:"656665566",default:false}],
+                telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono):[],
                 checked:false
             })});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});

@@ -117,7 +117,7 @@ const Proyectos = () => {
         })
     }
 
-    const loadSelects = () => {
+    const beforeEdit = () => {
         console.log("loadSelects");
     }
 
@@ -134,6 +134,9 @@ const Proyectos = () => {
 
     const fetchData = async () => {
         fetchAPIData('/silefe.cofinanciadas/all', {lang: getLanguageId() },referer).then(response => {
+            console.log("cofinanciadas");
+            console.log(response);
+            form.fields.entidadId.change = miEvento;
             form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
 
@@ -143,6 +146,8 @@ const Proyectos = () => {
         });
 
         fetchAPIData('/silefe.convocatoria/all', {lang: getLanguageId()},referer).then(response => {
+            console.log("convocatoria")
+            console.log(response);
             form.fields.convocatoriaId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
 
@@ -152,8 +157,6 @@ const Proyectos = () => {
             console.debug(form.fields.tecnicos.options);
         });
 
-
-        form.fields.entidadId.change = miEvento;
         form.fields.cofinanciacion.change = cofinanciacionChange;
 
         const postdata = {
@@ -195,7 +198,7 @@ const Proyectos = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
-                loadSelects={loadSelects}
+                beforeEdit={beforeEdit}
             />
             { (items.status === 'load') && 
             <LoadFiles 

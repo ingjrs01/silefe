@@ -217,6 +217,15 @@ export const form = {
             conditions: [],
             change: ()=>{console.log("disponibilidad");},
         },
+        formacion: {
+            key:24,
+            type: "table",
+            label: Liferay.Language.get('Formacion'), 
+            name: "formacion", 
+            enabled: true,
+            conditions: [],
+            //change: ()=>{console.log("disponibilidad");},
+        }
 
 
     },
@@ -259,7 +268,7 @@ export const form = {
             rows: [
                 {
                     key:50,
-                    cols: ['nombre']
+                    cols: ['formacion']
                 },        
             ]
         },
