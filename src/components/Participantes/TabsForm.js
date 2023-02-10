@@ -3,7 +3,7 @@ import ClayForm from '@clayui/form';
 import ClayTabs from '@clayui/tabs';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
 const TabsForm = ({ itemsHandle, save, items, notify }) => {

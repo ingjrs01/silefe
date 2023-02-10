@@ -20,6 +20,8 @@ export const ITEMS_ACTIONS = {
     REMOVE_MULTIFIELD: 21,
     SET_MULTIFIELD: 22,
     SET_MULTIFIELDCHECK: 23,
+    SET_STATUS: 24,
+    SET_ACTIVETAB: 25,
   }
 
 const initialState = {
@@ -36,7 +38,6 @@ const initialState = {
 }
 
 const resetErrors = (fields) => {
-    //debugger;
     let errores = {};
     let tmp_item = {};
     Object.keys(fields.fields).forEach( j => {
@@ -273,6 +274,16 @@ export const red_items = (state=initialState, action ) => {
             return {
                 ...state,
                 item:newField
+            }
+        case ITEMS_ACTIONS.SET_STATUS:
+            return {
+                ...state,
+                status: action.status
+            }
+        case ITEMS_ACTIONS.SET_ACTIVETAB:
+            return {
+                ...state,
+                fields: {...state.fields,tabActive:action.active}     //['activeTab']: action.active
             }
         default: 
         throw new Error ("Accion invalida");

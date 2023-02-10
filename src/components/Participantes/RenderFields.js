@@ -4,10 +4,10 @@ import ClayTable from '@clayui/table';
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayAutocomplete from '@clayui/autocomplete';
-import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import ClayLocalizedInput from '@clayui/localized-input';
-import { getMonths, getDays } from './DatesLang';
-import { getLanguageId } from '../LiferayFunctions'
+import { getMonths, getDays } from '../../includes/interface/DatesLang';
+import { getLanguageId } from '../../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 

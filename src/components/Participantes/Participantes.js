@@ -1,5 +1,5 @@
 import React,{useEffect,useReducer,useRef,useState} from "react";
-import TabsForm from '../../includes/interface/TabsForm';
+import TabsForm from './TabsForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
@@ -13,6 +13,7 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
 import { getLanguageId } from '../../includes/LiferayFunctions';
+import { TableForm } from './TableForm';
 
 
 const Participantes = () => {
@@ -21,6 +22,7 @@ const Participantes = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
+    const [titulaciones,setTitulaciones] = useState([]);
 
     const referer = "http://localhost:8080/participantes";
     const form = formulario;
@@ -180,7 +182,27 @@ const Participantes = () => {
             const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
         });
+        beforeFormacion();
     }
+
+    const beforeFormacion = () => {
+        const formaciones = [
+            {
+                id:  1,
+                ini: "2023-02-01",
+                fin: "2023-12-31",
+                titulacionId: 960,
+            },
+            {
+                id:  2,
+                ini: "2022-01-01",
+                fin: "2022-12-31",
+                titulacionId: 821,
+            },
+        ];
+        setTitulaciones(formaciones);
+    }
+
 
     if (!items) 
     return (<div>{Liferay.Language.get('Cargando')}</div>)
@@ -213,6 +235,12 @@ const Participantes = () => {
                 <Table 
                     items={items} 
                     itemsHandle={itemsHandle} 
+                />
+            }
+            {
+                (items.status === 'otros') &&                
+                <TableForm 
+                    itemsHandle={itemsHandle}
                 />
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
