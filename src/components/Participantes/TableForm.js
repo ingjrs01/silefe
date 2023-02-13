@@ -11,7 +11,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions'
 const spritemap = './icons.svg';
 
 
-export const TableForm = ({itemsHandle}) => {
+export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTitulacion}) => {
 
     return(
         <>
@@ -27,13 +27,13 @@ export const TableForm = ({itemsHandle}) => {
                         <ClayForm.Group className="col">
                             <label htmlFor="basicInput">{"Fecha Inicio"}</label>
                             <ClayDatePicker
-                                onChange={val => { itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
+                                onChange={val => { setTitulacion({...titulacion,ini:val})}}
                                 placeholder={"lalala"}
                                 firstDayOfWeek={1}
                                 months={getMonths(getLanguageId())}
                                 spritemap={spritemap}
                                 timezone="GMT+01:00"
-                                value={"2023-02-10"}
+                                value={titulacion.ini}
                                 weekdaysShort={getDays(getLanguageId())}
                                 years={{
                                 end:  2025,
@@ -45,13 +45,13 @@ export const TableForm = ({itemsHandle}) => {
                         <ClayForm.Group className="col">
                             <label htmlFor="basicInput">{"Fecha Fin"}</label>
                             <ClayDatePicker
-                                onChange={val => { itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
+                                onChange={val => { setTitulacion({...titulacion,fin:val})}}
                                 placeholder={"lalala"}
                                 firstDayOfWeek={1}
                                 months={getMonths(getLanguageId())}
                                 spritemap={spritemap}
                                 timezone="GMT+01:00"
-                                value={"2023-02-10"}
+                                value={titulacion.fin}
                                 weekdaysShort={getDays(getLanguageId())}
                                 years={{
                                 end:  2025,
@@ -65,13 +65,13 @@ export const TableForm = ({itemsHandle}) => {
 
                         {/* ---------------------------------------------------------------------------------------------------------------- */}
                         <ClayForm.Group className="col">
-                            <label htmlFor="basicInput">{ "Tipo" }</label>
+                            <label htmlFor="basicInput">{ Liferay.Language.get("Tipo") }</label>
                               <ClaySelect aria-label="Select Label"
                                 id={"it"}
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { console.log("cambiando" + evt) }}
+                                onChange={evt => { changeSelectsTitulacion("tipo") }}
                                 value={1} >
                                   <ClaySelect.Option
                                     label={"Opcion 1"}
@@ -85,13 +85,13 @@ export const TableForm = ({itemsHandle}) => {
                         </ClayForm.Group>
                         {/* ---------------------------------------------------------------------------------------------------------------- */}
                         <ClayForm.Group className="col">
-                            <label htmlFor="basicInput">{ "Nivel" }</label>
+                            <label htmlFor="basicInput">{ Liferay.Language.get("Nivel") }</label>
                               <ClaySelect aria-label="Select Label"
                                 id={"it"}
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { console.log("cambiando" + evt) }}
+                                onChange={evt => { changeSelectsTitulacion("nivel"); }}
                                 value={1} >
                                   <ClaySelect.Option
                                     label={"Opcion 1"}
@@ -105,7 +105,7 @@ export const TableForm = ({itemsHandle}) => {
                         </ClayForm.Group>
                         {/* ---------------------------------------------------------------------------------------------------------------- */}
                         <ClayForm.Group className="col">
-                            <label htmlFor="basicInput">{ "Familia" }</label>
+                            <label htmlFor="basicInput">{ Liferay.Language.get("Familia") }</label>
                               <ClaySelect aria-label="Select Label"
                                 id={"it"}
                                 name={"it"}
@@ -133,6 +133,8 @@ export const TableForm = ({itemsHandle}) => {
                                 id="basicInputText"
                                 placeholder="Insert your name here"
                                 type="text"
+                                value={titulacion.titulacionName}
+                                onChange={evt => {setTitulacion({...titulacion,titulacionName:evt.target.value})}}
                             />
                             </ClayForm.Group>                            
                         </div>
@@ -145,7 +147,8 @@ export const TableForm = ({itemsHandle}) => {
                         </div>
                         <div className="btn-group-item">
                             <ClayButton onClick={e => { 
-                            itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'edit'}) 
+                            itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'edit'});                            
+
                             }} 
                             displayType="primary">{Liferay.Language.get('Guardar')}
                             </ClayButton>

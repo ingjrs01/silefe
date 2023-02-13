@@ -14,18 +14,24 @@ import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import { TableForm } from './TableForm';
+import {cambiaTitulacionNivel,cambiaTitulacionTipo} from '../../includes/api/titulaciones';
+import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/titulaciones.reducer';
 
 
 const Participantes = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
+    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: []});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
     const [titulaciones,setTitulaciones] = useState([]);
+    const [titulacion,setTitulacion]     = useState({id:0,ini:"",fin:"",titulacionName:""});
 
     const referer = "http://localhost:8080/participantes";
     const form = formulario;
+
+//    titulacionHandler({type:TITULACIONES_ACTIONS.START});
 
     useEffect(()=>{
 		if (!isInitialized.current) {
@@ -176,6 +182,12 @@ const Participantes = () => {
         console.log("change propio");
     }
 
+    const changeSelectsTitulacion = (selectName) => {
+        console.log(selectName);
+        if (selectName == "tipo")
+            cambiaTitulacionTipo();
+    }
+
     const beforeEdit = () => {
         let sel = items.arr.filter(i => i.checked)[0]['provinciaId'];
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel},referer).then(response => {
@@ -192,14 +204,25 @@ const Participantes = () => {
                 ini: "2023-02-01",
                 fin: "2023-12-31",
                 titulacionId: 960,
+                titulacionName: "FP cocina"
             },
             {
                 id:  2,
                 ini: "2022-01-01",
                 fin: "2022-12-31",
                 titulacionId: 821,
+                titulacionName: "Grado de informática"
             },
+            {
+                id:  3,
+                ini: "2022-01-01",
+                fin: "2022-12-31",
+                titulacionId: "Ingeniería de Telecomunicaciones",
+                titulacionName: "Ingeniería de Telecomunicaciones"
+            },
+
         ];
+        console.log("poniendo las formaciones");
         setTitulaciones(formaciones);
     }
 
@@ -228,6 +251,7 @@ const Participantes = () => {
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
+                    titulaciones={titulaciones}
                 />
             }            
             {
@@ -241,6 +265,9 @@ const Participantes = () => {
                 (items.status === 'otros') &&                
                 <TableForm 
                     itemsHandle={itemsHandle}
+                    titulacion={titulacion}
+                    setTitulacion={setTitulacion}
+                    changeSelectsTitulacion={changeSelectsTitulacion}
                 />
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />

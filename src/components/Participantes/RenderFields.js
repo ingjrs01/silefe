@@ -11,7 +11,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
-const RenderFields =  ({ rows,  itemsHandle, items }) => {
+const RenderFields =  ({ rows,  itemsHandle, items, titulaciones }) => {
 
     const locales = [
     {
@@ -311,27 +311,22 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                   </ClayTable.Row>
                                 </ClayTable.Head>
                                 <ClayTable.Body>
+                                  { titulaciones.map( item => { return(
+                                   <>
                                   <ClayTable.Row>
                                     <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
                                     </ClayTable.Cell>
-                                    <ClayTable.Cell>{"2023-01-01"}</ClayTable.Cell>
-                                    <ClayTable.Cell>{"2023-12-31"}</ClayTable.Cell>
-                                    <ClayTable.Cell headingTitle>{"Ingeniería industrial"}</ClayTable.Cell>
+                                    <ClayTable.Cell>{item.ini}</ClayTable.Cell>
+                                    <ClayTable.Cell>{item.fin}</ClayTable.Cell>
+                                    <ClayTable.Cell headingTitle>{item.titulacionName}</ClayTable.Cell>
                                     <ClayTable.Cell>
                                       <ClayButton onClick={e => console.log("borrando")} displayType="secondary">{"E"} </ClayButton>
                                       <ClayButton onClick={e => console.log("borrando")} displayType="danger">{"B"} </ClayButton>
                                     </ClayTable.Cell>
                                   </ClayTable.Row>
-                                  <ClayTable.Row>
-                                    <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} /></ClayTable.Cell>
-                                    <ClayTable.Cell>{"2023-05-20"}</ClayTable.Cell>
-                                    <ClayTable.Cell>{"2024-05-20"}</ClayTable.Cell>
-                                    <ClayTable.Cell headingTitle>{"Ingeniería informática"}</ClayTable.Cell>
-                                    <ClayTable.Cell>
-                                      <ClayButton onClick={e => console.log("borrando")} displayType="secondary">{"E"} </ClayButton>
-                                      <ClayButton onClick={e => console.log("borrando")} displayType="danger">{"B"} </ClayButton>
-                                    </ClayTable.Cell>
-                                  </ClayTable.Row>
+                                   </> 
+                                  );})}
+
                                 </ClayTable.Body>
                               </ClayTable>
                               <ClayButton onClick={e => { itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'})}} displayType="primary">{Liferay.Language.get('Nuevo')} </ClayButton>
