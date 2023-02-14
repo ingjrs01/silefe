@@ -115,6 +115,8 @@ const Participantes = () => {
     }
 
     const fetchData = async () => {
+        titulacionHandler({type:TITULACIONES_ACTIONS.START});
+        
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
@@ -268,6 +270,7 @@ const Participantes = () => {
                     titulacion={titulacion}
                     setTitulacion={setTitulacion}
                     changeSelectsTitulacion={changeSelectsTitulacion}
+                    redTitulaciones={redTitulaciones}
                 />
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />

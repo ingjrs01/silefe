@@ -11,7 +11,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions'
 const spritemap = './icons.svg';
 
 
-export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTitulacion}) => {
+export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTitulacion, redTitulaciones}) => {
 
     return(
         <>
@@ -72,15 +72,15 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 key={"it"}
                                 disabled={ false }
                                 onChange={evt => { changeSelectsTitulacion("tipo") }}
-                                value={1} >
-                                  <ClaySelect.Option
-                                    label={"Opcion 1"}
-                                    value={1}
-                                  />
-                                  <ClaySelect.Option
-                                    label={"Opcion 2"}
-                                    value={2}
-                                  />
+                                value={101} >
+                                  {
+                                    redTitulaciones.tipoOptions.map( option => { return (
+                                      <ClaySelect.Option
+                                        label={option.label}
+                                        value={option.value}
+                                      />
+                                    )})
+                                  }
                             </ClaySelect>
                         </ClayForm.Group>
                         {/* ---------------------------------------------------------------------------------------------------------------- */}
@@ -93,14 +93,14 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 disabled={ false }
                                 onChange={evt => { changeSelectsTitulacion("nivel"); }}
                                 value={1} >
-                                  <ClaySelect.Option
-                                    label={"Opcion 1"}
-                                    value={1}
-                                  />
-                                  <ClaySelect.Option
-                                    label={"Opcion 2"}
-                                    value={2}
-                                  />
+                                  {
+                                    redTitulaciones.nivelOptions.map( option => { return (
+                                      <ClaySelect.Option
+                                        label={option.label}
+                                        value={option.value}
+                                      />
+                                    )})
+                                  }
                             </ClaySelect>
                         </ClayForm.Group>
                         {/* ---------------------------------------------------------------------------------------------------------------- */}
