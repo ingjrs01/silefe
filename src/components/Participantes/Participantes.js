@@ -26,12 +26,10 @@ const Participantes = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
     const [titulaciones,setTitulaciones] = useState([]);
-    const [titulacion,setTitulacion]     = useState({id:0,ini:"",fin:"",titulacionName:""});
+    const [titulacion,setTitulacion]     = useState({id:0,ini:"",fin:"",titulacionId: 0,titulacionName:"",comentarios:"Mi comentario"});
 
     const referer = "http://localhost:8080/participantes";
     const form = formulario;
-
-//    titulacionHandler({type:TITULACIONES_ACTIONS.START});
 
     useEffect(()=>{
 		if (!isInitialized.current) {
@@ -88,6 +86,8 @@ const Participantes = () => {
         let obj = {obj: items.item, id:items.item.participanteId};
         let {status, error} = await saveAPI(endpoint,obj,referer); 
         if (status) {
+            // Si ya he guardado el participante, guardo su formatión: 
+
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
         }
@@ -116,6 +116,21 @@ const Participantes = () => {
 
     const fetchData = async () => {
         titulacionHandler({type:TITULACIONES_ACTIONS.START});
+
+        fetchAPIData('/silefe.titulaciontipo/all',  {descripcion: "", lang: getLanguageId()},"http://localhost:8080/titulaciones").then(response => {
+            titulacionHandler({type:TITULACIONES_ACTIONS.TIPOS,tipos:[...response.data]});
+        });
+        fetchAPIData('/silefe.titulacionnivel/all', {descripcion: "", lang: getLanguageId()},referer).then( response => {
+            titulacionHandler({type:TITULACIONES_ACTIONS.NIVEL,nivel:[...response.data]});
+        });
+        fetchAPIData('/silefe.titulacionfam/all', {descripcion: "", lang: getLanguageId()},referer).then(response => {
+            titulacionHandler({type:TITULACIONES_ACTIONS.FAMILIA,familias:[...response.data]});
+        });
+        fetchAPIData('/silefe.titulacion/all', {descripcion: "", lang: getLanguageId()},referer).then(response => {
+            titulacionHandler({type:TITULACIONES_ACTIONS.TITULACION,titulaciones: [...response.data]});
+        });
+
+       
         
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
@@ -184,8 +199,8 @@ const Participantes = () => {
         console.log("change propio");
     }
 
-    const changeSelectsTitulacion = (selectName) => {
-        console.log(selectName);
+    const changeSelectsTitulacion = (selectName, value) => {
+        console.log(selectName + " -> " + value);
         if (selectName == "tipo")
             cambiaTitulacionTipo();
     }
@@ -206,21 +221,24 @@ const Participantes = () => {
                 ini: "2023-02-01",
                 fin: "2023-12-31",
                 titulacionId: 960,
-                titulacionName: "FP cocina"
+                titulacionName: "FP cocina",
+                comentarios: "Comentarios"
             },
             {
                 id:  2,
                 ini: "2022-01-01",
                 fin: "2022-12-31",
                 titulacionId: 821,
-                titulacionName: "Grado de informática"
+                titulacionName: "Grado de informática",
+                comentarios: "Comentarios"
             },
             {
                 id:  3,
                 ini: "2022-01-01",
                 fin: "2022-12-31",
                 titulacionId: "Ingeniería de Telecomunicaciones",
-                titulacionName: "Ingeniería de Telecomunicaciones"
+                titulacionName: "Ingeniería de Telecomunicaciones",
+                comentarios: "Comentarios"
             },
 
         ];
@@ -254,6 +272,7 @@ const Participantes = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     titulaciones={titulaciones}
+                    setTitulaciones={setTitulaciones}
                 />
             }            
             {
@@ -271,6 +290,9 @@ const Participantes = () => {
                     setTitulacion={setTitulacion}
                     changeSelectsTitulacion={changeSelectsTitulacion}
                     redTitulaciones={redTitulaciones}
+                    titulacionHandler={titulacionHandler}
+                    titulaciones={titulaciones}
+                    setTitulaciones={setTitulaciones}
                 />
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />

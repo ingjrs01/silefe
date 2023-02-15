@@ -11,7 +11,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
-const RenderFields =  ({ rows,  itemsHandle, items, titulaciones }) => {
+const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulaciones }) => {
 
     const locales = [
     {
@@ -311,7 +311,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, titulaciones }) => {
                                   </ClayTable.Row>
                                 </ClayTable.Head>
                                 <ClayTable.Body>
-                                  { titulaciones.map( item => { return(
+                                  { titulaciones.map( (item,index) => { return(
                                    <>
                                   <ClayTable.Row>
                                     <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
@@ -320,8 +320,13 @@ const RenderFields =  ({ rows,  itemsHandle, items, titulaciones }) => {
                                     <ClayTable.Cell>{item.fin}</ClayTable.Cell>
                                     <ClayTable.Cell headingTitle>{item.titulacionName}</ClayTable.Cell>
                                     <ClayTable.Cell>
-                                      <ClayButton onClick={e => console.log("borrando")} displayType="secondary">{"E"} </ClayButton>
-                                      <ClayButton onClick={e => console.log("borrando")} displayType="danger">{"B"} </ClayButton>
+                                      <ClayButton onClick={e => console.log("editando")} displayType="secondary">{"E"} </ClayButton>
+                                      <ClayButton onClick={e => {
+                                        console.log("borrando " + index);
+                                        setTitulaciones(titulaciones.splice(index,1));
+                                        }} 
+                                        displayType="danger">{"B"} 
+                                      </ClayButton>
                                     </ClayTable.Cell>
                                   </ClayTable.Row>
                                    </> 

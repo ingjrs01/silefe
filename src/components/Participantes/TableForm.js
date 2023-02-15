@@ -6,12 +6,13 @@ import ClayDatePicker from '@clayui/date-picker';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import { getMonths, getDays } from '../../includes/interface/DatesLang';
 import { getLanguageId } from '../../includes/LiferayFunctions'
+import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 //import RenderFields from "./RenderFields";
 
 const spritemap = './icons.svg';
 
 
-export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTitulacion, redTitulaciones}) => {
+export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTitulacion, redTitulaciones, titulacionHandler, titulaciones, setTitulaciones}) => {
 
     return(
         <>
@@ -71,8 +72,11 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { changeSelectsTitulacion("tipo") }}
-                                value={101} >
+                                onChange={evt => { 
+                                  changeSelectsTitulacion("tipo",evt.target.value);
+                                  titulacionHandler({type: TITULACIONES_ACTIONS.LOAD_NIVELES, value:evt.target.value})
+                                 }}
+                                value={redTitulaciones.titulacionTipoId} >
                                   {
                                     redTitulaciones.tipoOptions.map( option => { return (
                                       <ClaySelect.Option
@@ -91,8 +95,11 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { changeSelectsTitulacion("nivel"); }}
-                                value={1} >
+                                onChange={evt => { 
+                                  changeSelectsTitulacion("nivel",evt.target.value); 
+                                  titulacionHandler({type: TITULACIONES_ACTIONS.LOAD_FAMILIAS, value:evt.target.value})
+                                }}
+                                value={redTitulaciones.titulacionNivelId} >
                                   {
                                     redTitulaciones.nivelOptions.map( option => { return (
                                       <ClaySelect.Option
@@ -113,28 +120,55 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 disabled={ false }
                                 onChange={evt => { console.log("cambiando" + evt) }}
                                 value={1} >
-                                  <ClaySelect.Option
-                                    label={"Opcion 1"}
-                                    value={1}
-                                  />
-                                  <ClaySelect.Option
-                                    label={"Opcion 2"}
-                                    value={2}
-                                  />
+                                {
+                                  redTitulaciones.familiaOptions.map( option => { return (
+                                    <ClaySelect.Option
+                                      label={option.label}
+                                      value={option.value}
+                                    />
+                                  )})
+                                }
                             </ClaySelect>
                         </ClayForm.Group>
                         {/* ---------------------------------------------------------------------------------------------------------------- */}
                         </div>
                         <div className="row">
                         <ClayForm.Group className="col">
-                            <label htmlFor="basicInputText">Name</label>
+                            <label htmlFor="basicInput">{ Liferay.Language.get("Titulacion") }</label>
+                              <ClaySelect aria-label="Select Label"
+                                id={"it"}
+                                name={"it"}
+                                key={"it"}
+                                disabled={ false }
+                                onChange={evt => { 
+                                  console.log("cambiando" + evt);
+                                  titulacionHandler({type:TITULACIONES_ACTIONS.CHG_TITULACION,value:evt.target.value});
+                                  setTitulacion({...titulacion,titulacionId:evt.target.value});
+                                }}
+                                value={redTitulaciones.titulacionId} >
+                                {
+                                  redTitulaciones.titulacionOptions.map( option => { return (
+                                    <ClaySelect.Option
+                                      label={option.label}
+                                      value={option.value}
+                                    />
+                                  )})
+                                }
+                            </ClaySelect>
+                        </ClayForm.Group>
+                        </div>
+                        <div className="row">
+                        <ClayForm.Group className="col">
+                            <label htmlFor="basicInputText">{Liferay.Language.get("Comentarios")}</label>
                             <ClayInput
                                 component="textarea"
                                 id="basicInputText"
                                 placeholder="Insert your name here"
                                 type="text"
-                                value={titulacion.titulacionName}
-                                onChange={evt => {setTitulacion({...titulacion,titulacionName:evt.target.value})}}
+                                value={titulacion.comentarios}
+                                onChange={evt => {
+                                  setTitulacion({...titulacion,comentarios:evt.target.value});
+                                }}
                             />
                             </ClayForm.Group>                            
                         </div>
@@ -147,7 +181,15 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                         </div>
                         <div className="btn-group-item">
                             <ClayButton onClick={e => { 
-                            itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'edit'});                            
+                              setTitulaciones([...titulaciones,{
+                                id:  2,
+                                ini: "2022-01-01",
+                                fin: "2022-12-31",
+                                titulacionId: 821,
+                                titulacionName: "Uno nuevo",
+                                comentarios: "Comentario nuevo"
+                            }]);
+                              itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'edit'});                            
 
                             }} 
                             displayType="primary">{Liferay.Language.get('Guardar')}
