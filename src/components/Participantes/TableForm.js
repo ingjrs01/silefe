@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
+import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox, ClaySelectWithOption } from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
@@ -11,8 +11,7 @@ import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reduc
 
 const spritemap = './icons.svg';
 
-
-export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTitulacion, redTitulaciones, titulacionHandler, titulaciones, setTitulaciones}) => {
+export const TableForm = ({cancelTitulacion,redTitulaciones, titulacionHandler, saveTitulacion}) => {
 
     return(
         <>
@@ -28,13 +27,18 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                         <ClayForm.Group className="col">
                             <label htmlFor="basicInput">{"Fecha Inicio"}</label>
                             <ClayDatePicker
-                                onChange={val => { setTitulacion({...titulacion,ini:val})}}
+                                onChange={val => { 
+                                  titulacionHandler({
+                                    type:TITULACIONES_ACTIONS.SET_TITULACION,
+                                    titulacion: {...redTitulaciones.titulacion,ini: val}
+                                  });
+                                }}
                                 placeholder={"lalala"}
                                 firstDayOfWeek={1}
                                 months={getMonths(getLanguageId())}
                                 spritemap={spritemap}
                                 timezone="GMT+01:00"
-                                value={titulacion.ini}
+                                value={redTitulaciones.titulacion.ini}
                                 weekdaysShort={getDays(getLanguageId())}
                                 years={{
                                 end:  2025,
@@ -46,13 +50,18 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                         <ClayForm.Group className="col">
                             <label htmlFor="basicInput">{"Fecha Fin"}</label>
                             <ClayDatePicker
-                                onChange={val => { setTitulacion({...titulacion,fin:val})}}
+                                onChange={val => { 
+                                  titulacionHandler({
+                                    type:TITULACIONES_ACTIONS.SET_TITULACION,
+                                    titulacion: {...redTitulaciones.titulacion,fin: val}
+                                  });
+                                }}
                                 placeholder={"lalala"}
                                 firstDayOfWeek={1}
                                 months={getMonths(getLanguageId())}
                                 spritemap={spritemap}
                                 timezone="GMT+01:00"
-                                value={titulacion.fin}
+                                value={redTitulaciones.titulacion.fin}
                                 weekdaysShort={getDays(getLanguageId())}
                                 years={{
                                 end:  2025,
@@ -73,10 +82,9 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 key={"it"}
                                 disabled={ false }
                                 onChange={evt => { 
-                                  changeSelectsTitulacion("tipo",evt.target.value);
-                                  titulacionHandler({type: TITULACIONES_ACTIONS.LOAD_NIVELES, value:evt.target.value})
+                                  titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value:evt.target.value});                                  
                                  }}
-                                value={redTitulaciones.titulacionTipoId} >
+                                value={redTitulaciones.titulacion.titulacionTipoId} >
                                   {
                                     redTitulaciones.tipoOptions.map( option => { return (
                                       <ClaySelect.Option
@@ -96,10 +104,13 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 key={"it"}
                                 disabled={ false }
                                 onChange={evt => { 
-                                  changeSelectsTitulacion("nivel",evt.target.value); 
-                                  titulacionHandler({type: TITULACIONES_ACTIONS.LOAD_FAMILIAS, value:evt.target.value})
+                                  //titulacionHandler({
+                                  //  type:TITULACIONES_ACTIONS.SET_TITULACION,
+                                  //  titulacion: {...redTitulaciones.titulacion,titulacionNivelId: evt.target.value}
+                                  //});
+                                  titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value:evt.target.value})
                                 }}
-                                value={redTitulaciones.titulacionNivelId} >
+                                value={redTitulaciones.titulacion.titulacionNivelId} >
                                   {
                                     redTitulaciones.nivelOptions.map( option => { return (
                                       <ClaySelect.Option
@@ -118,8 +129,11 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { console.log("cambiando" + evt) }}
-                                value={1} >
+                                onChange={evt => { 
+                                  titulacionHandler({ type:TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA,value: evt.target.value}) 
+                                }}
+                                  
+                                value={redTitulaciones.titulacion.titulacionFamiliaId} >
                                 {
                                   redTitulaciones.familiaOptions.map( option => { return (
                                     <ClaySelect.Option
@@ -141,11 +155,9 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 key={"it"}
                                 disabled={ false }
                                 onChange={evt => { 
-                                  console.log("cambiando" + evt);
-                                  titulacionHandler({type:TITULACIONES_ACTIONS.CHG_TITULACION,value:evt.target.value});
-                                  setTitulacion({...titulacion,titulacionId:evt.target.value});
+                                  titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONID,value:evt.target.value});
                                 }}
-                                value={redTitulaciones.titulacionId} >
+                                value={redTitulaciones.titulacion.titulacionId} >
                                 {
                                   redTitulaciones.titulacionOptions.map( option => { return (
                                     <ClaySelect.Option
@@ -165,9 +177,12 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                                 id="basicInputText"
                                 placeholder="Insert your name here"
                                 type="text"
-                                value={titulacion.comentarios}
+                                value={redTitulaciones.titulacion.comentarios}
                                 onChange={evt => {
-                                  setTitulacion({...titulacion,comentarios:evt.target.value});
+                                  titulacionHandler({
+                                    type:TITULACIONES_ACTIONS.SET_TITULACION,
+                                    titulacion: {...redTitulaciones.titulacion,comentarios: evt.target.value}
+                                  });
                                 }}
                             />
                             </ClayForm.Group>                            
@@ -177,20 +192,11 @@ export const TableForm = ({itemsHandle,titulacion,setTitulacion, changeSelectsTi
                     </ClayCard.Description>                
                     <div className="btn-group">
                         <div className="btn-group-item">
-                            <ClayButton onClick={e =>  itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'edit'})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                            <ClayButton onClick={e =>  cancelTitulacion()} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
                         </div>
                         <div className="btn-group-item">
                             <ClayButton onClick={e => { 
-                              setTitulaciones([...titulaciones,{
-                                id:  2,
-                                ini: "2022-01-01",
-                                fin: "2022-12-31",
-                                titulacionId: 821,
-                                titulacionName: "Uno nuevo",
-                                comentarios: "Comentario nuevo"
-                            }]);
-                              itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'edit'});                            
-
+                              saveTitulacion();                                                       
                             }} 
                             displayType="primary">{Liferay.Language.get('Guardar')}
                             </ClayButton>

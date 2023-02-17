@@ -11,7 +11,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
-const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulaciones }) => {
+const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulaciones, editTitulacion }) => {
 
     const locales = [
     {
@@ -297,7 +297,6 @@ const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulacione
                             </>}
                             {(items.fields.fields[it].type === 'table') &&
                             <>                            
-                              {/*<label htmlFor="basicInputText">{items.fields.fields[it].label}</label>*/}
                               <ClayTable>
                                 <caption>Titulaciones</caption>
                                 <ClayTable.Head>
@@ -320,10 +319,15 @@ const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulacione
                                     <ClayTable.Cell>{item.fin}</ClayTable.Cell>
                                     <ClayTable.Cell headingTitle>{item.titulacionName}</ClayTable.Cell>
                                     <ClayTable.Cell>
-                                      <ClayButton onClick={e => console.log("editando")} displayType="secondary">{"E"} </ClayButton>
                                       <ClayButton onClick={e => {
-                                        console.log("borrando " + index);
-                                        setTitulaciones(titulaciones.splice(index,1));
+                                          editTitulacion(index);
+                                        }} 
+                                        displayType="secondary">{"E"} 
+                                      </ClayButton>
+                                      <ClayButton onClick={e => {
+                                        let tmp = [...titulaciones];
+                                        tmp.splice(index,1);
+                                        setTitulaciones(tmp);                                        
                                         }} 
                                         displayType="danger">{"B"} 
                                       </ClayButton>
@@ -334,11 +338,16 @@ const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulacione
 
                                 </ClayTable.Body>
                               </ClayTable>
-                              <ClayButton onClick={e => { itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'})}} displayType="primary">{Liferay.Language.get('Nuevo')} </ClayButton>
+                              <ClayButton onClick={e => { 
+                                  editTitulacion(-1); // para crear uno nuevo
+                                  //itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'});
+                                }} 
+                                displayType="primary">{Liferay.Language.get('Nuevo')} 
+                              </ClayButton>
                             </>
                             }
                           {
-                            items.errors[it].length > 0 && //  -> items.fields.rows[it].name
+                            items.errors[it].length > 0 && 
                             <ClayForm.FeedbackGroup>
                               <ClayForm.FeedbackItem>
                                 <ClayForm.FeedbackIndicator

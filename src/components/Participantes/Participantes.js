@@ -14,7 +14,6 @@ import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import { TableForm } from './TableForm';
-import {cambiaTitulacionNivel,cambiaTitulacionTipo} from '../../includes/api/titulaciones';
 import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/titulaciones.reducer';
 
 
@@ -26,7 +25,6 @@ const Participantes = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
     const [titulaciones,setTitulaciones] = useState([]);
-    const [titulacion,setTitulacion]     = useState({id:0,ini:"",fin:"",titulacionId: 0,titulacionName:"",comentarios:"Mi comentario"});
 
     const referer = "http://localhost:8080/participantes";
     const form = formulario;
@@ -74,19 +72,16 @@ const Participantes = () => {
     }
 
     const handleSave = async () => {
-        const data = {
-            ambitoId:       items.item.id,
-            descripcion: items.item.descripcion,
-            userId:      getUserId(),
-        }
         let endpoint = '/silefe.participante/save-participante';
         if (items.status === 'new')
             endpoint = '/silefe.participante/new-participante';
 
         let obj = {obj: items.item, id:items.item.participanteId};
-        let {status, error} = await saveAPI(endpoint,obj,referer); 
+        let {data, status, error} = await saveAPI(endpoint,obj,referer); 
         if (status) {
-            // Si ya he guardado el participante, guardo su formatión: 
+            const obj2 = {id:data.participanteId,titulaciones:titulaciones,userId: getUserId()};
+            let respon = await saveAPI('/silefe.formacionparticipante/save-formaciones-by-participante',obj2,referer);
+            await console.debug(respon);
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
@@ -117,20 +112,7 @@ const Participantes = () => {
     const fetchData = async () => {
         titulacionHandler({type:TITULACIONES_ACTIONS.START});
 
-        fetchAPIData('/silefe.titulaciontipo/all',  {descripcion: "", lang: getLanguageId()},"http://localhost:8080/titulaciones").then(response => {
-            titulacionHandler({type:TITULACIONES_ACTIONS.TIPOS,tipos:[...response.data]});
-        });
-        fetchAPIData('/silefe.titulacionnivel/all', {descripcion: "", lang: getLanguageId()},referer).then( response => {
-            titulacionHandler({type:TITULACIONES_ACTIONS.NIVEL,nivel:[...response.data]});
-        });
-        fetchAPIData('/silefe.titulacionfam/all', {descripcion: "", lang: getLanguageId()},referer).then(response => {
-            titulacionHandler({type:TITULACIONES_ACTIONS.FAMILIA,familias:[...response.data]});
-        });
-        fetchAPIData('/silefe.titulacion/all', {descripcion: "", lang: getLanguageId()},referer).then(response => {
-            titulacionHandler({type:TITULACIONES_ACTIONS.TITULACION,titulaciones: [...response.data]});
-        });
-
-       
+        queryTitulaciones();
         
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
@@ -199,12 +181,6 @@ const Participantes = () => {
         console.log("change propio");
     }
 
-    const changeSelectsTitulacion = (selectName, value) => {
-        console.log(selectName + " -> " + value);
-        if (selectName == "tipo")
-            cambiaTitulacionTipo();
-    }
-
     const beforeEdit = () => {
         let sel = items.arr.filter(i => i.checked)[0]['provinciaId'];
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel},referer).then(response => {
@@ -218,34 +194,112 @@ const Participantes = () => {
         const formaciones = [
             {
                 id:  1,
-                ini: "2023-02-01",
+                ini: "2024-02-01",
                 fin: "2023-12-31",
-                titulacionId: 960,
+                titulacionTipoId: 103 ,
+                titulacionNivelId: 205,
+                titulacionFamiliaId: 106,
+                titulacionId: 807,
                 titulacionName: "FP cocina",
-                comentarios: "Comentarios"
+                comentarios: "Esto le costó mucho"
             },
-            {
-                id:  2,
-                ini: "2022-01-01",
-                fin: "2022-12-31",
-                titulacionId: 821,
-                titulacionName: "Grado de informática",
-                comentarios: "Comentarios"
-            },
-            {
-                id:  3,
-                ini: "2022-01-01",
-                fin: "2022-12-31",
-                titulacionId: "Ingeniería de Telecomunicaciones",
-                titulacionName: "Ingeniería de Telecomunicaciones",
-                comentarios: "Comentarios"
-            },
-
         ];
+        debugger;
+        fetchAPIData('/silefe.formacionparticipante/filter-by-participante', {lang: getLanguageId(), participante: items.item.id},referer).then(response => {
+            console.log("Obteniendo las formaciones");
+            console.log(response.data);
+            console.log("lll");
+        })
+
         console.log("poniendo las formaciones");
         setTitulaciones(formaciones);
     }
 
+    const editTitulacion = (index) => {
+        // Se trata de una titulación nueva
+        if (index == -1) {
+            titulacionHandler({
+                type: TITULACIONES_ACTIONS.SET_TITULACION,
+                titulacion: {...redTitulaciones.titulacion,
+                    id: 0,
+                    ini: "2023-02-17",
+                    fin: "2023-02-17",
+                    titulacionTipoId: 0,
+                    titulacionNivelId: 0,
+                    titulacionFamiliaId: 0,
+                    titulacionId: 0,
+                    comentarios: "",
+                }
+            });
+    
+            itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'});
+            return true;
+        }
+        // tengo que hacer la carga de los selects adecuada:
+        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONTIPO,value:titulaciones[index].titulacionTipoId});
+
+        titulacionHandler({
+            type: TITULACIONES_ACTIONS.SET_TITULACION,
+            titulacion: {...redTitulaciones.titulacion,
+                id: titulaciones[index].id,
+                ini:titulaciones[index].ini,
+                fin:titulaciones[index].fin,
+                titulacionTipoId: titulaciones[index].titulacionTipoId,
+                titulacionNivelId: titulaciones[index].titulacionNivelId,
+                titulacionFamiliaId: titulaciones[index].titulacionFamiliaId,
+                titulacionId: titulaciones[index].titulacionId,
+                comentarios: titulaciones[index].comentarios,
+            }
+        });
+        itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'});
+    }
+
+    const saveTitulacion = () => {
+        if (redTitulaciones.titulacion.id == 0) {            
+            setTitulaciones([...titulaciones,{
+                id:                  redTitulaciones.titulacion.id,
+                ini:                 redTitulaciones.titulacion.ini,
+                fin:                 redTitulaciones.titulacion.fin,
+                titulacionTipoId:    redTitulaciones.titulacion.titulacionTipoId,
+                titulacionNivelId:   redTitulaciones.titulacion.titulacionNivelId,
+                titulacionFamiliaId: redTitulaciones.titulacion.titulacionFamiliaId,
+                titulacionId:        redTitulaciones.titulacion.titulacionId,
+                comentarios:         redTitulaciones.titulacion.comentarios,
+            }]);
+        }
+        else {
+            let tmp = [...titulaciones];
+            const index = tmp.findIndex(item => item.id == redTitulaciones.titulacion.id );
+            tmp.splice(index,1,redTitulaciones.titulacion);
+            setTitulaciones(tmp);
+        }
+
+        const status = items.item.id == 0?'new':'edit'
+        itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:status}); 
+        return true;
+    }
+
+    const cancelTitulacion = () => {
+        const status = items.item.id == 0?'new':'edit'
+        itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:status}); 
+        return true;
+    }
+
+    const queryTitulaciones = () => {
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, "http://localhost:8080/titulaciones").then(response => {
+            titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
+        });
+        fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: [...response.data] });
+        });
+        fetchAPIData('/silefe.titulacionfam/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: [...response.data] });
+        });
+        fetchAPIData('/silefe.titulacion/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: [...response.data] });
+        });
+    }
+  
 
     if (!items) 
     return (<div>{Liferay.Language.get('Cargando')}</div>)
@@ -273,6 +327,7 @@ const Participantes = () => {
                     items={items}
                     titulaciones={titulaciones}
                     setTitulaciones={setTitulaciones}
+                    editTitulacion={editTitulacion}
                 />
             }            
             {
@@ -285,14 +340,10 @@ const Participantes = () => {
             {
                 (items.status === 'otros') &&                
                 <TableForm 
-                    itemsHandle={itemsHandle}
-                    titulacion={titulacion}
-                    setTitulacion={setTitulacion}
-                    changeSelectsTitulacion={changeSelectsTitulacion}
+                    cancelTitulacion={cancelTitulacion}
                     redTitulaciones={redTitulaciones}
                     titulacionHandler={titulacionHandler}
-                    titulaciones={titulaciones}
-                    setTitulaciones={setTitulaciones}
+                    saveTitulacion={saveTitulacion}
                 />
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
@@ -301,3 +352,4 @@ const Participantes = () => {
     )
 }
 export default Participantes;
+

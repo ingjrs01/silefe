@@ -6,8 +6,7 @@ import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
-const TabsForm = ({ itemsHandle, save, items, titulaciones, notify, setTitulaciones }) => {
-  //const [active, setActive] = useState(0);
+const TabsForm = ({ itemsHandle, save, items, titulaciones, setTitulaciones, editTitulacion }) => {
 
   const validateAll = () => {
     console.log("validando todo");
@@ -98,6 +97,7 @@ const TabsForm = ({ itemsHandle, save, items, titulaciones, notify, setTitulacio
                 items={items}
                 titulaciones={titulaciones}
                 setTitulaciones={setTitulaciones}
+                editTitulacion={editTitulacion}
                 />
               </ClayTabs.TabPane>
 
