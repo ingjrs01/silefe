@@ -81,7 +81,7 @@ const Participantes = () => {
         if (status) {
             const obj2 = {id:data.participanteId,titulaciones:titulaciones,userId: getUserId()};
             let respon = await saveAPI('/silefe.formacionparticipante/save-formaciones-by-participante',obj2,referer);
-            await console.debug(respon);
+            //await console.debug(respon);
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
@@ -191,28 +191,33 @@ const Participantes = () => {
     }
 
     const beforeFormacion = () => {
-        const formaciones = [
-            {
-                id:  1,
-                ini: "2024-02-01",
-                fin: "2023-12-31",
-                titulacionTipoId: 103 ,
-                titulacionNivelId: 205,
-                titulacionFamiliaId: 106,
-                titulacionId: 807,
-                titulacionName: "FP cocina",
-                comentarios: "Esto le costó mucho"
-            },
-        ];
-        debugger;
-        fetchAPIData('/silefe.formacionparticipante/filter-by-participante', {lang: getLanguageId(), participante: items.item.id},referer).then(response => {
-            console.log("Obteniendo las formaciones");
-            console.log(response.data);
-            console.log("lll");
-        })
-
-        console.log("poniendo las formaciones");
-        setTitulaciones(formaciones);
+        let sel = items.arr.filter(i => i.checked);
+        if (sel.length > 0) {
+            const participanteId = sel[0].id;            
+            fetchAPIData('/silefe.formacionparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
+                const tits = response.data.map( i => {
+                    const familiaId = redTitulaciones.titulaciones.filter(t => t.titulacionId == i.titulacion)[0].titulacionFamiliaId;
+                    const nivelId = redTitulaciones.familias.filter(f => f.id == familiaId)[0].titulacionNivelId;
+                    const tipoId = redTitulaciones.niveles.filter(n => n.id == nivelId)[0].titulacionTipoId;
+                    let names = redTitulaciones.titulaciones.filter(t => t.titulacionId == i.titulacion);
+                    let name = Liferay.Language.get("No_disponible");
+                    if (names.length > 0)
+                        name = names[0].descripcion;
+                    return {
+                        ...i,
+                        id: i.formacionParticipanteId,
+                        titulacionTipoId: tipoId,
+                        titulacionNivelId: nivelId,
+                        titulacionFamiliaId: familiaId,
+                        titulacionId: i.titulacion,
+                        ini: (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
+                        fin: (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
+                        titulacionName:name,
+                    }
+                });
+                setTitulaciones(tits);
+            })    
+        }
     }
 
     const editTitulacion = (index) => {
@@ -235,23 +240,27 @@ const Participantes = () => {
             itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'});
             return true;
         }
-        // tengo que hacer la carga de los selects adecuada:
         titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONTIPO,value:titulaciones[index].titulacionTipoId});
-
         titulacionHandler({
             type: TITULACIONES_ACTIONS.SET_TITULACION,
             titulacion: {...redTitulaciones.titulacion,
-                id: titulaciones[index].id,
-                ini:titulaciones[index].ini,
-                fin:titulaciones[index].fin,
-                titulacionTipoId: titulaciones[index].titulacionTipoId,
-                titulacionNivelId: titulaciones[index].titulacionNivelId,
-                titulacionFamiliaId: titulaciones[index].titulacionFamiliaId,
-                titulacionId: titulaciones[index].titulacionId,
-                comentarios: titulaciones[index].comentarios,
+                ...titulaciones[index],
+                id: titulaciones[index].formacionParticipanteId,
             }
         });
         itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'});
+    }
+
+    const borrarTitulacion = (index) => {
+        if (titulaciones[index].id > 0) {
+            deleteAPI('/silefe.formacionparticipante/remove-titulaciones',[titulaciones[index].id],referer).then(res => {
+                if (res) {
+                    setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);    
+                }});
+        }
+        let tmp = [...titulaciones];
+        tmp.splice(index,1);
+        setTitulaciones(tmp);                                        
     }
 
     const saveTitulacion = () => {
@@ -300,7 +309,6 @@ const Participantes = () => {
         });
     }
   
-
     if (!items) 
     return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -326,7 +334,7 @@ const Participantes = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     titulaciones={titulaciones}
-                    setTitulaciones={setTitulaciones}
+                    borrarTitulacion={borrarTitulacion}
                     editTitulacion={editTitulacion}
                 />
             }            

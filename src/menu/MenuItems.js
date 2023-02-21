@@ -7,6 +7,7 @@ const MenuItems = [
     {key: 2, url: '/titnivel',     caption: 'Titulaciones Nivel'},
     {key: 3, url: '/titulacionesf',caption: 'Titulaciones Familias'},
     {key: 4, url: '/titulaciones', caption: 'Titulaciones'},
+    {key:22, url: '/tipocontrato', caption: 'TipoContrato' },
     {key: 5, url: '/colectivos',   caption: 'Colectivos'},
     {key: 6, url: '/provincias',   caption: 'Provincias'},
     {key:20, url: '/localidades',  caption: 'Municipios' },

@@ -127,7 +127,6 @@ export const red_items = (state=initialState, action ) => {
             }
         
         case ITEMS_ACTIONS.SELECT_ITEM:
-            //debugger;
             let sel = state.arr.filter(i => i.checked);
             if (sel.length > 0) {
                 let e2 = resetErrors(state.fields);

@@ -11,7 +11,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
-const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulaciones, editTitulacion }) => {
+const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, borrarTitulacion, editTitulacion }) => {
 
     const locales = [
     {
@@ -325,9 +325,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulacione
                                         displayType="secondary">{"E"} 
                                       </ClayButton>
                                       <ClayButton onClick={e => {
-                                        let tmp = [...titulaciones];
-                                        tmp.splice(index,1);
-                                        setTitulaciones(tmp);                                        
+                                        borrarTitulacion(index);
                                         }} 
                                         displayType="danger">{"B"} 
                                       </ClayButton>
@@ -339,8 +337,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, setTitulacione
                                 </ClayTable.Body>
                               </ClayTable>
                               <ClayButton onClick={e => { 
-                                  editTitulacion(-1); // para crear uno nuevo
-                                  //itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'});
+                                  editTitulacion(-1);
                                 }} 
                                 displayType="primary">{Liferay.Language.get('Nuevo')} 
                               </ClayButton>

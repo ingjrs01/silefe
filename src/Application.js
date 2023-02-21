@@ -22,6 +22,7 @@ import Ambitos from './components/Ambitos/Ambitos';
 import Participantes from './components/Participantes/Participantes';
 import Localidades from './components/Localidades/Localidades';
 import TiposVia from './components/TiposVia/TiposVia';
+import TipoContrato from './components/TipoContrato/TipoContrato';
 
 const Application = () => {
 
@@ -59,6 +60,7 @@ const Application = () => {
                             <Route path='/participantes' element={ <Participantes /> }   />
                             <Route path='/localidades'   element={ <Localidades /> } />
                             <Route path='/tiposvia'      element={ <TiposVia /> } />
+                            <Route path='/tipocontrato'  element={ <TipoContrato /> } />
                         </Routes>
                     </div>
                 </div>
