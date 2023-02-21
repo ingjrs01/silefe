@@ -5,6 +5,7 @@ import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import RenderFields from "./RenderFields";
+import ExperienciaRender from "./ExperienciaRender";
 
 const TabsForm = ({ itemsHandle, save, items, titulaciones, borrarTitulacion, editTitulacion }) => {
 
@@ -85,6 +86,14 @@ const TabsForm = ({ itemsHandle, save, items, titulaciones, borrarTitulacion, ed
               </ClayTabs.Item>
             );
           })}
+          <ClayTabs.Item
+            key={"tab-item4"}
+            innerProps={{
+              "aria-controls": "tabpanel-4"
+            }}
+          >
+            <a onClick={a => { itemsHandle({ type:ITEMS_ACTIONS.SET_ACTIVETAB,active: 4})}}>  {"Experiencias" }  </a>
+          </ClayTabs.Item>
 
       </ClayTabs>
       <ClayTabs.Content activeIndex={items.fields.tabActive} fade>
@@ -103,6 +112,15 @@ const TabsForm = ({ itemsHandle, save, items, titulaciones, borrarTitulacion, ed
 
             );
           })}
+          <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}>  
+            <ExperienciaRender
+            rows={items.fields.tabs[2].rows}
+            itemsHandle={itemsHandle} 
+            items={titulaciones}
+            borrarTitulacion={borrarTitulacion}
+            editTitulacion={editTitulacion}
+            />
+          </ClayTabs.TabPane>
 
       </ClayTabs.Content>
           </ClayForm>
