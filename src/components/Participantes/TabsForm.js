@@ -7,7 +7,7 @@ import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import RenderFields from "./RenderFields";
 import ExperienciaRender from "./ExperienciaRender";
 
-const TabsForm = ({ itemsHandle, save, items, titulaciones, borrarTitulacion, editTitulacion }) => {
+const TabsForm = ({ itemsHandle, save, items, titulaciones, experiencias, experienciasHandler, borrarTitulacion, editTitulacion }) => {
 
   const validateAll = () => {
     console.log("validando todo");
@@ -63,6 +63,10 @@ const TabsForm = ({ itemsHandle, save, items, titulaciones, borrarTitulacion, ed
     return true;
   }
 
+  const edit = () => {
+    console.log("edit");
+  }
+
   return (
     <ClayCard>
       <ClayCard.Body>
@@ -114,11 +118,9 @@ const TabsForm = ({ itemsHandle, save, items, titulaciones, borrarTitulacion, ed
           })}
           <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}>  
             <ExperienciaRender
-            rows={items.fields.tabs[2].rows}
-            itemsHandle={itemsHandle} 
-            items={titulaciones}
-            borrarTitulacion={borrarTitulacion}
-            editTitulacion={editTitulacion}
+              experiencias={experiencias}
+              experienciasHandler={experienciasHandler}
+              edit={edit}
             />
           </ClayTabs.TabPane>
 

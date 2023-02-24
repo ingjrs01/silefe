@@ -15,11 +15,12 @@ import { form as formulario } from "./Form";
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import { TableForm } from './TableForm';
 import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/titulaciones.reducer';
-
+import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 
 const Participantes = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: []});
+    const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list"});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -83,6 +84,13 @@ const Participantes = () => {
             let respon = await saveAPI('/silefe.formacionparticipante/save-formaciones-by-participante',obj2,referer);
             //await console.debug(respon);
 
+            // ahroa vamos con la experiencia
+            console.debug(redExperiencias);
+            const obj3 = {experiencias:redExperiencias.items,userId: getUserId()};
+            respon = await saveAPI('/silefe.experienciaparticipante/add-multiple',obj3,referer);
+
+            //debugger;
+
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
         }
@@ -111,6 +119,7 @@ const Participantes = () => {
 
     const fetchData = async () => {
         titulacionHandler({type:TITULACIONES_ACTIONS.START});
+        experienciasHandler({type:EXPERIENCIA_ACTIONS.START});
 
         queryTitulaciones();
         
@@ -188,6 +197,7 @@ const Participantes = () => {
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
         });
         beforeFormacion();
+        beforeExperiencia();
     }
 
     const beforeFormacion = () => {
@@ -218,6 +228,37 @@ const Participantes = () => {
                 setTitulaciones(tits);
             })    
         }
+    }
+
+    const beforeExperiencia = () => {
+        const experiencias = [{
+            id: 0,
+            ini: "2000-09-15",
+            fin: "2002-05-30",
+            tipoContradoId: 1,
+            cif: "a",
+            razonSocial: "",
+            puesto: "",
+            ocupacion: "",
+            duracion: "duracion 1",
+            motivoBaja: "",
+            observaciones: ""
+        },
+        {
+            id: 0,
+            ini: "1995-09-01",
+            fin: "1999-06-05",
+            tipoContradoId: 2,
+            cif: "b",
+            razonSocial: "",
+            puesto: "",
+            ocupacion: "",
+            duracion: "duracion 2",
+            motivoBaja: "",
+            observaciones: ""
+        }];
+        
+        experienciasHandler({type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias});
     }
 
     const editTitulacion = (index) => {
@@ -307,6 +348,16 @@ const Participantes = () => {
         fetchAPIData('/silefe.titulacion/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: [...response.data] });
         });
+        fetchAPIData('/silefe.tipocontrato/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            experienciasHandler({type: EXPERIENCIA_ACTIONS.CONTRATOS,contratoOptions: [...response.data]})
+        });
+        fetchAPIData('/silefe.mbaja/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            experienciasHandler({type: EXPERIENCIA_ACTIONS.MOTIVOS,motivos: [...response.data]})
+        });
+        fetchAPIData('/silefe.cno/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            experienciasHandler({type: EXPERIENCIA_ACTIONS.OCUPACIONES,ocupaciones: [...response.data]})
+        });
+
     }
   
     if (!items) 
@@ -334,6 +385,8 @@ const Participantes = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     titulaciones={titulaciones}
+                    experiencias={redExperiencias}
+                    experienciasHandler={experienciasHandler}
                     borrarTitulacion={borrarTitulacion}
                     editTitulacion={editTitulacion}
                 />
@@ -354,6 +407,7 @@ const Participantes = () => {
                     saveTitulacion={saveTitulacion}
                 />
             }
+            
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>
