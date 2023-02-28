@@ -15,6 +15,7 @@ const initialState = {
     items: [],
     deleted: [],
     status: "list",
+    participanteId: 0,
     tipoContratoOptions: [],
     motivosOptions: [],
     ocupacionesOptions: [],
@@ -44,7 +45,8 @@ export const reducerExperiencia = (state=initialState, action ) => {
         case EXPERIENCIA_ACTIONS.LOAD_ITEMS:
             return {
                 ...state,
-                items: action.experiencias
+                items: action.experiencias,
+                participanteId: action.participanteId
             }
 
         case EXPERIENCIA_ACTIONS.SELECT_ITEM:
@@ -67,7 +69,8 @@ export const reducerExperiencia = (state=initialState, action ) => {
                     ocupacion: "",
                     duracion: "",
                     motivoBaja: "",
-                    observaciones: ""
+                    observaciones: "",
+                    participanteId: state.participanteId,
                 },
                 status: "edit",
             }
@@ -103,11 +106,10 @@ export const reducerExperiencia = (state=initialState, action ) => {
             else {
                 tmp = [...state.items,state.item];
             }
-            debugger;
 
             return {
                 ...state,
-                items: tmp,//[...state.items,state.item],
+                items: tmp,
                 status: "list",
             }
         case EXPERIENCIA_ACTIONS.CANCEL:
@@ -116,11 +118,13 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 status: "list",
             }
         case EXPERIENCIA_ACTIONS.DELETE_ITEM:                             
-            let obj = {...state.items[action.index]}
+            let obj = {...state.items[action.index]};
+            tmp = [...state.items];
+            tmp.splice(action.index,1);
 
             return {
                 ...state,
-                items: [...state.items].splice(action.index,1),
+                items: tmp,
                 deleted: [...state.deleted,obj],
             }
        

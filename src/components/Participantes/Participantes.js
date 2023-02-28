@@ -20,7 +20,7 @@ import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers
 const Participantes = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: []});
-    const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list"});
+    const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list", participanteId: 0});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -82,14 +82,20 @@ const Participantes = () => {
         if (status) {
             const obj2 = {id:data.participanteId,titulaciones:titulaciones,userId: getUserId()};
             let respon = await saveAPI('/silefe.formacionparticipante/save-formaciones-by-participante',obj2,referer);
-            //await console.debug(respon);
 
-            // ahroa vamos con la experiencia
-            console.debug(redExperiencias);
+            //console.debug(redExperiencias);
             const obj3 = {experiencias:redExperiencias.items,userId: getUserId()};
             respon = await saveAPI('/silefe.experienciaparticipante/add-multiple',obj3,referer);
-
-            //debugger;
+            // Tenemos que borrar las experiencas borradas
+            if (redExperiencias.deleted.length > 0) {
+                const delExperiencias = redExperiencias.deleted.map( d => {return (d.experienciaParticipanteId)});
+                deleteAPI('/silefe.experienciaparticipante/remove-experiencias',delExperiencias,referer).then(res => {
+                    console.log("delete experiencias");
+                    //if (res) {
+                    //    setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);    
+                    //}
+                });
+            }            
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
@@ -105,10 +111,11 @@ const Participantes = () => {
     }
 
     const confirmDelete = async () => {
-        let s = items.arr.filter(item => item.checked).map( i => {return i.convocatoriaId});
-        deleteAPI('/silefe.ambito/remove-ambitos',s,referer).then(res => {
+        let s = items.arr.filter(item => item.checked).map( i => {return i.participanteId});
+
+        deleteAPI('/silefe.participante/delete-participantes',s,referer).then(res => {
             if (res) {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);                
                 fetchData();        
             }
             else {
@@ -171,7 +178,7 @@ const Participantes = () => {
                 ...i,
                 id:i.participanteId,
                 fechaNacimiento: (i.fechaNacimiento != null)?new Date(i.fechaNacimiento).toISOString().substring(0, 10):"",
-                email: (i.email != null && i.email.length > 0)?JSON.parse(i.email):[],//[{key: 100,value:"correoinicial@gmail.com",default:false}],
+                email: (i.email != null && i.email.length > 0)?JSON.parse(i.email):[],
                 telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono):[],
                 checked:false
             })});
@@ -231,34 +238,22 @@ const Participantes = () => {
     }
 
     const beforeExperiencia = () => {
-        const experiencias = [{
-            id: 0,
-            ini: "2000-09-15",
-            fin: "2002-05-30",
-            tipoContradoId: 1,
-            cif: "a",
-            razonSocial: "",
-            puesto: "",
-            ocupacion: "",
-            duracion: "duracion 1",
-            motivoBaja: "",
-            observaciones: ""
-        },
-        {
-            id: 0,
-            ini: "1995-09-01",
-            fin: "1999-06-05",
-            tipoContradoId: 2,
-            cif: "b",
-            razonSocial: "",
-            puesto: "",
-            ocupacion: "",
-            duracion: "duracion 2",
-            motivoBaja: "",
-            observaciones: ""
-        }];
-        
-        experienciasHandler({type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias});
+        let sel = items.arr.filter(i => i.checked);
+        if (sel.length > 0) {
+            const participanteId = sel[0].id;            
+            fetchAPIData('/silefe.experienciaparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
+                const experiencias = response.data.map( item => {
+                    return {
+                        ...item,
+                        id: item.experienciaParticipanteId,
+                        participanteId: participanteId,
+                        ini: (item.inicio != null)?new Date(item.inicio).toISOString().substring(0, 10):"",
+                        fin: (item.fin    != null)?new Date(item.fin).toISOString().substring(0, 10):"",
+                    }
+                });
+                experienciasHandler({type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias, participanteId:participanteId});
+            });
+        }
     }
 
     const editTitulacion = (index) => {
@@ -267,7 +262,7 @@ const Participantes = () => {
             titulacionHandler({
                 type: TITULACIONES_ACTIONS.SET_TITULACION,
                 titulacion: {...redTitulaciones.titulacion,
-                    id: 0,
+                    id: 0,                    
                     ini: "2023-02-17",
                     fin: "2023-02-17",
                     titulacionTipoId: 0,
@@ -352,7 +347,9 @@ const Participantes = () => {
             experienciasHandler({type: EXPERIENCIA_ACTIONS.CONTRATOS,contratoOptions: [...response.data]})
         });
         fetchAPIData('/silefe.mbaja/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            experienciasHandler({type: EXPERIENCIA_ACTIONS.MOTIVOS,motivos: [...response.data]})
+            let motivos = [...response.data];
+            motivos.unshift({id:0,descripcion: " "});
+            experienciasHandler({type: EXPERIENCIA_ACTIONS.MOTIVOS,motivos: motivos});
         });
         fetchAPIData('/silefe.cno/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             experienciasHandler({type: EXPERIENCIA_ACTIONS.OCUPACIONES,ocupaciones: [...response.data]})
