@@ -11,7 +11,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions';
 
 const spritemap = '/icons.svg';
 
-const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, borrarTitulacion, editTitulacion }) => {
+const RenderFields =  ({ rows,  itemsHandle, items }) => {
 
     const locales = [
     {
@@ -295,54 +295,6 @@ const RenderFields =  ({ rows,  itemsHandle, items, titulaciones, borrarTitulaci
                                 }}
                               />
                             </>}
-                            {(items.fields.fields[it].type === 'table') &&
-                            <>                            
-                              <ClayTable>
-                                <caption>Titulaciones</caption>
-                                <ClayTable.Head>
-                                  <ClayTable.Row>
-                                    <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
-                                    </ClayTable.Cell>
-                                    <ClayTable.Cell headingCell>{"Inicio"}</ClayTable.Cell>
-                                    <ClayTable.Cell headingCell>{"Fin"}</ClayTable.Cell>
-                                    <ClayTable.Cell expanded headingCell>{"Titulacion"}</ClayTable.Cell>
-                                    <ClayTable.Cell headingCell>{"Acciones"}</ClayTable.Cell>
-                                  </ClayTable.Row>
-                                </ClayTable.Head>
-                                <ClayTable.Body>
-                                  { titulaciones.map( (item,index) => { return(
-                                   <>
-                                  <ClayTable.Row>
-                                    <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
-                                    </ClayTable.Cell>
-                                    <ClayTable.Cell>{item.ini}</ClayTable.Cell>
-                                    <ClayTable.Cell>{item.fin}</ClayTable.Cell>
-                                    <ClayTable.Cell headingTitle>{item.titulacionName}</ClayTable.Cell>
-                                    <ClayTable.Cell>
-                                      <ClayButton onClick={e => {
-                                          editTitulacion(index);
-                                        }} 
-                                        displayType="secondary">{"E"} 
-                                      </ClayButton>
-                                      <ClayButton onClick={e => {
-                                        borrarTitulacion(index);
-                                        }} 
-                                        displayType="danger">{"B"} 
-                                      </ClayButton>
-                                    </ClayTable.Cell>
-                                  </ClayTable.Row>
-                                   </> 
-                                  );})}
-
-                                </ClayTable.Body>
-                              </ClayTable>
-                              <ClayButton onClick={e => { 
-                                  editTitulacion(-1);
-                                }} 
-                                displayType="primary">{Liferay.Language.get('Nuevo')} 
-                              </ClayButton>
-                            </>
-                            }
                           {
                             items.errors[it].length > 0 && 
                             <ClayForm.FeedbackGroup>

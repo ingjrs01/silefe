@@ -6,8 +6,9 @@ import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import RenderFields from "./RenderFields";
 import ExperienciaRender from "./ExperienciaRender";
+import TitulacionesRender from "./TitulacionesRender";
 
-const TabsForm = ({ itemsHandle, save, items, titulaciones, experiencias, experienciasHandler, borrarTitulacion, editTitulacion }) => {
+const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,  redTitulaciones, titulacionHandler }) => {
 
   const validateAll = () => {
     console.log("validando todo");
@@ -91,12 +92,21 @@ const TabsForm = ({ itemsHandle, save, items, titulaciones, experiencias, experi
             );
           })}
           <ClayTabs.Item
+            key={"tab-item3"}
+            innerProps={{
+              "aria-controls": "tabpanel-3"
+            }}
+          >
+            <a onClick={a => { itemsHandle({ type:ITEMS_ACTIONS.SET_ACTIVETAB,active: 2})}}>  {"Titulaciones" }  </a>
+          </ClayTabs.Item>
+
+          <ClayTabs.Item
             key={"tab-item4"}
             innerProps={{
               "aria-controls": "tabpanel-4"
             }}
           >
-            <a onClick={a => { itemsHandle({ type:ITEMS_ACTIONS.SET_ACTIVETAB,active: 4})}}>  {"Experiencias" }  </a>
+            <a onClick={a => { itemsHandle({ type:ITEMS_ACTIONS.SET_ACTIVETAB,active: 3})}}>  {"Experiencias" }  </a>
           </ClayTabs.Item>
 
       </ClayTabs>
@@ -108,14 +118,18 @@ const TabsForm = ({ itemsHandle, save, items, titulaciones, experiencias, experi
                 rows={tab.rows}
                 itemsHandle={itemsHandle} 
                 items={items}
-                titulaciones={titulaciones}
-                borrarTitulacion={borrarTitulacion}
-                editTitulacion={editTitulacion}
                 />
               </ClayTabs.TabPane>
 
             );
-          })}
+          })}          
+          <ClayTabs.TabPane aria-labelledby="tab-3" key={"tab-content-3"}>  
+            <TitulacionesRender
+              redTitulaciones={redTitulaciones}
+              titulacionHandler={titulacionHandler}
+            />
+          </ClayTabs.TabPane>
+
           <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}>  
             <ExperienciaRender
               experiencias={experiencias}

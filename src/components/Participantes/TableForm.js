@@ -3,15 +3,13 @@ import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, 
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
-import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import { getMonths, getDays } from '../../includes/interface/DatesLang';
 import { getLanguageId } from '../../includes/LiferayFunctions'
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
-//import RenderFields from "./RenderFields";
 
 const spritemap = './icons.svg';
 
-export const TableForm = ({cancelTitulacion,redTitulaciones, titulacionHandler, saveTitulacion}) => {
+export const TableForm = ({redTitulaciones, titulacionHandler}) => {
 
     return(
         <>
@@ -192,13 +190,13 @@ export const TableForm = ({cancelTitulacion,redTitulaciones, titulacionHandler, 
                     </ClayCard.Description>                
                     <div className="btn-group">
                         <div className="btn-group-item">
-                            <ClayButton onClick={e =>  cancelTitulacion()} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                            <ClayButton onClick={e =>  titulacionHandler({type: TITULACIONES_ACTIONS.CANCEL }) } 
+                              displayType="secondary">{Liferay.Language.get('Cancelar')}
+                            </ClayButton>
                         </div>
                         <div className="btn-group-item">
-                            <ClayButton onClick={e => { 
-                              saveTitulacion();                                                       
-                            }} 
-                            displayType="primary">{Liferay.Language.get('Guardar')}
+                            <ClayButton onClick={e =>  titulacionHandler({type: TITULACIONES_ACTIONS.SAVE_ITEM}) } 
+                              displayType="primary">{Liferay.Language.get('Guardar')}
                             </ClayButton>
                         </div>
                     </div>

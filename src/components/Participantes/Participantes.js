@@ -13,19 +13,17 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
 import { getLanguageId } from '../../includes/LiferayFunctions';
-import { TableForm } from './TableForm';
 import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/titulaciones.reducer';
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 
 const Participantes = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
-    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: []});
+    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: [], deleted: [], status: "list"});
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list", participanteId: 0});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
-    const [titulaciones,setTitulaciones] = useState([]);
 
     const referer = "http://localhost:8080/participantes";
     const form = formulario;
@@ -80,10 +78,9 @@ const Participantes = () => {
         let obj = {obj: items.item, id:items.item.participanteId};
         let {data, status, error} = await saveAPI(endpoint,obj,referer); 
         if (status) {
-            const obj2 = {id:data.participanteId,titulaciones:titulaciones,userId: getUserId()};
+            const obj2 = {id:data.participanteId,titulaciones:redTitulaciones.items,userId: getUserId()};
             let respon = await saveAPI('/silefe.formacionparticipante/save-formaciones-by-participante',obj2,referer);
 
-            //console.debug(redExperiencias);
             const obj3 = {experiencias:redExperiencias.items,userId: getUserId()};
             respon = await saveAPI('/silefe.experienciaparticipante/add-multiple',obj3,referer);
             // Tenemos que borrar las experiencas borradas
@@ -190,7 +187,6 @@ const Participantes = () => {
             const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
         });
-
     }
 
     const change2 = () => {
@@ -232,7 +228,7 @@ const Participantes = () => {
                         titulacionName:name,
                     }
                 });
-                setTitulaciones(tits);
+                titulacionHandler({type:TITULACIONES_ACTIONS.LOAD_ITEMS,items: tits})
             })    
         }
     }
@@ -254,80 +250,6 @@ const Participantes = () => {
                 experienciasHandler({type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias, participanteId:participanteId});
             });
         }
-    }
-
-    const editTitulacion = (index) => {
-        // Se trata de una titulación nueva
-        if (index == -1) {
-            titulacionHandler({
-                type: TITULACIONES_ACTIONS.SET_TITULACION,
-                titulacion: {...redTitulaciones.titulacion,
-                    id: 0,                    
-                    ini: "2023-02-17",
-                    fin: "2023-02-17",
-                    titulacionTipoId: 0,
-                    titulacionNivelId: 0,
-                    titulacionFamiliaId: 0,
-                    titulacionId: 0,
-                    comentarios: "",
-                }
-            });
-    
-            itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'});
-            return true;
-        }
-        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONTIPO,value:titulaciones[index].titulacionTipoId});
-        titulacionHandler({
-            type: TITULACIONES_ACTIONS.SET_TITULACION,
-            titulacion: {...redTitulaciones.titulacion,
-                ...titulaciones[index],
-                id: titulaciones[index].formacionParticipanteId,
-            }
-        });
-        itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'});
-    }
-
-    const borrarTitulacion = (index) => {
-        if (titulaciones[index].id > 0) {
-            deleteAPI('/silefe.formacionparticipante/remove-titulaciones',[titulaciones[index].id],referer).then(res => {
-                if (res) {
-                    setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);    
-                }});
-        }
-        let tmp = [...titulaciones];
-        tmp.splice(index,1);
-        setTitulaciones(tmp);                                        
-    }
-
-    const saveTitulacion = () => {
-        if (redTitulaciones.titulacion.id == 0) {            
-            setTitulaciones([...titulaciones,{
-                id:                  redTitulaciones.titulacion.id,
-                ini:                 redTitulaciones.titulacion.ini,
-                fin:                 redTitulaciones.titulacion.fin,
-                titulacionTipoId:    redTitulaciones.titulacion.titulacionTipoId,
-                titulacionNivelId:   redTitulaciones.titulacion.titulacionNivelId,
-                titulacionFamiliaId: redTitulaciones.titulacion.titulacionFamiliaId,
-                titulacionId:        redTitulaciones.titulacion.titulacionId,
-                comentarios:         redTitulaciones.titulacion.comentarios,
-            }]);
-        }
-        else {
-            let tmp = [...titulaciones];
-            const index = tmp.findIndex(item => item.id == redTitulaciones.titulacion.id );
-            tmp.splice(index,1,redTitulaciones.titulacion);
-            setTitulaciones(tmp);
-        }
-
-        const status = items.item.id == 0?'new':'edit'
-        itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:status}); 
-        return true;
-    }
-
-    const cancelTitulacion = () => {
-        const status = items.item.id == 0?'new':'edit'
-        itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:status}); 
-        return true;
     }
 
     const queryTitulaciones = () => {
@@ -381,11 +303,10 @@ const Participantes = () => {
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                    titulaciones={titulaciones}
                     experiencias={redExperiencias}
+                    redTitulaciones={redTitulaciones}
+                    titulacionHandler={titulacionHandler}
                     experienciasHandler={experienciasHandler}
-                    borrarTitulacion={borrarTitulacion}
-                    editTitulacion={editTitulacion}
                 />
             }            
             {
@@ -395,20 +316,11 @@ const Participantes = () => {
                     itemsHandle={itemsHandle} 
                 />
             }
-            {
-                (items.status === 'otros') &&                
-                <TableForm 
-                    cancelTitulacion={cancelTitulacion}
-                    redTitulaciones={redTitulaciones}
-                    titulacionHandler={titulacionHandler}
-                    saveTitulacion={saveTitulacion}
-                />
-            }
             
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>
     )
 }
-export default Participantes;
 
+export default Participantes;

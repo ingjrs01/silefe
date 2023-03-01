@@ -9,7 +9,7 @@ export const EXPERIENCIA_ACTIONS = {
     OCUPACIONES: 7,
     SAVE: 8,
     CANCEL: 9,
-    DELETE_ITEM:10,
+    DELETE_ITEM:10,    
   }
 const initialState = {
     items: [],

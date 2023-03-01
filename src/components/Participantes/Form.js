@@ -217,15 +217,15 @@ export const form = {
             conditions: [],
             change: ()=>{console.log("disponibilidad");},
         },
-        formacion: {
-            key:24,
-            type: "table",
-            label: Liferay.Language.get('Formacion'), 
-            name: "formacion", 
-            enabled: true,
-            conditions: [],
-            //change: ()=>{console.log("disponibilidad");},
-        }
+        //formacion: {
+        //    key:24,
+        //    type: "table",
+        //    label: Liferay.Language.get('Formacion'), 
+        //    name: "formacion", 
+        //    enabled: true,
+        //    conditions: [],
+        //    //change: ()=>{console.log("disponibilidad");},
+        //}
 
 
     },
@@ -262,36 +262,36 @@ export const form = {
                 },               
             ]
         },
-        {
-            caption: "Formacion",
-            key: 2,
-            ariacontrols: "tabpanel-2",
-            rows: [
-                {
-                    key:50,
-                    cols: ['formacion']
-                },        
-            ]
-        },
-        {
-            caption: "Experiencia",
-            key: 3,
-            ariacontrols: "tabpanel-3",
-            rows: [
-                {
-                    key:61,
-                    cols: ['id']
-                },
-                {
-                    key:62,
-                    cols: ['apellido2']
-                },        
-            ]
-        },
+        //{
+        //    caption: "Formacion",
+        //    key: 2,
+        //    ariacontrols: "tabpanel-2",
+        //    rows: [
+        //        {
+        //            key:50,
+        //            cols: ['formacion']
+        //        },        
+        //    ]
+        //},
+        //{
+        //    caption: "Experiencia",
+        //    key: 3,
+        //    ariacontrols: "tabpanel-3",
+        //    rows: [
+        //        {
+        //            key:61,
+        //            cols: ['id']
+        //        },
+        //        {
+        //            key:62,
+        //            cols: ['apellido2']
+        //        },        
+        //    ]
+        //},
         {
             caption: "Empleabilidad",
-            key:4,
-            ariacontrols: "tabpanel-4",
+            key:2,
+            ariacontrols: "tabpanel-2",
             rows: [
                 {
                     key:101,
