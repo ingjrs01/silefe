@@ -11,7 +11,7 @@ import { getLanguageId } from '../LiferayFunctions'
 
 const spritemap = '/icons.svg';
 
-const RenderFields =  ({ rows,  itemsHandle, items }) => {
+const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
 
     const locales = [
     {
@@ -295,48 +295,10 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 }}
                               />
                             </>}
-                            {(items.fields.fields[it].type === 'table') &&
-                            <>                            
-                              {/*<label htmlFor="basicInputText">{items.fields.fields[it].label}</label>*/}
-                              <ClayTable>
-                                <caption>Titulaciones</caption>
-                                <ClayTable.Head>
-                                  <ClayTable.Row>
-                                    <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
-                                    </ClayTable.Cell>
-                                    <ClayTable.Cell headingCell>{"Inicio"}</ClayTable.Cell>
-                                    <ClayTable.Cell headingCell>{"Fin"}</ClayTable.Cell>
-                                    <ClayTable.Cell expanded headingCell>{"Titulacion"}</ClayTable.Cell>
-                                    <ClayTable.Cell headingCell>{"Acciones"}</ClayTable.Cell>
-                                  </ClayTable.Row>
-                                </ClayTable.Head>
-                                <ClayTable.Body>
-                                  <ClayTable.Row>
-                                    <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
-                                    </ClayTable.Cell>
-                                    <ClayTable.Cell>{"2023-01-01"}</ClayTable.Cell>
-                                    <ClayTable.Cell>{"2023-12-31"}</ClayTable.Cell>
-                                    <ClayTable.Cell headingTitle>{"Ingeniería industrial"}</ClayTable.Cell>
-                                    <ClayTable.Cell>
-                                      <ClayButton onClick={e => console.log("borrando")} displayType="secondary">{"E"} </ClayButton>
-                                      <ClayButton onClick={e => console.log("borrando")} displayType="danger">{"B"} </ClayButton>
-                                    </ClayTable.Cell>
-                                  </ClayTable.Row>
-                                  <ClayTable.Row>
-                                    <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} /></ClayTable.Cell>
-                                    <ClayTable.Cell>{"2023-05-20"}</ClayTable.Cell>
-                                    <ClayTable.Cell>{"2024-05-20"}</ClayTable.Cell>
-                                    <ClayTable.Cell headingTitle>{"Ingeniería informática"}</ClayTable.Cell>
-                                    <ClayTable.Cell>
-                                      <ClayButton onClick={e => console.log("borrando")} displayType="secondary">{"E"} </ClayButton>
-                                      <ClayButton onClick={e => console.log("borrando")} displayType="danger">{"B"} </ClayButton>
-                                    </ClayTable.Cell>
-                                  </ClayTable.Row>
-                                </ClayTable.Body>
-                              </ClayTable>
-                              <ClayButton onClick={e => { itemsHandle({type:ITEMS_ACTIONS.SET_STATUS,status:'otros'})}} displayType="primary">{Liferay.Language.get('Nuevo')} </ClayButton>
-                            </>
-                            }
+                            {(items.fields.fields[it].type === 'other') &&
+                            <>
+                              { plugin()[items.fields.fields[it].componentName] }
+                            </>}
                           {
                             items.errors[it].length > 0 && //  -> items.fields.rows[it].name
                             <ClayForm.FeedbackGroup>
@@ -349,7 +311,6 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                               </ClayForm.FeedbackItem>
                             </ClayForm.FeedbackGroup>
                           }
-
                         </ClayForm.Group>
                       </>
                     )

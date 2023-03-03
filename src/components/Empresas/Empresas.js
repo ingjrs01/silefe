@@ -13,11 +13,13 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
 import { getLanguageId } from '../../includes/LiferayFunctions';
-
+import CentrosRender from "./CentrosRender";
+import { reducerCentros, CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
 
 
 const Empresas = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
+    const [redCentros,centrosHandle]     = useReducer(reducerCentros);
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -34,6 +36,21 @@ const Empresas = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"CIF"}];
 
+        fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            centrosHandle({type:CENTROS_ACTIONS.PROVINCIAS, provincias: opts})
+        });
+
+        fetchAPIData('/silefe.municipio/all', {lang: getLanguageId()},referer).then(response => {
+            if (response.data.length > 0)
+                centrosHandle({type:CENTROS_ACTIONS.MUNICIPIOS, municipios: [...response.data]})
+        });
+
+        fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            centrosHandle({type:CENTROS_ACTIONS.TIPOS_VIA, tipos: opts})
+        });
+
         let {data,totalPages,page} = await fetchAPIData('/silefe.empresa/filter',postdata,referer);
 
         const tmp = await data.map(i => {            
@@ -47,19 +64,29 @@ const Empresas = () => {
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
     }
 
-    const handleSave = async () => {
+    const handleSave = () => {
         let endpoint = '/silefe.empresa/save-empresa';
         if (items.status === 'new')
             endpoint = '/silefe.empresa/add-empresa';
 
         let obj = {obj: items.item, id:items.item.empresaId};
-        let {data, status, error} = await saveAPI(endpoint,obj,referer); 
-        if (status) {
-            fetchData();
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
-        } else {
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);        
-        }
+        saveAPI(endpoint,obj,referer).then( response => {
+            let {data, status, error} = response;
+            if (status) {
+                // ya está guardado. ahora tenemos que ver de gaurdar los otros            
+                const oo = {id:data.empresaId,centros:[...redCentros.items],userId: getUserId()};
+                console.debug(oo);
+                debugger;
+                saveAPI('/silefe.empresacentros/save-centros-by-empresa',oo,referer).then(respon => {
+                    console.log(respon);
+                });
+    
+                fetchData();
+                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
+            } else {
+                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);        
+            }
+        });
 
     }
 
@@ -69,6 +96,33 @@ const Empresas = () => {
 
     const beforeEdit = () => {
         console.log("beforeEdit");
+
+        const a = [{
+            id: 0,
+            nombre: "aaa",
+            empresaId: 0,
+            cp: "",
+            municipioId: 0,
+            localidad: "mi localidad",
+            provinciaId: 2,
+            tipoViaId: 0,
+            nombreVia: "",
+            numero: "",
+            piso: "", 
+        },{
+            id: 0,
+            nombre: "bbbb",
+            empresaId: 0,
+            cp: "",
+            municipioId: 0,
+            localidad: "localidad 2",
+            provinciaId: 2,
+            tipoViaId: 0,
+            nombreVia: "",
+            numero: "",
+            piso: "", 
+        }];
+        centrosHandle({type: CENTROS_ACTIONS.LOAD, items: a});
     }
 
     const loadCsv = () => {
@@ -77,6 +131,16 @@ const Empresas = () => {
 
     const notify = () => {
         console.log("notify");
+    }
+
+    const plugin2 = () => {
+        return { 
+            Centros: 
+            <CentrosRender 
+                reducer={redCentros}
+                centrosHandle={centrosHandle}
+             />
+        }
     }
 
     useEffect(()=>{
@@ -114,6 +178,7 @@ const Empresas = () => {
                         itemsHandle={itemsHandle}
                         items={items}
                         notify={notify}
+                        plugin={plugin2}
                     />
                 }            
                 {

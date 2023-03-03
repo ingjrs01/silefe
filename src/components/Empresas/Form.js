@@ -56,6 +56,12 @@ export const form = {
             placeholder: Liferay.Language.get('Telefono'), 
             conditions: ["text"]
         },
+        centros: {
+            key: 24,
+            type: "other",
+            componentName: "Centros",
+            name: "centros",
+        }
     },
     tabActive:0,
     tabs : [
@@ -79,13 +85,13 @@ export const form = {
             ]
         },
         {
-            caption: "Empleabilidad",
+            caption: "Centros",
             key:2,
             ariacontrols: "tabpanel-2",
             rows: [
                 {
                     key:53,
-                    cols: ['email','telefono']
+                    cols: ['centros']
                 },               
             ]
         },
