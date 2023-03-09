@@ -91,7 +91,7 @@ export const reducerCentros = (state=initialState, action ) => {
 
             return {
                 ...state,
-                items: tmp,//[...state.items,state.item],
+                items: tmp,
                 status: "list"
             }
         case CENTROS_ACTIONS.DELETE:

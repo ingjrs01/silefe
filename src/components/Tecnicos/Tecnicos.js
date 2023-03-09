@@ -103,7 +103,7 @@ const Tecnicos = () => {
         //const endpoint = "/user/get-user-group-users";
         //userGroupId: 52272
         const endpoint = '/silefe.tecnico/filter';
-        debugger;
+        //debugger;
         const postdata = {
             page: 0,
             descripcion: ''

@@ -61,7 +61,13 @@ export const form = {
             type: "other",
             componentName: "Centros",
             name: "centros",
-        }
+        },
+        contactos: {
+            key: 25,
+            type: "other",
+            componentName: "Contactos",
+            name: "contactos",
+        },
     },
     tabActive:0,
     tabs : [
@@ -95,6 +101,16 @@ export const form = {
                 },               
             ]
         },
+        {
+            caption: "Contactos",
+            key: 3,
+            ariacontrols: "tabpanel-3",
+            rows: [{
+                key: 61,
+                cols: ['contactos'],
+            }]
+
+        }
     ],
     table: {
         id: {

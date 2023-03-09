@@ -16,13 +16,11 @@ const CentrosRender = ({reducer,centrosHandle}) =>  {
             <ClayTable>
             <caption>{Liferay.Language.get("Centros")}</caption>
             <ClayTable.Head>
-                <ClayTable.Row>
-                <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
-                </ClayTable.Cell>
+                <ClayTable.Row> <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} /> </ClayTable.Cell>
                 <ClayTable.Cell headingCell>{"Nombre"}</ClayTable.Cell>
-                <ClayTable.Cell headingCell>{"Fin"}</ClayTable.Cell>
-                <ClayTable.Cell expanded headingCell>{Liferay.Language.get("Puesto")}</ClayTable.Cell>
-                <ClayTable.Cell headingCell>{"Acciones"}</ClayTable.Cell>
+                <ClayTable.Cell headingCell>{"CP"}</ClayTable.Cell>
+                <ClayTable.Cell expanded headingCell>{Liferay.Language.get("Localidad")}</ClayTable.Cell>
+                <ClayTable.Cell headingCell>{ Liferay.Language.get("Acciones")}</ClayTable.Cell>
                 </ClayTable.Row>
             </ClayTable.Head>
             <ClayTable.Body>
@@ -33,7 +31,7 @@ const CentrosRender = ({reducer,centrosHandle}) =>  {
                 </ClayTable.Cell>
                 <ClayTable.Cell>{item.nombre}</ClayTable.Cell>
                 <ClayTable.Cell>{item.cp}</ClayTable.Cell>
-                <ClayTable.Cell headingTitle>{ item.provinciaId}</ClayTable.Cell>
+                <ClayTable.Cell headingTitle>{ item.localidad}</ClayTable.Cell>
                 <ClayTable.Cell>
                     <ClayButton onClick={ () =>  centrosHandle({type: CENTROS_ACTIONS.SELECT_ITEM,index: index})} 
                     displayType="secondary">{"E"} 
