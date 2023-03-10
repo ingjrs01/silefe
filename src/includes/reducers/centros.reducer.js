@@ -15,6 +15,7 @@ export const CENTROS_ACTIONS = {
 const initialState = {
     items: [],
     item: {},
+    modified: [],
     deleted: [],
     status: "list",
     provincias: [],
@@ -29,11 +30,15 @@ export const reducerCentros = (state=initialState, action ) => {
     
     switch (action.type) {
         case CENTROS_ACTIONS.START:
-            return {...state}
-        case CENTROS_ACTIONS.LOAD:             
+            return {
+              ...state,
+              modified: [],
+            }
+        case CENTROS_ACTIONS.LOAD:
             return {
                 ...state,
-                items: action.items
+                items: action.items,
+                modified: [],
             }
         case CENTROS_ACTIONS.SELECT_ITEM: 
             // tengo que cargar los municipios de la provincia activa
@@ -78,6 +83,8 @@ export const reducerCentros = (state=initialState, action ) => {
         case CENTROS_ACTIONS.CANCEL: 
             return {
                 ...state,
+                modified: [],
+                deleted: [],
                 status: "list",
             }
         case CENTROS_ACTIONS.SAVE:
@@ -88,10 +95,15 @@ export const reducerCentros = (state=initialState, action ) => {
                 const index = tmp.findIndex(item => item.id == state.item.id );
                 tmp.splice(index,1,state.item);
             }
+            let modified = [...state.modified];
+            if (!modified.includes(state.item.id)) {
+              modified.push(state.item.id);
+            }
 
             return {
                 ...state,
                 items: tmp,
+                modified: modified,
                 status: "list"
             }
         case CENTROS_ACTIONS.DELETE:

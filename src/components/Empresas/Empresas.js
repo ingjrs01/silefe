@@ -77,11 +77,14 @@ const Empresas = () => {
         saveAPI(endpoint, obj, referer).then(response => {
             let { data, status, error } = response;
             if (status) {
-                const oo = { id: data.empresaId, centros: [...redCentros.items], userId: getUserId() };
-                saveAPI('/silefe.empresacentros/save-centros-by-empresa', oo, referer).then(respon => {
-                    console.log(respon);
-                });
-
+                if (redCentros.modified.length > 0) {
+                    //const oo = { id: data.empresaId, centros: [...redCentros.items], userId: getUserId() };
+                    //const contacts = redContactos.items.filter( i => redContactos.modified.includes( i.id )  );
+                    const oo = redCentros.items.filter( i => redCentros.modified.includes( i.id )  );
+                    saveAPI('/silefe.empresacentros/save-centros-by-empresa', {id: data.empresaId, centros: oo,userId: getUserId()} , referer).then(respon => {
+                      console.log(respon);
+                    });
+                }
                 // ahora tenemos que borrar los items que hallan sido borrados
                 if (redCentros.deleted.length > 0) {
                     const delCentros = redCentros.deleted.map(d => { return (d.empresaCentrosId) });
@@ -93,10 +96,9 @@ const Empresas = () => {
                 // vamos a sincronizar los contactos, sólo si se han modificado
                 if (redContactos.modified.length > 0 ) {
                   const contacts = redContactos.items.filter( i => redContactos.modified.includes( i.id )  );
-
                   saveAPI('/silefe.contacto/save-by-empresa',{id: data.empresaId, contactos: contacts ,userId:getUserId() },referer).then( response => {
                       console.log("a la vuelta de guardar los contactos");
-                     console.debug(response.data);
+                      console.debug(response.data);
                   });
                 }
 
