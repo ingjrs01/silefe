@@ -10,9 +10,8 @@ const spritemap = '/icons.svg';
 const DefaultForm = ({ itemsHandle, save, items, notify }) => {
 
   const validateAll = () => {
-    console.log("validando todo");
     Object.keys(items.fields.fields).forEach( campo => {
-      console.log(campo);
+      //console.log(campo);
       switch (items.fields.fields[campo].type) {
         case "text": 
           if (!validate(campo, items.item[campo]))
@@ -27,7 +26,6 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
       }
 
     });
-    console.log("todo ok");
     return true;
   }
 

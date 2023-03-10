@@ -56,6 +56,55 @@ export const form = {
             placeholder: Liferay.Language.get('Telefono'), 
             conditions: ["text"]
         },
+        pnl: {
+            key: 26,
+            type: "toggle",
+            label: Liferay.Language.get('PNL'), 
+            name: "pnl", 
+            value:"", 
+            conditions: []
+        },
+        ofertas: {
+            key: 27,
+            type: "toggle",
+            label: Liferay.Language.get('Ofertas'), 
+            name: "ofertas", 
+            value:"", 
+            conditions: []
+        },
+        formacionCompromiso: {
+            key: 28,
+            type: "toggle",
+            label: Liferay.Language.get('FormacionCompromiso'), 
+            name: "formacionCompromiso", 
+            value:"", 
+            conditions: []
+        },
+        ayuda: {
+            key: 29,
+            type: "toggle",
+            label: Liferay.Language.get('Ayuda'), 
+            name: "ayuda", 
+            value:"", 
+            conditions: []
+        },
+        formacion: {
+            key: 30,
+            type: "toggle",
+            label: Liferay.Language.get('Formacion'), 
+            name: "formacion", 
+            value:"", 
+            conditions: []
+        },
+        interes: {
+            key: 31,
+            type: "text",
+            label: Liferay.Language.get('Interes'), 
+            name: "interes", 
+            value:"Interes", 
+            placeholder: Liferay.Language.get('Interes'), 
+            conditions: []
+        },
         centros: {
             key: 24,
             type: "other",
@@ -109,7 +158,25 @@ export const form = {
                 key: 61,
                 cols: ['contactos'],
             }]
-
+        },
+        {
+            caption: "Intereses",
+            key: 4,
+            ariacontrols: "tabpanel-4",
+            rows: [
+              {
+                key: 71,
+                cols: ['pnl','ofertas','formacionCompromiso'],
+              },
+              {
+                key: 72,
+                cols: ['ayuda','formacion'],
+              },
+              {
+                key: 73,
+                cols: ['interes']
+              },
+            ]
         }
     ],
     table: {

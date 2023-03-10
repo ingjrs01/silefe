@@ -70,25 +70,21 @@ const Proyectos = () => {
     const handleSave = async () => {
         console.log("handleSave");
         const data = {
-            ...items.item,
-            descripcion: items.item.descripcion,
-            //id                       : 0,
-            //inicio                   : 0,
-            //fin                      : 0,
-            //entidadId                : 2, // de momento ponemos a todos XUNTA
-            presupuesto              : 10000,
-            //fondos_propios           : true,
-            //cofinanciacion           : true,
-            porcentaje_cofinanciacion: 0,
-            porcentaje_total         : 100,
-            //participantes            : 100,
-            //ambito_geo               : 2, // TODO: le estamos poniendo Provincial a todos
-            //objetivos                : '',
-            userId                   :      getUserId(),
+            id: items.item.id,
+            obj: {
+              ...items.item,
+              //descripcion: items.item.descripcion,
+              presupuesto: 10000,
+              porcentaje_cofinanciacion: 0,
+              porcentaje_total : 100,
+            },
+            userId :getUserId(),
         }
+
         let endpoint = '/silefe.proyecto/save-proyecto';
         if (items.status === 'new')
             endpoint = '/silefe.proyecto/add-proyecto';
+
         let {status, error} = await saveAPI(endpoint,data,referer); 
         if (status) {
             fetchData();
@@ -134,14 +130,16 @@ const Proyectos = () => {
 
     const fetchData = async () => {
         fetchAPIData('/silefe.cofinanciadas/all', {lang: getLanguageId() },referer).then(response => {
-            console.log("cofinanciadas");
-            console.log(response);
+            //console.log("cofinanciadas");
+            //console.log(response);
             form.fields.entidadId.change = miEvento;
             form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
 
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
+            //console.log("colectivo");
             const opts = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+            //console.debug(opts);
             form.fields.colectivos.options = opts;
         });
 

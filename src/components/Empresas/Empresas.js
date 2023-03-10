@@ -78,8 +78,6 @@ const Empresas = () => {
             let { data, status, error } = response;
             if (status) {
                 if (redCentros.modified.length > 0) {
-                    //const oo = { id: data.empresaId, centros: [...redCentros.items], userId: getUserId() };
-                    //const contacts = redContactos.items.filter( i => redContactos.modified.includes( i.id )  );
                     const oo = redCentros.items.filter( i => redCentros.modified.includes( i.id )  );
                     saveAPI('/silefe.empresacentros/save-centros-by-empresa', {id: data.empresaId, centros: oo,userId: getUserId()} , referer).then(respon => {
                       console.log(respon);
