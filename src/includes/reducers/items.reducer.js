@@ -118,9 +118,9 @@ export const red_items = (state=initialState, action ) => {
                 checkall: false
             }
         case ITEMS_ACTIONS.SET:
-            //console.log("Estableciendo el dato: " + action.fieldname);
-            //console.log(typeof(action.value));
-            //console.log("Valor: " + action.value);
+            console.log("Estableciendo el dato: " + action.fieldname);
+            console.log(typeof(action.value));
+            console.log("Valor: " + action.value);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}

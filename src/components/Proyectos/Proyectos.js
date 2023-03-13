@@ -73,10 +73,6 @@ const Proyectos = () => {
             id: items.item.id,
             obj: {
               ...items.item,
-              //descripcion: items.item.descripcion,
-              presupuesto: 10000,
-              porcentaje_cofinanciacion: 0,
-              porcentaje_total : 100,
             },
             userId :getUserId(),
         }
@@ -164,21 +160,13 @@ const Proyectos = () => {
         }
         let {data,totalPages,page} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
         const tmp = await data.map(i => {            
-            
             return({
                 ...i,
                 id                       : i.proyectoId,
                 inicio                   : (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
                 fin                      : (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
-                //entidadId                : 2, // de momento ponemos a todos XUNTA
-                //presupuesto              : 10000,
-                //fondos_propios           : false,
-                //cofinanciacion           : true,
-                porcentaje_cofinanciacion: 0,
-                porcentaje_total         : 100,
-                //participantes            : 100,
-                //ambito_geo               : 2, // TODO: le estamos poniendo Provincial a todos
-                //objetivos                : '',
+                colectivos               : i.colectivos.map(colectivo => {return colectivo.toString()} ),
+                tecnicos                 : i.tecnicos.map(tecnico=> {return tecnico.toString()} ),
                 checked                  : false
             });
         });
