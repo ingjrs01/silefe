@@ -133,7 +133,7 @@ export const form = {
         },
         colectivos: {
             key: 83,
-            type: "multilist",
+            typexperienciaRequeridoe: "multilist",
             label: Liferay.Language.get("Colectivos"),
             name: 'colectivos',
             placeholder: 'lalala',
