@@ -24,6 +24,7 @@ import Localidades from './components/Localidades/Localidades';
 import TiposVia from './components/TiposVia/TiposVia';
 import TipoContrato from './components/TipoContrato/TipoContrato';
 import Empresas from './components/Empresas/Empresas';
+import Ofertas from  './components/Ofertas/Ofertas';
 
 const Application = () => {
 
@@ -63,6 +64,7 @@ const Application = () => {
                             <Route path='/tiposvia'      element={ <TiposVia /> } />
                             <Route path='/tipocontrato'  element={ <TipoContrato /> } />
                             <Route path='/empresas'      element={ <Empresas /> } />
+                            <Route path='/ofertas'       element={ <Ofertas /> } />
                         </Routes>
                     </div>
                 </div>
