@@ -153,10 +153,11 @@ export const form = {
         },
         permisos: {
             key: 20,
-            type: "text",
+            type: "multilist",
             label: Liferay.Language.get('Permisos'), 
             name: "permisos", 
             placeholder: "",
+            enabled: true,
             conditions:["text"]
         },
         vehiculo: {
@@ -184,8 +185,17 @@ export const form = {
             enabled:true,
             change: ()=>{console.log("cambia el select");}
         },
-        habilidades: {
+        edadId: {
             key: 24,
+            type: "select",
+            label: Liferay.Language.get('Edad'), 
+            name: "generoId", 
+            value:"lelele", 
+            enabled:true,
+            change: ()=>{console.log("cambia el select");}
+        },
+        habilidades: {
+            key: 25,
             type: "text",
             label: Liferay.Language.get('Habilidades'), 
             name: "habilidades", 
@@ -194,7 +204,7 @@ export const form = {
             conditions: []
         },
         estado: {
-            key: 25,
+            key: 26,
             type: "select",
             label: Liferay.Language.get('Estado'), 
             name: "estado", 
@@ -203,7 +213,7 @@ export const form = {
             change: ()=>{console.log("cambia el select");}
         },
         colectivos: {
-            key: 26,
+            key: 27,
             type: "multilist",
             label: Liferay.Language.get("Colectivos"),
             name: 'colectivos',
@@ -211,7 +221,7 @@ export const form = {
             enabled: true
         },
         objetivos: {
-            key:55,
+            key: 28,
             type: "textarea",
             label: Liferay.Language.get('Objetivos'), 
             name: "objetivos", 
@@ -235,6 +245,40 @@ export const form = {
                     key:42,
                     cols: ['titulo']
                 },        
+            ]
+        },
+        {
+            caption: "Requisitos",
+            key: 2,
+            ariacontrols: "tabpanel-2",
+            rows: [
+                {
+                    key: 51,
+                    cols: ['titulacionRequerido','idiomasRequerido','informaticaRequerido','experienciaRequerido']
+                },
+                {
+                    key: 52,
+                    cols: ['permisos','vehiculo','necesitaVehiculo']
+                },
+                {
+                    key: 53,
+                    cols: ['generoId','edadId']
+                },
+                {
+                    key: 54,
+                    cols: ['habilidades']
+                },
+            ]
+        },
+        {
+            caption: "Estado",
+            key: 3,
+            ariacontrols: "tabpanel-3",
+            rows: [
+                {
+                    key: 61,
+                    cols: ['estado']
+                },
             ]
         },
     ],
