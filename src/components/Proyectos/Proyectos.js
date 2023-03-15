@@ -126,16 +126,12 @@ const Proyectos = () => {
 
     const fetchData = async () => {
         fetchAPIData('/silefe.cofinanciadas/all', {lang: getLanguageId() },referer).then(response => {
-            //console.log("cofinanciadas");
-            //console.log(response);
             form.fields.entidadId.change = miEvento;
             form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
 
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
-            //console.log("colectivo");
             const opts = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}});
-            //console.debug(opts);
             form.fields.colectivos.options = opts;
         });
 

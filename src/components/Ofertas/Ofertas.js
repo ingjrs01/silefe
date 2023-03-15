@@ -111,11 +111,10 @@ const Ofertas = () => {
         const opciones_requerido = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Recomendable" }, { value: "2", label: "Obligatorio" }];
         // consultado las edades
         fetchAPIData('/silefe.edad/all', {lang: getLanguageId()},referer).then(response => {
-            const opts = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
             console.debug(opts);
             form.fields.edadId.options = opts;
         });
-        //const opciones_edad = [{value:"0",value:seleccionarlabel},{value:"1",label:"hasta 20"}, {value:"2", label:"21-30"},{value:"3", label:"31-40"}];
 
         form.fields.titulacionRequerido.options = opciones_requerido;
         form.fields.idiomasRequerido.options = opciones_requerido;
