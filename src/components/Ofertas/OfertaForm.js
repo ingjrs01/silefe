@@ -212,8 +212,17 @@ export const form = {
             enabled:true,
             change: ()=>{console.log("cambia el select");}
         },
-        colectivos: {
+        observaciones: {
             key: 27,
+            type: "text",
+            label: Liferay.Language.get('Observaciones'), 
+            name: "observaciones", 
+            value:"lelele", 
+            enabled:true,
+            conditions: []
+        },
+        colectivos: {
+            key: 28,
             type: "multilist",
             label: Liferay.Language.get("Colectivos"),
             name: 'colectivos',
@@ -221,7 +230,7 @@ export const form = {
             enabled: true
         },
         objetivos: {
-            key: 28,
+            key: 29,
             type: "textarea",
             label: Liferay.Language.get('Objetivos'), 
             name: "objetivos", 
@@ -278,6 +287,10 @@ export const form = {
                 {
                     key: 61,
                     cols: ['estado']
+                },
+                {
+                    key: 62,
+                    cols: ['observaciones']
                 },
             ]
         },
