@@ -97,11 +97,10 @@ const Edades = () => {
             page: (items.page>0)?items.page:0,
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
-
         let {data,totalPages,page} = await fetchAPIData('/silefe.edad/filter',postdata,referer);
         await console.debug(data);
 
-        const tmp = await data.map(i => {return({...i,id:i.cnaeId,checked:false})});
+        const tmp = await data.map(i => {return({...i,checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
     }
 
