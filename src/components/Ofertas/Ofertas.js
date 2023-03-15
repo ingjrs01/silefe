@@ -109,7 +109,13 @@ const Ofertas = () => {
         }
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         const opciones_requerido = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Recomendable" }, { value: "2", label: "Obligatorio" }];
-        const opciones_edad = [{value:"0",value:seleccionarlabel},{value:"1",label:"hasta 20"}, {value:"2", label:"21-30"},{value:"3", label:"31-40"}];
+        // consultado las edades
+        fetchAPIData('/silefe.edad/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+            console.debug(opts);
+            form.fields.edadId.options = opts;
+        });
+        //const opciones_edad = [{value:"0",value:seleccionarlabel},{value:"1",label:"hasta 20"}, {value:"2", label:"21-30"},{value:"3", label:"31-40"}];
 
         form.fields.titulacionRequerido.options = opciones_requerido;
         form.fields.idiomasRequerido.options = opciones_requerido;
@@ -117,10 +123,11 @@ const Ofertas = () => {
         form.fields.experienciaRequerido.options = opciones_requerido;
         form.fields.permisos.options = opciones_requerido;
         form.fields.generoId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Hombre"},{value:"2",label:"Mujer"}];
-        form.fields.edadId.options = opciones_edad;
         form.fields.estado.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Activa"},{value:"2",label:"Con Inserción"},{value:"3",label:"Cerrada"}];
 
         let {data,totalPages,page} = await fetchAPIData('/silefe.oferta/filter',postdata,referer);
+        await console.log("datos recibidos");
+        await console.debug(data);
         const tmp = await data.map(i => {            
             return({
                 ...i,

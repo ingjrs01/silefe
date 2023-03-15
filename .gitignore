@@ -110,3 +110,4 @@ build/
 liferay-npm-bundler-report.html
 
 *.swo
+*.swp
