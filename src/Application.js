@@ -25,6 +25,7 @@ import TiposVia from './components/TiposVia/TiposVia';
 import TipoContrato from './components/TipoContrato/TipoContrato';
 import Empresas from './components/Empresas/Empresas';
 import Ofertas from  './components/Ofertas/Ofertas';
+import Edades from './components/Edades/Edades';
 
 const Application = () => {
 
@@ -65,6 +66,7 @@ const Application = () => {
                             <Route path='/tipocontrato'  element={ <TipoContrato /> } />
                             <Route path='/empresas'      element={ <Empresas /> } />
                             <Route path='/ofertas'       element={ <Ofertas /> } />
+                            <Route path='/edades'        element={ <Edades /> } />
                         </Routes>
                     </div>
                 </div>
