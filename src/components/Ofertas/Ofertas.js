@@ -14,13 +14,15 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import {form as formulario} from './OfertaForm';
+import { reducerCandidatos, CANDIDATOS_ACTIONS } from "../../includes/reducers/candidatos.reducer";
 
 const Ofertas = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
-    const [toastItems,setToastItems]     = useState([]);    
-    const {observer, onOpenChange, open} = useModal();
-    const [file,setFile]                 = useState();
-    const isInitialized                  = useRef;
+    const [items,itemsHandle]               = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
+    const [redCandidatos, candidatosHandle] = useReducer(reducerCandidatos);
+    const [toastItems,setToastItems]        = useState([]);    
+    const {observer, onOpenChange, open}    = useModal();
+    const [file,setFile]                    = useState();
+    const isInitialized                     = useRef;
 
     const referer = "http://localhost:8080/oferta";
     const form = formulario;
@@ -112,9 +114,47 @@ const Ofertas = () => {
         // consultado las edades
         fetchAPIData('/silefe.edad/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
-            console.debug(opts);
             form.fields.edadId.options = opts;
         });
+        // consultando las empresas
+        fetchAPIData('/silefe.empresa/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.razonSocial}})];
+            form.fields.empresaId.options = opts;
+        });
+        // consultados los centros.
+        fetchAPIData('/silefe.empresacentros/filter-by-empresa', {empresaId: 1},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            form.fields.centroId.options = opts;
+        });
+        // consultados los proyectos
+        fetchAPIData('/silefe.proyecto/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            form.fields.proyectoId.options = opts;
+        });
+        // consulto los cno's
+        fetchAPIData('/silefe.cno/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            form.fields.puestoId.options = opts;
+        });
+        // cargamos las cna's
+        fetchAPIData('/silefe.cnae/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            form.fields.cnaeId.options = opts;
+        });
+        // cargamos los tipos de contrato
+        fetchAPIData('/silefe.tipocontrato/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            form.fields.tipoContratoId.options = opts;
+        });
+        // cargamos los candidatos: 
+        const ofertaId = 1;
+        fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId:ofertaId},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            //form.fields.tipoContratoId.options = opts;
+            // cargar los datos en el reducer
+            console.log("datos");
+        });
+      
 
         form.fields.titulacionRequerido.options = opciones_requerido;
         form.fields.idiomasRequerido.options = opciones_requerido;
@@ -123,6 +163,7 @@ const Ofertas = () => {
         form.fields.permisos.options = opciones_requerido;
         form.fields.generoId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Hombre"},{value:"2",label:"Mujer"}];
         form.fields.estado.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Activa"},{value:"2",label:"Con Inserción"},{value:"3",label:"Cerrada"}];
+        form.fields.jornadaId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:Liferay.Language.get("Completa")},{value:"2",label:Liferay.Language.get("Parcial")}];
 
         let {data,totalPages,page} = await fetchAPIData('/silefe.oferta/filter',postdata,referer);
         await console.log("datos recibidos");
@@ -130,8 +171,9 @@ const Ofertas = () => {
         const tmp = await data.map(i => {            
             return({
                 ...i,
-                id                       : i.ofertaId,
-                checked                  : false
+                id                 : i.ofertaId,
+                fechaIncorporacion : "2023/03/15",
+                checked            : false
             });
         });
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});

@@ -40,7 +40,15 @@ export const form = {
             key: 5,
             type: "select",
             label: Liferay.Language.get('Puesto'), 
-            name: "centroId", 
+            name: "puestoId", 
+            enabled:true,
+            change: ()=>{console.log("cambia el select");}
+        },
+        proyectoId: {
+            key: 30,
+            type: "select",
+            label: Liferay.Language.get('Proyecto'), 
+            name: "proyectoId", 
             enabled:true,
             change: ()=>{console.log("cambia el select");}
         },
@@ -56,11 +64,12 @@ export const form = {
             key:8,
             type: "text",
             label: Liferay.Language.get('Vacantes'), 
+            value: "0",
             name: "vacantes", 
             placeholder: "0",
             conditions:["number"]
         },
-        fechaIncorporation: {
+        fechaIncorporacion: {
             key:9,
             type: "date",
             label: Liferay.Language.get('Incorporacion'), 
@@ -248,11 +257,23 @@ export const form = {
             rows: [
                 {
                     key:41,
-                    cols: ['id']
+                    cols: ['id','titulo']
                 },
                 {
                     key:42,
-                    cols: ['titulo']
+                    cols: ['duracionMeses', 'vacantes', 'empresaId','centroId']
+                },        
+                {
+                    key:43,
+                    cols: ['proyectoId','puestoId','cnaeId']
+                },        
+                {
+                    key:44,
+                    cols: ['tipoContratoId','fechaIncorporacion','duracionMeses', 'jornadaId']
+                },        
+                {
+                    key:45,
+                    cols: ['tareas']
                 },        
             ]
         },
@@ -280,7 +301,7 @@ export const form = {
             ]
         },
         {
-            caption: "Estado",
+            caption: "Cantidatos",
             key: 3,
             ariacontrols: "tabpanel-3",
             rows: [
@@ -290,6 +311,21 @@ export const form = {
                 },
                 {
                     key: 62,
+                    cols: ['observaciones']
+                },
+            ]
+        },
+        {
+            caption: "Estado",
+            key: 4,
+            ariacontrols: "tabpanel-4",
+            rows: [
+                {
+                    key: 71,
+                    cols: ['estado']
+                },
+                {
+                    key: 72,
                     cols: ['observaciones']
                 },
             ]
