@@ -123,7 +123,9 @@ const Ofertas = () => {
         });
         // consultados los centros.
         fetchAPIData('/silefe.empresacentros/filter-by-empresa', {empresaId: 1},referer).then(response => {
-            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            console.log("centros");
+            console.debug(response);
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.empresaCentrosId,label:obj.nombre}})];
             form.fields.centroId.options = opts;
         });
         // consultados los proyectos
@@ -172,7 +174,7 @@ const Ofertas = () => {
             return({
                 ...i,
                 id                 : i.ofertaId,
-                fechaIncorporacion : "2023/03/15",
+                fechaIncorporacion : (i.fechaIncorporacion != null)?new Date(i.fechaIncorporacion).toISOString().substring(0, 10):"",
                 checked            : false
             });
         });

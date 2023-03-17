@@ -26,6 +26,7 @@ const MenuItems = [
     {key:16, url: '/convocatorias',caption: 'Convocatorias'},
     {key:17, url: '/ambitos' ,     caption: 'Ámbitos Geográficos'},
     {key:25, url: '/edades',       caption: 'Rangos Edad'},
+    {key:27, url: '/carnets',      caption: 'Carnets'},
 ]
 
 export default MenuItems;
