@@ -149,11 +149,13 @@ const Ofertas = () => {
             form.fields.tipoContratoId.options = opts;
         });
         // cargamos los candidatos: 
+        fetchAPIData('/silefe.carnet/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            form.fields.permisos.options = opts;
+        });
         const ofertaId = 1;
         fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId:ofertaId},referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
-            //form.fields.tipoContratoId.options = opts;
-            // cargar los datos en el reducer
             console.log("datos");
         });
       
@@ -162,7 +164,6 @@ const Ofertas = () => {
         form.fields.idiomasRequerido.options = opciones_requerido;
         form.fields.informaticaRequerido.options = opciones_requerido;
         form.fields.experienciaRequerido.options = opciones_requerido;
-        form.fields.permisos.options = opciones_requerido;
         form.fields.generoId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Hombre"},{value:"2",label:"Mujer"}];
         form.fields.estado.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Activa"},{value:"2",label:"Con Inserción"},{value:"3",label:"Cerrada"}];
         form.fields.jornadaId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:Liferay.Language.get("Completa")},{value:"2",label:Liferay.Language.get("Parcial")}];
@@ -171,6 +172,7 @@ const Ofertas = () => {
         await console.log("datos recibidos");
         await console.debug(data);
         const tmp = await data.map(i => {            
+            console.log(i);
             return({
                 ...i,
                 id                 : i.ofertaId,
