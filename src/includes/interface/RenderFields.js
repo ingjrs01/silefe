@@ -90,7 +90,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
               return (
                 <div className="row">
                   { row.cols.map(it => {
-                    console.log(it);
+                    //console.log(items.fields.fields[it]);
                     return (
                       <>
                         <ClayForm.Group className={`${items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ "Group-" + items.fields.fields[it].key} >
@@ -276,7 +276,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 items={items.fields.fields[it].options}
                                 label={items.fields.fields[it].label}
                                 multiple
-                                onItemsChange={console.log("Cambiando los items dentro de ClaySelecBox")}
+                                //onItemsChange={console.log("Cambiando los items dentro de ClaySelecBox")}
                                 onSelectChange={val => {itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
                                 spritemap={spritemap}
                                 value={items.item[it]}

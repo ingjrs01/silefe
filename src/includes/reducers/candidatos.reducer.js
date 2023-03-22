@@ -1,4 +1,4 @@
-export const CANTIDATOS_OPTIONS= {
+export const PARTICIPANTES_OPTIONS = {
   START: 0,
   LOAD: 1,
   SELECT_ITEM: 2,
@@ -10,6 +10,9 @@ export const CANTIDATOS_OPTIONS= {
   CANCEL: 8,
   SAVE: 9,
   DELETE: 10,
+  SET_CANDIDATOS: 11,
+  TOGGLE_CHECK: 12,
+  TOGGLE_CHECKALL: 13,
 }
 
 const initialState = {
@@ -17,7 +20,9 @@ const initialState = {
   item: {},
   modified: [],
   deleted: [],
+  candidatos: [],
   status: "list",
+  checkall: false,
 }
 
 let tmp = [];
@@ -25,87 +30,90 @@ let newItem = {};
 
 export const reducerCandidatos= (state = initialState, action) => {
   switch (action.type) {
-    case CANDIDATOS_OPTIONS.START:
+    case PARTICIPANTES_OPTIONS.START:
       return {
         ...state,
-        status: "list"
+        status: "list",
+        search: action.search,
+        showError: action.showError,
+        candidatos: [
+          {check:false, nombre:'Persona 1',apellido1:'apellido1',participanteId:1},
+          {check:false, nombre:'Persona 2',apellido1:'apellido2',participanteId:2},
+        ]
       }
-    case CANDIDATOS_OPTIONS.LOAD: 
+    case PARTICIPANTES_OPTIONS.LOAD: 
       return {
         ...state,
         items: action.items,
       }
-    case CANDIDATOS_OPTION.SELECT_ITEM:
-      console.log("seleccionando");
-      return {
-        ...state,
-        item: state.items[action.index],
-        status: "edit",
-      }
-    case CANDIDATOS_OPTION.NEW_ITEM: 
-        console.log("Agregando un dato");
-        return {
-          ...state,
-          item: {
-            id: 0,
-            nombre: "",
-            apellido1: "",
-            apellido2: "",
-            cargo: "",
-            email: [],
-            telefono: [], 
-            origen: 0,
-            origenId: 1,
-          },
-          status: "edit",
-        }
-    case CANDIDATOS_OPTION.SETFIELD:
-      console.log("SETFIELD");
+    case PARTICIPANTES_OPTIONS.NEW_ITEM: 
       return {
         ...state,
         item: {
-          ...state.item,
-          [action.fieldname]: action.value,
+          id: 0,
+          nombre: "",
+          apellido1: "",
+          apellido2: "",
+          telefono : "",
         },
+        status: "edit",
+      }
+    case PARTICIPANTES_OPTIONS.CANCEL:
+      return {
+        ...state,
+        status: 'list',
+      }
+    case PARTICIPANTES_OPTIONS.SAVE:
+      console.log("añadiendo los participantes seleccionados");
+      const seleccionados = state.candidatos.filter( i => i.check == true);
+      console.debug(seleccionados);
+
+      if (seleccionados.lenght == 0) {
+        state.showError({title:'Selección',type:'error', text: 'Debe seleccionar un elemento para almacenar'});
+        return {
+          ...state
+        }
+      }
+      return {
+        ...state,
+        items: [...state.items,...seleccionados],
+        candidatos: [],
+        status: 'list',
       }
 
-    case CANDIDATOS_OPTION.SAVE:
-      if (state.item.id == 0)
-        tmp = [...state.items, state.item];
-      else {
-        tmp = [...state.items];
-        const index = tmp.findIndex(item => item.id == state.item.id);
-        tmp.splice(index, 1, state.item);
+    case PARTICIPANTES_OPTIONS.SEARCH:
+      state.search();
+      return {
+        ...state,
       }
-      let modified = [...state.modified];
-      if (!modified.includes(state.item.id)){
-        modified.push(state.item.id);
+
+    case PARTICIPANTES_OPTIONS.SET_CANDIDATOS:
+      return {
+        ...state,
+        candidatos: action.candidatos.map(item => {return {...item,check:false}}),
       }
+
+    case PARTICIPANTES_OPTIONS.TOGGLE_CHECK: 
+      console.debug(action);
+      const newArr = [...state.candidatos];
+      newArr[action.index].check = !(newArr[action.index].check);
 
       return {
         ...state,
-        items: tmp,
-        modified: modified,
-        status: "list",
+        candidatos: newArr,
+        checkall: false,
       }
-    case CANDIDATOS_OPTION.CANCEL:
-      return {
-        ...state,
-        status: "list",
-      }
-    case CANDIDATOS_OPTION.DELETE: 
-      console.log(action.index);
-      newItem = state.items[action.index];
-      tmp = [...state.items];
-      tmp.splice(action.index,1);
+
+    case PARTICIPANTES_OPTIONS.TOGGLE_CHECKALL: 
+      const checkall = !state.checkall;
 
       return {
         ...state,
-        items: tmp,
-        deleted: [...state.deleted,newItem.id],
-        status: "list"
+        candidatos: state.candidatos.map(item => {return{...item,check:checkall}}),
+        checkall: checkall,
       }
-    default:
+
+    default: 
       return {
         ...state
       }

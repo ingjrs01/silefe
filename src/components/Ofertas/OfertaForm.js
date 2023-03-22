@@ -246,7 +246,13 @@ export const form = {
             value:"lelele", 
             placeholder:Liferay.Language.get('Objetivos'),
             conditions:["text"]
-        }
+        },
+        participantes: {
+            key: 31,
+            type: "other",
+            componentName: "Participantes",
+            name: "participantes",
+        },
     },
     tabActive:0,
     tabs: [
@@ -307,11 +313,7 @@ export const form = {
             rows: [
                 {
                     key: 61,
-                    cols: ['estado']
-                },
-                {
-                    key: 62,
-                    cols: ['observaciones']
+                    cols: ['participantes']
                 },
             ]
         },

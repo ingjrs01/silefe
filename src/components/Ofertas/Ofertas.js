@@ -1,5 +1,4 @@
 import React,{useEffect,useReducer,useRef,useState} from "react";
-//import DefaultForm from '../../includes/interface/DefaultForm';
 import TabsForm from '../../includes/interface/TabsForm';
 import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
@@ -14,11 +13,13 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import {form as formulario} from './OfertaForm';
-import { reducerCandidatos, CANDIDATOS_ACTIONS } from "../../includes/reducers/candidatos.reducer";
+import { reducerCandidatos, PARTICIPANTES_OPTIONS } from "../../includes/reducers/candidatos.reducer";
+import {ParticipantesRender} from "./ParticipantesRender";
+import {Cosas} from './Cosas';
 
 const Ofertas = () => {
     const [items,itemsHandle]               = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
-    const [redCandidatos, candidatosHandle] = useReducer(reducerCandidatos);
+    const [redParticipantes, participantesHandle] = useReducer(reducerCandidatos);
     const [toastItems,setToastItems]        = useState([]);    
     const {observer, onOpenChange, open}    = useModal();
     const [file,setFile]                    = useState();
@@ -47,7 +48,6 @@ const Ofertas = () => {
     }
 
     const handleSave = async () => {
-        console.log("handleSave");
         const data = {
             id: items.item.id,
             obj: {
@@ -88,23 +88,66 @@ const Ofertas = () => {
         })
     }
 
-    const beforeEdit = () => {
-        console.log("loadSelects");
+    const showError = (error) => {
+
+      setToastItems([...toastItems, { title: error.title, type: (error.type === 'error')?'danger':'info', text: error.text }]);
     }
 
-    const miEvento = () => {
-        console.log("Soy una cuchara");
+    const beforeEdit = () => {
+        console.log('beforeEdit');
     }
 
     const plugin2 = () => {
-      console.log("probando el plutin");
+        return {
+            Participantes: 
+                <ParticipantesRender
+                  redParticipantes={redParticipantes}
+                  participantesHandle={participantesHandle}
+                />
+        }
     }
 
     const notify = () => {
       console.log("Accediendo a notify");
     }
 
+    const searchCandidatos = () => {
+      console.log("buscando desde ofertas 2");
+      const candidatostmp2 = [
+      {
+        nombre: 'Josito',
+        apellido1: 'Pérez',
+        participanteId: 3,
+      },
+      {
+        nombre: 'Patricia',
+        apellido1: 'Martínez',
+        participanteId: 4,
+      },
+      ];
+      const filters = [
+        {
+          fieldname: "nombre",
+          operator: "like",
+          value: "Juan"
+        },
+        //{
+        //  fieldname: "apellido1",
+        //  operator: "like",
+        //  value: "Rodriguez"
+       // }
+      ];
+
+      fetchAPIData('/silefe.participante/filter-candidatos', {filters: filters},referer).then(response => {
+          console.log(response);
+          //const candidatostmp = response.data.map( obj => { return {...obj }  })
+          participantesHandle({type:PARTICIPANTES_OPTIONS.SET_CANDIDATOS , candidatos: response.data })
+      });
+      
+    }
+
     const fetchData = async () => {
+        participantesHandle({type:PARTICIPANTES_OPTIONS.START,search:searchCandidatos,showError: showError });
         const postdata = {
             page:         items.page,
             nombre: (items.search && typeof items.search !== 'undefined')?items.search:""
@@ -123,8 +166,6 @@ const Ofertas = () => {
         });
         // consultados los centros.
         fetchAPIData('/silefe.empresacentros/filter-by-empresa', {empresaId: 1},referer).then(response => {
-            console.log("centros");
-            console.debug(response);
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.empresaCentrosId,label:obj.nombre}})];
             form.fields.centroId.options = opts;
         });
@@ -156,9 +197,7 @@ const Ofertas = () => {
         const ofertaId = 1;
         fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId:ofertaId},referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
-            console.log("datos");
         });
-      
 
         form.fields.titulacionRequerido.options = opciones_requerido;
         form.fields.idiomasRequerido.options = opciones_requerido;
@@ -169,10 +208,7 @@ const Ofertas = () => {
         form.fields.jornadaId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:Liferay.Language.get("Completa")},{value:"2",label:Liferay.Language.get("Parcial")}];
 
         let {data,totalPages,page} = await fetchAPIData('/silefe.oferta/filter',postdata,referer);
-        await console.log("datos recibidos");
-        await console.debug(data);
         const tmp = await data.map(i => {            
-            console.log(i);
             return({
                 ...i,
                 id                 : i.ofertaId,
@@ -220,6 +256,7 @@ const Ofertas = () => {
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
+                <p>esta es la zona de abajo</p>
         </>
     )
 }
