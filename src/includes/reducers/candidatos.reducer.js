@@ -13,6 +13,13 @@ export const PARTICIPANTES_OPTIONS = {
   SET_CANDIDATOS: 11,
   TOGGLE_CHECK: 12,
   TOGGLE_CHECKALL: 13,
+  SET_FILTER: 14,
+  SET_RANGOS: 15,
+  SET_JORNADAS: 16,
+  SET_PROVINCIAS: 17,
+  SET_PROVINCIA: 18,
+  SET_MUNICIPIOS: 19,
+  SET_OCUPACIONES: 20,
 }
 
 const initialState = {
@@ -22,7 +29,23 @@ const initialState = {
   deleted: [],
   candidatos: [],
   status: "list",
+  filters: {
+    nombre: '',
+    apellido1: '',
+    apellido2: '',
+    titulacion: '',
+    rangoId: 0,
+    jornadaId: 0,
+    provinciaId: 0,
+    municipioId: 0,
+  },
   checkall: false,
+  rangosOptions: [],
+  jornadaOptions: [],
+  provinciasOptions: [],
+  municipios: [],
+  municipiosOptions: [],
+  ocupacionesOptions: [],
 }
 
 let tmp = [];
@@ -56,12 +79,25 @@ export const reducerCandidatos= (state = initialState, action) => {
           apellido2: "",
           telefono : "",
         },
+        filters: {
+          nombre: '',
+          apellido1: '',
+          apellido2: '',
+          titulacion: '',
+          rangoId: 0,
+          jornadaId: 0,
+          provinciaId: 0,
+          municipioId: 0,
+        },
         status: "edit",
+        checkall: false,
+        filters: [],
       }
     case PARTICIPANTES_OPTIONS.CANCEL:
       return {
         ...state,
         status: 'list',
+        checkall: false,
       }
     case PARTICIPANTES_OPTIONS.SAVE:
       console.log("añadiendo los participantes seleccionados");
@@ -82,9 +118,10 @@ export const reducerCandidatos= (state = initialState, action) => {
       }
 
     case PARTICIPANTES_OPTIONS.SEARCH:
-      state.search();
+      state.search(state.filters);
       return {
         ...state,
+        checkall: false,
       }
 
     case PARTICIPANTES_OPTIONS.SET_CANDIDATOS:
@@ -111,6 +148,55 @@ export const reducerCandidatos= (state = initialState, action) => {
         ...state,
         candidatos: state.candidatos.map(item => {return{...item,check:checkall}}),
         checkall: checkall,
+      }
+    case PARTICIPANTES_OPTIONS.SET_FILTER: 
+      console.log("SET_FILTER");
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          [ action.fieldname ]: action.value
+        }
+      }
+    case PARTICIPANTES_OPTIONS.SET_RANGOS: 
+      console.log("poniendo los rangos 2");
+      return {
+        ...state,
+        rangosOptions: action.rangos,
+      }
+
+    case PARTICIPANTES_OPTIONS.SET_JORNADAS: 
+      return {
+        ...state,
+        jornadaOptions: action.jornadas,
+      }
+    case PARTICIPANTES_OPTIONS.SET_PROVINCIAS:
+      return {
+        ...state,
+        provinciasOptions: action.provincias,
+      }
+
+    case PARTICIPANTES_OPTIONS.SET_MUNICIPIOS:
+      return {
+        ...state,
+        municipios: action.municipios,
+      }
+
+    case PARTICIPANTES_OPTIONS.SET_PROVINCIA:
+      tmp = state.municipios.filter(item => item.provinciaId == action.provinciaId ).map(item => {return {value: item.municipioId, label: item.nombre}});
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          provinciaId: action.provinciaId,
+        },
+        municipiosOptions: tmp,
+      }
+
+    case PARTICIPANTES_OPTIONS.SET_OCUPACIONES: 
+      return {
+        ...state,
+        ocupacionesOptions: action.ocupaciones,
       }
 
     default: 

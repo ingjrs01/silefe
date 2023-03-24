@@ -111,39 +111,22 @@ const Ofertas = () => {
       console.log("Accediendo a notify");
     }
 
-    const searchCandidatos = () => {
-      console.log("buscando desde ofertas 2");
-      const candidatostmp2 = [
-      {
-        nombre: 'Josito',
-        apellido1: 'Pérez',
-        participanteId: 3,
-      },
-      {
-        nombre: 'Patricia',
-        apellido1: 'Martínez',
-        participanteId: 4,
-      },
-      ];
-      const filters = [
-        {
-          fieldname: "nombre",
-          operator: "like",
-          value: "Juan"
-        },
-        //{
-        //  fieldname: "apellido1",
-        //  operator: "like",
-        //  value: "Rodriguez"
-       // }
-      ];
-
-      fetchAPIData('/silefe.participante/filter-candidatos', {filters: filters},referer).then(response => {
-          console.log(response);
-          //const candidatostmp = response.data.map( obj => { return {...obj }  })
-          participantesHandle({type:PARTICIPANTES_OPTIONS.SET_CANDIDATOS , candidatos: response.data })
+    const searchCandidatos = (filters) => {
+      console.log("buscando desde ofertas 3");
+      const filters2 = [];
+      Object.keys(filters).forEach(it => {
+        if (filters[it].length == 0  || filters[it] == 0) {
+          console.log("esta vacio " + it);
+        }
+        else {
+          filters2.push({fieldname:it, value: filters[it]});
+        }
       });
-      
+
+      fetchAPIData('/silefe.participante/filter-candidatos', {filters: filters2},referer).then(response => {
+          //console.log(response);
+          participantesHandle({type:PARTICIPANTES_OPTIONS.SET_CANDIDATOS , candidatos: response.data });
+      });
     }
 
     const fetchData = async () => {
@@ -197,6 +180,38 @@ const Ofertas = () => {
         const ofertaId = 1;
         fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId:ofertaId},referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+        });
+
+        // Cargamos algunos datos para las ofertas: 
+        fetchAPIData('/silefe.salario/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            participantesHandle({type: PARTICIPANTES_OPTIONS.SET_RANGOS,rangos:opts});
+        });
+
+        // Cargamos algunos datos para las provincias: 
+        fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            participantesHandle({type: PARTICIPANTES_OPTIONS.SET_PROVINCIAS,provincias:opts});
+        });
+
+        // Cargamos algunos datos para las municipios: 
+        fetchAPIData('/silefe.municipio/all', {lang: getLanguageId()},referer).then(response => {
+            //const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            participantesHandle({type: PARTICIPANTES_OPTIONS.SET_MUNICIPIOS,municipios:response.data});
+        });
+
+        // Cargamos algunos datos para las ocupaciones: 
+        fetchAPIData('/silefe.cno/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            participantesHandle({type: PARTICIPANTES_OPTIONS.SET_OCUPACIONES,ocupaciones:opts});
+        });
+        
+        fetchAPIData('/silefe.horario/all', {lang: getLanguageId()},referer).then(response => {
+            console.log("posibles jornadas");
+            console.log(response);
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            console.log(opts);
+            participantesHandle({type: PARTICIPANTES_OPTIONS.SET_JORNADAS,jornadas:opts});
         });
 
         form.fields.titulacionRequerido.options = opciones_requerido;
@@ -256,7 +271,6 @@ const Ofertas = () => {
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
-                <p>esta es la zona de abajo</p>
         </>
     )
 }

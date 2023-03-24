@@ -28,8 +28,8 @@ export const ParticipantesForm = ({ redParticipantes, participantesHandle }) => 
                     type="text"
                     name={"nombre"}
                     key={"nombre"}
-                    value={redParticipantes.item.nombre}
-                    onChange={e => participantesHandle({ type: PARTICIPANTES_OPTIONS.SETFIELD, fieldname: 'nombre', value: e.target.value })}>
+                    value={redParticipantes.filters.nombre}
+                    onChange={e => participantesHandle({ type: PARTICIPANTES_OPTIONS.SET_FILTER, fieldname: 'nombre', value: e.target.value })}>
                   </ClayInput>
                 </ClayForm.Group>
                 <ClayForm.Group className="col">
@@ -39,9 +39,9 @@ export const ParticipantesForm = ({ redParticipantes, participantesHandle }) => 
                     type="text"
                     name={"Apellido1"}
                     key={"Apellido1"}
-                    value={redParticipantes.item.apellido1}
+                    value={redParticipantes.filters.apellido1}
                     onChange={e => {
-                      participantesHandle({ type: PARTICIPANTES_OPTIONS.SETFIELD, fieldname: 'apellido1', value: e.target.value });
+                      participantesHandle({ type: PARTICIPANTES_OPTIONS.SET_FILTER, fieldname: 'apellido1', value: e.target.value });
                     }}>
                   </ClayInput>
                 </ClayForm.Group>
@@ -53,13 +53,123 @@ export const ParticipantesForm = ({ redParticipantes, participantesHandle }) => 
                     type="text"
                     name={"Apellido2"}
                     key={"Apellido2"}
-                    value={redParticipantes.item.apellido2}
+                    value={redParticipantes.filters.apellido2}
                     onChange={e => {
-                      participantesHandle({ type: PARTICIPANTES_OPTIONS.SETFIELD, fieldname: 'apellido2', value: e.target.value });
+                      participantesHandle({ type: PARTICIPANTES_OPTIONS.SET_FILTER, fieldname: 'apellido2', value: e.target.value });
                     }}>
                   </ClayInput>
                 </ClayForm.Group>
               </div>
+              <div class="row">
+                <ClayForm.Group className="col">
+                  <label htmlFor="titulacion">{Liferay.Language.get("Titulacion")}</label>
+                  <ClayInput
+                    placeholder={"Titulación"}
+                    type="text"
+                    name={"titulacion"}
+                    key={"titulacion"}
+                    value={redParticipantes.filters.titulacion}
+                    onChange={e => {
+                      participantesHandle({ type: PARTICIPANTES_OPTIONS.SET_FILTER, fieldname: 'titulacion', value: e.target.value });
+                    }}>
+                  </ClayInput>
+                </ClayForm.Group>
+
+                <ClayForm.Group className="col">
+                  <label htmlFor="rangoSalarial">{Liferay.Language.get("RangoSalarial")}</label>
+                  <ClaySelect aria-label="Select Label"
+                      id={"rangoSalarial"}
+                      name={"rangoSalarial"}
+                      key={"rangoSalarial"}
+                      onChange={evt => { participantesHandle({type: PARTICIPANTES_OPTIONS.SET_FILTER, fieldname: 'rangoId', value: evt.target.value })}}
+                     value={ redParticipantes.filters.rangoId} >
+                     {redParticipantes.rangosOptions.map(item => (
+                         <ClaySelect.Option
+                             key={"option-" + item.value}
+                             label={item.label}
+                             value={item.value}
+                         />
+                     ))}
+                  </ClaySelect>
+                </ClayForm.Group>
+
+                <ClayForm.Group className="col">
+                  <label htmlFor="jornadaId">{Liferay.Language.get("Jornada")}</label>
+                  <ClaySelect aria-label="Select Label"
+                      id={"jornadaId"}
+                      name={"jornadaId"}
+                      key={"jornadaId"}
+                      onChange={evt => { participantesHandle({type: PARTICIPANTES_OPTIONS.SET_FILTER, fieldname: 'jornadaId', value: evt.target.value })}}
+                      value={ redParticipantes.filters.jornadaId} >
+                      {redParticipantes.jornadaOptions.map(item => (
+                         <ClaySelect.Option
+                             key={"option-" + item.value}
+                             label={item.label}
+                             value={item.value}
+                         />
+                     ))}
+                  </ClaySelect>
+                </ClayForm.Group>
+
+              </div>
+            <div className="row">
+                <ClayForm.Group className="col">
+                  <label htmlFor="provinciaId">{Liferay.Language.get("Provincia")}</label>
+                  <ClaySelect aria-label="Select Label"
+                      id={"provinciaId"}
+                      name={"provinciaId"}
+                      key={"provinciaId"}
+                      onChange={evt => { participantesHandle({type: PARTICIPANTES_OPTIONS.SET_PROVINCIA, provinciaId: evt.target.value })}}
+                      value={ redParticipantes.filters.provinciaId} >
+                      {redParticipantes.provinciasOptions.map(item => (
+                         <ClaySelect.Option
+                             key={"option-" + item.value}
+                             label={item.label}
+                             value={item.value}
+                         />
+                     ))}
+                  </ClaySelect>
+                </ClayForm.Group>
+
+                <ClayForm.Group className="col">
+                  <label htmlFor="municipioId">{Liferay.Language.get("Municipio")}</label>
+                  <ClaySelect aria-label="Select Label"
+                      id={"municipioId"}
+                      name={"municipioId"}
+                      key={"municipioId"}
+                      onChange={evt => { participantesHandle({type: PARTICIPANTES_OPTIONS.SET_FILTER,fieldname: 'municipioId' ,value: evt.target.value })}}
+                      value={ redParticipantes.filters.municipioId} >
+                      {redParticipantes.municipiosOptions.map(item => (
+                         <ClaySelect.Option
+                             key={"option-" + item.value}
+                             label={item.label}
+                             value={item.value}
+                         />
+                     ))}
+                  </ClaySelect>
+                </ClayForm.Group>
+
+            </div>
+            <div className="row">
+                <ClayForm.Group className="col">
+                  <label htmlFor="ocupacionId">{Liferay.Language.get("Ocupacion")}</label>
+                  <ClaySelect aria-label="Select Label"
+                      id={"ocupacionId"}
+                      name={"ocupacionId"}
+                      key={"ocupacionId"}
+                      onChange={evt => { participantesHandle({type: PARTICIPANTES_OPTIONS.SET_FILTER,fieldname: 'ocupacionId' ,value: evt.target.value })}}
+                      value={ redParticipantes.filters.ocupacionId} >
+                      {redParticipantes.ocupacionesOptions.map(item => (
+                         <ClaySelect.Option
+                             key={"option-" + item.value}
+                             label={item.label}
+                             value={item.value}
+                         />
+                     ))}
+                  </ClaySelect>
+                </ClayForm.Group>
+
+            </div>
             <div className="btn-group-item">
               <ClayButton onClick={() => participantesHandle({ type: PARTICIPANTES_OPTIONS.SEARCH }) }
                 displayType="primary">{Liferay.Language.get('Buscar')}
