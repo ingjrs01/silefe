@@ -20,6 +20,7 @@ export const PARTICIPANTES_OPTIONS = {
   SET_PROVINCIA: 18,
   SET_MUNICIPIOS: 19,
   SET_OCUPACIONES: 20,
+  SET_COLECTIVOS: 21,
 }
 
 const initialState = {
@@ -38,6 +39,7 @@ const initialState = {
     jornadaId: 0,
     provinciaId: 0,
     municipioId: 0,
+    colectivoId: 0,
   },
   checkall: false,
   rangosOptions: [],
@@ -46,6 +48,7 @@ const initialState = {
   municipios: [],
   municipiosOptions: [],
   ocupacionesOptions: [],
+  colectivosOptions: [],
 }
 
 let tmp = [];
@@ -197,6 +200,12 @@ export const reducerCandidatos= (state = initialState, action) => {
       return {
         ...state,
         ocupacionesOptions: action.ocupaciones,
+      }
+
+    case PARTICIPANTES_OPTIONS.SET_COLECTIVOS:
+      return {
+        ...state,
+        colectivosOptions: action.colectivos,
       }
 
     default: 

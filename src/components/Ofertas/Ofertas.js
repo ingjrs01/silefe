@@ -112,7 +112,7 @@ const Ofertas = () => {
     }
 
     const searchCandidatos = (filters) => {
-      console.log("buscando desde ofertas 3");
+      console.log("buscando desde ofertas 4");
       const filters2 = [];
       Object.keys(filters).forEach(it => {
         if (filters[it].length == 0  || filters[it] == 0) {
@@ -122,9 +122,7 @@ const Ofertas = () => {
           filters2.push({fieldname:it, value: filters[it]});
         }
       });
-
       fetchAPIData('/silefe.participante/filter-candidatos', {filters: filters2},referer).then(response => {
-          //console.log(response);
           participantesHandle({type:PARTICIPANTES_OPTIONS.SET_CANDIDATOS , candidatos: response.data });
       });
     }
@@ -205,6 +203,12 @@ const Ofertas = () => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
             participantesHandle({type: PARTICIPANTES_OPTIONS.SET_OCUPACIONES,ocupaciones:opts});
         });
+
+        // Cargamos algunos datos para los colectivos
+        fetchAPIData('/silefe.colectivo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            participantesHandle({type: PARTICIPANTES_OPTIONS.SET_COLECTIVOS,colectivos:opts});
+        });
         
         fetchAPIData('/silefe.horario/all', {lang: getLanguageId()},referer).then(response => {
             console.log("posibles jornadas");
@@ -275,3 +279,4 @@ const Ofertas = () => {
     )
 }
 export default Ofertas;
+
