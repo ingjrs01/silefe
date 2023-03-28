@@ -221,7 +221,7 @@ export const ParticipantesForm = ({ redParticipantes, participantesHandle }) => 
                 <ClayTable.Cell>{item.apellido2}</ClayTable.Cell>
                 <ClayTable.Cell>{item.participanteId }</ClayTable.Cell>
                 <ClayTable.Cell>
-                  <ClayButton onClick={ () => participantesHandle({type: PARTICIPANTES_ACTIONS.DELETE, index:index}) } 
+                  <ClayButton onClick={ () => participantesHandle({type: PARTICIPANTES_OPTIONS.DELETE, index:index}) } 
                     displayType="danger">{"B"} 
                     </ClayButton>
                 </ClayTable.Cell>

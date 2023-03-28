@@ -262,32 +262,6 @@ export const form = {
                 },               
             ]
         },
-        //{
-        //    caption: "Formacion",
-        //    key: 2,
-        //    ariacontrols: "tabpanel-2",
-        //    rows: [
-        //        {
-        //            key:50,
-        //            cols: ['formacion']
-        //        },        
-        //    ]
-        //},
-        //{
-        //    caption: "Experiencia",
-        //    key: 3,
-        //    ariacontrols: "tabpanel-3",
-        //    rows: [
-        //        {
-        //            key:61,
-        //            cols: ['id']
-        //        },
-        //        {
-        //            key:62,
-        //            cols: ['apellido2']
-        //        },        
-        //    ]
-        //},
         {
             caption: "Empleabilidad",
             key:2,
@@ -312,17 +286,27 @@ export const form = {
         id: {
             columnTitle: "Id",
             columnType: "checkbox",
-            key: "c1",
+            key: "tc1",
+        },
+        documento: {
+            columnTitle: Liferay.Language.get('Documento'),
+            columnType: "string",
+            key: "tc2",
         },
         nombre: {
             columnTitle: Liferay.Language.get('Nombre'),
             columnType: "string",
-            key: "c3",
+            key: "tc3",
         },
         apellido1: {
             columnTitle: Liferay.Language.get('Apellido1'),
             columnType: "string",
-            key: "c4",
+            key: "tc4",
+        },
+        provincia: {
+            columnTitle: Liferay.Language.get('Provincia'),
+            columnType: "string",
+            key: "tc5",
         },
 }    
 };

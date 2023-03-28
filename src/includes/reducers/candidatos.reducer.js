@@ -62,16 +62,16 @@ export const reducerCandidatos= (state = initialState, action) => {
         status: "list",
         search: action.search,
         showError: action.showError,
-        candidatos: [
-          {check:false, nombre:'Persona 1',apellido1:'apellido1',participanteId:1},
-          {check:false, nombre:'Persona 2',apellido1:'apellido2',participanteId:2},
-        ]
+        candidatos: []
       }
+
     case PARTICIPANTES_OPTIONS.LOAD: 
       return {
         ...state,
         items: action.items,
+        deleted: [],
       }
+
     case PARTICIPANTES_OPTIONS.NEW_ITEM: 
       return {
         ...state,
@@ -103,9 +103,7 @@ export const reducerCandidatos= (state = initialState, action) => {
         checkall: false,
       }
     case PARTICIPANTES_OPTIONS.SAVE:
-      console.log("añadiendo los participantes seleccionados");
       const seleccionados = state.candidatos.filter( i => i.check == true);
-      console.debug(seleccionados);
 
       if (seleccionados.lenght == 0) {
         state.showError({title:'Selección',type:'error', text: 'Debe seleccionar un elemento para almacenar'});
@@ -118,6 +116,18 @@ export const reducerCandidatos= (state = initialState, action) => {
         items: [...state.items,...seleccionados],
         candidatos: [],
         status: 'list',
+      }
+
+    case PARTICIPANTES_OPTIONS.DELETE: 
+      console.log("borrando los elementos");
+      let item = state.items[action.index];
+
+      tmp = [...state.items];
+      tmp.splice(action.index,1);
+      return {
+         ...state,
+         items: tmp,
+         deleted: [...state.deleted, item],
       }
 
     case PARTICIPANTES_OPTIONS.SEARCH:
@@ -162,7 +172,6 @@ export const reducerCandidatos= (state = initialState, action) => {
         }
       }
     case PARTICIPANTES_OPTIONS.SET_RANGOS: 
-      console.log("poniendo los rangos 2");
       return {
         ...state,
         rangosOptions: action.rangos,

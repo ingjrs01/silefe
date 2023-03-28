@@ -36,10 +36,12 @@ export const ParticipantesRender = ({redParticipantes, participantesHandle}) => 
                 <ClayTable.Cell>{item.apellido2}</ClayTable.Cell>
                 <ClayTable.Cell>{item.cargo }</ClayTable.Cell>
                 <ClayTable.Cell>
-                    <ClayButton onClick={ () =>  participantesHandle({type: PARTICIPANTES_ACTIONS.SELECT_ITEM,index: index})} 
+                  { /*
+                    <ClayButton onClick={ () =>  participantesHandle({type: PARTICIPANTES_OPTIONS.SELECT_ITEM,index: index})} 
                       displayType="secondary">{"E"} 
-                    </ClayButton> 
-                  <ClayButton onClick={ () => participantesHandle({type: PARTICIPANTES_ACTIONS.DELETE, index:index}) } 
+                    </ClayButton>*/ 
+                  }
+                  <ClayButton onClick={ () => participantesHandle({type: PARTICIPANTES_OPTIONS.DELETE, index:index}) } 
                     displayType="danger">{"B"} 
                     </ClayButton>
                 </ClayTable.Cell>

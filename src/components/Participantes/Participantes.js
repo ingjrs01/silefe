@@ -122,6 +122,7 @@ const Participantes = () => {
     }
 
     const fetchData = async () => {
+        localStorage.setItem('juanpruebas','probando cosillas');
         titulacionHandler({type:TITULACIONES_ACTIONS.START});
         experienciasHandler({type:EXPERIENCIA_ACTIONS.START});
 
@@ -177,6 +178,7 @@ const Participantes = () => {
                 fechaNacimiento: (i.fechaNacimiento != null)?new Date(i.fechaNacimiento).toISOString().substring(0, 10):"",
                 email: (i.email != null && i.email.length > 0)?JSON.parse(i.email):[],
                 telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono):[],
+                provincia: 'Provincia',
                 checked:false
             })});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});

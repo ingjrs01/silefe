@@ -7,7 +7,7 @@ import { getUserId} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import { batchAPI, deleteAPI, deleteAPIParams, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
@@ -15,7 +15,6 @@ import { Errors } from '../../includes/Errors';
 import {form as formulario} from './OfertaForm';
 import { reducerCandidatos, PARTICIPANTES_OPTIONS } from "../../includes/reducers/candidatos.reducer";
 import {ParticipantesRender} from "./ParticipantesRender";
-import {Cosas} from './Cosas';
 
 const Ofertas = () => {
     const [items,itemsHandle]               = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
@@ -47,7 +46,7 @@ const Ofertas = () => {
         console.log("processCsv");
     }
 
-    const handleSave = async () => {
+    const handleSave = () => {
         const data = {
             id: items.item.id,
             obj: {
@@ -60,14 +59,31 @@ const Ofertas = () => {
         if (items.status === 'new')
             endpoint = '/silefe.oferta/add-oferta';
 
-        let {status, error} = await saveAPI(endpoint,data,referer); 
-        if (status) {
-            fetchData();
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
-        }
-        else {
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);        
-        }
+        saveAPI(endpoint,data,referer).then(response => {
+          let {status, data, error} = response;
+
+          if (status) {
+                const participantes = redParticipantes.items.map( i => {return i.participanteId}); 
+                saveAPI('/silefe.oferta/save-participantes-oferta',{ofertaId: data.ofertaId, identifiers: participantes},referer).then(res => {
+              });
+              // tenemos que solicitar borrar los elementos que ha quitado el usuario: 
+              if (redParticipantes.deleted.length > 0) {
+                console.log("Tenemso cosas a borrar con la nueva API");
+                const s = redParticipantes.deleted.map( i => {return i.participanteId});
+                console.debug(s);
+
+                deleteAPIParams('/silefe.oferta/delete-participantes-oferta',{ofertaId: data.ofertaId,identifiers:s},referer).then(res => { 
+                  console.log("borrado");
+                });
+              }
+
+              fetchData();
+              setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
+          }
+          else {
+              setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);        
+          }
+        });
     }
 
     const handleDelete = () => {
@@ -89,12 +105,15 @@ const Ofertas = () => {
     }
 
     const showError = (error) => {
-
       setToastItems([...toastItems, { title: error.title, type: (error.type === 'error')?'danger':'info', text: error.text }]);
     }
 
     const beforeEdit = () => {
-        console.log('beforeEdit');
+        const s = items.arr.filter(item => item.checked).map( i => {return i.id})[0];
+      
+        fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId: s },referer).then(response => {
+          participantesHandle({type: PARTICIPANTES_OPTIONS.LOAD,items:response.data});
+        });
     }
 
     const plugin2 = () => {
@@ -112,7 +131,6 @@ const Ofertas = () => {
     }
 
     const searchCandidatos = (filters) => {
-      console.log("buscando desde ofertas 4");
       const filters2 = [];
       Object.keys(filters).forEach(it => {
         if (filters[it].length == 0  || filters[it] == 0) {
@@ -175,7 +193,8 @@ const Ofertas = () => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
             form.fields.permisos.options = opts;
         });
-        const ofertaId = 1;
+
+        const ofertaId = 1201;
         fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId:ofertaId},referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
         });
@@ -211,10 +230,7 @@ const Ofertas = () => {
         });
         
         fetchAPIData('/silefe.horario/all', {lang: getLanguageId()},referer).then(response => {
-            console.log("posibles jornadas");
-            console.log(response);
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
-            console.log(opts);
             participantesHandle({type: PARTICIPANTES_OPTIONS.SET_JORNADAS,jornadas:opts});
         });
 
