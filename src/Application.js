@@ -1,4 +1,5 @@
 import React from 'react';
+import { QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import { Route, Routes } from 'react-router-dom';
 import VMenu from './components/VMenu';
 import Titulaciones from './components/Titulaciones/Titulaciones';
@@ -28,9 +29,13 @@ import Ofertas from  './components/Ofertas/Ofertas';
 import Edades from './components/Edades/Edades';
 import Carnets from './components/Carnets/Carnets';
 
+
+const queryClient = new QueryClient();
+
 const Application = () => {
 
     return (
+        <QueryClientProvider client={queryClient} >
         <div className="container">
             <div className="sheet">
             <div className="row">
@@ -75,6 +80,7 @@ const Application = () => {
             </div>
             </div>
         </div>
+        </QueryClientProvider>
             
     )
 }

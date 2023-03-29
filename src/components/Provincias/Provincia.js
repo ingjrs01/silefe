@@ -1,4 +1,5 @@
 import React, {useState,useEffect, useReducer, useRef} from 'react';
+import { useQuery } from '@tanstack/react-query';
 import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
@@ -12,6 +13,8 @@ import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
 import {form as formulario} from './Form';
+// probando
+import {PROVINCIA_ACTIONS, rProvincias} from './provincias.reducer';
 
 const Provincias = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false,page:0,load:0});
@@ -19,6 +22,25 @@ const Provincias = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized = useRef;
+
+    // Probando a ver como va esto del query: 
+    const {data, status, isFetching, error, refetch} = useQuery(["users"], () => fetchAPIData('/silefe.provincia/filter',{name:"",page:1},referer)
+    );
+
+    const [provincias, provinciasHandle] = useReducer(rProvincias,{});
+    const [jload, setJload] = useState(0);
+
+    console.log("probando lo nuevo");
+
+    useEffect(()=>{
+        console.log("este es el nuevo useEffect");
+        if (data) {
+            console.log("cargando datos");
+            provinciasHandle({type:PROVINCIA_ACTIONS.START,items:data.data});
+        }
+        else 
+            console.log("esto habia fallado")
+    },[data,isFetching, jload]);
 
     const referer = 'http://localhost:8080/provincias';
     const form = formulario;
@@ -105,15 +127,15 @@ const Provincias = () => {
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
     }
 
-    useEffect( ()=> {
-		if (!isInitialized.current) {
-            fetchData();
-			isInitialized.current = true;
-		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
-		}
-    },[items.load]);
+//    useEffect( ()=> {
+//		if (!isInitialized.current) {
+//            fetchData();
+//			isInitialized.current = true;
+//		} else {
+//			const timeoutId = setTimeout(fetchData, 350);
+//			return () => clearTimeout(timeoutId);
+//		}
+//    },[items.load]);
 
     if (!items) 
         return (<div>Liferay.Language.get("Cargando")</div>)
@@ -148,6 +170,10 @@ const Provincias = () => {
                     itemsHandle={itemsHandle} 
                  />
             }
+            <button onClick={()=>{
+                setJload(jload + 1);
+                console.log("pulsando");
+            }}>Actualizar</button>
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>

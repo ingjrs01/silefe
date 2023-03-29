@@ -55,6 +55,7 @@
 		"@clayui/toolbar": "^3.69.0",
 		"@clayui/tooltip": "^3.71.0",
 		"@clayui/upper-toolbar": "^3.71.0",
+		"@tanstack/react-query": "^4.28.0",
 		"atlas-css": "^0.1.0",
 		"axios": "^0.27.2",
 		"i18next": "^21.10.0",
