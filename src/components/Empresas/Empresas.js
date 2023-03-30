@@ -36,6 +36,25 @@ const Empresas = () => {
             page: items.page,
             razonSocial: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""
         }
+
+        if (redCentros == undefined || redCentros.provincias.length == 0)
+            initCentrosForm();
+
+        let { data, totalPages, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
+
+        const tmp = await data.map(i => {
+            return ({
+                ...i,
+                id: i.empresaId,
+                email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
+                telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
+                checked: false
+            })
+        });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, page: page });
+    }
+
+    const initCentrosForm = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "CIF" }];
 
@@ -53,19 +72,6 @@ const Empresas = () => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             centrosHandle({ type: CENTROS_ACTIONS.TIPOS_VIA, tipos: opts })
         });
-
-        let { data, totalPages, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
-
-        const tmp = await data.map(i => {
-            return ({
-                ...i,
-                id: i.empresaId,
-                email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
-                telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
-                checked: false
-            })
-        });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, page: page });
     }
 
     const handleSave = () => {
@@ -80,7 +86,7 @@ const Empresas = () => {
                 if (redCentros.modified.length > 0) {
                     const oo = redCentros.items.filter( i => redCentros.modified.includes( i.id )  );
                     saveAPI('/silefe.empresacentros/save-centros-by-empresa', {id: data.empresaId, centros: oo,userId: getUserId()} , referer).then(respon => {
-                      console.log(respon);
+                         console.log("lalala")
                     });
                 }
                 // ahora tenemos que borrar los items que hallan sido borrados
