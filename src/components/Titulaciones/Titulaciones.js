@@ -68,31 +68,10 @@ const Titulaciones = () => {
     }
 
     const fetchData = async () => {
-        let postdata = {
-            descripcion: "",
-            lang: getLanguageId()
-        };
-    
-        fetchAPIData('/silefe.titulaciontipo/all', postdata,referer).then(response => {
-            const l = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})
-            form.fields.titulacionTipoId.options = l;    
-            form.fields.titulacionTipoId.change = cambiaTitulacionTipo;    
-        });
+        if (form.fields.titulacionTipoId.options == undefined || form.fields.titulacionTipoId.options.length == 0)
+            initForm();
 
-        fetchAPIData('/silefe.titulacionnivel/all', postdata,referer).then( response => {
-            //debugger;
-            opciones_nivel = [...response.data];
-            //console.log("Niveles cargados");
-            //console.log(opciones_nivel);
-            form.fields.titulacionNivelId.change = cambiaTitulacionNivel;
-        });
-
-        fetchAPIData('/silefe.titulacionfam/all', postdata,referer).then(response => {
-            titulacionesFamiliaOptions = response.data;
-            form.fields.titulacionFamiliaId.change = cambiaTitulacionFamilia;
-        })
-        
-        postdata = {
+        const postdata = {
             page: items.page,
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
@@ -119,6 +98,30 @@ const Titulaciones = () => {
         });
 
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages,page:page });
+    }
+
+    const initForm = () => {
+        let postdata = {
+            descripcion: "",
+            lang: getLanguageId()
+        };
+    
+        fetchAPIData('/silefe.titulaciontipo/all', postdata,referer).then(response => {
+            const l = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})
+            form.fields.titulacionTipoId.options = l;    
+            form.fields.titulacionTipoId.change = cambiaTitulacionTipo;    
+        });
+
+        fetchAPIData('/silefe.titulacionnivel/all', postdata,referer).then( response => {
+            opciones_nivel = [...response.data];
+            form.fields.titulacionNivelId.change = cambiaTitulacionNivel;
+        });
+
+        fetchAPIData('/silefe.titulacionfam/all', postdata,referer).then(response => {
+            titulacionesFamiliaOptions = response.data;
+            form.fields.titulacionFamiliaId.change = cambiaTitulacionFamilia;
+        })
+
     }
 
     const cambiaTitulacionTipo = (value) => {
@@ -151,7 +154,6 @@ const Titulaciones = () => {
         let seleccionado = items.arr.filter(item => item.checked)[0];
         //cambiaTitulacionTipo(seleccionado.titulacionTipoId);
         console.debug(items);        
-        debugger;
         const opt_nivel = opciones_nivel.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
         const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
         itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
