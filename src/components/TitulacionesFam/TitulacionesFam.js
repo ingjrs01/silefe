@@ -103,23 +103,25 @@ const TitulacionesFam = () => {
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
         };
         let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
-        const options = await getNivelesTitulaciones();
+
+        if (form.fields.titulacionNivelId.options == undefined || form.fields.titulacionNivelId.options.length == 0) {
+            form.fields.titulacionNivelId.options = await getNivelesTitulaciones();
+        }
+        //form.fields.titulacionNivelId.options = options;
         const tmp = await data.map(i => {
             console.log(i);
-            return({...i,id:i.titulacionFamId, titulacionNivelDescripcion:options.filter(o => o.value == i.titulacionNivelId)[0].label   ,checked:false})
+            return({
+                ...i,
+                id:i.titulacionFamId, 
+                titulacionNivelDescripcion:form.fields.titulacionNivelId.options.filter(o => o.value == i.titulacionNivelId)[0].label,
+                checked:false
+            })
         });
-        form.fields.titulacionNivelId.options = options;
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
     }
 
     const getNivelesTitulaciones = async () => {
-        const endpoint = '/silefe.titulacionnivel/all';
-        const postdata = {
-            descripcion: "",
-            lang: getLanguageId()
-
-        };
-        let {data} = await fetchAPIData(endpoint, postdata,referer);
+        let {data} = await fetchAPIData('/silefe.titulacionnivel/all', {descripcion: "",lang:getLanguageId()},referer);
         const options = await data.map(obj => {return {value:obj.id,label:obj.descripcion}});
         return options 
     }
