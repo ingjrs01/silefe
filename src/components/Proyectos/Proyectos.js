@@ -125,29 +125,8 @@ const Proyectos = () => {
     }
 
     const fetchData = async () => {
-        fetchAPIData('/silefe.cofinanciadas/all', {lang: getLanguageId() },referer).then(response => {
-            form.fields.entidadId.change = miEvento;
-            form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
-        });
-
-        fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
-            const opts = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}});
-            form.fields.colectivos.options = opts;
-        });
-
-        fetchAPIData('/silefe.convocatoria/all', {lang: getLanguageId()},referer).then(response => {
-            console.log("convocatoria")
-            console.log(response);
-            form.fields.convocatoriaId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
-        });
-
-        fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
-            console.log("viendo los tecnicos");
-            form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 
-            console.debug(form.fields.tecnicos.options);
-        });
-
-        form.fields.cofinanciacion.change = cofinanciacionChange;
+        if (form.fields.entidadId.options == undefined)
+            initForm();
 
         const postdata = {
             page:         items.page,
@@ -167,6 +146,28 @@ const Proyectos = () => {
             });
         });
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
+    }
+
+    const initForm = () => {
+        fetchAPIData('/silefe.cofinanciadas/all', {lang: getLanguageId() },referer).then(response => {
+            form.fields.entidadId.change = miEvento;
+            form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
+        });
+        fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+            form.fields.colectivos.options = opts;
+        });
+        fetchAPIData('/silefe.convocatoria/all', {lang: getLanguageId()},referer).then(response => {
+            console.log("convocatoria")
+            console.log(response);
+            form.fields.convocatoriaId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
+        });
+        fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
+            console.log("viendo los tecnicos");
+            form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 
+            console.debug(form.fields.tecnicos.options);
+        });
+        form.fields.cofinanciacion.change = cofinanciacionChange;
     }
 
     if (!items) 

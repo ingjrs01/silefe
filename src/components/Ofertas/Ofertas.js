@@ -151,9 +151,7 @@ const Ofertas = () => {
             page:   items.page,
             nombre: (items.search && typeof items.search !== 'undefined')?items.search:""
         }
-        
-        console.log("form");
-        console.debug(form);
+
         if (form.fields.edadId.options == undefined)
             initForm()
 
@@ -162,13 +160,10 @@ const Ofertas = () => {
 //            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
 //        });
 
-        // Inicializando todos los datos d elos participantes: 
-        console.log("mirando los redParticipantes");
-        console.debug(redParticipantes);
-        if (redParticipantes == undefined || redParticipantes.provinciasOptions.length == 0 ) {
-            console.log("lalala");
+        // Inicializando todos los datos de los participantes: 
+        if (redParticipantes == undefined || redParticipantes.provinciasOptions.length == 0 ) 
             initFormParticipantes();
-        }
+        
         else {
             console.log("los datos ya están cargados, y no vuelvo a cargarlos");
         }
