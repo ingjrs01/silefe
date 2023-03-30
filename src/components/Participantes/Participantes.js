@@ -122,7 +122,6 @@ const Participantes = () => {
     }
 
     const fetchData = async () => {
-        titulacionHandler({type:TITULACIONES_ACTIONS.START});
         experienciasHandler({type:EXPERIENCIA_ACTIONS.START});
 
         // TODO Cargar esto solo si es necesario: 
@@ -131,13 +130,15 @@ const Participantes = () => {
             queryTitulaciones();
         }
         
-        if (form.fields.situacionLaboral.options == undefined) 
+        if (form.fields.situacionLaboral.options == undefined)  {
             initForm();
-
+        }
+            
         const postdata = {
             page:    items.page,
-            nombre : (items.nombre && typeof items.search !== 'undefined')?items.nombre:""
+            nombre : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
+
         let {data,totalPages,page} = await fetchAPIData('/silefe.participante/filter',postdata,referer);
         
         const tmp = await data.map(i => {
@@ -258,6 +259,8 @@ const Participantes = () => {
     }
 
     const queryTitulaciones = () => {
+        titulacionHandler({type:TITULACIONES_ACTIONS.START});
+        
         fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, "http://localhost:8080/titulaciones").then(response => {
             titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
         });

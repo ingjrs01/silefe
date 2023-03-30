@@ -125,8 +125,9 @@ const Proyectos = () => {
     }
 
     const fetchData = async () => {
-        if (form.fields.entidadId.options == undefined)
+        if (form.fields.entidadId.options == undefined) {
             initForm();
+        }
 
         const postdata = {
             page:         items.page,
