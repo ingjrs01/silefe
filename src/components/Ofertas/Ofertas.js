@@ -148,9 +148,44 @@ const Ofertas = () => {
     const fetchData = async () => {
         participantesHandle({type:PARTICIPANTES_OPTIONS.START,search:searchCandidatos,showError: showError });
         const postdata = {
-            page:         items.page,
+            page:   items.page,
             nombre: (items.search && typeof items.search !== 'undefined')?items.search:""
         }
+        
+        console.log("form");
+        console.debug(form);
+        if (form.fields.edadId.options == undefined)
+            initForm()
+
+//        const ofertaId = 1201;
+//        fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId:ofertaId},referer).then(response => {
+//            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+//        });
+
+        // Inicializando todos los datos d elos participantes: 
+        console.log("mirando los redParticipantes");
+        console.debug(redParticipantes);
+        if (redParticipantes == undefined || redParticipantes.provinciasOptions.length == 0 ) {
+            console.log("lalala");
+            initFormParticipantes();
+        }
+        else {
+            console.log("los datos ya están cargados, y no vuelvo a cargarlos");
+        }
+
+        let {data,totalPages,page} = await fetchAPIData('/silefe.oferta/filter',postdata,referer);
+        const tmp = await data.map(i => {            
+            return({
+                ...i,
+                id                 : i.ofertaId,
+                fechaIncorporacion : (i.fechaIncorporacion != null)?new Date(i.fechaIncorporacion).toISOString().substring(0, 10):"",
+                checked            : false
+            });
+        });
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
+    }
+
+    const initForm = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         const opciones_requerido = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Recomendable" }, { value: "2", label: "Obligatorio" }];
         // consultado las edades
@@ -194,10 +229,17 @@ const Ofertas = () => {
             form.fields.permisos.options = opts;
         });
 
-        const ofertaId = 1201;
-        fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId:ofertaId},referer).then(response => {
-            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
-        });
+        form.fields.titulacionRequerido.options = opciones_requerido;
+        form.fields.idiomasRequerido.options = opciones_requerido;
+        form.fields.informaticaRequerido.options = opciones_requerido;
+        form.fields.experienciaRequerido.options = opciones_requerido;
+        form.fields.generoId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Hombre"},{value:"2",label:"Mujer"}];
+        form.fields.estado.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Activa"},{value:"2",label:"Con Inserción"},{value:"3",label:"Cerrada"}];
+        form.fields.jornadaId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:Liferay.Language.get("Completa")},{value:"2",label:Liferay.Language.get("Parcial")}];
+
+    }
+
+    const initFormParticipantes = () => {
 
         // Cargamos algunos datos para las ofertas: 
         fetchAPIData('/silefe.salario/all', {lang: getLanguageId()},referer).then(response => {
@@ -234,24 +276,7 @@ const Ofertas = () => {
             participantesHandle({type: PARTICIPANTES_OPTIONS.SET_JORNADAS,jornadas:opts});
         });
 
-        form.fields.titulacionRequerido.options = opciones_requerido;
-        form.fields.idiomasRequerido.options = opciones_requerido;
-        form.fields.informaticaRequerido.options = opciones_requerido;
-        form.fields.experienciaRequerido.options = opciones_requerido;
-        form.fields.generoId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Hombre"},{value:"2",label:"Mujer"}];
-        form.fields.estado.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Activa"},{value:"2",label:"Con Inserción"},{value:"3",label:"Cerrada"}];
-        form.fields.jornadaId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:Liferay.Language.get("Completa")},{value:"2",label:Liferay.Language.get("Parcial")}];
 
-        let {data,totalPages,page} = await fetchAPIData('/silefe.oferta/filter',postdata,referer);
-        const tmp = await data.map(i => {            
-            return({
-                ...i,
-                id                 : i.ofertaId,
-                fechaIncorporacion : (i.fechaIncorporacion != null)?new Date(i.fechaIncorporacion).toISOString().substring(0, 10):"",
-                checked            : false
-            });
-        });
-        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
     }
 
     if (!items) 

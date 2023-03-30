@@ -24,19 +24,16 @@ const Provincias = () => {
     const isInitialized = useRef;
 
     // Probando a ver como va esto del query: 
-    const {data, status, isFetching, error, refetch} = useQuery(["users"], () => fetchAPIData('/silefe.provincia/filter',{name:"",page:1},referer)
-    );
+    const {data, status, isFetching, error, refetch} = useQuery(["users"], () => fetchAPIData('/silefe.provincia/filter',{name:"",page:1},referer) );
 
     const [provincias, provinciasHandle] = useReducer(rProvincias,{});
     const [jload, setJload] = useState(0);
 
-    console.log("probando lo nuevo");
-
     useEffect(()=>{
-        console.log("este es el nuevo useEffect");
         if (data) {
             console.log("cargando datos");
             provinciasHandle({type:PROVINCIA_ACTIONS.START,items:data.data});
+            itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
         }
         else 
             console.log("esto habia fallado")
