@@ -28,6 +28,7 @@ export const form = {
             value:"ta ta ta", 
             placeholder: Liferay.Language.get('Tipo'), 
             conditions: [],
+            enabled:true,
             options: []  
         },         
     },
