@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import Table from '../../includes/interface/Table';
 import DefaultForm from '../../includes/interface/DefaultForm';
+import { TitulacionForm } from './TitulacionForm';
 import Menu from '../Menu';
 import { useModal } from '@clayui/modal';
 import { getUserId } from '../../includes/LiferayFunctions';
@@ -13,6 +14,7 @@ import { Errors } from '../../includes/Errors';
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import {form as f2} from './Form';
 import Papa from "papaparse";
+import {reducerTitulacion, TITULACIONES_ACTIONS} from '../../includes/reducers/titulaciones.reducer';
 
 const Titulaciones = () => {
     const [items, itemsHandle]             = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,page:0, load: 0 });
@@ -23,6 +25,8 @@ const Titulaciones = () => {
     //const [titulacionesNivelOptions ,setTitulacionesNivelOptions] = useState([]);
     let opciones_nivel = [];
     let titulacionesFamiliaOptions = [];
+    // TODO: viendo las cosas
+    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{});
     
     let form = f2;
     const referer = "http://localhost:8080/titulaciones";
@@ -68,6 +72,11 @@ const Titulaciones = () => {
     }
 
     const fetchData = async () => {
+        if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0) {
+            console.log("veo que es mejor consultar las titulaciones");
+            queryTitulaciones();
+        }
+
         if (form.fields.titulacionTipoId.options == undefined || form.fields.titulacionTipoId.options.length == 0)
             initForm();
 
@@ -81,7 +90,9 @@ const Titulaciones = () => {
         if (error == 1) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
         }
-        
+        await console.log("cargamos los datos");
+        await console.debug(redTitulaciones);
+        //debugger;
         const tmp = await data.map(i => {
             let tFamilia = "";
             let nivelId = 0;
@@ -96,7 +107,7 @@ const Titulaciones = () => {
             }
             return ({ ...i, id: i.titulacionId,titulacionFamiliaDescripcion: tFamilia, titulacionNivelId: nivelId,titulacionTipoId:tipoId,checked: false })
         });
-
+        
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages,page:page });
     }
 
@@ -120,9 +131,32 @@ const Titulaciones = () => {
         fetchAPIData('/silefe.titulacionfam/all', postdata,referer).then(response => {
             titulacionesFamiliaOptions = response.data;
             form.fields.titulacionFamiliaId.change = cambiaTitulacionFamilia;
-        })
+        });
 
+        //queryTitulaciones();
     }
+
+    const queryTitulaciones = () => {
+        console.log("Cargando los dados de reducer desde titulaciones");
+        titulacionHandler({type:TITULACIONES_ACTIONS.START});
+        const lang = getLanguageId();
+        //debugger;
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: lang }, "http://localhost:8080/titulaciones").then(response => {
+            console.log("cargando los tipos");
+            titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
+        });
+        fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "", lang: lang }, referer).then(response => {
+          //  debugger;
+            titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: [...response.data] });
+        });
+        fetchAPIData('/silefe.titulacionfam/all', { descripcion: "", lang: lang }, referer).then(response => {
+            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: [...response.data] });
+        });
+        fetchAPIData('/silefe.titulacion/all', { descripcion: "", lang: lang }, referer).then(response => {
+            titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: [...response.data] });
+        });
+    }
+
 
     const cambiaTitulacionTipo = (value) => {
         console.log("opciones nivel");
@@ -215,11 +249,17 @@ const Titulaciones = () => {
             />}
             {
                 (items.status === 'edit' || items.status === 'new') &&
+                <TitulacionForm 
+                    redTitulaciones={redTitulaciones}
+                    titulacionHandler={titulacionHandler}
+                    itemsHandle={itemsHandle}
+                />                
+                /*
                 <DefaultForm
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                />
+                /> */
             }
             {
                 (items.status === 'list') &&
