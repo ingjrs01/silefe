@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox, ClaySelectWithOption } from '@clayui/form';
+import ClayLocalizedInput from '@clayui/localized-input';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
@@ -10,7 +11,22 @@ import { ITEMS_ACTIONS } from "../../includes/reducers/items.reducer";
 
 const spritemap = './icons.svg';
 
-export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle}) => {
+export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,items,save}) => {
+  const locales = [
+    {
+      label: "es-ES",
+      symbol: "es-ES"
+    },
+    {
+      label: "en-US",
+      symbol: "en-US"
+    },
+    {
+      label: "gl-ES",
+      symbol: "gl-ES"
+    }
+    ]
+    const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
     return(
         <>
@@ -99,25 +115,22 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle}
                         </div>
                         <div className="row">
                         <ClayForm.Group className="col">
-                            <label htmlFor="basicInput">{ Liferay.Language.get("Titulacion") }</label>
-                              <ClaySelect aria-label="Select Label"
-                                id={"it"}
-                                name={"it"}
-                                key={"it"}
-                                disabled={ false }
-                                onChange={evt => { 
-                                  titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONID,value:evt.target.value});
-                                }}
-                                value={redTitulaciones.titulacion.titulacionId} >
-                                {
-                                  redTitulaciones.titulacionOptions.map( option => { return (
-                                    <ClaySelect.Option
-                                      label={option.label}
-                                      value={option.value}
-                                    />
-                                  )})
+                              <ClayLocalizedInput
+                                id={"tdescripcion"}
+                                key={"tdescripcion"}
+                                label={"Descripcion"}
+                                locales={locales}
+                                onSelectedLocaleChange={setSelectedLocale}
+                                onTranslationsChange={evt => {
+                                  //validateLocalized(it, evt);
+                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: "descripcion", value: evt });
+                                  console.log("escribiendo");
                                 }
-                            </ClaySelect>
+                                }
+                                selectedLocale={selectedLocale}
+                                translations={items.item["descripcion"]}
+                              />
+
                         </ClayForm.Group>
                         </div>
 
@@ -133,7 +146,7 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle}
                             </ClayButton>
                         </div>
                         <div className="btn-group-item">
-                            <ClayButton onClick={e =>  titulacionHandler({type: TITULACIONES_ACTIONS.SAVE_ITEM}) } 
+                            <ClayButton onClick={e =>  save() } 
                               displayType="primary">{Liferay.Language.get('Guardar')}
                             </ClayButton>
                         </div>

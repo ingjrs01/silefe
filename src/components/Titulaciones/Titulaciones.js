@@ -94,18 +94,23 @@ const Titulaciones = () => {
         await console.debug(redTitulaciones);
         //debugger;
         const tmp = await data.map(i => {
-            let tFamilia = "";
-            let nivelId = 0;
-            let tipoId = 0;
-            let filtered = titulacionesFamiliaOptions.filter(o => o.titulacionFamId == i.titulacionFamiliaId);
-            if (filtered.length > 0) {
-                tFamilia = filtered[0].descripcion ;
-                nivelId = filtered[0].titulacionNivelId;                
-            } 
-            if (nivelId != 0) {
-                tipoId = opciones_nivel.filter(t => t.titulacionNivelId == nivelId)[0].titulacionTipoId;
-            }
-            return ({ ...i, id: i.titulacionId,titulacionFamiliaDescripcion: tFamilia, titulacionNivelId: nivelId,titulacionTipoId:tipoId,checked: false })
+            let tFamilia = "jajaja";
+//            let nivelId = 0;
+//            let tipoId = 0;
+//            let filtered = titulacionesFamiliaOptions.filter(o => o.titulacionFamId == i.titulacionFamiliaId);
+//            if (filtered.length > 0) {
+//                tFamilia = filtered[0].descripcion ;
+//                nivelId = filtered[0].titulacionNivelId;                
+//            } 
+//            if (nivelId != 0) {
+//                tipoId = opciones_nivel.filter(t => t.titulacionNivelId == nivelId)[0].titulacionTipoId;
+//            }
+
+            return ({ ...i, 
+                id: i.titulacionId,
+                titulacionFamiliaDescripcion: tFamilia, 
+                //titulacionNivelId: nivelId,titulacionTipoId:tipoId,
+                checked: false })
         });
         
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages,page:page });
@@ -179,19 +184,28 @@ const Titulaciones = () => {
         console.log("no hago nada");
     }
 
-    // Esto se llama al editar un elemento
     const beforeEdit = (val) => {
         //await console.log("loadSelects esperando");
         //await console.log(opciones_nivel);
         //await console.log(titulacionesFamiliaOptions);
         //await console.log("todo cargado");
         let seleccionado = items.arr.filter(item => item.checked)[0];
-        //cambiaTitulacionTipo(seleccionado.titulacionTipoId);
-        console.debug(items);        
-        const opt_nivel = opciones_nivel.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
-        const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: opt_fam});
+        //console.debug(items);        
+        //const opt_nivel = opciones_nivel.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
+        //const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
+        //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
+        //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: opt_fam});
+
+        // TENGO QUE PONER LOS DATOS CORRECTOS EN EL REDUCER
+        console.log("Cargando un dato");
+        console.debug(seleccionado);
+        console.debug(items.arr);
+
+        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONTIPO,value: seleccionado.titulacionTipoId});
+        //debugger;
+        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value: seleccionado.titulacionNivelId});
+        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA, value: seleccionado.titulacionFamiliaId});
+
     }
 
     const handleSave = async () => {
@@ -199,7 +213,7 @@ const Titulaciones = () => {
             titulacionId: items.item.id,
             codigo: items.item.codigo,
             descripcion: items.item.descripcion,
-            titulacionFamiliaId: items.item.titulacionFamiliaId,
+            titulacionFamiliaId: redTitulaciones.titulacion.titulacionFamiliaId,
             userId: getUserId()
         }
 
@@ -253,6 +267,8 @@ const Titulaciones = () => {
                     redTitulaciones={redTitulaciones}
                     titulacionHandler={titulacionHandler}
                     itemsHandle={itemsHandle}
+                    items={items}
+                    save={handleSave}
                 />                
                 /*
                 <DefaultForm

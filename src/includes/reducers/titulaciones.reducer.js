@@ -26,6 +26,9 @@ let newniveles = [];
 let newfamilias = [];
 let newtitulaciones = [];
 let tmp = [];
+let tmpTipoId = 0;
+let tmpNivelId = 0;
+let tmpFamiliaId = 0;
 
 export const reducerTitulacion = (state=initialState, action ) => {
     switch (action.type) {
@@ -80,17 +83,35 @@ export const reducerTitulacion = (state=initialState, action ) => {
                 ...state,
                 titulacion: action.titulacion
             }
-        case TITULACIONES_ACTIONS.SET_TITULACIONTIPO:
-            newniveles = state.niveles.filter(i => i.titulacionTipoId == action.value).map(i => {return {value:i.titulacionNivelId,label:i.descripcion}})
-            newfamilias = state.familias.filter(i => i.titulacionNivelId == newniveles[0].value).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
-            newtitulaciones = state.titulaciones.filter(i => i.titulacionFamiliaId == newfamilias[0].value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+        case TITULACIONES_ACTIONS.SET_TITULACIONTIPO:            
+            tmpTipoId = 0;
+            if (action.value == "0") 
+                tmpTipoId = state.tipoOptions[0].value
+            else 
+                tmpTipoId = action.value 
+
+            newniveles = state.niveles.filter(i => i.titulacionTipoId == tmpTipoId).map(i => {return {value:i.titulacionNivelId,label:i.descripcion}})
+            tmpNivelId = 0;
+            tmpFamiliaId = 0;
+            newtitulaciones = [];
+            newfamilias = [];            
+
+            if (newniveles.length > 0) {
+                tmpNivelId = newniveles[0].value;
+                newfamilias = state.familias.filter(i => i.titulacionNivelId == tmpNivelId).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
+            }
+
+            if (newfamilias.length > 0) {
+                tmpFamiliaId = newfamilias[0].value;
+                newtitulaciones = state.titulaciones.filter(i => i.titulacionFamiliaId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+            }
             
             return {
                 ...state,
                 titulacion: {...state.titulacion,
                     titulacionTipoId: action.value,
-                    titulacionNivelId: newniveles[0].value,
-                    titulacionFamiliaId: newfamilias[0].value,
+                    titulacionNivelId: tmpNivelId,
+                    titulacionFamiliaId: tmpFamiliaId,
                     titulacionId:        (newtitulaciones.length > 0)?newtitulaciones[0].value:0,
                 },
                 nivelOptions: newniveles,
@@ -98,8 +119,20 @@ export const reducerTitulacion = (state=initialState, action ) => {
                 titulacionOptions: newtitulaciones,
             }
         case TITULACIONES_ACTIONS.SET_TITULACIONNIVEL:
+            if (action.value == "0")
+                return {
+                    ...state
+                }
+            //debugger;
             newfamilias = state.familias.filter(i => i.titulacionNivelId == action.value).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
-            newtitulaciones = state.titulaciones.filter(i => i.titulacionId == newfamilias[0].value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+            tmpFamiliaId = 0;
+            newtitulaciones = [];
+
+            if (newfamilias.length > 0) {
+                tmpFamiliaId = newfamilias[0].value
+                newtitulaciones = state.titulaciones.filter(i => i.titulacionId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+            }
+
             return {
                 ...state,
                 titulacion: {
@@ -112,6 +145,11 @@ export const reducerTitulacion = (state=initialState, action ) => {
                 titulacionOptions: newtitulaciones,
             }
         case TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA:
+            if (action.value == "0") 
+                return {
+                    ...state
+                }
+
             newtitulaciones = state.titulaciones.filter(i => i.titulacionId == action.value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
             return {
                 ...state,

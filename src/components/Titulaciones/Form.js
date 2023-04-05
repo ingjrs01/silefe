@@ -48,6 +48,15 @@ export const form = {
             placeholder: Liferay.Language.get('Descripcion'), 
             conditions: ["text"] 
         },
+        familia: { 
+            key: 6, 
+            type: "multilang",
+            label: Liferay.Language.get('Familia'), 
+            name: "familia", 
+            value: "", 
+            placeholder: Liferay.Language.get('Familia'), 
+            conditions: ["text"] 
+        },
     },
     rows: [
         {
@@ -74,9 +83,9 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
-        titulacionFamiliaDescripcion: {
+        familia: {
             columnTitle: Liferay.Language.get('Familia'),
-            columnType: "string",
+            columnType: "multilang",
             key: "c4",
         },
     }    
