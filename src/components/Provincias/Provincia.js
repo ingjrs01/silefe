@@ -124,15 +124,15 @@ const Provincias = () => {
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
     }
 
-//    useEffect( ()=> {
-//		if (!isInitialized.current) {
-//            fetchData();
-//			isInitialized.current = true;
-//		} else {
-//			const timeoutId = setTimeout(fetchData, 350);
-//			return () => clearTimeout(timeoutId);
-//		}
-//    },[items.load]);
+    useEffect( ()=> {
+		if (!isInitialized.current) {
+            fetchData();
+			isInitialized.current = true;
+		} else {
+			const timeoutId = setTimeout(fetchData, 350);
+			return () => clearTimeout(timeoutId);
+		}
+    },[items.load]);
 
     if (!items) 
         return (<div>Liferay.Language.get("Cargando")</div>)

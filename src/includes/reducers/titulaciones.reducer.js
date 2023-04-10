@@ -150,7 +150,7 @@ export const reducerTitulacion = (state=initialState, action ) => {
                     ...state
                 }
 
-            newtitulaciones = state.titulaciones.filter(i => i.titulacionId == action.value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+            newtitulaciones = state.titulaciones.filter(i => i.titulacionFamiliaId == action.value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
             return {
                 ...state,
                 titulacion: {

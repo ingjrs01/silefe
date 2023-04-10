@@ -102,10 +102,6 @@ export const TableForm = ({redTitulaciones, titulacionHandler}) => {
                                 key={"it"}
                                 disabled={ false }
                                 onChange={evt => { 
-                                  //titulacionHandler({
-                                  //  type:TITULACIONES_ACTIONS.SET_TITULACION,
-                                  //  titulacion: {...redTitulaciones.titulacion,titulacionNivelId: evt.target.value}
-                                  //});
                                   titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value:evt.target.value})
                                 }}
                                 value={redTitulaciones.titulacion.titulacionNivelId} >
