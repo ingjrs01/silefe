@@ -123,7 +123,6 @@ export const reducerTitulacion = (state=initialState, action ) => {
                 return {
                     ...state
                 }
-            //debugger;
             newfamilias = state.familias.filter(i => i.titulacionNivelId == action.value).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
             tmpFamiliaId = 0;
             newtitulaciones = [];
