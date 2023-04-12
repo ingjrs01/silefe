@@ -15,6 +15,7 @@ import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifu
 import {form as formulario} from './Form';
 // probando
 import {PROVINCIA_ACTIONS, rProvincias} from './provincias.reducer';
+import { Paginator } from '../../includes/interface/Paginator';
 
 const Provincias = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false,page:0,load:0});
@@ -162,10 +163,16 @@ const Provincias = () => {
             }
             {
                 (items.status === 'list') &&
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                 />
+                <>
+                    <Table 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                    <Paginator 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                </>
             }
             <button onClick={()=>{
                 setJload(jload + 1);

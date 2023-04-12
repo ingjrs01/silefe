@@ -13,6 +13,7 @@ import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
 import { url_api, getAuthToken } from "../../includes/LiferayFunctions";
 import {form as formulario} from './Form';
+import { Paginator } from '../../includes/interface/Paginator';
 
 
 const Tecnicos = () => {
@@ -191,10 +192,16 @@ const Tecnicos = () => {
             }
             {
                 (items.status === 'list') &&
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                />
+                <>
+                    <Table 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                    <Paginator 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }

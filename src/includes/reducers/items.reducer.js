@@ -1,3 +1,5 @@
+import ClayAutocompleteLoadingIndicator from "@clayui/autocomplete/lib/LoadingIndicator";
+
 export const ITEMS_ACTIONS = {
     START: 0,
     LOAD: 1,
@@ -15,13 +17,14 @@ export const ITEMS_ACTIONS = {
     FETCH: 16,
     NEXTPAG: 17,
     PREVPAG:18,
-    SET_FORMOPTIONS: 19,
-    ADD_MULTIFIELD: 20,
-    REMOVE_MULTIFIELD: 21,
-    SET_MULTIFIELD: 22,
-    SET_MULTIFIELDCHECK: 23,
-    SET_STATUS: 24,
-    SET_ACTIVETAB: 25,
+    SETPAGE: 19,
+    SET_FORMOPTIONS: 20,
+    ADD_MULTIFIELD: 21,
+    REMOVE_MULTIFIELD: 22,
+    SET_MULTIFIELD: 23,
+    SET_MULTIFIELDCHECK: 24,
+    SET_STATUS: 25,
+    SET_ACTIVETAB: 26,
   }
 
 const initialState = {
@@ -84,6 +87,7 @@ export const red_items = (state=initialState, action ) => {
                 //else 
                 //    tmp_item[j] = [];
             });
+
             return {
                 ...state,
                 arr: action.items,
@@ -214,7 +218,19 @@ export const red_items = (state=initialState, action ) => {
             }
             return {
                 ...state,
-                } 
+                }
+        case ITEMS_ACTIONS.SETPAGE:
+            if ((action.page < state.totalPages) && (action.page >= 0)) {
+                return {
+                    ...state,
+                    page: action.page,
+                    load: (state.load + 1) % 17
+                }                
+            }
+            return {
+                ...state,
+                }
+            
         case ITEMS_ACTIONS.SET_FORMOPTIONS:
             let newFields = state.fields;
             newFields.fields[action.fieldname].options=action.options;

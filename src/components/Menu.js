@@ -34,7 +34,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
             </ClayInput.GroupItem>
           </ClayInput.Group>
         </ClayToolbar.Item>
-
+        {/*
         <ClayToolbar.Item>
           <ClayToolbar.Section>
             <ClayButton.Group>
@@ -62,6 +62,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
             </ClayButton.Group>
           </ClayToolbar.Section>
         </ClayToolbar.Item>
+        */ }
 
         <ClayToolbar.Item>
           <ClayToolbar.Section>

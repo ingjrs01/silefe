@@ -12,6 +12,7 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario } from './Form';
+import { Paginator } from "../../includes/interface/Paginator";
 
 const Salarios = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
@@ -137,10 +138,16 @@ const Salarios = () => {
             }
             {
                 items.status === 'list' &&
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle}
-                 />
+                <>
+                    <Table 
+                        items={items} 
+                        itemsHandle={itemsHandle}
+                    />
+                    <Paginator 
+                        items={items} 
+                        itemsHandle={itemsHandle}
+                    />
+                </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }

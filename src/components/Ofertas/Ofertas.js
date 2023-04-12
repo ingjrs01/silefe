@@ -15,6 +15,7 @@ import { Errors } from '../../includes/Errors';
 import {form as formulario} from './OfertaForm';
 import { reducerCandidatos, PARTICIPANTES_OPTIONS } from "../../includes/reducers/candidatos.reducer";
 import {ParticipantesRender} from "./ParticipantesRender";
+import { Paginator } from "../../includes/interface/Paginator";
 
 const Ofertas = () => {
     const [items,itemsHandle]               = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
@@ -177,6 +178,9 @@ const Ofertas = () => {
                 checked            : false
             });
         });
+        console.log("fetchData");
+        console.log(data);
+        console.log(totalPages);
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
     }
 
@@ -304,10 +308,16 @@ const Ofertas = () => {
             }
             {
                 (items.status === 'list') &&
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                />
+                <>
+                    <Table 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                    <Paginator
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }

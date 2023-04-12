@@ -17,6 +17,7 @@ import CentrosRender from "./CentrosRender";
 import { reducerCentros, CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
 import { reducerContactos, CONTACTOS_ACTIONS } from "../../includes/reducers/contactos.reducer";
 import ContactosRender from "./ContactosRender";
+import { Paginator } from "../../includes/interface/Paginator";
 
 const Empresas = () => {
     const [items, itemsHandle] = useReducer(red_items, { arr: [], item: { id: 0 }, totalPages: 0, page: 0, load: 0 });
@@ -215,10 +216,17 @@ const Empresas = () => {
             }
             {
                 (items.status === 'list') &&
-                <Table
-                    items={items}
-                    itemsHandle={itemsHandle}
-                />
+                <>
+                    <Table
+                        items={items}
+                        itemsHandle={itemsHandle}
+                    />
+                    
+                    <Paginator
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                </>
             }
 
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />

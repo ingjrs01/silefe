@@ -12,6 +12,7 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
 import {form as formulario} from './Form';
+import { Paginator } from '../../includes/interface/Paginator';
 
 const DGeografica = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false},status:'list',fields:form, checkall: false, showform: false, page:0,load:0}); 
@@ -205,10 +206,16 @@ const DGeografica = () => {
             }
             {
                 (items.status === 'list') &&
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                />
+                <>
+                    <Table 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                    <Paginator 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }

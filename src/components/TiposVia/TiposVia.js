@@ -13,6 +13,7 @@ import Papa, { parse } from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
 import {form as formulario} from './Form';
 import { getLanguageId } from '../../includes/LiferayFunctions';
+import {Paginator} from '../../includes/interface/Paginator';
 
 const TiposVia = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false,page:0,load:0});
@@ -154,10 +155,16 @@ const TiposVia = () => {
             }
             {
                 (items.status === 'list') &&
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                 />
+                <>
+                    <Table 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                    <Paginator 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }

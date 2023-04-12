@@ -15,9 +15,10 @@ import { form as formulario } from "./Form";
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/titulaciones.reducer';
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
+import { Paginator } from "../../includes/interface/Paginator";
 
 const Participantes = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,page:0,load:0});
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: [], deleted: [], status: "list"});
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list", participanteId: 0});
     const [toastItems,setToastItems]     = useState([]);    
@@ -287,7 +288,10 @@ const Participantes = () => {
     }
   
     if (!items) 
-    return (<div>{Liferay.Language.get('Cargando')}</div>)
+        return (<div>{Liferay.Language.get('Cargando')}</div>)
+
+    //console.log("Datos generados");
+    //console.debug(items);
 
     return (
         <>
@@ -318,10 +322,16 @@ const Participantes = () => {
             }            
             {
                 (items.status === 'list') &&
+                <>
                 <Table 
                     items={items} 
                     itemsHandle={itemsHandle} 
                 />
+                <Paginator 
+                    itemsHandle={itemsHandle}
+                    items={items}
+                />
+                </>
             }
             
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />

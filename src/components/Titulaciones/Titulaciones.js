@@ -15,6 +15,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions';
 import {form as f2} from './Form';
 import Papa from "papaparse";
 import {reducerTitulacion, TITULACIONES_ACTIONS} from '../../includes/reducers/titulaciones.reducer';
+import { Paginator } from "../../includes/interface/Paginator";
 
 const Titulaciones = () => {
     const [items, itemsHandle]             = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,page:0, load: 0 });
@@ -279,10 +280,17 @@ const Titulaciones = () => {
             }
             {
                 (items.status === 'list') &&
-                <Table
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                />
+                <>
+                    <Table
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                    <Paginator 
+                        itemsHandle={itemsHandle}
+                        items={items}
+                    />
+                </>
+
             }            
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
 

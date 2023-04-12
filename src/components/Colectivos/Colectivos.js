@@ -12,6 +12,7 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import {form as formulario} from './Form';
 import Papa from "papaparse";
+import { Paginator } from '../../includes/interface/Paginator';
 
 const Colectivos = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0}); 
@@ -145,10 +146,16 @@ const Colectivos = () => {
             }
             {
                 (items.status === 'list') &&
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                />
+                <>
+                    <Table 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                    <Paginator 
+                        items={items} 
+                        itemsHandle={itemsHandle} 
+                    />
+                </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
