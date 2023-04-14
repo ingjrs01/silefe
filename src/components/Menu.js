@@ -1,25 +1,24 @@
 import React from 'react';
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import ClayIcon from '@clayui/icon';
+import ClayIcon, {ClayIconSpriteContext} from '@clayui/icon';
 import {ClayInput} from '@clayui/form';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayToolbar from '@clayui/toolbar';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
-
 //import "@clayui/css/lib/css/atlas.css";
 
-const spritemap = './icons.svg';
+
+const spritemap = "./o/my-project/icons.svg";
 
 const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit}) => {
 
   return (
+    <ClayIconSpriteContext.Provider value={spritemap}>
     <ClayToolbar>
       <ClayToolbar.Nav>
         <ClayToolbar.Item className="text-left" expand>
           <ClayToolbar.Section>
             <label className="component-title">{"SiLeFe "}</label>
-
-            <ClayIcon symbol="lock" />
           </ClayToolbar.Section>
         </ClayToolbar.Item>
 
@@ -34,7 +33,6 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
             </ClayInput.GroupItem>
           </ClayInput.Group>
         </ClayToolbar.Item>
-        {/*
         <ClayToolbar.Item>
           <ClayToolbar.Section>
             <ClayButton.Group>
@@ -43,7 +41,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
                 aria-label="Previous"
                 onClick={() => {   itemsHandle({type:ITEMS_ACTIONS.PREVPAG})}}
                 small
-                symbol="user"
+                symbol="angle-left"
               />
 
               <ClayButtonWithIcon
@@ -62,51 +60,71 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
             </ClayButton.Group>
           </ClayToolbar.Section>
         </ClayToolbar.Item>
-        */ }
+
 
         <ClayToolbar.Item>
           <ClayToolbar.Section>
-            <ClayButton aria-label="Delete" displayType="danger" onClick={() => { handleDelete() }}>
-              {Liferay.Language.get('Borrar')}
-              <ClayIcon spritemap={spritemap} symbol="plus" />
-            </ClayButton>
+          <ClayButton.Group>
+            <ClayButtonWithIcon
+                  displayType="danger"
+                  aria-label="Delete"
+                  className="nav-btn nav-btn-monospaced"
+                  onClick={() => handleDelete() }
+                  spritemap={spritemap}
+                  symbol="trash"
+                />
 
             {
               (status === 'list') &&
-            <ClayButton aria-label="Edit" className="inline-item-after" onClick={() => { 
-              itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM});
-              beforeEdit();
-            }}>
-              {Liferay.Language.get('Editar')}
-            </ClayButton>
+              <ClayButtonWithIcon
+              aria-label="Edit"
+              className="nav-btn nav-btn-monospaced"
+              onClick={() => {itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM});beforeEdit();} }
+              spritemap={spritemap}
+              symbol="pencil"
+            />
+
             }
 
             {
               (status === 'new' || status === 'edit') &&
-            <ClayButton aria-label="Save" className="inline-item-after" onClick={() => { handleSave() }}>
-              {Liferay.Language.get('Guardar')}
-            </ClayButton>
+              <ClayButtonWithIcon
+                aria-label="Save"
+                className="nav-btn nav-btn-monospaced"
+                onClick={() => { handleSave() }}
+                spritemap={spritemap}
+                symbol="disk"
+              />
             }
 
             {
-              (status === 'list') &&
-            <ClayButton aria-label="New" className="inline-item-after" onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEW_ITEM}) }}>
-              {Liferay.Language.get('Nuevo')}
-            </ClayButton>
+              (status === 'list') &&                    
+              <ClayButtonWithIcon
+                aria-label="Add"
+                className="nav-btn nav-btn-monospaced"
+                onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEW_ITEM}) }}
+                spritemap={spritemap}
+                symbol="plus"
+              />
             }
             {
               (status === 'list') &&
-            <ClayButton aria-label="Load" className="inline-item-after" onClick={() => { loadCsv(); }}>
-              {Liferay.Language.get('Carga')}
-            </ClayButton>
+              <ClayButtonWithIcon
+                aria-label="Load"
+                className="nav-btn nav-btn-monospaced"
+                onClick={() => loadCsv()}
+                spritemap={spritemap}
+                symbol="import-list"
+              />
             }
-
+          </ClayButton.Group>
           </ClayToolbar.Section>
         </ClayToolbar.Item>
 
 
       </ClayToolbar.Nav>
     </ClayToolbar>
+    </ClayIconSpriteContext.Provider>
   );
 };
 

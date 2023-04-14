@@ -9,7 +9,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions'
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 import { ITEMS_ACTIONS } from "../../includes/reducers/items.reducer";
 
-const spritemap = './icons.svg';
+const spritemap = "./o/my-project/icons.svg";
 
 export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,items,save}) => {
   const locales = [

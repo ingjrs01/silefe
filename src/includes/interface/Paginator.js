@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { ITEMS_ACTIONS} from '../reducers/items.reducer';
 import {ClayPaginationWithBasicItems} from '@clayui/pagination';
 
-const spritemap = '/icons.svg';
+const spritemap = "./o/my-project/icons.svg";
 
 export const Paginator = ({itemsHandle,items}) => {
   const [active, setActive] = useState(items.page+1);

@@ -9,7 +9,8 @@ import ClayLocalizedInput from '@clayui/localized-input';
 import { getMonths, getDays } from '../../includes/interface/DatesLang';
 import { getLanguageId } from '../../includes/LiferayFunctions';
 
-const spritemap = '/icons.svg';
+const spritemap = "./o/my-project/icons.svg";
+
 
 const RenderFields =  ({ rows,  itemsHandle, items }) => {
 
@@ -142,11 +143,15 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 </>
                                 )})
                               }
-                              <ClayButton size={"xs"} displayType={"secondary"} onClick={evt => {
-                                console.log("direccion");
-                                itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: it });
-                                
-                              }}>{"Añadir"}</ClayButton>
+                              <ClayButtonWithIcon 
+                                aria-label="Add" 
+                                displayType="secondary" 
+                                spritemap={spritemap} 
+                                symbol="plus" 
+                                title="Add"
+                                onClick={ () => itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: it }) }
+                              />
+
                             </>}
 
 

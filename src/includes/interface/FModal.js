@@ -2,7 +2,8 @@ import React from "react";
 import ClayModal from '@clayui/modal';
 import ClayButton from '@clayui/button';
 
-const spritemap = "./icons.svg";
+const spritemap = "./o/my-project/icons.svg";
+
 
 export const FModal = ({onOpenChange,confirmDelete, observer }) => {
 

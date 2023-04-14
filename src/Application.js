@@ -28,7 +28,9 @@ import Empresas from './components/Empresas/Empresas';
 import Ofertas from  './components/Ofertas/Ofertas';
 import Edades from './components/Edades/Edades';
 import Carnets from './components/Carnets/Carnets';
-
+import {VerticalMenu} from './includes/interface/VerticalMenu';
+//import "@clayui/css/lib/css/atlas.css";
+//import './o/my-project/css/atlas.css';
 
 const queryClient = new QueryClient();
 
@@ -43,6 +45,7 @@ const Application = () => {
                     <div className="sheet-header">
                         <h2 className="sheet-title">Menú</h2>
                         <div className="sheet-text"><VMenu /></div>
+                        <div className="sheet-text"><VerticalMenu /></div>
                     </div>
                 </div>
                 <div className='col-10'>

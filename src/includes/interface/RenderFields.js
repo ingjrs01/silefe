@@ -9,22 +9,22 @@ import ClayLocalizedInput from '@clayui/localized-input';
 import { getMonths, getDays } from './DatesLang';
 import { getLanguageId } from '../LiferayFunctions'
 
-const spritemap = '/icons.svg';
+const spritemap = "./o/my-project/icons.svg";
 
 const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
 
     const locales = [
     {
       label: "es-ES",
-      symbol: "es-ES"
+      symbol: "es-es"
     },
     {
       label: "en-US",
-      symbol: "en-US"
+      symbol: "en-us"
     },
     {
       label: "gl-ES",
-      symbol: "gl-ES"
+      symbol: "gl-es"
     }
     ]
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);

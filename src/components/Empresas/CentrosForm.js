@@ -8,7 +8,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions'
 import { CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
 //import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 
-const spritemap = './icons.svg';
+const spritemap = "./o/my-project/icons.svg";
 
 export const CentrosForm = ({ reducer, centrosHandle }) => {
 

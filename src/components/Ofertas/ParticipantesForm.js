@@ -7,7 +7,7 @@ import { getMonths, getDays } from '../../includes/interface/DatesLang';
 import { getLanguageId } from '../../includes/LiferayFunctions'
 import { PARTICIPANTES_OPTIONS } from "../../includes/reducers/candidatos.reducer";
 
-const spritemap = './icons.svg';
+const spritemap = "./o/my-project/icons.svg";
 
 export const ParticipantesForm = ({ redParticipantes, participantesHandle }) => {
 

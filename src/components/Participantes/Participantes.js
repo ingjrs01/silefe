@@ -17,6 +17,9 @@ import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/t
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { Paginator } from "../../includes/interface/Paginator";
 
+
+const spritemap = "./o/my-project/icons.svg";
+
 const Participantes = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,page:0,load:0});
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: [], deleted: [], status: "list"});
@@ -125,9 +128,7 @@ const Participantes = () => {
     const fetchData = async () => {
         experienciasHandler({type:EXPERIENCIA_ACTIONS.START});
 
-        // TODO Cargar esto solo si es necesario: 
         if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0) {
-            console.log("cargo als titulaciones, porque no las tengo");
             queryTitulaciones();
         }
         
@@ -137,7 +138,9 @@ const Participantes = () => {
             
         const postdata = {
             page:    items.page,
-            nombre : (items.search && typeof items.search !== 'undefined')?items.search:""
+            nombre : (items.search && typeof items.search !== 'undefined')?items.search:"",
+            order : [{name: 'documento', direction: 'asc'}]
+
         }
 
         let {data,totalPages,page} = await fetchAPIData('/silefe.participante/filter',postdata,referer);
@@ -289,9 +292,6 @@ const Participantes = () => {
   
     if (!items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
-
-    //console.log("Datos generados");
-    //console.debug(items);
 
     return (
         <>

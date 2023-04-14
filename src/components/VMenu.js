@@ -3,7 +3,7 @@ import {Link, useLocation} from 'react-router-dom';
 import MenuItems from '../menu/MenuItems';
 
 //import "@clayui/css/lib/css/atlas.css";
-const spritemap = "icons.svg";
+const spritemap = "./o/my-project/icons.svg";
 
 const VMenu = () => {
     const location = useLocation(); 

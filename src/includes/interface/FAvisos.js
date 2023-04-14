@@ -1,7 +1,8 @@
 import React from 'react';
 import ClayAlert from '@clayui/alert';
 
-const spritemap = "./icons.svg";
+const spritemap = "./o/my-project/icons.svg";
+
 
 export const FAvisos = ({toastItems, setToastItems}) => {
 

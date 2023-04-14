@@ -11,7 +11,7 @@ import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/experiencias.reduce
 
 //import RenderFields from "./RenderFields";
 
-const spritemap = './icons.svg';
+const spritemap = "./o/my-project/icons.svg";
 
 export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
 

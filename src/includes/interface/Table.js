@@ -1,9 +1,12 @@
 import React from 'react';
 import ClayTable from '@clayui/table';
 import {ClayCheckbox} from '@clayui/form';
+import ClayIcon from '@clayui/icon';
 
 import { ITEMS_ACTIONS } from '../reducers/items.reducer'
 import {getLanguageId } from '../LiferayFunctions';
+
+const spritemap = "./o/my-project/icons.svg";
 
 const Table = ({ items, itemsHandle}) => {
 
@@ -16,7 +19,14 @@ const Table = ({ items, itemsHandle}) => {
             {
               Object.keys(items.fields.table).map(tableCol => {
                 if (items.fields.table[tableCol].columnType == "string" || items.fields.table[tableCol].columnType == "multilang")
-                  return (<ClayTable.Cell key={items.fields.table[tableCol].key}><strong>{ items.fields.table[tableCol].columnTitle }</strong></ClayTable.Cell> )
+                  return (
+                    <ClayTable.Cell 
+                      key={items.fields.table[tableCol].key}
+                    >
+                      <strong>{ items.fields.table[tableCol].columnTitle }</strong>
+                      <span className="navbar-breakpoint-d-none">  </span>
+                      <ClayIcon symbol="order-ascending" spritemap={spritemap} onClick={() => console.log("Ordenando " + tableCol)} />
+                    </ClayTable.Cell> )
                 if (items.fields.table[tableCol].columnType == "checkbox")
                   return (<ClayTable.Cell key={items.fields.table[tableCol].key} headingCell><ClayCheckbox checked={items.fields.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
               })

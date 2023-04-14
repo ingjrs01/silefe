@@ -6,7 +6,7 @@ import { getMonths, getDays } from '../../includes/interface/DatesLang';
 import { getLanguageId } from '../../includes/LiferayFunctions'
 import { CONTACTOS_ACTIONS } from "../../includes/reducers/contactos.reducer";
 
-const spritemap = './icons.svg';
+const spritemap = "./o/my-project/icons.svg";
 
 export const ContactosForm = ({ redContactos, contactosHandle }) => {
 

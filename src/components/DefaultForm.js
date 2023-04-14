@@ -8,7 +8,7 @@ import ClayLocalizedInput from '@clayui/localized-input';
 import {getMonths, getDays} from '../includes/interface/DatesLang';
 import {getLanguageId} from '../includes/LiferayFunctions';
 
-const spritemap = '/icons.svg';
+const spritemap = "./o/my-project/icons.svg";
 
 const DefaultForm = ({ itemsHandle, save, items, notify }) => {
   const locales = [
