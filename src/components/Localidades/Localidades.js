@@ -16,7 +16,7 @@ import { getLanguageId } from '../../includes/LiferayFunctions';
 import { Paginator } from '../../includes/interface/Paginator';
 
 const Localidades = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false,page:0,load:0});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},checkall:false,showform:false,page:0,load:0, search: '',order: []});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -118,18 +118,19 @@ const Localidades = () => {
         const postdata = {
             nombre: (items.search && typeof items.search !== 'undefined')?items.search:"",
             page: items.page,
+            order: items.order,
         };
 
+        // TODO: Revisar si necesitamos cargar de todas las veces
         fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            console.debug(opts);
             form.fields.provinciaId.options = opts;
         });
 
 
-        let {data,totalPages, page}  = await fetchAPIData(endpoint,postdata,referer);
+        let {data,totalPages, totalItems, page}  = await fetchAPIData(endpoint,postdata,referer);
         const tmp = await data.map(i => {return({...i,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages, total:totalItems,page:page});
     }
 
     useEffect( ()=> {
@@ -153,6 +154,7 @@ const Localidades = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
+                items={items}
             />
             { (items.status === 'load') && 
             <LoadFiles 

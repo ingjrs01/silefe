@@ -133,7 +133,8 @@ const Proyectos = () => {
         const postdata = {
             page:         items.page,
             codigo:       0,
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
+            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
+            order : items.order
         }
         let {data,totalPages,page, totalItems} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
         const tmp = await data.map(i => {            

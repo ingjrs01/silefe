@@ -20,7 +20,7 @@ import ContactosRender from "./ContactosRender";
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Empresas = () => {
-    const [items, itemsHandle] = useReducer(red_items, { arr: [], item: { id: 0 }, totalPages: 0, page: 0, load: 0 });
+    const [items, itemsHandle] = useReducer(red_items,{ arr: [], item: { id: 0 }, totalPages: 0, page: 0, load: 0, search: "", order: [] });
     const [redCentros, centrosHandle] = useReducer(reducerCentros);
     const [redContactos, contactosHandle] = useReducer(reducerContactos);
     const [toastItems, setToastItems] = useState([]);
@@ -35,13 +35,14 @@ const Empresas = () => {
         contactosHandle({type:CONTACTOS_ACTIONS.START});
         const postdata = {
             page: items.page,
-            razonSocial: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""
+            razonSocial: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : "",
+            order: items.order
         }
 
         if (redCentros == undefined || redCentros.provincias.length == 0)
             initCentrosForm();
 
-        let { data, totalPages, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
 
         const tmp = await data.map(i => {
             return ({
@@ -52,7 +53,7 @@ const Empresas = () => {
                 checked: false
             })
         });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
     }
 
     const initCentrosForm = () => {
@@ -198,6 +199,7 @@ const Empresas = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
+                items={items}
             />
             {(items.status === 'load') &&
                 <LoadFiles

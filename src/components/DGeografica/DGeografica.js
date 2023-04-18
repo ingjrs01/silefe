@@ -15,7 +15,7 @@ import {form as formulario} from './Form';
 import { Paginator } from '../../includes/interface/Paginator';
 
 const DGeografica = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false},status:'list',fields:form, checkall: false, showform: false, page:0,load:0}); 
+    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false},status:'list',fields:form, checkall: false, showform: false, page:0,load:0, search: '', order: []}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -152,21 +152,18 @@ const DGeografica = () => {
     }
 
     const fetchData = async () => {
-        console.log("fetchData");
-        const endpoint = '/silefe.dgeografica/filter';
         const postdata = {
-            page: items.page,
-            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
+            page:        items.page,
+            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
+            order:       items.order,
         };
-        let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
+        let {data,totalPages, totalItems, page} = await fetchAPIData('/silefe.dgeografica/filter', postdata,referer);
         await console.log("Datos recibidos");
         await console.debug(data);
         const tmp = await data.map(i => {return({...i,id:i.dGeograficaId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages, total: totalItems,page:page });
     }
 
-    console.log("Cargando DGEo");
-    
     useEffect(() => {
         console.log("useEffect");
 		if (!isInitialized.current) {
@@ -189,6 +186,7 @@ const DGeografica = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
+                items={items}
             />
             { (items.status === 'load') && 
             <LoadFiles 

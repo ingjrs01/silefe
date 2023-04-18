@@ -17,7 +17,7 @@ import { Paginator } from '../../includes/interface/Paginator';
 
 
 const Tecnicos = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0}); 
+    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0, search: '', order: []}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -107,7 +107,8 @@ const Tecnicos = () => {
         //debugger;
         const postdata = {
             page: 0,
-            descripcion: ''
+            descripcion: '',
+            order: items.order
         };
 
         const auth = getAuthToken();
@@ -149,7 +150,7 @@ const Tecnicos = () => {
         const tmp = await data.map(i => {return({id:i.userId,firstName:i.firstName,lastName:i.lastName,emailAddress:i.emailAddress,checked:false})});
         await console.log("los datos procesados");
         await console.log(tmp);
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages, total: 99,page:page });
 
     }
 
@@ -175,6 +176,7 @@ const Tecnicos = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
+                items={items}
             />
             { (items.status === 'load') && 
             <LoadFiles 

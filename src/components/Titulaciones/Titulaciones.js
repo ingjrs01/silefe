@@ -18,7 +18,7 @@ import {reducerTitulacion, TITULACIONES_ACTIONS} from '../../includes/reducers/t
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Titulaciones = () => {
-    const [items, itemsHandle]             = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,page:0, load: 0 });
+    const [items, itemsHandle]             = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,page:0, load: 0, search: '',order: [] });
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
@@ -83,10 +83,11 @@ const Titulaciones = () => {
 
         const postdata = {
             page: items.page,
-            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
+            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
+            order: items.order
         };
 
-        let {data, error,totalPages, page} = await fetchAPIData('/silefe.titulacion/filter', postdata,referer);
+        let {data, error,totalPages, totalItems, page} = await fetchAPIData('/silefe.titulacion/filter', postdata,referer);
         
         if (error == 1) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
@@ -114,7 +115,7 @@ const Titulaciones = () => {
                 checked: false })
         });
         
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages,page:page });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages, total:totalItems,page:page });
     }
 
     const initForm = () => {
@@ -255,6 +256,7 @@ const Titulaciones = () => {
                 loadCsv={loadCsv}
                 items={items}
                 beforeEdit={beforeEdit}
+                items={items}
             />
             { (items.status === 'load') && 
             <LoadFiles 

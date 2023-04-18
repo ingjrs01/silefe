@@ -16,7 +16,7 @@ import Papa from "papaparse";
 import { Paginator } from '../../includes/interface/Paginator';
 
 const TitulacionesFam = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0}); 
+    const [items,itemsHandle]            = useReducer(red_items,{arr: [], item: {id:0,checked:false}, checkall: false, showform: false, page:0,load:0,search: '',order: []}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -101,9 +101,10 @@ const TitulacionesFam = () => {
         const endpoint = '/silefe.titulacionfam/filter';
         const postdata = {
             page: items.page,
-            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:""
+            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
+            order: []
         };
-        let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
+        let {data,totalPages, totalItems, page} = await fetchAPIData(endpoint, postdata,referer);
 
         if (form.fields.titulacionNivelId.options == undefined || form.fields.titulacionNivelId.options.length == 0) {
             form.fields.titulacionNivelId.options = await getNivelesTitulaciones();
@@ -118,7 +119,7 @@ const TitulacionesFam = () => {
                 checked:false
             })
         });
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,page:page });
+        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages, total: totalItems,page:page });
     }
 
     const getNivelesTitulaciones = async () => {
@@ -148,6 +149,7 @@ const TitulacionesFam = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
+                items={items}
             />
             { (items.status === 'load') && 
             <LoadFiles 
