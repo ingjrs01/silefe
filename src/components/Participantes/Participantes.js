@@ -21,7 +21,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 const spritemap = "./o/my-project/icons.svg";
 
 const Participantes = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,page:0,load:0});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,page:0,load:0, search: "", order: []} );
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: [], deleted: [], status: "list"});
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list", participanteId: 0});
     const [toastItems,setToastItems]     = useState([]);    
@@ -33,6 +33,7 @@ const Participantes = () => {
     const form = formulario;
 
     useEffect(()=>{
+        console.log("useEffect");
 		if (!isInitialized.current) {
             fetchData();
 			isInitialized.current = true;
@@ -139,11 +140,11 @@ const Participantes = () => {
         const postdata = {
             page:    items.page,
             nombre : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order : [{name: 'documento', direction: 'asc'}]
+            order : items.order//[{name: 'documento', direction: 'asc'}]
 
         }
 
-        let {data,totalPages,page} = await fetchAPIData('/silefe.participante/filter',postdata,referer);
+        let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.participante/filter',postdata,referer);
         
         const tmp = await data.map(i => {
             return({
@@ -155,7 +156,7 @@ const Participantes = () => {
                 provincia: 'Provincia',
                 checked:false
             })});
-        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,total: totalItems, totalPages:totalPages,page:page});
     }
 
     const initForm = () => {
@@ -302,6 +303,7 @@ const Participantes = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
+                items={items}
             />
             { (items.status === 'load') && 
             <LoadFiles 

@@ -5,7 +5,8 @@ import {ClayInput} from '@clayui/form';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayToolbar from '@clayui/toolbar';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
-//import "@clayui/css/lib/css/atlas.css";
+
+import { MgtToolbar } from '../includes/interface/MgtToolbar';
 
 
 const spritemap = "./o/my-project/icons.svg";
@@ -13,6 +14,7 @@ const spritemap = "./o/my-project/icons.svg";
 const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit}) => {
 
   return (
+    <>
     <ClayIconSpriteContext.Provider value={spritemap}>
     <ClayToolbar>
       <ClayToolbar.Nav>
@@ -125,6 +127,11 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
       </ClayToolbar.Nav>
     </ClayToolbar>
     </ClayIconSpriteContext.Provider>
+    {
+      (items.search.length > 0 || items.order.length > 0) &&
+      <MgtToolbar items={items} itemsHandle={itemsHandle} />
+    }
+    </>
   );
 };
 

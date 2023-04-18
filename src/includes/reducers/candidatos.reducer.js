@@ -144,7 +144,6 @@ export const reducerCandidatos= (state = initialState, action) => {
       }
 
     case PARTICIPANTES_OPTIONS.TOGGLE_CHECK: 
-      console.debug(action);
       const newArr = [...state.candidatos];
       newArr[action.index].check = !(newArr[action.index].check);
 
@@ -163,7 +162,6 @@ export const reducerCandidatos= (state = initialState, action) => {
         checkall: checkall,
       }
     case PARTICIPANTES_OPTIONS.SET_FILTER: 
-      console.log("SET_FILTER");
       return {
         ...state,
         filters: {

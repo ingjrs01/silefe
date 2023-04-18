@@ -1,5 +1,4 @@
-import ClayAutocompleteLoadingIndicator from "@clayui/autocomplete/lib/LoadingIndicator";
-
+//import ClayAutocompleteLoadingIndicator from "@clayui/autocomplete/lib/LoadingIndicator";
 export const ITEMS_ACTIONS = {
     START: 0,
     LOAD: 1,
@@ -25,12 +24,15 @@ export const ITEMS_ACTIONS = {
     SET_MULTIFIELDCHECK: 24,
     SET_STATUS: 25,
     SET_ACTIVETAB: 26,
+    SET_ORDER: 27,
+    DELETE_ORDER: 28,
   }
 
 const initialState = {
     arr: [],
     item: {id:0,checked:false},
     page: 0,
+    total: 0,
     totalPages:0,
     errors: [],
     checkall: false,
@@ -38,6 +40,7 @@ const initialState = {
     status: "list", /* values: new, edit, list, load  */
     search: "",
     load: 0,
+    order: [],
 }
 
 const resetErrors = (fields) => {
@@ -56,6 +59,9 @@ const resetErrors = (fields) => {
 
     return errores;
 }
+
+let index = 0;
+let tmp = []
 
 export const red_items = (state=initialState, action ) => {
     switch (action.type) {
@@ -93,6 +99,7 @@ export const red_items = (state=initialState, action ) => {
                 arr: action.items,
                 page:action.page,
                 totalPages:action.totalPages,
+                total: action.total,
                 fields: action.fields,
                 item: tmp_item,
                 errors: resetErrors(action.fields),
@@ -122,9 +129,6 @@ export const red_items = (state=initialState, action ) => {
                 checkall: false
             }
         case ITEMS_ACTIONS.SET:
-            console.log("Estableciendo el dato: " + action.fieldname);
-            console.log(typeof(action.value));
-            console.log("Valor: " + action.value);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
@@ -285,7 +289,7 @@ export const red_items = (state=initialState, action ) => {
         case ITEMS_ACTIONS.SET_MULTIFIELDCHECK:
             newField = state.item;
             newField[action.fieldname][action.pos].default = !newField[action.fieldname][action.pos].default;
-            //console.log(newField);
+            
             return {
                 ...state,
                 item:newField
@@ -300,7 +304,33 @@ export const red_items = (state=initialState, action ) => {
                 ...state,
                 fields: {...state.fields,tabActive:action.active}     //['activeTab']: action.active
             }
+        case ITEMS_ACTIONS.SET_ORDER: 
+            console.log("nueva version2");
+            index = state.order.findIndex(x => x.name == action.fieldname);
+            if (index >= 0) {
+                tmp = [...state.order];
+                tmp[index].direction = (tmp[index].direction == 'asc')?'desc':'asc';
+            }
+            else 
+                tmp.push({name: action.fieldname,direction:'asc'})
+
+            return {
+                ...state,
+                order: tmp,//[...state.order,{name: action.fieldname, direction: 'asc'} ],
+                load: (state.load + 1) % 17,
+            }
+        case ITEMS_ACTIONS.DELETE_ORDER:
+            index = state.order.findIndex(x => x.name == action.fieldname);
+            if (index >= 0) {
+                tmp = [...state.order];
+                tmp.splice(index,1);
+            }
+            return {
+                ...state,
+                order: tmp
+            }
+        
         default: 
-        throw new Error ("Accion invalida");
+            throw new Error ("Accion invalida");
     }
 }

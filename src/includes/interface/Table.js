@@ -25,7 +25,11 @@ const Table = ({ items, itemsHandle}) => {
                     >
                       <strong>{ items.fields.table[tableCol].columnTitle }</strong>
                       <span className="navbar-breakpoint-d-none">  </span>
-                      <ClayIcon symbol="order-ascending" spritemap={spritemap} onClick={() => console.log("Ordenando " + tableCol)} />
+                      <ClayIcon 
+                        symbol="order-ascending" 
+                        spritemap={spritemap} 
+                        onClick={() =>  itemsHandle({type: ITEMS_ACTIONS.SET_ORDER, fieldname:tableCol})} 
+                      />
                     </ClayTable.Cell> )
                 if (items.fields.table[tableCol].columnType == "checkbox")
                   return (<ClayTable.Cell key={items.fields.table[tableCol].key} headingCell><ClayCheckbox checked={items.fields.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)

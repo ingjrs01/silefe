@@ -16,7 +16,7 @@ import {form as formulario} from './ProyectoForm2';
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Proyectos = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0, search: '', order: []});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -135,7 +135,7 @@ const Proyectos = () => {
             codigo:       0,
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:""
         }
-        let {data,totalPages,page} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
+        let {data,totalPages,page, totalItems} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
         const tmp = await data.map(i => {            
             return({
                 ...i,
@@ -147,7 +147,7 @@ const Proyectos = () => {
                 checked                  : false
             });
         });
-        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,page:page});
+        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: toastItems,page:page});
     }
 
     const initForm = () => {
@@ -184,6 +184,7 @@ const Proyectos = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
+                items={items}
             />
             { (items.status === 'load') && 
             <LoadFiles 
