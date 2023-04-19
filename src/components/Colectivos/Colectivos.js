@@ -102,7 +102,7 @@ const Colectivos = () => {
         const postdata = {
             page: items.page,
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
-            order: []
+            order: items.order,
         };
         let {data,totalPages, totalItems, page} = await fetchAPIData(endpoint, postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.colectivoId,checked:false})});
