@@ -23,7 +23,7 @@ const Ofertas = () => {
     const [toastItems,setToastItems]        = useState([]);    
     const {observer, onOpenChange, open}    = useModal();
     const [file,setFile]                    = useState();
-    const isInitialized                     = useRef;
+    const isInitialized                     = useRef(null);
 
     const referer = "http://localhost:8080/oferta";
     const form = formulario;
@@ -164,11 +164,11 @@ const Ofertas = () => {
 
         // Inicializando todos los datos de los participantes: 
         if (redParticipantes == undefined || redParticipantes.provinciasOptions.length == 0 ) 
-            initFormParticipantes();
-        
+            initFormParticipantes();        
         else {
             console.log("los datos ya están cargados, y no vuelvo a cargarlos");
         }
+        debugger;
 
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.oferta/filter',postdata,referer);
         const tmp = await data.map(i => {            

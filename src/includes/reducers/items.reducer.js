@@ -26,6 +26,7 @@ export const ITEMS_ACTIONS = {
     SET_ACTIVETAB: 26,
     SET_ORDER: 27,
     DELETE_ORDER: 28,
+    RESET: 29,
   }
 
 const initialState = {
@@ -65,7 +66,24 @@ let tmp = []
 
 export const red_items = (state=initialState, action ) => {
     switch (action.type) {
+        case ITEMS_ACTIONS.RESET: 
+            //console.log("hago un pase por reset");
+            return {
+                ...state,
+                arr: [],
+                page: 0,
+                totalPages: 0,
+                total: 0,
+                // TODO: Esto realmente se debería cargar aquí, y no cada vez que mando datos: 
+                fields: {},//action.fields,
+                //item: tmp_item,
+                //errors: resetErrors(action.fields),
+                checkall:false,
+                status: "list",
+                order: []
+            }
         case ITEMS_ACTIONS.START: 
+            console.log("parece que a START");
             let tmp_item = {};
             Object.keys(action.fields.fields).forEach(j => {
                 switch (action.fields.fields[j].type) {
@@ -93,6 +111,7 @@ export const red_items = (state=initialState, action ) => {
                 //else 
                 //    tmp_item[j] = [];
             });
+            console.log("pero no llega aquí");
 
             return {
                 ...state,
@@ -305,10 +324,9 @@ export const red_items = (state=initialState, action ) => {
                 fields: {...state.fields,tabActive:action.active}     //['activeTab']: action.active
             }
         case ITEMS_ACTIONS.SET_ORDER: 
-            console.log("nueva version2");
+            tmp = [...state.order];
             index = state.order.findIndex(x => x.name == action.fieldname);
             if (index >= 0) {
-                tmp = [...state.order];
                 tmp[index].direction = (tmp[index].direction == 'asc')?'desc':'asc';
             }
             else 

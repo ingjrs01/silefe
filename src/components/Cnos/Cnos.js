@@ -19,7 +19,7 @@ const Cnos = () => {
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
-    const isInitialized                  = useRef;
+    const isInitialized                  = useRef(null);
 
     const referer = "http://localhost:8080/cnos";
     const form = formulario;

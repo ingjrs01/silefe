@@ -19,7 +19,7 @@ const Experiencias = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const referer = "http://localhost:8080/experiencias";
-    const isInitialized = useRef;
+    const isInitialized = useRef(null);
 
     const form = formulario;
 

@@ -8,6 +8,7 @@ export const fetchAPIData = async (endpoint, postdata, referer) => {
 //
 //    const controller = new AbortController();
 //    controllerRef.current = controller;
+    //debugger;
     const auth = getAuthToken();
     const response = await fetch(url_api, {
   //      signal: controllerRef.current?.signal,
@@ -28,6 +29,7 @@ export const fetchAPIData = async (endpoint, postdata, referer) => {
         "method": "POST",
         "mode": "cors"
     });
+    //debugger;
 
     let { data, totalPages, page, error, totalItems } = await JSON.parse(await response.json());
     return {data, error,totalPages, page, totalItems}

@@ -16,7 +16,7 @@ export const Paginator = ({itemsHandle,items}) => {
     <ClayPaginationWithBasicItems
       active={active}
       ellipsisBuffer={2}
-      ellipsisProps={{ "aria-label": "Más", title: "Más" }}
+      ellipsisprops={{ "aria-label": "Más", title: "Más" }}
       onActiveChange={evt => setPage(evt)}
       spritemap={spritemap}
       totalPages={items.totalPages}

@@ -18,7 +18,7 @@ const Horarios = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0, search: '', order: []}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
-    const isInitialized                  = useRef;
+    const isInitialized                  = useRef(null);
 
     const referrer = "http://localhost:8080/horarios";
     const form = formulario;

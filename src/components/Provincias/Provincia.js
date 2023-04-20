@@ -22,7 +22,7 @@ const Provincias = () => {
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
-    const isInitialized = useRef;
+    const isInitialized                  = useRef(null);
 
     // Probando a ver como va esto del query: 
     const {data, status, isFetching, error, refetch} = useQuery(["users"], () => fetchAPIData('/silefe.provincia/filter',{name:"",page:1},referer) );

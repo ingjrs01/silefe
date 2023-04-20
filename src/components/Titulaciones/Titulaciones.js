@@ -22,7 +22,7 @@ const Titulaciones = () => {
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const isInitialized = useRef();    
+    const isInitialized = useRef(null);    
     //const [titulacionesNivelOptions ,setTitulacionesNivelOptions] = useState([]);
     let opciones_nivel = [];
     let titulacionesFamiliaOptions = [];

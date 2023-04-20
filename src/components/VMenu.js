@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import MenuItems from '../menu/MenuItems';
+import ClayIcon, {ClayIconSpriteContext} from '@clayui/icon';
 
 //import "@clayui/css/lib/css/atlas.css";
 const spritemap = "./o/my-project/icons.svg";
@@ -19,14 +20,7 @@ const VMenu = () => {
         		role="button"
         	>
         		Detalles
-        		<svg
-        			className="lexicon-icon lexicon-icon-caret-bottom"
-        			focusable="false"
-        			role="presentation"
-        		>
-        			{/*<use xlink:href="/images/icons/icons.svg#caret-bottom" />*/}
-                    <use xlinkHref="/images/icons/icons.svg#caret-bottom" />
-        		</svg>
+				<ClayIcon symbol="caret-bottom" spritemap={spritemap} />
         	</button>
         	<div
         		className="collapse menubar-collapse"
@@ -44,26 +38,10 @@ const VMenu = () => {
         				>
         					Maestros
         					<span className="collapse-icon-closed">
-        						<svg
-        							className="lexicon-icon lexicon-icon-caret-right"
-        							focusable="false"
-        							role="presentation"
-        						>
-        							<use
-        								xlinkHref="/images/icons/icons.svg#caret-right"
-        							/>
-        						</svg>
+							<ClayIcon symbol="caret-right" spritemap={spritemap} />
         					</span>
         					<span className="collapse-icon-open">
-        						<svg
-        							className="lexicon-icon lexicon-icon-caret-bottom"
-        							focusable="false"
-        							role="presentation"
-        						>
-        							<use
-        								xlinkHref="/images/icons/icons.svg#caret-bottom"
-        							/>
-        						</svg>
+								<ClayIcon symbol="caret-bottom" spritemap={spritemap} />
         					</span>
         				</button>
         				<div
@@ -93,26 +71,10 @@ const VMenu = () => {
         							>
         								Documents and Media
         								<span className="collapse-icon-closed">
-        									<svg
-        										className="lexicon-icon lexicon-icon-caret-right"
-        										focusable="false"
-        										role="presentation"
-        									>
-        										<use
-        											xlinkHref="/images/icons/icons.svg#caret-right"
-        										/>
-        									</svg>
+											<ClayIcon symbol="caret-right" spritemap={spritemap} />
         								</span>
         								<span className="collapse-icon-open">
-        									<svg
-        										className="lexicon-icon lexicon-icon-caret-bottom"
-        										focusable="false"
-        										role="presentation"
-        									>
-        										<use
-        											xlinkHref="/images/icons/icons.svg#caret-bottom"
-        										/>
-        									</svg>
+											<ClayIcon symbol="caret-bottom" spritemap={spritemap} />
         								</span>
         							</button>
         							<div
@@ -160,26 +122,10 @@ const VMenu = () => {
         				>
         					SEO
         					<span className="collapse-icon-closed">
-        						<svg
-        							className="lexicon-icon lexicon-icon-caret-right"
-        							focusable="false"
-        							role="presentation"
-        						>
-        							<use
-        								xlinkHref="/images/icons/icons.svg#caret-right"
-        							/>
-        						</svg>
+								<ClayIcon symbol="caret-right" spritemap={spritemap} />
         					</span>
         					<span className="collapse-icon-open">
-        						<svg
-        							className="lexicon-icon lexicon-icon-caret-bottom"
-        							focusable="false"
-        							role="presentation"
-        						>
-        							<use
-        								xlinkHref="/images/icons/icons.svg#caret-bottom"
-        							/>
-        						</svg>
+								<ClayIcon symbol="caret-bottom" spritemap={spritemap} />
         					</span>
         				</button>
         				<div
@@ -207,26 +153,10 @@ const VMenu = () => {
         				>
         					Advanced
         					<span className="collapse-icon-closed">
-        						<svg
-        							className="lexicon-icon lexicon-icon-caret-right"
-        							focusable="false"
-        							role="presentation"
-        						>
-        							<use
-        								xlinkHref="{{rootPath}}/images/icons/icons.svg#caret-right"
-        							/>
-        						</svg>
+								<ClayIcon symbol="caret-right" spritemap={spritemap} />
         					</span>
         					<span className="collapse-icon-open">
-        						<svg
-        							className="lexicon-icon lexicon-icon-caret-bottom"
-        							focusable="false"
-        							role="presentation"
-        						>
-        							<use
-        								xlinkHref="{{rootPath}}/images/icons/icons.svg#caret-bottom"
-        							/>
-        						</svg>
+								<ClayIcon symbol="caret-bottom" spritemap={spritemap} />
         					</span>
         				</button>
         				<div

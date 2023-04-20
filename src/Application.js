@@ -28,9 +28,8 @@ import Empresas from './components/Empresas/Empresas';
 import Ofertas from  './components/Ofertas/Ofertas';
 import Edades from './components/Edades/Edades';
 import Carnets from './components/Carnets/Carnets';
+import Home from './components/Home/Home';
 import {VerticalMenu} from './includes/interface/VerticalMenu';
-//import "@clayui/css/lib/css/atlas.css";
-//import './o/my-project/css/atlas.css';
 
 const queryClient = new QueryClient();
 
@@ -51,6 +50,7 @@ const Application = () => {
                 <div className='col-10'>
                     <div className="sheet-section">
                         <Routes>
+                            <Route path='/home'          element={ <Home /> } />
                             <Route path='/titnivel'      element={ <TitulacionesNivel /> } />
                             <Route path='/tittipo'       element={ <TitulacionesTipo /> } />
                             <Route path='/titulaciones'  element={ <Titulaciones /> } />
