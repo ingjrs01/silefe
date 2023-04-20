@@ -1,4 +1,3 @@
-//import ClayAutocompleteLoadingIndicator from "@clayui/autocomplete/lib/LoadingIndicator";
 export const ITEMS_ACTIONS = {
     START: 0,
     LOAD: 1,
@@ -26,7 +25,6 @@ export const ITEMS_ACTIONS = {
     SET_ACTIVETAB: 26,
     SET_ORDER: 27,
     DELETE_ORDER: 28,
-    RESET: 29,
   }
 
 const initialState = {
@@ -66,52 +64,31 @@ let tmp = []
 
 export const red_items = (state=initialState, action ) => {
     switch (action.type) {
-        case ITEMS_ACTIONS.RESET: 
-            //console.log("hago un pase por reset");
-            return {
-                ...state,
-                arr: [],
-                page: 0,
-                totalPages: 0,
-                total: 0,
-                // TODO: Esto realmente se debería cargar aquí, y no cada vez que mando datos: 
-                fields: {},//action.fields,
-                //item: tmp_item,
-                //errors: resetErrors(action.fields),
-                checkall:false,
-                status: "list",
-                order: []
-            }
         case ITEMS_ACTIONS.START: 
-            console.log("parece que a START");
             let tmp_item = {};
-            Object.keys(action.fields.fields).forEach(j => {
-                switch (action.fields.fields[j].type) {
-                    case "multilang":
-                        let tt = {}
-                        action.fields.languages.forEach(el => {tt[el]=""});
-                        tmp_item[j] = tt;
-                        break;
-                    case "multitext": 
-                        let tt2 = []
-                        //action.fields.languages.forEach(el => {tt2[el]=""});
-                        tt2.push({key:8,value:"correo",default:false});
-                        tt2.push({key:9,value:"correo@correo.es",default:false});
-                        tmp_item[j] = tt2;
-                        break;
-                    default:
-                        tmp_item[j] = [];
-                        break;
-                }
-                //if (action.fields.fields[j].type === "multilang") {
-                //    let tt = {}
-                //    action.fields.languages.forEach(el => {tt[el]=""});
-                //    tmp_item[j] = tt;
-                //}
-                //else 
-                //    tmp_item[j] = [];
-            });
-            console.log("pero no llega aquí");
+            if (state.load == 0) {
+                Object.keys(action.fields.fields).forEach(j => {
+                    switch (action.fields.fields[j].type) {
+                        case "multilang":
+                            let tt = {}
+                            action.fields.languages.forEach(el => {tt[el]=""});
+                            tmp_item[j] = tt;
+                            break;
+                        case "multitext": 
+                            let tt2 = []
+                            //action.fields.languages.forEach(el => {tt2[el]=""});
+                            tt2.push({key:8,value:"correo",default:false});
+                            tt2.push({key:9,value:"correo@correo.es",default:false});
+                            tmp_item[j] = tt2;
+                            break;
+                        default:
+                            tmp_item[j] = [];
+                            break;
+                    }
+                });
+            }
+            else 
+                tmp_item = state.fields;
 
             return {
                 ...state,
@@ -321,7 +298,7 @@ export const red_items = (state=initialState, action ) => {
         case ITEMS_ACTIONS.SET_ACTIVETAB:
             return {
                 ...state,
-                fields: {...state.fields,tabActive:action.active}     //['activeTab']: action.active
+                fields: {...state.fields,tabActive:action.active} 
             }
         case ITEMS_ACTIONS.SET_ORDER: 
             tmp = [...state.order];

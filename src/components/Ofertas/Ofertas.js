@@ -168,7 +168,6 @@ const Ofertas = () => {
         else {
             console.log("los datos ya están cargados, y no vuelvo a cargarlos");
         }
-        debugger;
 
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.oferta/filter',postdata,referer);
         const tmp = await data.map(i => {            

@@ -24,6 +24,11 @@ const Colectivos = () => {
     const form = formulario;
     const referer = 'http://localhost:8080/colectivos';
 
+    //if (!isInitialized.current) {
+    //    console.log("una forma de inicializar el formulario");
+    //    itemsHandle({type: ITEMS_ACTIONS.RESET});
+    //}
+
     const loadCsv = () => {
         console.log("Cargando un csv");
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
@@ -108,18 +113,11 @@ const Colectivos = () => {
         let {data,totalPages, totalItems, page} = await fetchAPIData(endpoint, postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.colectivoId,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages, total:totalItems,page:page });
-
-        //fetchAPIData(endpoint, postdata,referer).then( (response) => {
-            //    let {data,totalPages, totalItems, page} = response;
-            //    const tmp = data.map(i => {return({...i,id:i.colectivoId,checked:false})});
-            //itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages, total:totalItems,page:page });
-        //});
-
     }
 
     useEffect(() => {
-        debugger;
 		if (!isInitialized.current) {
+            //itemsHandle({type: ITEMS_ACTIONS.RESET});
             fetchData();
             isInitialized.current = true;
 		} else {
