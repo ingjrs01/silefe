@@ -145,7 +145,7 @@ const Participantes = () => {
         }
 
         let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.participante/filter',postdata,referer);
-        
+        await console.debug(data);
         const tmp = await data.map(i => {
             return({
                 ...i,
@@ -153,7 +153,7 @@ const Participantes = () => {
                 fechaNacimiento: (i.fechaNacimiento != null)?new Date(i.fechaNacimiento).toISOString().substring(0, 10):"",
                 email: (i.email != null && i.email.length > 0)?JSON.parse(i.email):[],
                 telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono):[],
-                provincia: 'Provincia',
+                //provincia: 'Provincia',
                 checked:false
             })});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,total: totalItems, totalPages:totalPages,page:page});

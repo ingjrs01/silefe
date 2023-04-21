@@ -250,7 +250,7 @@ export const form = {
                 },        
                 {
                     key:44,
-                    cols: ['provinciaId', 'municipioId','localidad']
+                    cols: ['provinciaId', 'municipioId']//,'localidad']
                 },
                 {
                     key:45,
@@ -305,8 +305,13 @@ export const form = {
         },
         provincia: {
             columnTitle: Liferay.Language.get('Provincia'),
-            columnType: "string",
+            columnType: "multilang",
             key: "tc5",
+        },
+        localidad: {
+            columnTitle: Liferay.Language.get('Localidad'),
+            columnType: "multilang",
+            key: "tc6",
         },
 }    
 };
