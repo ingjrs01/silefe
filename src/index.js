@@ -15,6 +15,8 @@ import Application from './Application';
  * @return {void}
  */
 export default function main({portletNamespace, contextPath, portletElementId, configuration}) {
+    console.log("viendo cosas");
+    console.log(portletElementId);
     const root = ReactDOM.createRoot(document.getElementById(portletElementId));
     root.render(
         <Router>

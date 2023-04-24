@@ -33,7 +33,6 @@ const Participantes = () => {
     const form = formulario;
 
     useEffect(()=>{
-        console.log("useEffect");
 		if (!isInitialized.current) {
             fetchData();
 			isInitialized.current = true;
@@ -132,9 +131,10 @@ const Participantes = () => {
         if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0) {
             queryTitulaciones();
         }
-        
+
         if (form.fields.situacionLaboral.options == undefined)  {
-            initForm();
+            console.log("visto que estoy dentro");
+            await initForm();
         }
             
         const postdata = {
@@ -143,9 +143,9 @@ const Participantes = () => {
             order : items.order//[{name: 'documento', direction: 'asc'}]
 
         }
+        console.debug(form);
 
-        let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.participante/filter',postdata,referer);
-        await console.debug(data);
+        let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.participante/filter',postdata,referer);        
         const tmp = await data.map(i => {
             return({
                 ...i,
@@ -153,13 +153,13 @@ const Participantes = () => {
                 fechaNacimiento: (i.fechaNacimiento != null)?new Date(i.fechaNacimiento).toISOString().substring(0, 10):"",
                 email: (i.email != null && i.email.length > 0)?JSON.parse(i.email):[],
                 telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono):[],
-                //provincia: 'Provincia',
                 checked:false
             })});
+        
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,total: totalItems, totalPages:totalPages,page:page});
     }
 
-    const initForm = () => {
+    const initForm = async () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];

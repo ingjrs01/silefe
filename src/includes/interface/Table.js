@@ -46,7 +46,7 @@ const Table = ({ items, itemsHandle}) => {
                   Object.keys(items.fields.table).map(columName => {
                     switch (items.fields.table[columName].columnType) {
                       case "multilang":
-                        return (<ClayTable.Cell key={items.fields.table[columName]+row.id}>{ row[columName][lang] }</ClayTable.Cell> )
+                        return (<ClayTable.Cell key={columName+row.id}>{ row[columName][lang] }</ClayTable.Cell> )
                       case "string":
                         return (<ClayTable.Cell key={items.fields.table[columName].columnTitle+row.id}>{ row[columName] }</ClayTable.Cell> )
                       case "checkbox":

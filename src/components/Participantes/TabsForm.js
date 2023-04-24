@@ -12,12 +12,15 @@ const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,
 
   const validateAll = () => {
     console.log("validando todo");
+    let error = false;
     Object.keys(items.fields.fields).forEach( campo => {
       console.log(campo);
       switch (items.fields.fields[campo].type) {
         case "text": 
-          if (!validate(campo, items.item[campo]))
+          if (!validate(campo, items.item[campo])) {
+            error = true;
             return false;
+          }
           break;
         case "multilang":
           if (!validateLocalized(campo, items.item[campo]))
@@ -28,7 +31,9 @@ const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,
       }
 
     });
-    console.log("todo ok");
+    if (error)
+      return false;
+
     return true;
   }
 
@@ -147,8 +152,12 @@ const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,
             <ClayButton aria-label="Cancel" onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
           </div>
           <div className="btn-group-item">
-            <ClayButton aria-label="Save" onClick={e => {
-              validateAll() && save()
+            <ClayButton aria-label="Save" onClick={() => {
+              if (validateAll() ) {
+                save();
+              }
+              else
+                console.log("No ha pasado la validación");
             }}
               displayType="primary">{Liferay.Language.get('Guardar')}
             </ClayButton>

@@ -47,6 +47,10 @@ const Provincias = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
     }
 
+    const beforeEdit = () => {
+        console.log("solo");
+    }
+
     const processCsv = () => {
         console.log(file);
 
