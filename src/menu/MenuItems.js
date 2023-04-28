@@ -2,6 +2,8 @@
 
 const MenuItems = [
     {key:18, url: '/proyectos',    caption: 'Proyectos'},
+    {key:28, url: '/accionestipo', caption: 'AccionesTipo'},
+    {key:29, url: '/accionestipoformacion', caption: 'AccionesTipoFormacion'},
     {key:19, url: '/participantes',caption: 'Participantes'},
     {key:23, url: '/empresas',     caption: 'Empresas'},
     {key:24, url: '/ofertas',      caption: 'Ofertas'},
@@ -27,6 +29,7 @@ const MenuItems = [
     {key:17, url: '/ambitos' ,     caption: 'Ámbitos Geográficos'},
     {key:25, url: '/edades',       caption: 'Rangos Edad'},
     {key:27, url: '/carnets',      caption: 'Carnets'},
+    {key:30, url: '/prestaciones', caption: 'Prestaciones'},
 ]
 
 export default MenuItems;

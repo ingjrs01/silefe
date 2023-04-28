@@ -28,6 +28,8 @@ import Empresas from './components/Empresas/Empresas';
 import Ofertas from  './components/Ofertas/Ofertas';
 import Edades from './components/Edades/Edades';
 import Carnets from './components/Carnets/Carnets';
+import AccionesTipo from './components/AccionesTipo/AccionesTipo';
+import AccionesTipoFormacion from './components/AccionesTipoFormacion/AccionesTipoFormacion';
 import Home from './components/Home/Home';
 import {VerticalMenu} from './includes/interface/VerticalMenu';
 
@@ -77,6 +79,8 @@ const Application = () => {
                             <Route path='/ofertas'       element={ <Ofertas /> } />
                             <Route path='/edades'        element={ <Edades /> } />
                             <Route path='/carnets'       element={ <Carnets /> } />
+                            <Route path='/accionestipo'  element={ <AccionesTipo /> } />
+                            <Route path='AccionesTipoFormacion' element={<AccionesTipoFormacion />} />
                         </Routes>
                     </div>
                 </div>

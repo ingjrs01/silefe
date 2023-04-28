@@ -197,11 +197,46 @@ export const form = {
             columnType: "checkbox",
             key: "c1",
         },
+        codigo: {
+            columnTitle: Liferay.Language.get('Código'),
+            columnType: "string",
+            key: "c9",
+        },        
+        convocatoria: {
+            columnTitle: Liferay.Language.get('Convocatoria'),
+            columnType: "string",
+            key: "c10",
+        },        
         descripcion: {
             columnTitle: Liferay.Language.get('Descripcion'),
             columnType: "multilang",
             key: "c3",
+        },        
+        ambito_geo: {
+            columnTitle: Liferay.Language.get('Amb. Geográfico'),
+            columnType: "string",
+            key: "c7",
         },
+        presupuesto: {
+            columnTitle: Liferay.Language.get('Presupuesto'),
+            columnType: "string",
+            key: "c4",
+        },
+        inicio: {
+            columnTitle: Liferay.Language.get('F. Inicio'),
+            columnType: "string",
+            key: "c5",
+        },
+        fin: {
+            columnTitle: Liferay.Language.get('F. Fin'),
+            columnType: "string",
+            key: "c6",
+        },        
+        participantes: {
+            columnTitle: Liferay.Language.get('Participantes'),
+            columnType: "string",
+            key: "c8",
+        },        
     }
 
 };
