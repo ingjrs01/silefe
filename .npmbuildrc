@@ -1,7 +1,7 @@
 {
 	"translatorTextKey": "",
 	"supportedLocales": ["es","en","gl"],
-	"liferayDir": "/home/jriveiro/project/liferay/silefe-server",
+	"liferayDir": "/home/jriveiro/project/bladeproject/promocion/bundles",
 	"webpack": {
 		"rules": [
 			{

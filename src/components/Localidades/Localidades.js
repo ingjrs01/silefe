@@ -114,19 +114,19 @@ const Localidades = () => {
     }
 
     const fetchData = async () => {
-        const endpoint   = '/silefe.municipio/filter';
+        const endpoint   = '/silefe.ayuntamiento/filter';
         const postdata = {
             nombre: (items.search && typeof items.search !== 'undefined')?items.search:"",
             page: items.page,
             order: items.order,
         };
+        console.log("hecho del fetchData");
 
         // TODO: Revisar si necesitamos cargar de todas las veces
         fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             form.fields.provinciaId.options = opts;
         });
-
 
         let {data,totalPages, totalItems, page}  = await fetchAPIData(endpoint,postdata,referer);
         const tmp = await data.map(i => {return({...i,checked:false})});

@@ -129,7 +129,6 @@ const Proyectos = () => {
         if (form.fields.entidadId.options == undefined) {
             initForm();
         }
-
         const postdata = {
             page:         items.page,
             codigo:       0,
@@ -157,7 +156,8 @@ const Proyectos = () => {
             form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
-            const opts = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}});
+            //  [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            const opts = [{value:"0",label: "Seleccionar"}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
             form.fields.colectivos.options = opts;
         });
         fetchAPIData('/silefe.convocatoria/all', {lang: getLanguageId()},referer).then(response => {

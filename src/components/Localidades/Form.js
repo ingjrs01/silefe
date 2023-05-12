@@ -31,6 +31,15 @@ export const form = {
             value:"lelele",             
             placeholder: Liferay.Language.get('Municipio'), 
             conditions: ["text"]
+        },
+        provincia: {
+            key:4,
+            type: "multilang",
+            label: Liferay.Language.get('Provincia'), 
+            name: "provincia", 
+            value:"lelele",             
+            placeholder: Liferay.Language.get('Provincia'), 
+            conditions: ["text"]
         }
     },
     rows: [
@@ -52,12 +61,17 @@ export const form = {
         nombre: {
             columnTitle: Liferay.Language.get('Municipio'),
             columnType: "multilang",
-            key: "c3",
+            key: "c2",
         },
         provinciaId: {
             columnTitle: Liferay.Language.get('Provincia'),
             columnType: "String",
             key: "c3",
+        },
+        provincia: {
+            columnTitle: Liferay.Language.get('Provincia'),
+            columnType: "multilang",
+            key: "c4",
         },
     }    
 };

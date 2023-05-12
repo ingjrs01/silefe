@@ -21,64 +21,10 @@ const DGeografica = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-//    const columns = [
-//        {
-//            columnName: "dGeograficaId",
-//            columnTitle: "Id",
-//            columnType: "checkbox",
-//            key: "c1",
-//        },
-//        {
-//            columnName: "descripcion",
-//            columnTitle: Liferay.Language.get('Descripcion'),
-//            columnType: "multilang",
-//            key: "c2",
-//        },
-//    ];
-
     const form = formulario;
-//    {
-//        title: Liferay.Language.get('Disposicion_Geografica'),
-//        languages: ["es-ES","en-US","gl-ES"],
-//        rows: [
-//            {
-//                key: 5,
-//                type:"row",
-//                classname:"",
-//                cols: {
-//                    id: {
-//                        key:1,
-//                        type: "text",
-//                        label: "ID", 
-//                        name: "id", 
-//                        value:"lalala", 
-//                        placeholder:"Identifier", 
-//                        conditions: ["number"]
-//                    },
-//                }
-//            },
-//            {
-//                key: 5,
-//                type:"row",
-//                classname:"",
-//                cols: {
-//                    descripcion: {
-//                        key:2,
-//                        type: "multilang",
-//                        label: Liferay.Language.get('Descripcion'), 
-//                        name: "descripcion", 
-//                        value:"lelele", 
-//                        placeholder: Liferay.Language.get('Descripcion'), 
-//                        conditions: ["text"]
-//                    }
-//                }
-//            }
-//
-//
-//        ]
-//    };
-
     const referer = 'http://localhost:8080/dgeografica';
+
+    console.log("eooo");
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -157,9 +103,8 @@ const DGeografica = () => {
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
             order:       items.order,
         };
+        console.log("haciendo fetch");
         let {data,totalPages, totalItems, page} = await fetchAPIData('/silefe.dgeografica/filter', postdata,referer);
-        await console.log("Datos recibidos");
-        await console.debug(data);
         const tmp = await data.map(i => {return({...i,id:i.dGeograficaId,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages, total: totalItems,page:page });
     }

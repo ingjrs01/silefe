@@ -180,10 +180,6 @@ const Provincias = () => {
                     />
                 </>
             }
-            <button onClick={()=>{
-                setJload(jload + 1);
-                console.log("pulsando");
-            }}>Actualizar</button>
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>

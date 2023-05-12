@@ -98,6 +98,7 @@ const Prestaciones = () => {
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order:        items.order,
         }
+        console.log("preparado para la consulta");
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.prestacion/filter',postdata,referer);
         await console.log("los datos han llegado");
         await console.debug(data);
@@ -106,6 +107,7 @@ const Prestaciones = () => {
     }
 
     useEffect(()=>{
+        console.log("estoy en useEffect");
 		if (!isInitialized.current) {
             fetchData();
 			isInitialized.current = true;
