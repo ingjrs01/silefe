@@ -28,11 +28,13 @@ import Empresas from './components/Empresas/Empresas';
 import Ofertas from  './components/Ofertas/Ofertas';
 import Edades from './components/Edades/Edades';
 import Carnets from './components/Carnets/Carnets';
+import Acciones from './components/Acciones/Acciones';
 import AccionesTipo from './components/AccionesTipo/AccionesTipo';
 import AccionesTipoFormacion from './components/AccionesTipoFormacion/AccionesTipoFormacion';
 import Home from './components/Home/Home';
 import {VerticalMenu} from './includes/interface/VerticalMenu';
 import Prestaciones from './components/Prestaciones/Prestacion';
+import Estados from './components/Estados/Estados';
 
 const queryClient = new QueryClient();
 
@@ -80,8 +82,10 @@ const Application = () => {
                             <Route path='/ofertas'       element={ <Ofertas /> } />
                             <Route path='/edades'        element={ <Edades /> } />
                             <Route path='/carnets'       element={ <Carnets /> } />
+                            <Route path='/estados'       element={ <Estados /> } />
                             <Route path='/prestaciones'  element={ <Prestaciones/>} />
                             <Route path='/accionestipo'  element={ <AccionesTipo /> } />
+                            <Route path='/acciones'      element={ <Acciones /> } />
                             <Route path='AccionesTipoFormacion' element={<AccionesTipoFormacion />} />
                         </Routes>
                     </div>

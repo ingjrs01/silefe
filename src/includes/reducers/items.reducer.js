@@ -125,6 +125,8 @@ export const red_items = (state=initialState, action ) => {
                 checkall: false
             }
         case ITEMS_ACTIONS.SET:
+            console.log("poninedo el adato");
+            console.log(action.fieldname);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
