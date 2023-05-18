@@ -4,8 +4,9 @@ import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
+import DocentesTable from "./DocentesTable";
 
-const AccionesForm = ({ items, itemsHandle }) => {
+const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
   const [tab, setTab] = useState(0);
 
   return (
@@ -154,8 +155,7 @@ const AccionesForm = ({ items, itemsHandle }) => {
                 </ClayForm.Group>
 
                 </div>
-
-
+                <div className="row">
                 <ClayForm.Group className={'has-success'} key={"Group-4"} >
                   <ClayInput
                     placeholder={"prueba"}
@@ -166,6 +166,7 @@ const AccionesForm = ({ items, itemsHandle }) => {
                     onChange={e => { console.log("estamos") }}>
                   </ClayInput>
                 </ClayForm.Group>
+                </div>
 
               </ClayTabs.TabPane>
 
@@ -181,6 +182,12 @@ const AccionesForm = ({ items, itemsHandle }) => {
               </ClayTabs.TabPane>
 
               <ClayTabs.TabPane aria-labelledby="tab-3" key={"tab-content-3"}>
+
+                <DocentesTable>
+                  docentes={docentes}
+                  docentesHandler={docentesHandler}
+                </DocentesTable>
+
                 <ClayInput
                   placeholder={"prueba4"}
                   type="text"

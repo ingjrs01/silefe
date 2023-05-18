@@ -15,45 +15,47 @@ import { Errors } from '../../includes/Errors';
 import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 import { getLanguageId } from '../../includes/LiferayFunctions';
+import {reducerDocentes, DOCENTE_ACTIONS} from '../../includes/reducers/docentes.reducer'; 
 
 
 const Acciones = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},page:0,totalPages:0,load:0, search: '', order: []});
+    const [docentes,docentesHandler]     = useReducer(reducerDocentes, {items: [], status:'list', item: {id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
     let form = formulario;
-    const referer = "http://localhost:8080/accionestipo";
+    const referer = "http://localhost:8080/acciones";
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
     }
 
-    const processCsv = () => {
-        if (file) {
-            const reader = new FileReader();         
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                const parsedData = csv?.data;                                
-                let end = '/silefe.cnae/add-multiple';
-                let ttmp = { cnaes:parsedData,userId:getUserId()};
-                batchAPI(end,ttmp,referer).then( res2 => {
-                    if (res2.ok) {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);                    
-                        fetchData();
-                    }
-                    else 
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-                });
-            };
-            reader.readAsText(file);
-        }
-        else {
-            console.log("fichero no cargado")
-        }
-    }
+//    const processCsv = () => {
+//        if (file) {
+//            const reader = new FileReader();         
+//            reader.onload = async ({ target }) => {
+//                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+//                const parsedData = csv?.data;                                
+//                let end = '/silefe.cnae/add-multiple';
+//                let ttmp = { cnaes:parsedData,userId:getUserId()};
+//                batchAPI(end,ttmp,referer).then( res2 => {
+//                    if (res2.ok) {
+//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);                    
+//                        fetchData();
+//                    }
+//                    else 
+//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+//                });
+//            };
+//            reader.readAsText(file);
+//        }
+//        else {
+//            console.log("fichero no cargado")
+//        }
+//    }
 
     const handleSave = async () => {
         const data = {
@@ -96,6 +98,7 @@ const Acciones = () => {
 
     const fetchData = async () => {
         console.log("fetchData en Acciones");
+        docentesHandler({type: DOCENTE_ACTIONS.START});
         const postdata = {
             page:         (items.page>0)?items.page:0,
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
@@ -163,6 +166,8 @@ const Acciones = () => {
                     save={ handleSave} 
                     itemsHandle={itemsHandle}
                     items={items}
+                    docentes={docentes}
+                    docentesHandler={docentesHandler}
                 />
             }
             {
