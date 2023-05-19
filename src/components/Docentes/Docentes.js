@@ -1,6 +1,5 @@
 import React, {useEffect, useReducer, useRef, useState} from "react";
-//import DefaultForm from "../../includes/interface/DefaultForm";
-import DefaultForm from "./AccionesForm";
+import DefaultForm from "../../includes/interface/DefaultForm";
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
@@ -15,26 +14,20 @@ import { Errors } from '../../includes/Errors';
 import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 import { getLanguageId } from '../../includes/LiferayFunctions';
-import {reducerDocentes, DOCENTE_ACTIONS} from '../../includes/reducers/docentes.reducer'; 
 
 
-const Acciones = () => {
+const Docentes = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},page:0,totalPages:0,load:0, search: '', order: []});
-    const [docentes,docentesHandler]     = useReducer(reducerDocentes, {items: [], status:'list', item: {id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-    let form = formulario;
-    const referer = "http://localhost:8080/acciones";
+    const form = formulario;
+    const referer = "http://localhost:8080/docentes";
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
-    }
-
-    const beforeEdit = () => {
-        console.log("tngo problemas con ala");
     }
 
 //    const processCsv = () => {
@@ -67,9 +60,9 @@ const Acciones = () => {
             obj: items.item,
             userId:      getUserId()
         }
-        let endpoint = '/silefe.accion/save-accion';
+        let endpoint = '/silefe.docente/save-docente';
         if (items.status === 'new')
-            endpoint = '/silefe.accion/add-accion';
+            endpoint = '/silefe.docente/add-docente';
         let {status,error} = await saveAPI(endpoint,data,referer);
         if (status) {
             fetchData();
@@ -85,7 +78,7 @@ const Acciones = () => {
     }
 
     const confirmDelete = async () => {
-        const endpoint = '/silefe.accion/delete-accioneso';
+        const endpoint = '/silefe.docente/delete-docentes';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
 
@@ -98,42 +91,69 @@ const Acciones = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
             }
         })
+
     }
 
     const fetchData = async () => {
-        console.log("fetchData en Acciones");
-        docentesHandler({type: DOCENTE_ACTIONS.START});
+        if (form.fields.provinciaId.options == undefined)  {
+            console.log("visto que estoy dentro");
+            await initForm();
+        }
+
         const postdata = {
             page:         (items.page>0)?items.page:0,
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order:        items.order,
         }
+        let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.docente/filter',postdata,referer);
+        //await console.debug(data);
 
-        if (form.fields.accionTipoId.options.length == 0) {
-            loadForm();
-        }
+        const tmp = await data.map(i => {
+            console.log("iterando");
+            console.log(i);
+            return(
+                {...i,
+                fechaNacimiento: (i.fechaNacimiento != null)?new Date(i.fechaNacimiento).toISOString().substring(0, 10):"",
+                email: (i.email != null && i.email.length > 0)?JSON.parse(i.email):[],
+                telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono):[],
+                checked:false
+            })});
 
-        let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.accion/filter',postdata,referer);
-        const tmp = await data.map(i => {return({...i,acctionTipo: "lalala", checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: totalItems,page:page});
     }
 
-    const loadForm = () => {
-        fetchAPIData('/silefe.acciontipo/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{value: 0, label: Liferay.Language.get("Seleccionar")}, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            form.fields.accionTipoId.options = opts;
-        });
+    const initForm = async () => {
+        const seleccionarlabel = Liferay.Language.get('Seleccionar');
 
-        fetchAPIData('/silefe.acciontipoformacion/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{value: 0, label: Liferay.Language.get("Seleccionar")}, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            form.fields.accionTipoFormacionId.options = opts;
+        fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            form.fields.provinciaId.options = opts;            
+            form.fields.provinciaId.change = changeProvince;
         });
-
-        fetchAPIData('/silefe.tecnico/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{value: 0, label: Liferay.Language.get("Seleccionar")}, ...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName } })];
-            form.fields.tecnicoId.options = opts;
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
+            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            form.fields.municipioId.options = opts;            
+            form.fields.municipioId.change = change2;
         });
+        fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
+            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            form.fields.tipoviaId.options = opts;            
+            form.fields.tipoviaId.change = () => {console.log("cambiando el tipo de via")};
+        });
+        form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];        
+        form.fields.sexo.options = [{key: 0, value:"H",label:Liferay.Language.get('Hombre')},{key:1, value:"M",label: Liferay.Language.get('Mujer')}];
 
+    }
+
+    const changeProvince = (id) => {
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: id},referer).then(response => {
+            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
+        });
+    }
+
+    const change2 = () => {
+        console.log("cambiando las otroas opcioens")
     }
 
     useEffect(()=>{
@@ -148,9 +168,6 @@ const Acciones = () => {
 
     if (!items) 
         return (<div>Liferay.Language.get('Cargando')</div>)
-
-    console.log("aqui estoy en acciones");
-    console.debug(docentes);
 
     return (
         <>
@@ -173,8 +190,6 @@ const Acciones = () => {
                     save={ handleSave} 
                     itemsHandle={itemsHandle}
                     items={items}
-                    docentes={docentes}
-                    docentesHandler={docentesHandler}
                 />
             }
             {
@@ -196,4 +211,4 @@ const Acciones = () => {
     )
 }
 
-export default Acciones;
+export default Docentes;

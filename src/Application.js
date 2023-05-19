@@ -32,9 +32,10 @@ import Acciones from './components/Acciones/Acciones';
 import AccionesTipo from './components/AccionesTipo/AccionesTipo';
 import AccionesTipoFormacion from './components/AccionesTipoFormacion/AccionesTipoFormacion';
 import Home from './components/Home/Home';
-import {VerticalMenu} from './includes/interface/VerticalMenu';
 import Prestaciones from './components/Prestaciones/Prestacion';
 import Estados from './components/Estados/Estados';
+import Docentes from './components/Docentes/Docentes';
+import {VerticalMenu} from './includes/interface/VerticalMenu';
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ const Application = () => {
                             <Route path='/titnivel'      element={ <TitulacionesNivel /> } />
                             <Route path='/tittipo'       element={ <TitulacionesTipo /> } />
                             <Route path='/titulaciones'  element={ <Titulaciones /> } />
+                            <Route path='/docentes'      element={ <Docentes /> } />
                             <Route path='/colectivos'    element={ <Colectivos /> }   />
                             <Route path='/provincias'    element={ <Provincias /> }   />
                             <Route path='/cnaes'         element={ <Cnaes /> }   />

@@ -8,6 +8,8 @@ import DocentesTable from "./DocentesTable";
 
 const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
   const [tab, setTab] = useState(0);
+  console.log("estoy en el form");
+  console.debug(docentes);
 
   return (
     <ClayCard>
@@ -19,7 +21,7 @@ const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
         <ClayCard.Description truncate={false} displayType="text">
           <ClayForm>
 
-            <ClayTabs active={0} modern onActiveChange={e => { setActive(0) }}>
+            <ClayTabs active={0} modern onActiveChange={e => { console.log("cambiado") }}>
               <ClayTabs.Item
                 key={"tab-item1"}
                 innerProps={{ "aria-controls": "tabpanel-1" }}
@@ -182,11 +184,12 @@ const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
               </ClayTabs.TabPane>
 
               <ClayTabs.TabPane aria-labelledby="tab-3" key={"tab-content-3"}>
-
-                <DocentesTable>
+                
+                <DocentesTable
                   docentes={docentes}
-                  docentesHandler={docentesHandler}
-                </DocentesTable>
+                  docentesHandler={docentesHandler} />
+                
+                               
 
                 <ClayInput
                   placeholder={"prueba4"}

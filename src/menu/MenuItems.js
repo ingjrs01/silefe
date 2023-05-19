@@ -6,6 +6,7 @@ const MenuItems = [
     {key:28, url: '/accionestipo', caption: 'AccionesTipo'},
     {key:29, url: '/accionestipoformacion', caption: 'AccionesTipoFormacion'},
     {key:19, url: '/participantes',caption: 'Participantes'},
+    {key:33, url: '/docentes',     caption: 'Docentes'},
     {key:23, url: '/empresas',     caption: 'Empresas'},
     {key:24, url: '/ofertas',      caption: 'Ofertas'},
     {key: 1, url: '/tittipo',      caption: 'Titulaciones Tipo'},
