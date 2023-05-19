@@ -106,7 +106,6 @@ const Docentes = () => {
             order:        items.order,
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.docente/filter',postdata,referer);
-        //await console.debug(data);
 
         const tmp = await data.map(i => {
             console.log("iterando");

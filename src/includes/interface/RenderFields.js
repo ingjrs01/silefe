@@ -250,7 +250,8 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             <>
                               <ClayRadioGroup
                                 active={act2}
-                                defaultValue="H"
+                                defaultValue="M"
+                                value={items.item[it]}
                                 //onActiveChange={setAct2}
                                 onChange={ evt => {console.log("este es el general")}}
                                 inline
@@ -261,7 +262,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                       key={items.fields.fields[it].name + it5.key}
                                       label={it5.label}
                                       value={it5.value}
-                                      onClick={a => {console.log("man hecho click")}}
+                                      onClick={a => { itemsHandle({type: ITEMS_ACTIONS.SET, fieldname:it, value: a.target.value}); }}
                                     />
                                   )
                                 })}
