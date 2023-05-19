@@ -35,6 +35,22 @@ const Acciones = () => {
 
     const beforeEdit = () => {
         console.log("tngo problemas con ala");
+        const searchItems= [
+            {
+                nombre: "Nombre 1",
+                apellidos: "Apellidos 1",
+                documento: "00000000",
+                email: "email1@gmail.com"
+            },
+            {
+                nombre: "Nombre 2",
+                apellidos: "Apellidos 2",
+                documento: "111111111",
+                email: "email_2@gmail.com"
+            },
+        ];
+        docentesHandler({type: DOCENTE_ACTIONS.SETSEARCHITEMS,items:searchItems});
+    
     }
 
 //    const processCsv = () => {
@@ -103,6 +119,8 @@ const Acciones = () => {
     const fetchData = async () => {
         console.log("fetchData en Acciones");
         docentesHandler({type: DOCENTE_ACTIONS.START});
+        // TODO: esto tiene que desaparecer: 
+        beforeEdit();
         const postdata = {
             page:         (items.page>0)?items.page:0,
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
@@ -149,8 +167,6 @@ const Acciones = () => {
     if (!items) 
         return (<div>Liferay.Language.get('Cargando')</div>)
 
-    console.log("aqui estoy en acciones");
-    console.debug(docentes);
 
     return (
         <>
@@ -161,6 +177,7 @@ const Acciones = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                beforeEdit={beforeEdit}
             />
             { (items.status === 'load') && 
             <LoadFiles 

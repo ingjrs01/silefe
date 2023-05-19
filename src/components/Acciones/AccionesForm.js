@@ -8,8 +8,6 @@ import DocentesTable from "./DocentesTable";
 
 const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
   const [tab, setTab] = useState(0);
-  console.log("estoy en el form");
-  console.debug(docentes);
 
   return (
     <ClayCard>
@@ -187,18 +185,9 @@ const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
                 
                 <DocentesTable
                   docentes={docentes}
-                  docentesHandler={docentesHandler} />
+                  docentesHandler={docentesHandler} 
+                />
                 
-                               
-
-                <ClayInput
-                  placeholder={"prueba4"}
-                  type="text"
-                  name={"prueba-4"}
-                  key={"prueba-4"}
-                  value={"ccc"}
-                  onChange={e => { console.log("estamos en 2") }}>
-                </ClayInput>
               </ClayTabs.TabPane>
 
             </ClayTabs.Content>
@@ -208,7 +197,11 @@ const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
 
         <div className="btn-group">
           <div className="btn-group-item">
-            <ClayButton aria-label="Cancel" onClick={e => console.log("pulsan en cancelar")} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+            <ClayButton 
+              aria-label="Cancel" 
+              onClick={e => itemsHandle({type: ITEMS_ACTIONS.CANCEL})} 
+              displayType="secondary">{Liferay.Language.get('Cancelar')}
+            </ClayButton>
           </div>
 
           <div className="btn-group-item">

@@ -1,22 +1,31 @@
+import { ITEMS_ACTIONS } from "./items.reducer";
+
 export const DOCENTE_ACTIONS = {
     START: 0,
     LOAD_ITEMS: 1,
     SELECT_ITEM: 2,
     NEW_ITEM: 3,
     SETFIELD: 4,
-    SAVE: 8,
-    CANCEL: 9,
-    DELETE_ITEM:10,    
+    SETSEARCH: 5,
+    SETSEARCHITEMS: 6,
+    CHECKSEARCH: 7,
+    CHECKALLSEARCH: 8,
+    SAVE: 9,
+    CANCEL: 10,
+    DELETE_ITEM:11,
+    SELECT_ITEMS: 12,
+    CHECK: 13,
+    CHECKALL: 14,
   }
 const initialState = {
     items: [],
     deleted: [],
+    search: "",
+    searchItems: [],
     status: "list",
     participanteId: 0,
-    tipoContratoOptions: [],
-    motivosOptions: [],
-    ocupacionesOptions: [],
 }
+let tmpar= []; 
 
 export const reducerDocentes = (state=initialState, action ) => {
     switch (action.type) {
@@ -27,6 +36,9 @@ export const reducerDocentes = (state=initialState, action ) => {
                     id: 0,                    
                 },
                 items: [],
+                searchItems: [],
+                checkAllSearch: false,
+                checkAll: false,
                 status: "list",
             }
         case DOCENTE_ACTIONS.LOAD_ITEMS:
@@ -53,6 +65,31 @@ export const reducerDocentes = (state=initialState, action ) => {
             return {
                 ...state,
                 item: {...state.item, [action.fieldname]:action.value}
+            }
+        case DOCENTE_ACTIONS.SETSEARCH: 
+            return {
+                ...state,
+                search: action.value
+            }
+        case DOCENTE_ACTIONS.SETSEARCHITEMS: 
+            return {
+                ...state,
+                searchItems: action.items.map(item => ({...item, checked:false}))
+            }
+        case DOCENTE_ACTIONS.CHECKSEARCH: 
+            tmpar = state.searchItems;
+            tmpar[action.index].checked = !tmpar[action.index].checked;
+
+            return {
+                ...state,
+                searchItems: tmpar
+            }
+        case DOCENTE_ACTIONS.CHECKALLSEARCH: 
+            const check = !state.checkAllSearch;
+            return {
+                ...state, 
+                checkAllSearch: check,
+                searchItems: state.searchItems.map(i => ({...i,checked:check}))
             }
 
         case DOCENTE_ACTIONS.SAVE:
@@ -86,6 +123,30 @@ export const reducerDocentes = (state=initialState, action ) => {
                 ...state,
                 items: tmp,
                 deleted: [...state.deleted,obj],
+            }
+        case DOCENTE_ACTIONS.SELECT_ITEMS: 
+            tmpar = state.searchItems.filter(item => item.checked);
+            let tmpPar2 = state.searchItems.filter(item => item.checked == false);
+
+            return {
+                ...state,
+                items: [...state.items,...tmpar.map(i => ({...i,checked:false}))],
+                searchItems: tmpPar2,
+            }
+        case DOCENTE_ACTIONS.CHECK: 
+            tmpar = state.items;
+            tmpar[action.index].checked = !tmpar[action.index].checked;
+
+            return {
+                ...state,
+                items: tmpar
+            }
+        case DOCENTE_ACTIONS.CHECKALL: 
+            const val = !state.checkAll;
+            return {
+                ...state,
+                checkAll: val,
+                items: [...state.items.map(item => ({...item,checked: val}))]
             }
        
         default: 
