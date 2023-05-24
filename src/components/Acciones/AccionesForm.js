@@ -5,15 +5,9 @@ import ClayButton from '@clayui/button';
 import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import DocentesTable from "./DocentesTable";
+import ParticipantesTable from "./ParticipantesTable";
 
-
-//save={ handleSave} 
-//itemsHandle={itemsHandle}
-//items={items}
-//docentes={docentes}
-//docentesHandler={docentesHandler}
-
-const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler }) => {
+const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler }) => {
   const [tab, setTab] = useState(0);
 
   return (
@@ -44,6 +38,12 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler }) =
                 innerProps={{ "aria-controls": "tabpanel-3" }}
               >
                 <a onClick={a => { console.log("setting"); setTab(2); }}>  { Liferay.Language.get("Docentes")}  </a>
+              </ClayTabs.Item>
+              <ClayTabs.Item
+                key={"tab-item4"}
+                innerProps={{ "aria-controls": "tabpanel-4" }}
+              >
+                <a onClick={a => { console.log("setting"); setTab(3); }}>  { Liferay.Language.get("Participantes")}  </a>
               </ClayTabs.Item>
 
             </ClayTabs>
@@ -195,6 +195,16 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler }) =
                 />
                 
               </ClayTabs.TabPane>
+
+              <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}>                  
+                <ParticipantesTable
+                  participantes={participantes}
+                  participantesHandler={participantesHandler} 
+                />
+                
+                
+              </ClayTabs.TabPane>
+
 
             </ClayTabs.Content>
           </ClayForm>

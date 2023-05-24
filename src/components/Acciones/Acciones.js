@@ -16,11 +16,13 @@ import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import {reducerDocentes, DOCENTE_ACTIONS} from '../../includes/reducers/docentes.reducer'; 
+import {reducerParticipantes, PARTICIPANTE_ACTIONS} from '../../includes/reducers/participantes.reducer';
 
 
 const Acciones = () => {
     const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},page:0,totalPages:0,load:0, search: '', order: []});
     const [docentes,docentesHandler]     = useReducer(reducerDocentes, {items: [], status:'list', item: {id:0}});
+    const [participantes,participantesHandler] = useReducer(reducerParticipantes, {items: [], status:'list', item: {id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -110,6 +112,7 @@ const Acciones = () => {
     const fetchData = async () => {
         console.log("fetchData en Acciones");
         docentesHandler({type: DOCENTE_ACTIONS.START});
+        participantesHandler({type: PARTICIPANTE_ACTIONS.START});
         // TODO: esto tiene que desaparecer:         
         const postdata = {
             page:         (items.page>0)?items.page:0,
@@ -141,6 +144,26 @@ const Acciones = () => {
             });
             docentesHandler({type: DOCENTE_ACTIONS.SETSEARCHITEMS,items:tits});
         })
+        // ahora cargamos los posbiles participantes
+        fetchAPIData('/silefe.participante/all', {lang: getLanguageId()}).then(response => {
+            console.log("recibiendo los participantes");
+            console.debug(response);
+            const pts = response.data.map( i => {                
+                let email = "";
+                console.log(i);
+                if (i.email.length > 0) 
+                    email = JSON.parse(i.email)[0].value;
+                return {
+                    ...i, 
+                    apellidos: i.apellido1 + " " + i.apellido2, 
+                    nuevo: true,
+                    email: email
+                }
+            });
+            participantesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:pts});
+        })
+
+
         
         let sel = items.arr.filter(i => i.checked);        
         if (sel.length > 0) {
@@ -221,6 +244,8 @@ const Acciones = () => {
                     items={items}
                     docentes={docentes}
                     docentesHandler={docentesHandler}
+                    participantes={participantes}
+                    participantesHandler={participantesHandler}
                 />
             }
             {

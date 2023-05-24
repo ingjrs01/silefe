@@ -282,8 +282,7 @@ const Participantes = () => {
             experienciasHandler({type: EXPERIENCIA_ACTIONS.CONTRATOS,contratoOptions: [...response.data]})
         });
         fetchAPIData('/silefe.mbaja/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            let motivos = [...response.data];
-            debugger;
+            let motivos = [...response.data];            
             motivos.unshift({id:0,descripcion: " "});
             experienciasHandler({type: EXPERIENCIA_ACTIONS.MOTIVOS,motivos: motivos});
         });
