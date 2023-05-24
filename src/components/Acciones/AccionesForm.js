@@ -6,7 +6,14 @@ import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, 
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import DocentesTable from "./DocentesTable";
 
-const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
+
+//save={ handleSave} 
+//itemsHandle={itemsHandle}
+//items={items}
+//docentes={docentes}
+//docentesHandler={docentesHandler}
+
+const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler }) => {
   const [tab, setTab] = useState(0);
 
   return (
@@ -18,7 +25,6 @@ const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
 
         <ClayCard.Description truncate={false} displayType="text">
           <ClayForm>
-
             <ClayTabs active={0} modern onActiveChange={e => { console.log("cambiado") }}>
               <ClayTabs.Item
                 key={"tab-item1"}
@@ -207,6 +213,7 @@ const AccionesForm = ({ items, itemsHandle, docentes, docentesHandler }) => {
           <div className="btn-group-item">
             <ClayButton aria-label="Save" onClick={() => {
               console.log("pulsan en guardar");
+              save();
             }}
               displayType="primary">{Liferay.Language.get('Guardar')}
             </ClayButton>

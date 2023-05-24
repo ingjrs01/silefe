@@ -58,24 +58,22 @@ const DocentesTable = ({docentes,docentesHandler}) =>  {
             <ClayTable.Body>
                 { docentes.searchItems.map( (item,index) => { return(
                 <>
-                <ClayTable.Row>
+                <ClayTable.Row key={"tsel-"+index}>
                 <ClayTable.Cell><ClayCheckbox checked={item.checked} onChange={() => docentesHandler({type: DOCENTE_ACTIONS.CHECKSEARCH, index:index})} />
                 </ClayTable.Cell>
-                <ClayTable.Cell>{item.nombre}</ClayTable.Cell>
-                <ClayTable.Cell>{item.apellidos}</ClayTable.Cell>
-                <ClayTable.Cell>{item.documento}</ClayTable.Cell>
-                <ClayTable.Cell headingTitle>{ item.email}</ClayTable.Cell>
-                <ClayTable.Cell>
-                    <ClayButton onClick={e => {
-                        docentesHandler({type: DOCENTE_ACTIONS.SELECT_ITEM , index:index});
-                    }} 
-                    displayType="secondary">{"E"} 
-                    </ClayButton>
-                    <ClayButton onClick={e => {
-                        docentesHandler({type:DOCENTE_ACTIONS.DELETE_ITEM,index:index});
-                    }} 
-                    displayType="danger">{"B"} 
-                    </ClayButton>
+                <ClayTable.Cell key={"sr"+item.nombre+index}>{item.nombre}</ClayTable.Cell>
+                <ClayTable.Cell key={"sr"+item.apellidos+index}>{item.apellidos}</ClayTable.Cell>
+                <ClayTable.Cell key={"sr"+item.documento+index}>{item.documento}</ClayTable.Cell>
+                <ClayTable.Cell key={"sr"+item.email+index} headingTitle>{ item.email}</ClayTable.Cell>
+                <ClayTable.Cell key={"sr-accion"+index}>
+                    <ClayButtonWithIcon
+                        aria-label={Liferay.Language.get("Quitar")}
+                        spritemap={spritemap}
+                        symbol="plus"
+                        title="quitar"
+                        displayType="primary"
+                    />                    
+
                 </ClayTable.Cell>
                 </ClayTable.Row>
                 </> 
@@ -105,24 +103,23 @@ const DocentesTable = ({docentes,docentesHandler}) =>  {
             <ClayTable.Body>
                 { docentes.items.map( (item,index) => { return(
                 <>
-                <ClayTable.Row>
+                <ClayTable.Row key={"k-"+item.id}>
                 <ClayTable.Cell><ClayCheckbox checked={item.checked} onChange={() => docentesHandler({type: DOCENTE_ACTIONS.CHECK, index: index})} />
                 </ClayTable.Cell>
-                <ClayTable.Cell>{item.nombre}</ClayTable.Cell>
-                <ClayTable.Cell>{item.apellidos}</ClayTable.Cell>
-                <ClayTable.Cell>{item.documento}</ClayTable.Cell>
-                <ClayTable.Cell headingTitle>{ item.email}</ClayTable.Cell>
+                <ClayTable.Cell key={"krow-"+ item.nombre + item.id}>{item.nombre}</ClayTable.Cell>
+                <ClayTable.Cell key={"krow-"+ item.apellidos + item.id}>{item.apellidos}</ClayTable.Cell>
+                <ClayTable.Cell key={"krow-"+ item.documento + item.id}>{item.documento}</ClayTable.Cell>
+                <ClayTable.Cell key={"krow-"+item.email+item.id} headingTitle>{ item.email}</ClayTable.Cell>
                 <ClayTable.Cell>
-                    <ClayButton onClick={e => {
-                        docentesHandler({type: DOCENTE_ACTIONS.SELECT_ITEM , index:index});
-                    }} 
-                    displayType="secondary">{"E"} 
-                    </ClayButton>
-                    <ClayButton onClick={e => {
-                        docentesHandler({type:DOCENTE_ACTIONS.DELETE_ITEM,index:index});
-                    }} 
-                    displayType="danger">{"B"} 
-                    </ClayButton>
+                    <ClayButtonWithIcon
+                        aria-label={Liferay.Language.get("Quitar")}
+                        key={"bi-"+item.id}
+                        spritemap={spritemap}
+                        symbol="minus-circle"
+                        title="quitar"
+                        displayType="danger"
+                        onClick={ () => docentesHandler({type: DOCENTE_ACTIONS.DELETE_ITEM, index: index}) }
+                    />                    
                 </ClayTable.Cell>
                 </ClayTable.Row>
                 </> 

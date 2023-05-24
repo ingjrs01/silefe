@@ -1,5 +1,3 @@
-import { ITEMS_ACTIONS } from "./items.reducer";
-
 export const DOCENTE_ACTIONS = {
     START: 0,
     LOAD_ITEMS: 1,
@@ -16,6 +14,7 @@ export const DOCENTE_ACTIONS = {
     SELECT_ITEMS: 12,
     CHECK: 13,
     CHECKALL: 14,
+    SETITEMS: 15
   }
 const initialState = {
     items: [],
@@ -36,6 +35,7 @@ export const reducerDocentes = (state=initialState, action ) => {
                     id: 0,                    
                 },
                 items: [],
+                deleted: [],
                 searchItems: [],
                 checkAllSearch: false,
                 checkAll: false,
@@ -114,15 +114,16 @@ export const reducerDocentes = (state=initialState, action ) => {
                 ...state,
                 status: "list",
             }
-        case DOCENTE_ACTIONS.DELETE_ITEM:                             
+
+        case DOCENTE_ACTIONS.DELETE_ITEM:
             let obj = {...state.items[action.index]};
             tmp = [...state.items];
             tmp.splice(action.index,1);
-
+            
             return {
                 ...state,
                 items: tmp,
-                deleted: [...state.deleted,obj],
+                deleted: (obj.nuevo)?[...state.deleted]:[...state.deleted,obj],
             }
         case DOCENTE_ACTIONS.SELECT_ITEMS: 
             tmpar = state.searchItems.filter(item => item.checked);
@@ -132,6 +133,11 @@ export const reducerDocentes = (state=initialState, action ) => {
                 ...state,
                 items: [...state.items,...tmpar.map(i => ({...i,checked:false}))],
                 searchItems: tmpPar2,
+            }
+        case DOCENTE_ACTIONS.SETITEMS: 
+            return {
+                ...state,
+                items: [...action.items.map(item=>({...item, checked:false}))]
             }
         case DOCENTE_ACTIONS.CHECK: 
             tmpar = state.items;
