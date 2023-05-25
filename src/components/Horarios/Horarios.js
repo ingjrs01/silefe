@@ -15,7 +15,7 @@ import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Horarios = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0, search: '', order: []}); 
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []}); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const isInitialized                  = useRef(null);
@@ -105,13 +105,12 @@ const Horarios = () => {
     }
 
     const fetchData = async () => {
-        const endpoint = "/silefe.horario/filter";  
         const postdata = {
-            page:         items.page,
+            pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order:        items.order,
         }
-        let {data, totalPages, totalItems,page} = await fetchAPIData(endpoint,postdata,referrer);
+        let {data, totalPages, totalItems,page} = await fetchAPIData('/silefe.horario/filter',postdata,referrer);
         let tmp = await data.map(i => {return({...i,id:i.horarioId,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages, total: totalItems,page:page});
     }

@@ -14,7 +14,7 @@ import { form as formulario } from './Form';
 import { Paginator } from '../../includes/interface/Paginator';
 
 const Experiencias = () => {
-    const [items, itemsHandle]           = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,totalPages:0,page:0,load:0, search: '', order: []});
+    const [items, itemsHandle]           = useReducer(red_items, {arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -68,14 +68,13 @@ const Experiencias = () => {
     }
 
     const fetchData = async () => {
-        const endpoint = "/silefe.experiencia/filter";
         const postdata = {
-            page:        items.page,
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             descripcion: (items.search && typeof items.search !== 'undefined')?items.search:"", 
             order:       items.order,
         };
 
-        let {data,totalPages, totalItems,page} = await fetchAPIData(endpoint,postdata,referer);
+        let {data,totalPages, totalItems,page} = await fetchAPIData("/silefe.experiencia/filter",postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.experienciaId,checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form, totalPages:totalPages, total: totalItems,page:page});
     }

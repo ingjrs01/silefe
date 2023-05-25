@@ -20,7 +20,7 @@ import {reducerParticipantes, PARTICIPANTE_ACTIONS} from '../../includes/reducer
 
 
 const Acciones = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},page:0,totalPages:0,load:0, search: '', order: []});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
     const [docentes,docentesHandler]     = useReducer(reducerDocentes, {items: [], status:'list', item: {id:0}});
     const [participantes,participantesHandler] = useReducer(reducerParticipantes, {items: [], status:'list', item: {id:0}});
     const [toastItems,setToastItems]     = useState([]);    
@@ -115,7 +115,7 @@ const Acciones = () => {
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
         // TODO: esto tiene que desaparecer:         
         const postdata = {
-            page:         (items.page>0)?items.page:0,
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order:        items.order,
         }

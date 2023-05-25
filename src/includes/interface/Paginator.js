@@ -41,7 +41,7 @@ export const Paginator = ({itemsHandle,items}) => {
         onActiveChange={evt => setPage(evt)}
         spritemap={spritemap}
         totalPages={items.totalPages}
-        onDeltaChange={console.log("pageSize")}
+        //onDeltaChange={console.log("pageSize")}
       />
     </ClayPaginationBar>
   );

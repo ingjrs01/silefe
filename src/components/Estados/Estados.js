@@ -15,7 +15,7 @@ import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Estados = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},page:0,totalPages:0,load:0, search: '', order: []});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -92,9 +92,8 @@ const Estados = () => {
     }
 
     const fetchData = async () => {
-        console.log("fetchData en Acciones");
         const postdata = {
-            page:         (items.page>0)?items.page:0,
+            pagination: {page: items.pagination, pageSize: items.pagination.pageSize},
             nombre : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order:        items.order,
         }

@@ -15,7 +15,7 @@ import { form as formulario } from "./Form";
 import { Paginator } from "../../includes/interface/Paginator";
 
 const MBaja = () => {
-    const [items, itemsHandle]           = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,totalPages:0,page:0,load:0, search: '', order: [] });
+    const [items, itemsHandle]           = useReducer(red_items, {arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -54,14 +54,13 @@ const MBaja = () => {
     }
 
     const fetchData = async () => {
-        const endpoint = "/silefe.mbaja/filter";
         const postdata = {
             descripcion : (items.seach && typeof items.seach !== 'undefined')?items.seach:"",
-            page:         items.page, 
+            pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
             order:        items.order,
         }
 
-        let {data,totalPages, totalItems,page} = await fetchAPIData(endpoint,postdata,referer);
+        let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.mbaja/filter',postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.mBajaId,checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp,fields:form,totalPages:totalPages, total: totalItems,page:page});
     }

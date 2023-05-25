@@ -15,7 +15,7 @@ import { form as formulario } from "./Form";
 import { Paginator } from "../../includes/interface/Paginator";
 
 const TipoContrato = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0, search: '',order: []});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -106,7 +106,7 @@ const TipoContrato = () => {
 
     const fetchData = async () => {
         const postdata = {
-            page:         items.page,
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order: []
         }

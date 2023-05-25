@@ -4,7 +4,7 @@ import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import { getUserId} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
@@ -21,7 +21,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 const spritemap = "./o/my-project/icons.svg";
 
 const Participantes = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,page:0,load:0, search: "", order: []} );
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []} );
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: [], deleted: [], status: "list"});
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list", participanteId: 0});
     const [toastItems,setToastItems]     = useState([]);    
@@ -138,7 +138,8 @@ const Participantes = () => {
         }
             
         const postdata = {
-            page:    items.page,
+            //page:    items.page,
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             nombre : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order : items.order//[{name: 'documento', direction: 'asc'}]
 

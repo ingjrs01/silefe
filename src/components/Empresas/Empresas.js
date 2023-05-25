@@ -20,7 +20,7 @@ import ContactosRender from "./ContactosRender";
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Empresas = () => {
-    const [items, itemsHandle] = useReducer(red_items,{ arr: [], item: { id: 0 }, totalPages: 0, page: 0, load: 0, search: "", order: [] });
+    const [items, itemsHandle] = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
     const [redCentros, centrosHandle] = useReducer(reducerCentros);
     const [redContactos, contactosHandle] = useReducer(reducerContactos);
     const [toastItems, setToastItems] = useState([]);
@@ -34,7 +34,7 @@ const Empresas = () => {
     const fetchData = async () => {
         contactosHandle({type:CONTACTOS_ACTIONS.START});
         const postdata = {
-            page: items.page,
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             razonSocial: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : "",
             order: items.order
         }

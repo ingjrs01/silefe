@@ -18,7 +18,7 @@ import {ParticipantesRender} from "./ParticipantesRender";
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Ofertas = () => {
-    const [items,itemsHandle]               = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0,search: '',order: []});
+    const [items,itemsHandle]               = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
     const [redParticipantes, participantesHandle] = useReducer(reducerCandidatos);
     const [toastItems,setToastItems]        = useState([]);    
     const {observer, onOpenChange, open}    = useModal();
@@ -149,7 +149,7 @@ const Ofertas = () => {
     const fetchData = async () => {
         participantesHandle({type:PARTICIPANTES_OPTIONS.START,search:searchCandidatos,showError: showError });
         const postdata = {
-            page:   items.page,
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             nombre: (items.search && typeof items.search !== 'undefined')?items.search:"",
             order: items.order
         }

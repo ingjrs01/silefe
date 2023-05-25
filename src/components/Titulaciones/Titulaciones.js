@@ -18,7 +18,7 @@ import {reducerTitulacion, TITULACIONES_ACTIONS} from '../../includes/reducers/t
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Titulaciones = () => {
-    const [items, itemsHandle]             = useReducer(red_items, { arr: [], item: { id: 0, checked: false }, checkall: false, showform: false,page:0, load: 0, search: '',order: [] });
+    const [items, itemsHandle]             = useReducer(red_items, {arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
@@ -82,7 +82,7 @@ const Titulaciones = () => {
             initForm();
 
         const postdata = {
-            page: items.page,
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
             order: items.order
         };

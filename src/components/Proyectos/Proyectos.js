@@ -4,7 +4,7 @@ import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
 import { getUserId} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -16,7 +16,7 @@ import {form as formulario} from './ProyectoForm2';
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Proyectos = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,page:0,load:0, search: '', order: []});
+    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -129,9 +129,9 @@ const Proyectos = () => {
         if (form.fields.entidadId.options == undefined) {
             initForm();
         }
+        //debugger;
         const postdata = {
-            page:         items.page,
-            codigo:       0,
+            pagination:  {page: items.pagination.page, pageSize: items.pagination.pageSize},
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order : items.order
         }

@@ -28,15 +28,20 @@ export const ITEMS_ACTIONS = {
     SET_PAGESIZE: 29,
   }
 
-const initialState = {
+export const initialState = {
     arr: [],
     item: {id:0,checked:false},
     page: 0,
+    pagination: {
+        page: 0,
+        pageSize: 30,
+        sizes: [10,20,30],
+    },
     total: 0,
     totalPages:0,
     errors: [],
     checkall: false,
-    fields: {},
+    //fields: {},
     status: "list", /* values: new, edit, list, load  */
     search: "",
     load: 0,
@@ -63,7 +68,7 @@ const resetErrors = (fields) => {
 let index = 0;
 let tmp = []
 
-export const red_items = (state=initialState, action ) => {
+export const red_items = (state, action ) => {
     switch (action.type) {
         case ITEMS_ACTIONS.START: 
             let tmp_item = {};
@@ -95,11 +100,11 @@ export const red_items = (state=initialState, action ) => {
                 ...state,
                 arr: action.items,
                 page:action.page,
-                pagination: {
-                    page: action.page,
-                    pageSize: 10,
-                    sizes: [10,20,30]
-                },
+//                pagination: {
+//                    page: action.page,
+//                    pageSize: 10,
+//                    sizes: [10,20,30]
+//                },
                 totalPages:action.totalPages,
                 total: action.total,
                 fields: action.fields,
@@ -338,6 +343,7 @@ export const red_items = (state=initialState, action ) => {
             return {
                 ...state,
                 pagination: {...state.pagination, pageSize: action.pageSize },
+                load: (state.load + 1) % 17,
             }
         
         default: 
