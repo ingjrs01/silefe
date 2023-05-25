@@ -11,6 +11,11 @@ const spritemap = "./o/my-project/icons.svg";
 export const Paginator = ({itemsHandle,items}) => {
   const [active, setActive] = useState(items.page+1);
 
+  const its  = items.pagination.sizes.map( s => ({
+    label: s,
+    onClick: () => { itemsHandle({type:ITEMS_ACTIONS.SET_PAGESIZE, pageSize:s})}
+  }));
+
   const setPage = (p) => {
     setActive(p);
     itemsHandle({type: ITEMS_ACTIONS.SETPAGE,page:p-1});
@@ -18,22 +23,18 @@ export const Paginator = ({itemsHandle,items}) => {
 
   return (
     <ClayPaginationBar>
-
+      {
+        /*
+        items={ items.pagination.sizes.map( s => ({
+          label: s
+        }))}
+        */
+      }
       <ClayPaginationBar.DropDown
-        items={[
-          {
-            label: "10",
-            onClick: () => {}
-          },
-          {
-            label: "20",
-            onClick: () => {}
-          }
-
-        ]}
+        items={its}
         trigger={
           <ClayButton displayType="unstyled">
-            {"10 items per page"}
+            {items.pagination.pageSize + " items por página"}
 
             <ClayIcon spritemap={spritemap} symbol="caret-double-l" />
           </ClayButton>
@@ -41,7 +42,7 @@ export const Paginator = ({itemsHandle,items}) => {
       />
 
       <ClayPaginationBar.Results>
-        {"Showing a handful of items..."}
+        {"Mostrando un puñado de items..."}
       </ClayPaginationBar.Results>
 
 
@@ -52,6 +53,7 @@ export const Paginator = ({itemsHandle,items}) => {
         onActiveChange={evt => setPage(evt)}
         spritemap={spritemap}
         totalPages={items.totalPages}
+        onDeltaChange={console.log("pageSize")}
       />
     </ClayPaginationBar>
   );

@@ -25,6 +25,7 @@ export const ITEMS_ACTIONS = {
     SET_ACTIVETAB: 26,
     SET_ORDER: 27,
     DELETE_ORDER: 28,
+    SET_PAGESIZE: 29,
   }
 
 const initialState = {
@@ -94,6 +95,11 @@ export const red_items = (state=initialState, action ) => {
                 ...state,
                 arr: action.items,
                 page:action.page,
+                pagination: {
+                    page: action.page,
+                    pageSize: 10,
+                    sizes: [10,20,30]
+                },
                 totalPages:action.totalPages,
                 total: action.total,
                 fields: action.fields,
@@ -215,6 +221,7 @@ export const red_items = (state=initialState, action ) => {
                 return {
                     ...state,
                     page: state.page + 1,
+                    pagination: {...state.pagination,page: state.pagination.page + 1},
                     load: (state.load + 1) % 17
                 }                
             }
@@ -226,6 +233,7 @@ export const red_items = (state=initialState, action ) => {
                 return {
                     ...state,
                     page: action.page,
+                    pagination: {...state.pagination,page: action.page},
                     load: (state.load + 1) % 17
                 }                
             }
@@ -325,6 +333,11 @@ export const red_items = (state=initialState, action ) => {
             return {
                 ...state,
                 order: tmp
+            }
+        case ITEMS_ACTIONS.SET_PAGESIZE: 
+            return {
+                ...state,
+                pagination: {...state.pagination, pageSize: action.pageSize },
             }
         
         default: 
