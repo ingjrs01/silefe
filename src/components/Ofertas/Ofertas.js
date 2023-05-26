@@ -4,7 +4,7 @@ import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
 import { getUserId} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, deleteAPIParams, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -18,7 +18,7 @@ import {ParticipantesRender} from "./ParticipantesRender";
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Ofertas = () => {
-    const [items,itemsHandle]               = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
+    const [items,itemsHandle]               = useReducer(red_items,initialState);
     const [redParticipantes, participantesHandle] = useReducer(reducerCandidatos);
     const [toastItems,setToastItems]        = useState([]);    
     const {observer, onOpenChange, open}    = useModal();

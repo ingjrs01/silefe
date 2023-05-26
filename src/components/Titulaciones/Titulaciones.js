@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import Table from '../../includes/interface/Table';
-import DefaultForm from '../../includes/interface/DefaultForm';
+//import DefaultForm from '../../includes/interface/DefaultForm';
 import { TitulacionForm } from './TitulacionForm';
 import Menu from '../Menu';
 import { useModal } from '@clayui/modal';
 import { getUserId } from '../../includes/LiferayFunctions';
-import { ITEMS_ACTIONS, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, red_items, initialState } from '../../includes/reducers/items.reducer';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
@@ -18,15 +18,13 @@ import {reducerTitulacion, TITULACIONES_ACTIONS} from '../../includes/reducers/t
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Titulaciones = () => {
-    const [items, itemsHandle]             = useReducer(red_items, {arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
+    const [items, itemsHandle]             = useReducer(red_items, initialState);// {arr:[],item:{id:0},pagination: {page:0,pageSize:10, sizes: [10,20,30],totalPages:0},load:0, search: '', order: []});
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const isInitialized = useRef(null);    
-    //const [titulacionesNivelOptions ,setTitulacionesNivelOptions] = useState([]);
     let opciones_nivel = [];
-    let titulacionesFamiliaOptions = [];
-    // TODO: viendo las cosas
+    let titulacionesFamiliaOptions = [];    
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{});
     
     let form = f2;

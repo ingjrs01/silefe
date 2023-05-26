@@ -5,7 +5,7 @@ import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import { getUserId} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI, deleteAPIParams } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
@@ -20,7 +20,7 @@ import {reducerParticipantes, PARTICIPANTE_ACTIONS} from '../../includes/reducer
 
 
 const Acciones = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
+    const [items,itemsHandle]            = useReducer(red_items,initialState);
     const [docentes,docentesHandler]     = useReducer(reducerDocentes, {items: [], status:'list', item: {id:0}});
     const [participantes,participantesHandler] = useReducer(reducerParticipantes, {items: [], status:'list', item: {id:0}});
     const [toastItems,setToastItems]     = useState([]);    

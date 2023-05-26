@@ -4,7 +4,7 @@ import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import { getUserId} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
@@ -15,7 +15,7 @@ import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Cnaes = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []});
+    const [items,itemsHandle]            = useReducer(red_items, initialState);
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();

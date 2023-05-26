@@ -16,7 +16,7 @@ import {form as formulario} from './ProyectoForm2';
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Proyectos = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
+    const [items,itemsHandle]            = useReducer(red_items,initialState);
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();

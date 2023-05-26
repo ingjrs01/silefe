@@ -4,7 +4,7 @@ import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import { useModal } from '@clayui/modal';
 import { getUserId } from '../../includes/LiferayFunctions';
-import { red_items, ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
+import { red_items, ITEMS_ACTIONS, initialState } from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import { LoadFiles } from '../../includes/interface/LoadFiles'
@@ -20,7 +20,7 @@ import ContactosRender from "./ContactosRender";
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Empresas = () => {
-    const [items, itemsHandle] = useReducer(red_items,{arr:[],item:{id:0},totalPages:0,pagination: {page:0,pageSize:10, sizes: [10,20,30]},load:0, search: '', order: []});
+    const [items, itemsHandle] = useReducer(red_items,initialState);
     const [redCentros, centrosHandle] = useReducer(reducerCentros);
     const [redContactos, contactosHandle] = useReducer(reducerContactos);
     const [toastItems, setToastItems] = useState([]);

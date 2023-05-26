@@ -5,7 +5,7 @@ import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import {getUserId} from '../../includes/LiferayFunctions';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
-import {ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
+import {ITEMS_ACTIONS,red_items, initialState} from '../../includes/reducers/items.reducer';
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
@@ -15,7 +15,7 @@ import Papa from "papaparse";
 import { Paginator } from '../../includes/interface/Paginator';
 
 const Colectivos = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []}); 
+    const [items,itemsHandle]            = useReducer(red_items,initialState); 
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();

@@ -40,7 +40,7 @@ export const Paginator = ({itemsHandle,items}) => {
         ellipsisprops={{ "aria-label": "Más", title: "Más" }}
         onActiveChange={evt => setPage(evt)}
         spritemap={spritemap}
-        totalPages={items.totalPages}
+        totalPages={items.pagination.totalPages}
         //onDeltaChange={console.log("pageSize")}
       />
     </ClayPaginationBar>

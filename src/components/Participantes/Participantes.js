@@ -21,7 +21,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 const spritemap = "./o/my-project/icons.svg";
 
 const Participantes = () => {
-    const [items,itemsHandle]            = useReducer(red_items,{arr:[],item:{id:0},totalPages: 1,pagination: {page:0,pageSize:10, sizes: [10,20,30]}, page:0,load:0, search: "", order: []} );
+    const [items,itemsHandle]            = useReducer(red_items,initialState );
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: [], deleted: [], status: "list"});
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list", participanteId: 0});
     const [toastItems,setToastItems]     = useState([]);    

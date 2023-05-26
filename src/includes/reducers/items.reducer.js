@@ -33,14 +33,17 @@ export const initialState = {
     item: {id:0,checked:false},
     pagination: {
         page: 0,
-        pageSize: 30,
+        pageSize: 20,
         sizes: [10,20,30],
+        totalPages:0,
     },
     total: 0,
-    totalPages:0,
     errors: [],
     checkall: false,
-    //fields: {},
+    fields: { 
+        empty: true,
+        table: {},
+    },
     status: "list", /* values: new, edit, list, load  */
     search: "",
     load: 0,
@@ -70,6 +73,8 @@ let tmp = []
 export const red_items = (state, action ) => {
     switch (action.type) {
         case ITEMS_ACTIONS.START: 
+            //console.log("Cargando");
+            //console.debug(action.items);
             let tmp_item = {};
             if (state.load == 0) {
                 Object.keys(action.fields.fields).forEach(j => {
@@ -98,13 +103,14 @@ export const red_items = (state, action ) => {
             return {
                 ...state,
                 arr: action.items,
-                totalPages:action.totalPages,
+                pagination: {...state.pagination,totalPages: action.totalPages},
                 total: action.total,
                 fields: action.fields,
                 item: tmp_item,
                 errors: resetErrors(action.fields),
                 checkall:false,
                 status: "list",
+                //load: (state.load + 1) % 17,
             }
 
         case ITEMS_ACTIONS.CHECK:
@@ -214,7 +220,7 @@ export const red_items = (state, action ) => {
             }
 
         case ITEMS_ACTIONS.SETPAGE:
-            if ((state.pagination.page < state.totalPages) && (action.page >= 0)) {
+            if ((state.pagination.page < state.pagination.totalPages) && (action.page >= 0)) {
                 return {
                     ...state,
                     pagination: {...state.pagination,page: action.page},
