@@ -13,8 +13,8 @@ export const ITEMS_ACTIONS = {
     CANCEL_LOAD:14,
     SEARCH: 15,
     FETCH: 16,
-    NEXTPAG: 17,
-    PREVPAG:18,
+//    NEXTPAG: 17,
+//    PREVPAG:18,
     SETPAGE: 19,
     SET_FORMOPTIONS: 20,
     ADD_MULTIFIELD: 21,
@@ -31,7 +31,6 @@ export const ITEMS_ACTIONS = {
 export const initialState = {
     arr: [],
     item: {id:0,checked:false},
-    page: 0,
     pagination: {
         page: 0,
         pageSize: 30,
@@ -99,12 +98,6 @@ export const red_items = (state, action ) => {
             return {
                 ...state,
                 arr: action.items,
-                page:action.page,
-//                pagination: {
-//                    page: action.page,
-//                    pageSize: 10,
-//                    sizes: [10,20,30]
-//                },
                 totalPages:action.totalPages,
                 total: action.total,
                 fields: action.fields,
@@ -136,8 +129,6 @@ export const red_items = (state, action ) => {
                 checkall: false
             }
         case ITEMS_ACTIONS.SET:
-            console.log("poninedo el adato");
-            console.log(action.fieldname);
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
@@ -218,26 +209,14 @@ export const red_items = (state, action ) => {
             return {
                 ...state,
                 search: action.value,
-                page: 0,
+                pagination: {...state.pagination, page: 0},
                 load: (state.load + 1) % 17
             }
-        case ITEMS_ACTIONS.NEXTPAG:
-            if (state.page < state.totalPages - 1) {
-                return {
-                    ...state,
-                    page: state.page + 1,
-                    pagination: {...state.pagination,page: state.pagination.page + 1},
-                    load: (state.load + 1) % 17
-                }                
-            }
-            return {
-                ...state,
-                }
+
         case ITEMS_ACTIONS.SETPAGE:
-            if ((action.page < state.totalPages) && (action.page >= 0)) {
+            if ((state.pagination.page < state.totalPages) && (action.page >= 0)) {
                 return {
                     ...state,
-                    page: action.page,
                     pagination: {...state.pagination,page: action.page},
                     load: (state.load + 1) % 17
                 }                
@@ -260,18 +239,6 @@ export const red_items = (state, action ) => {
                 fields: {...state.fields,rows: narray}
             }
     
-        case ITEMS_ACTIONS.PREVPAG:
-            if (state.page > 0) {
-                return {
-                    ...state,
-                    page: state.page - 1,
-                    load: (state.load + 1) % 17
-                }
-            }
-            return {
-                ...state
-            }
-
         case ITEMS_ACTIONS.ADD_MULTIFIELD:
             let newItem = state.item;
             let key = newItem[action.fieldname].length + 1;
@@ -326,7 +293,7 @@ export const red_items = (state, action ) => {
 
             return {
                 ...state,
-                order: tmp,//[...state.order,{name: action.fieldname, direction: 'asc'} ],
+                order: tmp,
                 load: (state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.DELETE_ORDER:

@@ -8,7 +8,7 @@ import ClayIcon from '@clayui/icon';
 const spritemap = "./o/my-project/icons.svg";
 
 export const Paginator = ({itemsHandle,items}) => {
-  const [active, setActive] = useState(items.page+1);
+  const [active, setActive] = useState(items.pagination.page+1);
   const its  = items.pagination.sizes.map( s => ({
     label: s,
     onClick: () => { itemsHandle({type:ITEMS_ACTIONS.SET_PAGESIZE, pageSize:s})}

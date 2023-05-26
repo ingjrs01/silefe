@@ -35,33 +35,37 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
             </ClayInput.GroupItem>
           </ClayInput.Group>
         </ClayToolbar.Item>
-        <ClayToolbar.Item>
-          <ClayToolbar.Section>
-            <ClayButton.Group>
-              <ClayButtonWithIcon
-                displayType="secondary"
-                aria-label="Previous"
-                onClick={() => {   itemsHandle({type:ITEMS_ACTIONS.PREVPAG})}}
-                small
-                symbol="angle-left"
-              />
-
-              <ClayButtonWithIcon
-                displayType="secondary"
-                aria-label="Next"
-                onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEXTPAG}) }}
-                spritemap={spritemap}
-                small
-                symbol="angle-right"
-              />
-              	<svg
-                  className="lexicon-icon lexicon-icon-blogs"
-                  focusable="false"
-                  role="presentation"
-		            ></svg>
-            </ClayButton.Group>
-          </ClayToolbar.Section>
-        </ClayToolbar.Item>
+        {
+          /*  
+          <ClayToolbar.Item>
+            <ClayToolbar.Section>
+              <ClayButton.Group>
+                <ClayButtonWithIcon
+                  displayType="secondary"
+                  aria-label="Previous"
+                  onClick={() => {   itemsHandle({type:ITEMS_ACTIONS.PREVPAG})}}
+                  small
+                  symbol="angle-left"
+                />
+  
+                <ClayButtonWithIcon
+                  displayType="secondary"
+                  aria-label="Next"
+                  onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEXTPAG}) }}
+                  spritemap={spritemap}
+                  small
+                  symbol="angle-right"
+                />
+                  <svg
+                    className="lexicon-icon lexicon-icon-blogs"
+                    focusable="false"
+                    role="presentation"
+                  ></svg>
+              </ClayButton.Group>
+            </ClayToolbar.Section>
+          </ClayToolbar.Item>         
+          */
+        }
 
 
         <ClayToolbar.Item>
