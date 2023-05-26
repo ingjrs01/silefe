@@ -3,7 +3,7 @@ import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
-import {getUserId} from '../../includes/LiferayFunctions';
+import { url_api, getAuthToken, getUserId, url_referer } from "../../includes/LiferayFunctions";
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
 import {ITEMS_ACTIONS,red_items, initialState} from '../../includes/reducers/items.reducer';
 import {LoadFiles} from '../../includes/interface/LoadFiles'
@@ -11,7 +11,6 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
-import { url_api, getAuthToken } from "../../includes/LiferayFunctions";
 import {form as formulario} from './Form';
 import { Paginator } from '../../includes/interface/Paginator';
 
@@ -24,7 +23,7 @@ const Tecnicos = () => {
     const isInitialized                  = useRef(null);
 
     const form = formulario;
-    const referer = 'http://localhost:8080/tecnicos';
+    const referer = `${url_referer}/tecnicos`;
 
     const loadCsv = () => {
         console.log("Cargando un csv");

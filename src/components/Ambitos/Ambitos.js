@@ -3,7 +3,7 @@ import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
-import { getUserId} from '../../includes/LiferayFunctions';
+import { getUserId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -21,7 +21,7 @@ const Ambitos = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-    const referer = "http://localhost:8080/ambitos";
+    const referer = `${url_referer}/ambitos`;
     const form = formulario;
 
     useEffect(()=>{

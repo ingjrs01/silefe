@@ -4,7 +4,7 @@ import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
-import {getUserId} from '../../includes/LiferayFunctions';
+import {getUserId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
@@ -40,7 +40,7 @@ const Provincias = () => {
             console.log("esto habia fallado")
     },[data,isFetching, jload]);
 
-    const referer = 'http://localhost:8080/provincias';
+    const referer = `${url_referer}/provincias`;
     const form = formulario;
 
     const loadCsv = () => {

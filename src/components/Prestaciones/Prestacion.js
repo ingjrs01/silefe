@@ -3,9 +3,8 @@ import DefaultForm from "../../includes/interface/DefaultForm";
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
-import { getUserId} from '../../includes/LiferayFunctions';
+import { getUserId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
@@ -13,6 +12,7 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
+import Papa from "papaparse";
 
 const Prestaciones = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -22,7 +22,7 @@ const Prestaciones = () => {
     const isInitialized                  = useRef(null);
 
     const form = formulario;
-    const referer = "http://localhost:8080/prestaciones";
+    const referer = `${url_referer}/prestaciones`;
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});

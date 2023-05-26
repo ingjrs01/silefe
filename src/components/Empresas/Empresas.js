@@ -3,7 +3,7 @@ import TabsForm from '../../includes/interface/TabsForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import { useModal } from '@clayui/modal';
-import { getUserId } from '../../includes/LiferayFunctions';
+import { getUserId, getLanguageId, url_referer } from '../../includes/LiferayFunctions';
 import { red_items, ITEMS_ACTIONS, initialState } from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -12,7 +12,6 @@ import { FAvisos } from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
-import { getLanguageId } from '../../includes/LiferayFunctions';
 import CentrosRender from "./CentrosRender";
 import { reducerCentros, CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
 import { reducerContactos, CONTACTOS_ACTIONS } from "../../includes/reducers/contactos.reducer";
@@ -28,7 +27,7 @@ const Empresas = () => {
     const [file, setFile] = useState();
     const isInitialized = useRef(null);
 
-    const referer = "http://localhost:8080/empresas";
+    const referer = `${url_referer}/empresas`;
     const form = formulario;
 
     const fetchData = async () => {

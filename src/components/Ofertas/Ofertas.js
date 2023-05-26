@@ -3,9 +3,8 @@ import TabsForm from '../../includes/interface/TabsForm';
 import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
-import { getUserId} from '../../includes/LiferayFunctions';
+import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import { getLanguageId } from '../../includes/LiferayFunctions';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, deleteAPIParams, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
@@ -25,7 +24,7 @@ const Ofertas = () => {
     const [file,setFile]                    = useState();
     const isInitialized                     = useRef(null);
 
-    const referer = "http://localhost:8080/oferta";
+    const referer = `${url_referer}/oferta`;
     const form = formulario;
 
     useEffect(()=>{

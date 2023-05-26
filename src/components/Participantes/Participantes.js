@@ -3,7 +3,7 @@ import TabsForm from './TabsForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
-import { getUserId} from '../../includes/LiferayFunctions';
+import { getUserId,getLanguageId,  url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -12,7 +12,6 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
-import { getLanguageId } from '../../includes/LiferayFunctions';
 import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/titulaciones.reducer';
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { Paginator } from "../../includes/interface/Paginator";
@@ -29,7 +28,7 @@ const Participantes = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef;
 
-    const referer = "http://localhost:8080/participantes";
+    const referer = `${url_referer}/participantes`;
     const form = formulario;
 
     useEffect(()=>{

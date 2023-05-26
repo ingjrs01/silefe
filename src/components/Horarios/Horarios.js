@@ -3,7 +3,7 @@ import DefaultForm from '../../includes/interface/DefaultForm';
 import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
-import {getUserId} from '../../includes/LiferayFunctions';
+import {getUserId, url_referer} from '../../includes/LiferayFunctions';
 import {initialState, ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -20,7 +20,7 @@ const Horarios = () => {
     const {observer, onOpenChange, open} = useModal();
     const isInitialized                  = useRef(null);
 
-    const referrer = "http://localhost:8080/horarios";
+    const referrer = `${url_referer}/horarios`;
     const form = formulario;
     
     useEffect(()=>{

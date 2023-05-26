@@ -1,22 +1,20 @@
 import React, {useEffect, useReducer, useRef, useState} from "react";
-//import DefaultForm from "../../includes/interface/DefaultForm";
 import DefaultForm from "./AccionesForm";
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
-import { getUserId} from '../../includes/LiferayFunctions';
+import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI, deleteAPIParams } from "../../includes/apifunctions";
+import { deleteAPI, fetchAPIData, saveAPI, deleteAPIParams } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
-import { getLanguageId } from '../../includes/LiferayFunctions';
 import {reducerDocentes, DOCENTE_ACTIONS} from '../../includes/reducers/docentes.reducer'; 
 import {reducerParticipantes, PARTICIPANTE_ACTIONS} from '../../includes/reducers/participantes.reducer';
+//import Papa from "papaparse";
 
 
 const Acciones = () => {
@@ -29,7 +27,7 @@ const Acciones = () => {
     const isInitialized                  = useRef(null);
 
     let form = formulario;
-    const referer = "http://localhost:8080/acciones";
+    const referer = `${url_referer}/acciones`;
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});

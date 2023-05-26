@@ -3,7 +3,7 @@ import DefaultForm from '../../includes/interface/DefaultForm';
 import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
-import {getUserId} from '../../includes/LiferayFunctions';
+import {getUserId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
 import {LoadFiles} from '../../includes/interface/LoadFiles'
@@ -18,9 +18,9 @@ const Experiencias = () => {
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
-    const referer = "http://localhost:8080/experiencias";
     const isInitialized = useRef(null);
-
+    
+    const referer = `${url_referer}/experiencias`;
     const form = formulario;
 
     const loadCsv = () => {

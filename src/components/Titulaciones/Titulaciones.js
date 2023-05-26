@@ -4,14 +4,13 @@ import Table from '../../includes/interface/Table';
 import { TitulacionForm } from './TitulacionForm';
 import Menu from '../Menu';
 import { useModal } from '@clayui/modal';
-import { getUserId } from '../../includes/LiferayFunctions';
+import { getUserId, getLanguageId, url_referer } from '../../includes/LiferayFunctions';
 import { ITEMS_ACTIONS, red_items, initialState } from '../../includes/reducers/items.reducer';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
-import { getLanguageId } from '../../includes/LiferayFunctions';
 import {form as f2} from './Form';
 import Papa from "papaparse";
 import {reducerTitulacion, TITULACIONES_ACTIONS} from '../../includes/reducers/titulaciones.reducer';
@@ -28,7 +27,7 @@ const Titulaciones = () => {
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{});
     
     let form = f2;
-    const referer = "http://localhost:8080/titulaciones";
+    const referer = `${url_referer}/titulaciones`;
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD})

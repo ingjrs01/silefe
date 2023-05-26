@@ -3,7 +3,7 @@ import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
-import {getUserId} from '../../includes/LiferayFunctions';
+import {getUserId, url_referer} from '../../includes/LiferayFunctions';
 import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
 import {ITEMS_ACTIONS,red_items, initialState} from '../../includes/reducers/items.reducer';
 import {LoadFiles} from '../../includes/interface/LoadFiles'
@@ -22,7 +22,7 @@ const TitulacionesTipo = () => {
     const isInitialized                  = useRef(null);
 
     const form = formulario;
-    const referer = 'http://localhost:8080/tittipo';
+    const referer = `${url_referer}/tittipo`;
 
     const loadCsv = () => {
         console.log("Cargando un csv");

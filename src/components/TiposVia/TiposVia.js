@@ -3,7 +3,7 @@ import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
-import {getUserId} from '../../includes/LiferayFunctions';
+import {getUserId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
@@ -12,7 +12,6 @@ import { Errors } from '../../includes/Errors';
 import Papa, { parse } from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
 import {form as formulario} from './Form';
-import { getLanguageId } from '../../includes/LiferayFunctions';
 import {Paginator} from '../../includes/interface/Paginator';
 
 const TiposVia = () => {
@@ -22,7 +21,7 @@ const TiposVia = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-    const referer = 'http://localhost:8080/localidades';
+    const referer = `${url_referer}/localidades`;
     const form = formulario;
 
     const loadCsv = () => {

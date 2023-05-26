@@ -3,17 +3,16 @@ import DefaultForm from '../../includes/interface/DefaultForm';
 import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
-import { getUserId} from '../../includes/LiferayFunctions';
+import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import { getLanguageId } from '../../includes/LiferayFunctions';
-import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import {form as formulario} from './ProyectoForm2';
 import { Paginator } from "../../includes/interface/Paginator";
+//import Papa from "papaparse";
 
 const Proyectos = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -22,7 +21,7 @@ const Proyectos = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-    const referer = "http://localhost:8080/proyectos";
+    const referer = `${url_referer}/proyectos`;
     const form = formulario;
 
     useEffect(()=>{
@@ -129,12 +128,12 @@ const Proyectos = () => {
         if (form.fields.entidadId.options == undefined) {
             initForm();
         }
-        //debugger;
         const postdata = {
             pagination:  {page: items.pagination.page, pageSize: items.pagination.pageSize},
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order : items.order
         }
+        console.log(referer);
         let {data,totalPages,page, totalItems} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
         const tmp = await data.map(i => {            
             return({
