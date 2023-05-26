@@ -15,7 +15,7 @@ export const MgtToolbar = ({items, itemsHandle}) => {
                     <li className="tbar-item">
                         <div className="tbar-section">
                             <span className="component-text text-truncate-inline">
-                                <span className="text-truncate">{items.total} { Liferay.Language.get("resultados")} "<strong>{items.search}</strong>"</span>
+                                <span className="text-truncate">{items.pagination.total} { Liferay.Language.get("resultados")} "<strong>{items.search}</strong>"</span>
                             </span>
                         </div>
                     </li>

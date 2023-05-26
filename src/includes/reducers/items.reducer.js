@@ -36,8 +36,8 @@ export const initialState = {
         pageSize: 20,
         sizes: [10,20,30],
         totalPages:0,
+        total: 0,
     },
-    total: 0,
     errors: [],
     checkall: false,
     fields: { 
@@ -103,14 +103,12 @@ export const red_items = (state, action ) => {
             return {
                 ...state,
                 arr: action.items,
-                pagination: {...state.pagination,totalPages: action.totalPages},
-                total: action.total,
+                pagination: {...state.pagination,totalPages: action.totalPages, total: action.total,},                
                 fields: action.fields,
                 item: tmp_item,
                 errors: resetErrors(action.fields),
                 checkall:false,
                 status: "list",
-                //load: (state.load + 1) % 17,
             }
 
         case ITEMS_ACTIONS.CHECK:
