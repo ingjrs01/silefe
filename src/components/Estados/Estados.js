@@ -93,7 +93,7 @@ const Estados = () => {
 
     const fetchData = async () => {
         const postdata = {
-            pagination: {page: items.pagination, pageSize: items.pagination.pageSize},
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             nombre : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order:        items.order,
         }
