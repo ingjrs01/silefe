@@ -63,14 +63,22 @@ export const form = {
             options: []  
         },
         horas: {
-            key:1,
+            key:8,
             type: "text",
             label: "Horas", 
             name: "horas", 
             placeholder:"Horas", 
-            conditions: ["number"]
+            conditions: ["number"],
         },
-
+        nombre: {
+            key:9,
+            type: "multilang",
+            label: Liferay.Language.get('Nombre'), 
+            name: "nombre", 
+            value:"lelele", 
+            placeholder: Liferay.Language.get('Nombre'), 
+            conditions: ["text"]
+        }
     },
     rows: [
         {
@@ -79,20 +87,20 @@ export const form = {
         },
         {
             key:8,
-            cols: ['accionTipoId']
+            cols: ['accionTipoId', 'nombre'],
         },
         {
             key:10,
-            cols: ['accionTipoFormacionId', 'teorica', 'practica', 'grupal']
+            cols: ['accionTipoFormacionId', 'teorica', 'practica', 'grupal'],
         },
         {
             key:11,
-            cols: ['horas']
+            cols: ['horas'],
 
         },
         {
             key:12,
-            cols: ['tecnicoId']
+            cols: ['tecnicoId'],
         },
     ],
     table: {
@@ -105,6 +113,12 @@ export const form = {
             columnTitle: Liferay.Language.get('Tipo'),
             columnType: "String",
             key: "c2",
-        }
+        },
+        nombre: {
+            columnTitle: Liferay.Language.get('Nombre'),
+            columnType: "multilang",
+            key: "c3",
+        },
+
     }    
 };

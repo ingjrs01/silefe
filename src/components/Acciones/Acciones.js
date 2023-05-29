@@ -121,6 +121,7 @@ const Acciones = () => {
         if (form.fields.accionTipoId.options.length == 0) {
             loadForm();
         }
+        console.log("fetchData de Acciones");
 
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.accion/filter',postdata,referer);
         const tmp = await data.map(i => {return({...i,acctionTipo: "lalala", checked:false})});
@@ -160,8 +161,6 @@ const Acciones = () => {
             });
             participantesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:pts});
         })
-
-
         
         let sel = items.arr.filter(i => i.checked);        
         if (sel.length > 0) {

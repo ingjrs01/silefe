@@ -6,9 +6,27 @@ import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, 
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import DocentesTable from "./DocentesTable";
 import ParticipantesTable from "./ParticipantesTable";
+import ClayLocalizedInput from '@clayui/localized-input';
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler }) => {
   const [tab, setTab] = useState(0);
+
+  const locales = [
+    {
+      label: "es-ES",
+      symbol: "es-es"
+    },
+    {
+      label: "en-US",
+      symbol: "en-us"
+    },
+    {
+      label: "gl-ES",
+      symbol: "gl-es"
+    }
+    ]
+    const [selectedLocale, setSelectedLocale] = useState(locales[0]);
+    const [act2,setAct2] = useState(0);
 
   return (
     <ClayCard>
@@ -71,6 +89,23 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                         ))}
                       </ClaySelect>
                     </ClayForm.Group>
+                    { /* kajsdñlaksjdfñalksjd */}
+                    <ClayForm.Group className={'has-success'} key={"Group-nombre"} >
+                      <ClayLocalizedInput
+                        id={items.item['nombre']}
+                        key={items.fields.fields['nombre'].key}
+                        label={items.fields.fields['nombre'].label}
+                        locales={locales}
+                        onSelectedLocaleChange={setSelectedLocale}
+                        onTranslationsChange={evt => {
+                          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: 'nombre', value: evt });
+                        }
+                        }
+                        selectedLocale={selectedLocale}
+                        translations={items.item['nombre']}
+                      />
+                    </ClayForm.Group>
+
                   </div>
 
                 {

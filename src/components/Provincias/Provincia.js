@@ -1,5 +1,5 @@
 import React, {useState,useEffect, useReducer, useRef} from 'react';
-import { useQuery } from '@tanstack/react-query';
+//import { useQuery } from '@tanstack/react-query';
 import DefaultForm from '../../includes/interface/DefaultForm';
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
@@ -13,8 +13,8 @@ import { Errors } from '../../includes/Errors';
 import Papa from "papaparse";
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
 import {form as formulario} from './Form';
-// probando
-import {PROVINCIA_ACTIONS, rProvincias} from './provincias.reducer';
+
+//import {PROVINCIA_ACTIONS, rProvincias} from './provincias.reducer';
 import { Paginator } from '../../includes/interface/Paginator';
 
 const Provincias = () => {
@@ -24,21 +24,18 @@ const Provincias = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-    // Probando a ver como va esto del query: 
-    const {data, status, isFetching, error, refetch} = useQuery(["users"], () => fetchAPIData('/silefe.provincia/filter',{name:"",page:1},referer) );
+    // const [provincias, provinciasHandle] = useReducer(rProvincias,{});
+    // const [jload, setJload] = useState(0);
 
-    const [provincias, provinciasHandle] = useReducer(rProvincias,{});
-    const [jload, setJload] = useState(0);
-
-    useEffect(()=>{
-        if (data) {
-            console.log("cargando datos");
-            provinciasHandle({type:PROVINCIA_ACTIONS.START,items:data.data});
-            itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
-        }
-        else 
-            console.log("esto habia fallado")
-    },[data,isFetching, jload]);
+    // useEffect(()=>{
+    //     if (data) {
+    //         console.log("cargando datos");
+    //         //provinciasHandle({type:PROVINCIA_ACTIONS.START,items:data.data});
+    //         itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages,page:page});
+    //     }
+    //     else 
+    //         console.log("esto habia fallado")
+    // },[data,isFetching, jload]);
 
     const referer = `${url_referer}/provincias`;
     const form = formulario;
