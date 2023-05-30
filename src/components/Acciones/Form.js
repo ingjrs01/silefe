@@ -111,7 +111,7 @@ export const form = {
         },
         acctionTipo: {
             columnTitle: Liferay.Language.get('Tipo'),
-            columnType: "String",
+            columnType: "string",
             key: "c2",
         },
         nombre: {
@@ -119,6 +119,35 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
-
+        tipo: {
+            columnTitle: Liferay.Language.get('Tipo'),
+            columnType: "multilang",
+            key: "c4",
+        },
+        formacion: {
+            columnTitle: Liferay.Language.get('Formacion'),
+            columnType: "multilang",
+            key: "c9",
+        },
+        teorica: {
+            columnTitle: Liferay.Language.get('Teórica'),
+            columnType: "boolean",
+            key: "c5",
+        },
+        practica: {
+            columnTitle: Liferay.Language.get('Práctica'),
+            columnType: "boolean",
+            key: "c6",
+        },
+        grupal: {
+            columnTitle: Liferay.Language.get('Grupal'),
+            columnType: "boolean",
+            key: "c7",
+        },
+        horas: {
+            columnTitle: Liferay.Language.get('Horas'),
+            columnType: "string",
+            key: "c8",
+        },
     }    
 };

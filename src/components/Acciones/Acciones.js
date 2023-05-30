@@ -111,7 +111,7 @@ const Acciones = () => {
         console.log("fetchData en Acciones");
         docentesHandler({type: DOCENTE_ACTIONS.START});
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
-        // TODO: esto tiene que desaparecer:         
+                
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
