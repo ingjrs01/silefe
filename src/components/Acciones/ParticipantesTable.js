@@ -1,13 +1,19 @@
-import React from "react";
+import React, {useState} from "react";
 import ClayTable from '@clayui/table';
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import ClayForm, { ClayInput, ClayCheckbox } from '@clayui/form';
+import ClayForm, { ClayInput, ClayCheckbox, ClaySelect } from '@clayui/form';
 import { PARTICIPANTE_ACTIONS } from "../../includes/reducers/participantes.reducer";
 import ClayUpperToolbar from '@clayui/upper-toolbar';
+import { MiniPaginator } from "../../includes/interface/MiniPaginator";
+import ClayIcon from '@clayui/icon';
+
+//import { form } from "./Form";
 
 const spritemap = "./o/my-project/icons.svg";
 
 const ParticipantesTable = ({participantes,participantesHandler}) =>  {
+
+    const [showSearch, setShowSearch] = useState(false);
 
     if (!participantes.items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
@@ -20,6 +26,19 @@ const ParticipantesTable = ({participantes,participantesHandler}) =>  {
                 <ClayUpperToolbar.Item className="text-left">
                     <label htmlFor="basicInput">{Liferay.Language.get("Buscar")}</label>
                 </ClayUpperToolbar.Item>
+
+                <ClayUpperToolbar.Item className="text-left">                    
+                    <ClayIcon 
+                        symbol="view" 
+                        spritemap={spritemap} 
+                        onClick={() => {
+                            participantesHandler({type: PARTICIPANTE_ACTIONS.LOAD});
+                            setShowSearch(!showSearch);
+                        }} 
+                    />
+                </ClayUpperToolbar.Item>
+                { showSearch && 
+                <>
                 <ClayUpperToolbar.Item className="text-left">
                     <ClayInput
                         placeholder={"Buscar..."}
@@ -32,16 +51,46 @@ const ParticipantesTable = ({participantes,participantesHandler}) =>  {
                         }}>
                     </ClayInput>
                 </ClayUpperToolbar.Item>
+                {/* aqui ponemos el campo por el que buscar */}
+                <ClayUpperToolbar.Item className="text-left">
+                    <ClaySelect aria-label="Select Label"
+                        id={"campo"}
+                        name={"campo"}
+                        key={"campo"}
+                        onChange={evt => participantesHandler({ type: PARTICIPANTE_ACTIONS.SETSEARCHFIELD, value: evt.target.value })}
+                        value={ participantes.searchField} >                                                    
+                            <ClaySelect.Option
+                                key={"option-1"}
+                                label={"Nombre"}
+                                value={"nombre"}
+                            />                            
+                            <ClaySelect.Option
+                                key={"option-2"}
+                                label={"Apellidos"}
+                                value={"apellidos"}
+                            />                            
+                            <ClaySelect.Option
+                                key={"option-3"}
+                                label={"Documento"}
+                                value={"documento"}
+                            />                            
+                    </ClaySelect>
+                </ClayUpperToolbar.Item>
+
                 <ClayUpperToolbar.Item className="text-left" expand>
                     <ClayButtonWithIcon
                         aria-label={Liferay.Language.get("Buscar")}
                         spritemap={spritemap}
                         symbol="search"
                         title="Search"
+                        onClick={() => participantesHandler({type: PARTICIPANTE_ACTIONS.LOAD})}
                     />
                 </ClayUpperToolbar.Item>
+                </>
+                }
             </ClayUpperToolbar>
-
+            { showSearch && 
+            <>
             <ClayTable>
             <caption>{ Liferay.Language.get("Seleccionar") }</caption>
             <ClayTable.Head>
@@ -81,14 +130,21 @@ const ParticipantesTable = ({participantes,participantesHandler}) =>  {
 
             </ClayTable.Body>
             </ClayTable>
+            <MiniPaginator 
+                items={participantes} 
+                itemsHandle={participantesHandler} 
+                ITEMS_ACTIONS={PARTICIPANTE_ACTIONS}
+            />
 
 			<ClayButton displayType="primary" onClick={ ()=> participantesHandler({type:PARTICIPANTE_ACTIONS.SELECT_ITEMS})}>
 				{Liferay.Language.get("Seleccionar")}
 			</ClayButton>
+            </>
+            }
 
             {/*--------------------------------------------------------------------------------------------------------*/ }
             <ClayTable>
-            <caption>{ Liferay.Language.get("Docentes") }</caption>
+            <caption>{ Liferay.Language.get("Participantes") }</caption>
             <ClayTable.Head>
                 <ClayTable.Row>
                 <ClayTable.Cell headingCell><ClayCheckbox checked={participantes.checkAll} onChange={() => participantesHandler({type: PARTICIPANTE_ACTIONS.CHECKALL})} />

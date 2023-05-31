@@ -13,14 +13,14 @@ import { Errors } from '../../includes/Errors';
 import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 import {reducerDocentes, DOCENTE_ACTIONS} from '../../includes/reducers/docentes.reducer'; 
-import {reducerParticipantes, PARTICIPANTE_ACTIONS} from '../../includes/reducers/participantes.reducer';
+import {reducerParticipantes, PARTICIPANTE_ACTIONS, initialParticipantes} from '../../includes/reducers/participantes.reducer';
 //import Papa from "papaparse";
 
 
 const Acciones = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
     const [docentes,docentesHandler]     = useReducer(reducerDocentes, {items: [], status:'list', item: {id:0}});
-    const [participantes,participantesHandler] = useReducer(reducerParticipantes, {items: [], status:'list', item: {id:0}});
+    const [participantes,participantesHandler] = useReducer(reducerParticipantes, initialParticipantes);//{items: [], status:'list', item: {id:0}});
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -32,7 +32,6 @@ const Acciones = () => {
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
     }
-
 
 //    const processCsv = () => {
 //        if (file) {
@@ -70,14 +69,21 @@ const Acciones = () => {
             endpoint = '/silefe.accion/add-accion';
         let {data, status, error} = await saveAPI(endpoint,pdata,referer);
         if (status) {
-            // mando los docentes: 
             const obj2 = {id:data.accionId,docentes:docentes.items,userId: getUserId()};
-            let respon = await saveAPI('/silefe.accion/save-docentes-accion',obj2,referer);            
+            let respon = await saveAPI('/silefe.accion/save-docentes-accion',obj2,referer);
             if (docentes.deleted.length > 0) {
                 const deleteItems = docentes.deleted.map( d => {return (d.docenteId)});
                 deleteAPIParams('/silefe.accion/delete-docentes-accion',{id: data.accionId, docentes: deleteItems},referer).then(res => {
                     console.log("se han borrad los docentes");
             })};
+            const obj3 = {id:data.accionId,participantes:participantes.items,userId: getUserId()};
+            respon = await saveAPI('/silefe.accion/save-participantes-accion',obj3,referer);
+            if (participantes.deleted.length > 0) {
+                const deleteItems = participantes.deleted.map(d => (d.participanteId));
+                deleteAPIParams('/silefe.accion/delete-participantes-accion', {id: data.accionId, participantes: deleteItems},referer).then(res => {
+                    console.log("Se han borrado los participantes");
+                });
+            }
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);            
@@ -94,21 +100,17 @@ const Acciones = () => {
     const confirmDelete = async () => {
         const endpoint = '/silefe.accion/delete-accioneso';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
-
-
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();        
             }
-            else {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
-            }
+            else 
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);            
         })
     }
 
     const fetchData = async () => {
-        console.log("fetchData en Acciones");
         docentesHandler({type: DOCENTE_ACTIONS.START});
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
                 
@@ -121,7 +123,6 @@ const Acciones = () => {
         if (form.fields.accionTipoId.options.length == 0) {
             loadForm();
         }
-        console.log("fetchData de Acciones");
 
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.accion/filter',postdata,referer);
         const tmp = await data.map(i => {return({...i,acctionTipo: "lalala", checked:false})});
@@ -129,8 +130,6 @@ const Acciones = () => {
     }
 
     const beforeEdit = () => {
-        console.log("beforeEdit");
-        // hay que cargar todos los profesores: 
         fetchAPIData('/silefe.docente/all', {lang: getLanguageId()}).then(response => {
             const tits = response.data.map( i => {                
                 let tt = JSON.parse(i.email);
@@ -143,14 +142,67 @@ const Acciones = () => {
             });
             docentesHandler({type: DOCENTE_ACTIONS.SETSEARCHITEMS,items:tits});
         })
-        // ahora cargamos los posbiles participantes
-        fetchAPIData('/silefe.participante/all', {lang: getLanguageId()}).then(response => {
-            console.log("recibiendo los participantes");
-            console.debug(response);
+               
+        let sel = items.arr.filter(i => i.checked);        
+        if (sel.length > 0) {
+            const accionId = sel[0].accionId;              
+            fetchAPIData('/silefe.accion/filter-docentes-by-accion', {accionId: accionId},referer).then(response => {                
+                const tits = response.data.map( i => {
+                    let email = '';
+                    if (i.email.length > 0) 
+                        email = JSON.parse(i.email)[0].value;
+
+                    return {
+                        ...i,
+                        apellidos: i.apellido1 + " " + i.apellido2,
+                        nuevo: false,
+                        email: email
+                    }
+                });
+                docentesHandler({type: DOCENTE_ACTIONS.SETITEMS,items:tits});
+            });
+        
+            fetchAPIData('/silefe.accion/filter-participantes-by-accion', {accionId: accionId},referer).then(response => {                
+                const tits = response.data.map( i => {
+                    let email = '';
+                    if (i.email != null && i.email.length > 0) 
+                        email = JSON.parse(i.email)[0].value;
+
+                    return {
+                        ...i,
+                        apellidos: i.apellido1 + " " + i.apellido2,
+                        nuevo: false,
+                        email: email
+                    }
+                });
+                participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:tits});            
+            });
+        }
+    }
+
+    const loadParticipantes = () => {
+        console.log("loadParticipantes");
+        console.debug(participantes);
+        let filters = [];
+        if (participantes.search.length > 0)
+            filters = [{name: participantes.searchField, value: participantes.search}];
+
+        const postdata = {
+            pagination: {
+                page: participantes.pagination.page, 
+                pageSize: 4
+            },
+            options : {
+                filters: filters,
+                order: [{ name: 'apellido1', direction: 'asc'}],
+                excludes: participantes.items.map(i => (i.participanteId)),
+            },
+        }
+
+        fetchAPIData('/silefe.participante/filter',postdata,referer).then(response => {
             const pts = response.data.map( i => {                
                 let email = "";
-                console.log(i);
-                if (i.email.length > 0) 
+                if (i.email != null && i.email.length > 0) 
                     email = JSON.parse(i.email)[0].value;
                 return {
                     ...i, 
@@ -159,30 +211,9 @@ const Acciones = () => {
                     email: email
                 }
             });
-            participantesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:pts});
-        })
-        
-        let sel = items.arr.filter(i => i.checked);        
-        if (sel.length > 0) {
-            const accionId = sel[0].accionId;              
-            fetchAPIData('/silefe.accion/filter-docentes-by-accion', {accionId: accionId},referer).then(response => {
-                
-                const tits = response.data.map( i => {
-                    let email = '';
-                    if (i.email.length > 0) 
-                        email = JSON.parse(i.email)[0].value;
-                                        
-                    return {
-                        ...i,
-                        apellidos: i.apellido1 + " " + i.apellido2,
-                        nuevo: false,
-                        email: email
-                    }
-                });
-                
-                docentesHandler({type: DOCENTE_ACTIONS.SETITEMS,items:tits});
-            })
-        }
+            const totalPages = response.totalPages;
+            participantesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:pts, totalPages: totalPages});
+        });
     }
 
     const loadForm = () => {
@@ -213,9 +244,13 @@ const Acciones = () => {
 		}
     },[items.load]);
 
+    useEffect( () => {
+        loadParticipantes()
+
+    }, [participantes.load]);
+
     if (!items) 
         return (<div>Liferay.Language.get('Cargando')</div>)
-
 
     return (
         <>

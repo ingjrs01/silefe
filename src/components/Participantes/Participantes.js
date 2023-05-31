@@ -137,13 +137,12 @@ const Participantes = () => {
         }
             
         const postdata = {
-            //page:    items.page,
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             nombre : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order : items.order//[{name: 'documento', direction: 'asc'}]
 
         }
-        console.debug(form);
+        //console.debug(form);
 
         let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.participante/filter',postdata,referer);        
         const tmp = await data.map(i => {

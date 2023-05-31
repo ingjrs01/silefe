@@ -55,13 +55,13 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 key={"tab-item3"}
                 innerProps={{ "aria-controls": "tabpanel-3" }}
               >
-                <a onClick={a => { console.log("setting"); setTab(2); }}>  { Liferay.Language.get("Docentes")}  </a>
+                <a onClick={a => {  setTab(2); }}>  { Liferay.Language.get("Docentes")}  </a>
               </ClayTabs.Item>
               <ClayTabs.Item
                 key={"tab-item4"}
                 innerProps={{ "aria-controls": "tabpanel-4" }}
               >
-                <a onClick={a => { console.log("setting"); setTab(3); }}>  { Liferay.Language.get("Participantes")}  </a>
+                <a onClick={a => {  setTab(3); }}>  { Liferay.Language.get("Participantes")}  </a>
               </ClayTabs.Item>
 
             </ClayTabs>
@@ -89,7 +89,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                         ))}
                       </ClaySelect>
                     </ClayForm.Group>
-                    { /* kajsdñlaksjdfñalksjd */}
                     <ClayForm.Group className={'has-success'} key={"Group-nombre"} >
                       <ClayLocalizedInput
                         id={items.item['nombre']}
@@ -198,14 +197,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 </div>
                 <div className="row">
                 <ClayForm.Group className={'has-success'} key={"Group-4"} >
-                  <ClayInput
-                    placeholder={"prueba"}
-                    type="text"
-                    name={"prueba-4"}
-                    key={"prueba-4"}
-                    value={"AAA"}
-                    onChange={e => { console.log("estamos") }}>
-                  </ClayInput>
                 </ClayForm.Group>
                 </div>
 
@@ -218,7 +209,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                   name={"prueba-2"}
                   key={"prueba-2"}
                   value={"bbb"}
-                  onChange={e => { console.log("estamos en 2") }}>
+                >
                 </ClayInput>
               </ClayTabs.TabPane>
 
@@ -257,7 +248,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
 
           <div className="btn-group-item">
             <ClayButton aria-label="Save" onClick={() => {
-              console.log("pulsan en guardar");
               save();
             }}
               displayType="primary">{Liferay.Language.get('Guardar')}

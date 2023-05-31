@@ -144,7 +144,6 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 )})
                               }
                               <ClayButton size={"xs"} displayType={"secondary"} onClick={evt => {
-                                console.log("direccion");
                                 itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: it });
                                 
                               }}>{"Añadir"}</ClayButton>

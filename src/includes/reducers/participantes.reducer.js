@@ -14,19 +14,29 @@ export const PARTICIPANTE_ACTIONS = {
     SELECT_ITEMS: 12,
     CHECK: 13,
     CHECKALL: 14,
-    SETITEMS: 15
+    SETITEMS: 15,
+    SETPAGE: 16,
+    SETSEARCHFIELD: 17,
+    LOAD: 18,
   }
-const initialState = {
+export const initialParticipantes = {
     items: [],
     deleted: [],
     search: "",
+    searchField: "",
     searchItems: [],
     status: "list",
     participanteId: 0,
+    pagination: {
+        page: 0,
+        pageSize: 4,
+        totalPages: 2,
+    },
+    load: 0,
 }
 let tmpar= []; 
 
-export const reducerParticipantes = (state=initialState, action ) => {
+export const reducerParticipantes = (state, action ) => {
     switch (action.type) {
         case PARTICIPANTE_ACTIONS.START:
             return {
@@ -74,7 +84,8 @@ export const reducerParticipantes = (state=initialState, action ) => {
         case PARTICIPANTE_ACTIONS.SETSEARCHITEMS: 
             return {
                 ...state,
-                searchItems: action.items.map(item => ({...item, checked:false}))
+                searchItems: action.items.map(item => ({...item, checked:false})),
+                pagination: {...state.pagination, totalPages: action.totalPages},
             }
         case PARTICIPANTE_ACTIONS.CHECKSEARCH: 
             tmpar = state.searchItems;
@@ -153,6 +164,27 @@ export const reducerParticipantes = (state=initialState, action ) => {
                 ...state,
                 checkAll: val,
                 items: [...state.items.map(item => ({...item,checked: val}))]
+            }
+        case PARTICIPANTE_ACTIONS.SETPAGE: 
+            return {
+                ...state,
+                pagination: {...state.pagination, page: action.page},
+                load: state.load + 1,
+            }
+//        case PARTICIPANTE_ACTIONS.SETTOTALPAGES: 
+//            return {
+//                ...state,
+//                pagination: {...state.pagination, totalPages: action.totalPages},
+//            }
+        case PARTICIPANTE_ACTIONS.SETSEARCHFIELD: 
+            return {
+                ...state,
+                searchField: action.value,
+            }
+        case PARTICIPANTE_ACTIONS.LOAD: 
+            return {
+                ...state,
+                load: state.load + 1,
             }
        
         default: 

@@ -18,7 +18,6 @@ const Table = ({ items, itemsHandle}) => {
         <ClayTable.Row>
             {
               Object.keys(items.fields.table).map(tableCol => {
-                console.log(tableCol);
                 if (items.fields.table[tableCol].columnType == "string" || items.fields.table[tableCol].columnType == "multilang")
                   return (
                     <ClayTable.Cell 
