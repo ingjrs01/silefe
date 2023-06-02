@@ -1,7 +1,7 @@
 import React from 'react';
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import ClayIcon, {ClayIconSpriteContext} from '@clayui/icon';
-import {ClayInput} from '@clayui/form';
+import {ClayIconSpriteContext} from '@clayui/icon';
+import {ClayInput, ClaySelect} from '@clayui/form';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
 import ClayToolbar from '@clayui/toolbar';
 import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
@@ -11,7 +11,10 @@ import { MgtToolbar } from '../includes/interface/MgtToolbar';
 
 const spritemap = "./o/my-project/icons.svg";
 
-const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit}) => {
+const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formulario}) => {
+
+  console.log("estoy en el menu");
+  console.debug(formulario);
 
   return (
     <>
@@ -25,48 +28,36 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
         </ClayToolbar.Item>
 
         <ClayToolbar.Item>
+              <ClaySelect aria-label="Select Label"
+                id={"fieldMenu"}
+                name={"fieldMenu"}
+                key={"fieldMenu"}
+                onChange={evt => {
+                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                }}
+                value={1} >
+                { formulario.searchFields.map( field => (
+                  <ClaySelect.Option
+                    key={"Aon-" + formulario.fields[field].key }
+                    label={formulario.fields[field].label}
+                    value={formulario.fields[field].name}
+                  />
+                )) }
+              </ClaySelect>
+        </ClayToolbar.Item>
+
+
+        <ClayToolbar.Item>
           <ClayInput.Group>
             <ClayInput.GroupItem>
               <ClayInput
                 className="form-control-inline"
-                placeholder="Buscar..."
+                placeholder={Liferay.Language.get("Texto a buscar")}
                 onChange={e => itemsHandle({type:ITEMS_ACTIONS.SEARCH,value:e.target.value})}
               />
             </ClayInput.GroupItem>
           </ClayInput.Group>
         </ClayToolbar.Item>
-        {
-          /*  
-          <ClayToolbar.Item>
-            <ClayToolbar.Section>
-              <ClayButton.Group>
-                <ClayButtonWithIcon
-                  displayType="secondary"
-                  aria-label="Previous"
-                  onClick={() => {   itemsHandle({type:ITEMS_ACTIONS.PREVPAG})}}
-                  small
-                  symbol="angle-left"
-                />
-  
-                <ClayButtonWithIcon
-                  displayType="secondary"
-                  aria-label="Next"
-                  onClick={() => { itemsHandle({type:ITEMS_ACTIONS.NEXTPAG}) }}
-                  spritemap={spritemap}
-                  small
-                  symbol="angle-right"
-                />
-                  <svg
-                    className="lexicon-icon lexicon-icon-blogs"
-                    focusable="false"
-                    role="presentation"
-                  ></svg>
-              </ClayButton.Group>
-            </ClayToolbar.Section>
-          </ClayToolbar.Item>         
-          */
-        }
-
 
         <ClayToolbar.Item>
           <ClayToolbar.Section>

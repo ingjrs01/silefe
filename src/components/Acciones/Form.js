@@ -204,5 +204,6 @@ export const form = {
             columnType: "string",
             key: "c8",
         },
-    }    
+    },
+    searchFields: ['accionTipoId','nombre'],
 };

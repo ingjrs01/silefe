@@ -280,6 +280,7 @@ const Acciones = () => {
                 loadCsv={loadCsv}
                 items={items}
                 beforeEdit={beforeEdit}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

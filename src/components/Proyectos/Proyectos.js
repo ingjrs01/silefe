@@ -185,6 +185,7 @@ const Proyectos = () => {
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 
