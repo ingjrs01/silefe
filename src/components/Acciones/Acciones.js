@@ -234,10 +234,16 @@ const Acciones = () => {
         
         fetchAPIData('/silefe.plataforma/all', {options: {}}, referer).then(response => {
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.plataformaId, label: obj.nombre } })];
-            console.log(opts);
-            
-            form.fields.plataformaId.options = opts;//[{value: 0, label:langSel}, {value: 0, label: "Moodle"}];
+            form.fields.plataformaId.options = opts;
         });
+
+        fetchAPIData('/silefe.estado/all', { lang: getLanguageId() }, referer).then(response => {
+            console.log("estados");
+            console.debug(response);
+            const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.estadoId, label: obj.nombre } })];
+            form.fields.estadoId.options = opts;
+        });
+
 
         // TODO: Categoria: 
         form.fields.categoriaId.options = [{value: 0, label:langSel}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}];

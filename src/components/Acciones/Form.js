@@ -120,6 +120,21 @@ export const form = {
             placeholder: Liferay.Language.get('Sincronizados'), 
             conditions: ["number"]
         },
+		estadoId: {
+            key: 15,
+            type: "select",
+            label: Liferay.Language.get('Estado'), 
+            name: "estadoId", 
+            placeholder: Liferay.Language.get('Estado'), 
+        },
+        observaciones: {
+            key: 16,
+            type: "text",
+            label: Liferay.Language.get('Observaciones'), 
+            name: "observaciones", 
+            placeholder: Liferay.Language.get('Observaciones'), 
+
+        }
     },
     rows: [
         {

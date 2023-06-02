@@ -29,6 +29,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
     const [act2,setAct2] = useState(0);
 
   return (
+    <div className="container">
     <ClayCard>
       <ClayCard.Body>
         <ClayCard.Description displayType="title">
@@ -69,13 +70,19 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
               >
                 <a onClick={a => {  setTab(4); }}>  { Liferay.Language.get("Elearning")}  </a>
               </ClayTabs.Item>
+              <ClayTabs.Item
+                key={"tab-item6"}
+                innerProps={{ "aria-controls": "tabpanel-5" }}
+              >
+                <a onClick={a => {  setTab(5); }}>  { Liferay.Language.get("Estado")}  </a>
+              </ClayTabs.Item>
 
             </ClayTabs>
 
             <ClayTabs.Content activeIndex={tab} fade>
               <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-1"}>
                   <div className="row"> 
-                    <ClayForm.Group className={'has-success'} key={"Group-1"} >
+                    <ClayForm.Group className={'has-success col'} key={"Group-1"} >
                       <label htmlFor="basicInput">{"ACCION TIPO"}</label>
                       <ClaySelect aria-label="Select Label"
                         id={"accionTipoId"}
@@ -95,7 +102,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                         ))}
                       </ClaySelect>
                     </ClayForm.Group>
-                    <ClayForm.Group className={'has-success'} key={"Group-nombre"} >
+                    <ClayForm.Group className={'has-success col'} key={"Group-nombre"} >
                       <ClayLocalizedInput
                         id={items.item['nombre']}
                         key={items.fields.fields['nombre'].key}
@@ -117,7 +124,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                   <>
                     <div className="row">
 
-                    <ClayForm.Group className={'has-success'} key={"Group-1"} >
+                    <ClayForm.Group className={'has-success col'} key={"Group-1"} >
                       <label htmlFor="basicInput">{"ACCION TIPO formacion"}</label>
                       <ClaySelect aria-label="Select Label"
                         id={"accionTipoFormacionId"}
@@ -138,7 +145,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                       </ClaySelect>
                     </ClayForm.Group>
 
-                      <ClayForm.Group className={'has-success'} key={"Group-teorica"} >
+                      <ClayForm.Group className={'has-success col'} key={"Group-teorica"} >
                         <ClayToggle
                           label={items.fields.fields['teorica'].label}
                           onToggle={val => {
@@ -150,7 +157,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                         />
                       </ClayForm.Group>
 
-                      <ClayForm.Group className={'has-success'} key={"Group-practica"} >
+                      <ClayForm.Group className={'has-success col'} key={"Group-practica"} >
                         <ClayToggle
                           label={items.fields.fields['practica'].label}
                           onToggle={val => {
@@ -162,7 +169,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                         />
                       </ClayForm.Group>
 
-                      <ClayForm.Group className={'has-success'} key={"Group-grupal"} >
+                      <ClayForm.Group className={'has-success col'} key={"Group-grupal"} >
                         <ClayToggle
                           label={items.fields.fields['grupal'].label}
                           onToggle={val => {
@@ -178,7 +185,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 }
 
                 <div className="row">
-                <ClayForm.Group className={'has-success'} key={"Group-tecnico"} >
+                <ClayForm.Group className={'has-success col'} key={"Group-tecnico"} >
                   <label htmlFor="basicInput">{"TECNICO"}</label>
                   <ClaySelect aria-label="Select Label"
                     id={"tecnicoId"}
@@ -236,7 +243,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
               <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-5"}>                  
                 <h3>{"ELEARNING"}</h3>
                 <div className="row">
-                  <ClayForm.Group className={'has-success'} key={"Group-plataforma"} >
+                  <ClayForm.Group className={'has-success  col'} key={"Group-plataforma"} >
                     <label htmlFor="basicInput">{items.fields.fields['plataformaId'].label}</label>
                     <ClaySelect aria-label="Select Label"
                       id={items.fields.fields['plataformaId'].name}
@@ -257,7 +264,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     </ClaySelect>
                   </ClayForm.Group>
 
-                  <ClayForm.Group className={'has-success'} key={"Group-categoria"} >
+                  <ClayForm.Group className={'has-success col'} key={"Group-categoria"} >
                     <label htmlFor="basicInput">{items.fields.fields['categoriaId'].label}</label>
                     <ClaySelect aria-label="Select Label"
                       id={items.fields.fields['categoriaId'].name}
@@ -278,9 +285,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     </ClaySelect>
                   </ClayForm.Group>
 
-                </div>
-                <div className="row">
-                  <ClayForm.Group className={'has-success'} key={"Group-curso"} >
+                  <ClayForm.Group className={'has-success  col'} key={"Group-curso"} >
                     <label htmlFor="basicInput">{items.fields.fields['cursoId'].label}</label>
                     <ClaySelect aria-label="Select Label"
                       id={items.fields.fields['cursoId'].name}
@@ -301,7 +306,10 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     </ClaySelect>
                   </ClayForm.Group>
 
-                  <ClayForm.Group className={'has-success'} key={"Group-nparticipantes"} >
+                </div>
+                <div className="row">
+
+                  <ClayForm.Group className={'has-success  col'} key={"Group-nparticipantes"} >
                     <label htmlFor="basicInput">{items.fields.fields['nparticipantes'].label}</label>
                     <ClayInput
                       placeholder={items.fields.fields['nparticipantes'].placeholder}
@@ -315,7 +323,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     </ClayInput>
                   </ClayForm.Group>
 
-                  <ClayForm.Group className={'has-success'} key={"Group-sincronizados"} >
+                  <ClayForm.Group className={'has-success col'} key={"Group-sincronizados"} >
                     <label htmlFor="basicInput">{items.fields.fields['sincronizados'].label}</label>
                     <ClayInput
                       placeholder={items.fields.fields['sincronizados'].placeholder}
@@ -332,7 +340,51 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 </div>
                 
               </ClayTabs.TabPane>
+              {  /*  lalala */}
+              <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-6"}>
+                <h3>{"ESTADO"}</h3>
+                <div className="row">
+                  <ClayForm.Group className={'has-success  col'} key={"Group-estado"} >
+                    <label htmlFor="basicInput">{items.fields.fields['estadoId'].label}</label>
+                    <ClaySelect aria-label="Select Label"
+                      id={items.fields.fields['estadoId'].name}
+                      name={items.fields.fields['estadoId'].name}
+                      key={items.fields.fields['estadoId'].key}
+                      disabled={false}
+                      onChange={evt => {
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                      }}
+                      value={items.item['estadoId']} >
+                      {items.fields.fields['estadoId'].options.map(item => (
+                        <ClaySelect.Option
+                          key={ "option-" + items.fields.fields['estadoId'] + item.value}
+                          label={item.label}
+                          value={item.value}
+                        />
+                      ))}
+                    </ClaySelect>
+                  </ClayForm.Group>
+                  </div>
+                  <div className="row">
 
+                    <ClayForm.Group className={'has-success  col'} key={"Group-objservaciones"} >
+                      <label htmlFor="basicInputText">{items.fields.fields['observaciones'].label}</label>
+                      <ClayInput
+                        component="textarea"
+                        id={items.fields.fields['observaciones'].name}
+                        name={items.fields.fields['observaciones'].name}
+                        placeholder={Liferay.Language.get("observaciones")}
+                        type="text"
+                        onChange={evt => {
+                          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                        }}
+                        value={items.item['observaciones']} 
+                        />
+                    </ClayForm.Group>                  
+
+                </div>
+                
+              </ClayTabs.TabPane>
 
             </ClayTabs.Content>
           </ClayForm>
@@ -358,6 +410,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
         </div>
       </ClayCard.Body>
     </ClayCard>
+    </div>
   );
 }
 
