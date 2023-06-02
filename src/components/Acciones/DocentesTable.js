@@ -1,7 +1,7 @@
 import React from "react";
 import ClayTable from '@clayui/table';
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import ClayForm, { ClayInput, ClayCheckbox } from '@clayui/form';
+import ClayForm, { ClayInput, ClayCheckbox, ClaySelect } from '@clayui/form';
 import { DOCENTE_ACTIONS } from "../../includes/reducers/docentes.reducer";
 import ClayUpperToolbar from '@clayui/upper-toolbar';
 

@@ -78,7 +78,48 @@ export const form = {
             value:"lelele", 
             placeholder: Liferay.Language.get('Nombre'), 
             conditions: ["text"]
-        }
+        },
+		plataformaId: {
+            key:10,
+            type: "select",
+            label: Liferay.Language.get('Plataforma'), 
+            name: "plataformaId", 
+            value:"lelele", 
+            placeholder: Liferay.Language.get('Plataforma'), 
+        },
+		categoriaId: {
+            key: 11,
+            type: "select",
+            label: Liferay.Language.get('Categoría'), 
+            name: "categoriaId", 
+            placeholder: Liferay.Language.get('Categoría'), 
+        },
+		cursoId: {
+            key: 12,
+            type: "select",
+            label: Liferay.Language.get('Curso'), 
+            name: "cursoId", 
+            value:"lelele", 
+            placeholder: Liferay.Language.get('Curso'), 
+        },
+		nparticipantes: {
+            key: 13,
+            type: "text",
+            label: Liferay.Language.get('Participantes'), 
+            name: "nparticipantes", 
+            value:"lelele", 
+            placeholder: Liferay.Language.get('Participantes'), 
+            conditions: ["number"]
+        },
+		sincronizados: {
+            key:14,
+            type: "text",
+            label: Liferay.Language.get('Sincronizados'), 
+            name: "sincronizados", 
+            value:"lelele", 
+            placeholder: Liferay.Language.get('Sincronizados'), 
+            conditions: ["number"]
+        },
     },
     rows: [
         {
@@ -96,7 +137,6 @@ export const form = {
         {
             key:11,
             cols: ['horas'],
-
         },
         {
             key:12,

@@ -7,8 +7,6 @@ import ClayUpperToolbar from '@clayui/upper-toolbar';
 import { MiniPaginator } from "../../includes/interface/MiniPaginator";
 import ClayIcon from '@clayui/icon';
 
-//import { form } from "./Form";
-
 const spritemap = "./o/my-project/icons.svg";
 
 const ParticipantesTable = ({participantes,participantesHandler}) =>  {

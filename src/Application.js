@@ -36,6 +36,7 @@ import Prestaciones from './components/Prestaciones/Prestacion';
 import Estados from './components/Estados/Estados';
 import Docentes from './components/Docentes/Docentes';
 import {VerticalMenu} from './includes/interface/VerticalMenu';
+import Plataformas from './components/Plataforma/Plataformas';
 
 const queryClient = new QueryClient();
 
@@ -86,6 +87,7 @@ const Application = () => {
                             <Route path='/carnets'       element={ <Carnets /> } />
                             <Route path='/estados'       element={ <Estados /> } />
                             <Route path='/prestaciones'  element={ <Prestaciones/>} />
+                            <Route path='/plataformas'  element={ <Plataformas/>} />
                             <Route path='/accionestipo'  element={ <AccionesTipo /> } />
                             <Route path='/acciones'      element={ <Acciones /> } />
                             <Route path='AccionesTipoFormacion' element={<AccionesTipoFormacion />} />

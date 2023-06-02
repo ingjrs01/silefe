@@ -63,6 +63,12 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
               >
                 <a onClick={a => {  setTab(3); }}>  { Liferay.Language.get("Participantes")}  </a>
               </ClayTabs.Item>
+              <ClayTabs.Item
+                key={"tab-item5"}
+                innerProps={{ "aria-controls": "tabpanel-5" }}
+              >
+                <a onClick={a => {  setTab(4); }}>  { Liferay.Language.get("Elearning")}  </a>
+              </ClayTabs.Item>
 
             </ClayTabs>
 
@@ -106,7 +112,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     </ClayForm.Group>
 
                   </div>
-
                 {
                   (items.item.accionTipoId == 1) &&
                   <>
@@ -226,8 +231,105 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 <ParticipantesTable
                   participantes={participantes}
                   participantesHandler={participantesHandler} 
-                />
-                
+                />                
+              </ClayTabs.TabPane>
+              <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-5"}>                  
+                <h3>{"ELEARNING"}</h3>
+                <div className="row">
+                  <ClayForm.Group className={'has-success'} key={"Group-plataforma"} >
+                    <label htmlFor="basicInput">{items.fields.fields['plataformaId'].label}</label>
+                    <ClaySelect aria-label="Select Label"
+                      id={items.fields.fields['plataformaId'].name}
+                      name={items.fields.fields['plataformaId'].name}
+                      key={items.fields.fields['plataformaId'].key}
+                      disabled={false}
+                      onChange={evt => {
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                      }}
+                      value={items.item['plataformaId']} >
+                      {items.fields.fields['plataformaId'].options.map(item => (
+                        <ClaySelect.Option
+                          key={ "option-" + items.fields.fields['plataformaId'] + item.value}
+                          label={item.label}
+                          value={item.value}
+                        />
+                      ))}
+                    </ClaySelect>
+                  </ClayForm.Group>
+
+                  <ClayForm.Group className={'has-success'} key={"Group-categoria"} >
+                    <label htmlFor="basicInput">{items.fields.fields['categoriaId'].label}</label>
+                    <ClaySelect aria-label="Select Label"
+                      id={items.fields.fields['categoriaId'].name}
+                      name={items.fields.fields['categoriaId'].name}
+                      key={items.fields.fields['categoriaId'].key}
+                      disabled={false}
+                      onChange={evt => {
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                      }}
+                      value={items.item['categoriaId']} >
+                      {items.fields.fields['categoriaId'].options.map(item => (
+                        <ClaySelect.Option
+                          key={ "option-" + items.fields.fields['categoriaId'] + item.value}
+                          label={item.label}
+                          value={item.value}
+                        />
+                      ))}
+                    </ClaySelect>
+                  </ClayForm.Group>
+
+                </div>
+                <div className="row">
+                  <ClayForm.Group className={'has-success'} key={"Group-curso"} >
+                    <label htmlFor="basicInput">{items.fields.fields['cursoId'].label}</label>
+                    <ClaySelect aria-label="Select Label"
+                      id={items.fields.fields['cursoId'].name}
+                      name={items.fields.fields['cursoId'].name}
+                      key={items.fields.fields['cursoId'].key}
+                      disabled={false}
+                      onChange={evt => {
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                      }}
+                      value={items.item['cursoId']} >
+                      {items.fields.fields['cursoId'].options.map(item => (
+                        <ClaySelect.Option
+                          key={ "option-" + items.fields.fields['cursoId'] + item.value}
+                          label={item.label}
+                          value={item.value}
+                        />
+                      ))}
+                    </ClaySelect>
+                  </ClayForm.Group>
+
+                  <ClayForm.Group className={'has-success'} key={"Group-nparticipantes"} >
+                    <label htmlFor="basicInput">{items.fields.fields['nparticipantes'].label}</label>
+                    <ClayInput
+                      placeholder={items.fields.fields['nparticipantes'].placeholder}
+                      type="text"
+                      name={items.fields.fields['nparticipantes'].name}
+                      key={items.fields.fields['nparticipantes'].name}
+                      value={items.item['nparticipantes']}
+                      onChange={e => {
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
+                      }}>
+                    </ClayInput>
+                  </ClayForm.Group>
+
+                  <ClayForm.Group className={'has-success'} key={"Group-sincronizados"} >
+                    <label htmlFor="basicInput">{items.fields.fields['sincronizados'].label}</label>
+                    <ClayInput
+                      placeholder={items.fields.fields['sincronizados'].placeholder}
+                      type="text"
+                      name={items.fields.fields['sincronizados'].name}
+                      key={items.fields.fields['sincronizados'].name}
+                      value={items.item['sincronizados']}
+                      onChange={e => {
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
+                      }}>
+                    </ClayInput>
+                  </ClayForm.Group>
+
+                </div>
                 
               </ClayTabs.TabPane>
 

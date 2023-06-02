@@ -181,8 +181,6 @@ const Acciones = () => {
     }
 
     const loadParticipantes = () => {
-        console.log("loadParticipantes");
-        console.debug(participantes);
         let filters = [];
         if (participantes.search.length > 0)
             filters = [{name: participantes.searchField, value: participantes.search}];
@@ -217,20 +215,34 @@ const Acciones = () => {
     }
 
     const loadForm = () => {
+        const langSel = Liferay.Language.get("Seleccionar");
+
         fetchAPIData('/silefe.acciontipo/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{value: 0, label: Liferay.Language.get("Seleccionar")}, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.accionTipoId.options = opts;
         });
 
         fetchAPIData('/silefe.acciontipoformacion/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{value: 0, label: Liferay.Language.get("Seleccionar")}, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.accionTipoFormacionId.options = opts;
         });
 
         fetchAPIData('/silefe.tecnico/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{value: 0, label: Liferay.Language.get("Seleccionar")}, ...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName } })];
+            const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName } })];
             form.fields.tecnicoId.options = opts;
         });
+        
+        fetchAPIData('/silefe.plataforma/all', {options: {}}, referer).then(response => {
+            const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.plataformaId, label: obj.nombre } })];
+            console.log(opts);
+            
+            form.fields.plataformaId.options = opts;//[{value: 0, label:langSel}, {value: 0, label: "Moodle"}];
+        });
+
+        // TODO: Categoria: 
+        form.fields.categoriaId.options = [{value: 0, label:langSel}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}];
+
+        form.fields.cursoId.options = [{value: 0, label:langSel}, {value: 1, label: "Curso 1"},{value: 2, label: "Curso 2"}];
 
     }
 
