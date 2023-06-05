@@ -32,10 +32,10 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
                 id={"fieldMenu"}
                 name={"fieldMenu"}
                 key={"fieldMenu"}
-                onChange={evt => {
-                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                onChange={evt => {                  
+                  itemsHandle({ type: ITEMS_ACTIONS.SET_SEARCHFIELD,value:evt.target.value});
                 }}
-                value={1} >
+                value={ items.searchField } >
                 { formulario.searchFields.map( field => (
                   <ClaySelect.Option
                     key={"Aon-" + formulario.fields[field].key }
@@ -45,7 +45,6 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
                 )) }
               </ClaySelect>
         </ClayToolbar.Item>
-
 
         <ClayToolbar.Item>
           <ClayInput.Group>

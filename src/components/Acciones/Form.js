@@ -164,20 +164,20 @@ export const form = {
             columnType: "checkbox",
             key: "c1",
         },
-        acctionTipo: {
+//        acctionTipo: {
+//            columnTitle: Liferay.Language.get('Tipo'),
+//            columnType: "string",
+//            key: "c2",
+//        },
+        tipo: {
             columnTitle: Liferay.Language.get('Tipo'),
-            columnType: "string",
-            key: "c2",
+            columnType: "multilang",
+            key: "c4",
         },
         nombre: {
             columnTitle: Liferay.Language.get('Nombre'),
             columnType: "multilang",
             key: "c3",
-        },
-        tipo: {
-            columnTitle: Liferay.Language.get('Tipo'),
-            columnType: "multilang",
-            key: "c4",
         },
         formacion: {
             columnTitle: Liferay.Language.get('Formacion'),
@@ -205,5 +205,5 @@ export const form = {
             key: "c8",
         },
     },
-    searchFields: ['accionTipoId','nombre'],
+    searchFields: ['accionTipoId','nombre','accionTipoFormacionId'],
 };

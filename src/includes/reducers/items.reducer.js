@@ -24,6 +24,7 @@ export const ITEMS_ACTIONS = {
     SET_ORDER: 22,
     DELETE_ORDER: 23,
     SET_PAGESIZE: 24,
+    SET_SEARCHFIELD: 25,
   }
 
 export const initialState = {
@@ -44,6 +45,7 @@ export const initialState = {
     },
     status: "list", /* values: new, edit, list, load  */
     search: "",
+    searchField: "",
     load: 0,
     order: [],
 }
@@ -71,8 +73,6 @@ let tmp = []
 export const red_items = (state, action ) => {
     switch (action.type) {
         case ITEMS_ACTIONS.START: 
-            //console.log("Cargando");
-            //console.debug(action.items);
             let tmp_item = {};
             if (state.load == 0) {
                 Object.keys(action.fields.fields).forEach(j => {
@@ -313,6 +313,11 @@ export const red_items = (state, action ) => {
                 ...state,
                 pagination: {...state.pagination, pageSize: action.pageSize },
                 load: (state.load + 1) % 17,
+            }
+        case ITEMS_ACTIONS.SET_SEARCHFIELD:
+            return {
+                ...state,
+                searchField: action.value,
             }
         
         default: 

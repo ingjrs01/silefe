@@ -115,17 +115,23 @@ const Acciones = () => {
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
                 
         const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order:        items.order,
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
+            options: {
+                filters: [
+                    {  name: items.searchField, value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: items.order,
+            },
         }
+        console.log("fectData");
+        console.debug(postdata);
 
         if (form.fields.accionTipoId.options.length == 0) {
             loadForm();
         }
 
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.accion/filter',postdata,referer);
-        const tmp = await data.map(i => {return({...i,acctionTipo: "lalala", checked:false})});
+        const tmp = await data.map(i => {return({...i, checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: totalItems,page:page});
     }
 
