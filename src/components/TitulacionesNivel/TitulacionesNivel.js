@@ -102,8 +102,12 @@ const TitulacionesNivel = () => {
         const endpoint = '/silefe.titulacionnivel/filter';
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
-            order: items.order
+            options: {
+                filters: [
+                    {name: "descripcion", value: ( items.search && typeof items.search !== "undefined")?items.search:"",},
+                ],
+                order: items.order
+            },
         };
         let {data,totalPages, totalItems, page} = await fetchAPIData(endpoint, postdata,referer);
 
@@ -149,6 +153,7 @@ const TitulacionesNivel = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

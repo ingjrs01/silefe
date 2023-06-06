@@ -204,5 +204,6 @@ export const form = {
             columnType: "string",
             key: "c3",
         },
-    }    
+    },
+    searchFields: ['nombre'],
 };

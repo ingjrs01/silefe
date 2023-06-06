@@ -79,7 +79,6 @@ const Docentes = () => {
         const endpoint = '/silefe.docente/delete-docentes';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
-
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_ok') }]);
@@ -99,14 +98,16 @@ const Docentes = () => {
 
         const postdata = {
             pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order:        items.order,
+            options: {
+                filters: [
+                    {name: "nombre", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order:        items.order,
+            },
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.docente/filter',postdata,referer);
 
         const tmp = await data.map(i => {
-            console.log("iterando");
-            console.log(i);
             return(
                 {...i,
                 fechaNacimiento: (i.fechaNacimiento != null)?new Date(i.fechaNacimiento).toISOString().substring(0, 10):"",
@@ -174,6 +175,7 @@ const Docentes = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

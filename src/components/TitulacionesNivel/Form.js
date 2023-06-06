@@ -63,5 +63,6 @@ export const form = {
             columnType: "string",
             key: "c4",
         },
-    }    
+    },
+    searchFields: ['descripcion'],
 };

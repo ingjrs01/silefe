@@ -92,11 +92,14 @@ const AccionesTipo = () => {
     }
 
     const fetchData = async () => {
-        console.log("fetchData en AccionesTipo");
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order:        items.order,
+            options: {
+                filters: [
+                    {name: "descripcion", value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order:        items.order,
+            },
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.acciontipo/filter',postdata,referer);
         await console.log("los datos han llegado");
@@ -127,6 +130,7 @@ const AccionesTipo = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

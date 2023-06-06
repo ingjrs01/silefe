@@ -98,13 +98,16 @@ const TitulacionesTipo = () => {
     }
 
     const fetchData = async () => {
-        const endpoint = '/silefe.titulaciontipo/filter';
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
-            order: items.order
+            options: {
+                filters : [
+                    {name:"descripcion", value: ( items.search && typeof items.search !== "undefined")?items.search:""},
+                ],
+                order: items.order
+            },
         };
-        let {data,totalPages, totalItems, page} = await fetchAPIData(endpoint, postdata,referer);
+        let {data,totalPages, totalItems, page} = await fetchAPIData('/silefe.titulaciontipo/filter', postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.titulacionTipoId,checked:false})});
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages,total: totalItems,page:page });
     }
@@ -131,6 +134,7 @@ const TitulacionesTipo = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

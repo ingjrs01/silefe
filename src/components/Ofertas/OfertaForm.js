@@ -344,6 +344,6 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
-    }
-
+    },
+    searchFields: ['titulo'],
 };

@@ -34,8 +34,12 @@ const Empresas = () => {
         contactosHandle({type:CONTACTOS_ACTIONS.START});
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            razonSocial: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : "",
-            order: items.order
+            options: {
+                filters: [
+                    {name: "razonSocial", value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""},
+                ],
+                order: items.order
+            },
         }
 
         if (redCentros == undefined || redCentros.provincias.length == 0)
@@ -199,6 +203,7 @@ const Empresas = () => {
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
                 items={items}
+                formulario={formulario}
             />
             {(items.status === 'load') &&
                 <LoadFiles

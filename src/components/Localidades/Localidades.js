@@ -114,9 +114,13 @@ const Localidades = () => {
 
     const fetchData = async () => {
         const postdata = {
-            nombre: (items.search && typeof items.search !== 'undefined')?items.search:"",
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            order: items.order,
+            options: {
+                filters: [
+                    {name: "nombre", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: items.order,
+            },
         };
         console.log("hecho del fetchData");
 
@@ -153,6 +157,7 @@ const Localidades = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

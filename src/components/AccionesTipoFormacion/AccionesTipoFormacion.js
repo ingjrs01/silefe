@@ -93,15 +93,16 @@ const AccionesTipoFormacion = () => {
     }
 
     const fetchData = async () => {
-        console.log("fetchData en AccionesTipoFormacion");
         const postdata = {
             pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order:        items.order,
+            options: {
+                filters: [
+                    {name: "descripcion", value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: items.order,
+            },
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.acciontipoformacion/filter',postdata,referer);
-        await console.log("los datos han llegado");
-        await console.debug(data);
         const tmp = await data.map(i => {return({...i,checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: totalItems,page:page});
     }
@@ -128,6 +129,7 @@ const AccionesTipoFormacion = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

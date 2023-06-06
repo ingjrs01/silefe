@@ -99,10 +99,15 @@ const TitulacionesFam = () => {
     const fetchData = async () => {
         const endpoint = '/silefe.titulacionfam/filter';
         const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
-            order: []
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize},
+            options: {
+                filters: [                    
+                    {name: "descripcion", value: ( items.search && typeof items.search !== "undefined")?items.search:"",}
+                ],
+                order: []
+            },
         };
+
         let {data,totalPages, totalItems, page} = await fetchAPIData(endpoint, postdata,referer);
 
         if (form.fields.titulacionNivelId.options == undefined || form.fields.titulacionNivelId.options.length == 0) {
@@ -149,6 +154,7 @@ const TitulacionesFam = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

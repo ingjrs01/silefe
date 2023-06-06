@@ -94,9 +94,13 @@ const Cnaes = () => {
 
     const fetchData = async () => {
         const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize}, 
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order: items.order
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize}, 
+            options: {
+                filters: [
+                    {name: "descripcion", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: items.order
+            },
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.cnae/filter',postdata,referer);
         await console.debug(data);
@@ -127,6 +131,7 @@ const Cnaes = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

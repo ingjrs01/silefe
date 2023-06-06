@@ -116,9 +116,13 @@ const Provincias = () => {
 
     const fetchData = async () => {
         const postdata = {
-            name: (items.search && typeof items.search !== 'undefined')?items.search:"",
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize},
-            order: items.order,
+            options: {
+                filters: [                    
+                    {name: "name", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: items.order,
+            },
         };
         let {data,totalPages, totalItems, page}  = await fetchAPIData('/silefe.provincia/filter',postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.provinciaId,checked:false})});
@@ -147,6 +151,7 @@ const Provincias = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

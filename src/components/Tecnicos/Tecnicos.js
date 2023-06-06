@@ -106,8 +106,12 @@ const Tecnicos = () => {
 
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion: '',
-            order: items.order
+            options: {
+                filters: [
+                    {name:"descripcion",value: ''},
+                ],
+                order: items.order
+            },
         };
 
         const auth = getAuthToken();
@@ -176,6 +180,7 @@ const Tecnicos = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

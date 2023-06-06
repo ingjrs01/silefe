@@ -139,10 +139,10 @@ const Participantes = () => {
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
-                order : items.order,
                 filters: [
                     {  name: "nombre", value : (items.search && typeof items.search !== 'undefined')?items.search:""},
                 ],
+                order : items.order,
             },
 
         }
@@ -306,6 +306,7 @@ const Participantes = () => {
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

@@ -94,8 +94,12 @@ const Estados = () => {
     const fetchData = async () => {
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            nombre : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order:        items.order,
+            options: {
+                filters: [
+                    { name: "nombre", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: items.order,
+            },
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.estado/filter',postdata,referer);
         const tmp = await data.map(i => {return({...i,acctionTipo: "lalala", checked:false})});
@@ -124,6 +128,7 @@ const Estados = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

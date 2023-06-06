@@ -108,10 +108,15 @@ const Cnos = () => {
         const endpoint = "/silefe.cno/filter";          
         const postdata = {
             pagination:  {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            codigo:       0,
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order:        items.order,
+            options: {
+                filters: [
+                    //{name : "codigo", value : 0},
+                    {name : "descripcion", value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order:        items.order,
+            },
         }
+
         let {data,totalPages, totalItems,page} = await fetchAPIData(endpoint,postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.cnoId,checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: totalItems,page:page});
@@ -129,6 +134,7 @@ const Cnos = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

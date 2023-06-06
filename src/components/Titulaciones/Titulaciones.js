@@ -80,8 +80,12 @@ const Titulaciones = () => {
 
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion: ( items.search && typeof items.search !== "undefined")?items.search:"",
-            order: items.order
+            options: {
+                filters: [                    
+                    { name: "descripcion", value:( items.search && typeof items.search !== "undefined")?items.search:""},
+                ],
+                order: items.order
+            },
         };
 
         let {data, error,totalPages, totalItems, page} = await fetchAPIData('/silefe.titulacion/filter', postdata,referer);
@@ -254,6 +258,7 @@ const Titulaciones = () => {
                 items={items}
                 beforeEdit={beforeEdit}
                 items={items}
+                formulario={form}
             />
             { (items.status === 'load') && 
             <LoadFiles 

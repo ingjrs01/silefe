@@ -95,7 +95,7 @@ const Plataformas = () => {
         const postdata = {
             pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {                
-                order:        items.order,
+                order: items.order,
             },
             //descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
         }
@@ -129,6 +129,7 @@ const Plataformas = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

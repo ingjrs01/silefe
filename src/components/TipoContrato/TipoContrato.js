@@ -107,8 +107,12 @@ const TipoContrato = () => {
     const fetchData = async () => {
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order: []
+            options: {
+                filters: [
+                    { name: "descripcion", value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: []
+            },
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.tipocontrato/filter',postdata,referer);
         const tmp = await data.map(i => {return({...i,id:i.id,checked:false})});
@@ -127,6 +131,7 @@ const TipoContrato = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

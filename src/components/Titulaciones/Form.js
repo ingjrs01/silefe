@@ -88,5 +88,6 @@ export const form = {
             columnType: "multilang",
             key: "c4",
         },
-    }    
+    },
+    searchFields: ['descripcion'],
 };

@@ -149,17 +149,17 @@ const Ofertas = () => {
         participantesHandle({type:PARTICIPANTES_OPTIONS.START,search:searchCandidatos,showError: showError });
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            nombre: (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order: items.order
+            options: {
+                filters: [
+                    { name:"titulo", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: items.order,
+            },
         }
 
         if (form.fields.edadId.options == undefined)
             initForm()
 
-//        const ofertaId = 1201;
-//        fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId:ofertaId},referer).then(response => {
-//            const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
-//        });
 
         // Inicializando todos los datos de los participantes: 
         if (redParticipantes == undefined || redParticipantes.provinciasOptions.length == 0 ) 
@@ -290,6 +290,7 @@ const Ofertas = () => {
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

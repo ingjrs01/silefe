@@ -55,9 +55,13 @@ const MBaja = () => {
 
     const fetchData = async () => {
         const postdata = {
-            descripcion : (items.seach && typeof items.seach !== 'undefined')?items.seach:"",
             pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            order:        items.order,
+            options: {
+                filters: [                    
+                    { name: "descripcion", value : (items.seach && typeof items.seach !== 'undefined')?items.seach:""},
+                ],
+                order:        items.order,
+            },
         }
 
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.mbaja/filter',postdata,referer);
@@ -122,6 +126,7 @@ const MBaja = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />           
            { (items.status === 'load') && 
             <LoadFiles 

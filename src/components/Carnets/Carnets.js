@@ -95,8 +95,12 @@ const Carnets = () => {
     const fetchData = async () => {
         const postdata = {
             pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order:        items.order,
+            options: {
+                filters: [
+                    { name: "descripcion", value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order:        items.order,
+            }
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.carnet/filter',postdata,referer);
         const tmp = await data.map(i => {return({...i,checked:false})});
@@ -125,6 +129,7 @@ const Carnets = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
+                formulario={formulario}
             />
             { (items.status === 'load') && 
             <LoadFiles 

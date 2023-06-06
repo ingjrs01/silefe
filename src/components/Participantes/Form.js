@@ -313,5 +313,6 @@ export const form = {
             columnType: "multilang",
             key: "tc6",
         },
-}    
+    },
+    searchFields: ['nombre', 'documento','apellido1','provincia'],
 };
