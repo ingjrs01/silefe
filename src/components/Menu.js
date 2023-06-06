@@ -27,6 +27,8 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
           </ClayToolbar.Section>
         </ClayToolbar.Item>
 
+        {
+        formulario.searchFields.length > 1 &&
         <ClayToolbar.Item>
               <ClaySelect aria-label="Select Label"
                 id={"fieldMenu"}
@@ -45,6 +47,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
                 )) }
               </ClaySelect>
         </ClayToolbar.Item>
+        }
 
         <ClayToolbar.Item>
           <ClayInput.Group>
