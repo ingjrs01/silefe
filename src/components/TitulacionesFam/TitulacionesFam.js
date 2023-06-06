@@ -104,7 +104,7 @@ const TitulacionesFam = () => {
                 filters: [                    
                     {name: "descripcion", value: ( items.search && typeof items.search !== "undefined")?items.search:"",}
                 ],
-                order: []
+                order: items.order,
             },
         };
 
