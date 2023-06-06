@@ -119,7 +119,7 @@ const Provincias = () => {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [                    
-                    {name: "name", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                    { name: "nombre", value: (items.search && typeof items.search !== 'undefined')?items.search:"" },
                 ],
                 order: items.order,
             },
