@@ -111,7 +111,7 @@ const TipoContrato = () => {
                 filters: [
                     { name: "descripcion", value : (items.search && typeof items.search !== 'undefined')?items.search:""},
                 ],
-                order: []
+                order: items.order,
             },
         }
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.tipocontrato/filter',postdata,referer);
