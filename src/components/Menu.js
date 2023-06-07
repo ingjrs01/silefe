@@ -13,8 +13,8 @@ const spritemap = "./o/my-project/icons.svg";
 
 const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formulario}) => {
 
-  console.log("estoy en el menu");
-  console.debug(formulario);
+  //console.log("estoy en el menu");
+  //console.debug(formulario);
 
   return (
     <>
@@ -23,7 +23,8 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
       <ClayToolbar.Nav>
         <ClayToolbar.Item className="text-left" expand>
           <ClayToolbar.Section>
-            <label className="component-title">{"SiLeFe "}</label>
+            {/*<label className="component-title form-control-inline">{ formulario.title }</label> */}
+            <h2 className='h1'>{ formulario.title }</h2>
           </ClayToolbar.Section>
         </ClayToolbar.Item>
 
@@ -53,7 +54,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
           <ClayInput.Group>
             <ClayInput.GroupItem>
               <ClayInput
-                className="form-control-inline"
+                className="form-contrl-inline"
                 placeholder={Liferay.Language.get("Texto a buscar")}
                 onChange={e => itemsHandle({type:ITEMS_ACTIONS.SEARCH,value:e.target.value})}
               />
