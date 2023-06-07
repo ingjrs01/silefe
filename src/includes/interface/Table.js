@@ -62,9 +62,9 @@ const Table = ({ items, itemsHandle}) => {
                       case "multilang":
                         return (<ClayTable.Cell key={columName+row.id}>{ row[columName][lang] }</ClayTable.Cell> )
                       case "string":                        
-                        return (<ClayTable.Cell key={items.fields.table[columName].columnTitle+row.id}>{ row[columName] }</ClayTable.Cell> )
+                        return (<ClayTable.Cell key={columName+row.id}>{ row[columName] }</ClayTable.Cell> )
                       case "boolean": 
-                        return (<ClayTable.Cell key={items.fields.table[columName].columnTitle+row.id}>
+                        return (<ClayTable.Cell key={columName+row.id}>
                           {<ClayCheckbox checked={row[columName]}  disabled  />}
                         </ClayTable.Cell>)
                       case "checkbox":

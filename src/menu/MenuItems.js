@@ -33,7 +33,7 @@ const MenuItems = [
     {key:27, url: '/carnets',      caption: 'Carnets'},
     {key:30, url: '/prestaciones', caption: 'Prestaciones'},
     {key:32, url: '/estados',      caption: 'Estados'},
-    {key:33, url: '/plataformas',  caption: 'Plataformas'},
+    {key:34, url: '/plataformas',  caption: 'Plataformas'},
 ]
 
 export default MenuItems;

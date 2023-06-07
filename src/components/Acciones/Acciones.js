@@ -123,8 +123,6 @@ const Acciones = () => {
                 order: items.order,
             },
         }
-        console.log("fectData");
-        console.debug(postdata);
 
         if (form.fields.accionTipoId.options.length == 0) {
             loadForm();
@@ -244,8 +242,6 @@ const Acciones = () => {
         });
 
         fetchAPIData('/silefe.estado/all', { lang: getLanguageId() }, referer).then(response => {
-            console.log("estados");
-            console.debug(response);
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.estadoId, label: obj.nombre } })];
             form.fields.estadoId.options = opts;
         });
