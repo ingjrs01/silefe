@@ -126,15 +126,11 @@ const Participantes = () => {
 
     const fetchData = async () => {
         experienciasHandler({type:EXPERIENCIA_ACTIONS.START});
-
-        if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0) {
+        if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0) 
             queryTitulaciones();
-        }
 
-        if (form.fields.situacionLaboral.options == undefined)  {
-            console.log("visto que estoy dentro");
+        if (form.fields.situacionLaboral.options == undefined)  
             await initForm();
-        }
             
         const postdata = {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
@@ -144,9 +140,7 @@ const Participantes = () => {
                 ],
                 order : items.order,
             },
-
         }
-
         let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.participante/filter',postdata,referer);        
         const tmp = await data.map(i => {
             return({
@@ -337,8 +331,7 @@ const Participantes = () => {
                     items={items}
                 />
                 </>
-            }
-            
+            }           
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>

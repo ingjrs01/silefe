@@ -68,7 +68,6 @@ const Proyectos = () => {
     }
 
     const handleSave = async () => {
-        console.log("handleSave");
         const data = {
             id: items.item.id,
             obj: {
@@ -117,8 +116,6 @@ const Proyectos = () => {
         console.log("Soy una cuchara");
     }
     const cofinanciacionChange = (value) => {
-        console.log("Cambiando cofinanciación");
-        console.log(value);
         if (value == false) {
             // cambiamos el estado
         }
@@ -133,7 +130,6 @@ const Proyectos = () => {
             descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
             order : items.order
         }
-        console.log(referer);
         let {data,totalPages,page, totalItems} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
         const tmp = await data.map(i => {            
             return({
@@ -160,14 +156,10 @@ const Proyectos = () => {
             form.fields.colectivos.options = opts;
         });
         fetchAPIData('/silefe.convocatoria/all', {lang: getLanguageId()},referer).then(response => {
-            console.log("convocatoria")
-            console.log(response);
             form.fields.convocatoriaId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
         fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
-            console.log("viendo los tecnicos");
             form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 
-            console.debug(form.fields.tecnicos.options);
         });
         form.fields.cofinanciacion.change = cofinanciacionChange;
     }
