@@ -39,6 +39,11 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
                   itemsHandle({ type: ITEMS_ACTIONS.SET_SEARCHFIELD,value:evt.target.value});
                 }}
                 value={ items.searchField } >
+                  <ClaySelect.Option
+                    key={"Aon-0"}
+                    label={ Liferay.Language.get("Seleccionar")}
+                    value={ -1 }
+                  />
                 { formulario.searchFields.map( field => (
                   <ClaySelect.Option
                     key={"Aon-" + formulario.fields[field].key }

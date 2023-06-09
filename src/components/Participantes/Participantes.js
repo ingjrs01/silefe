@@ -16,7 +16,6 @@ import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/t
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { Paginator } from "../../includes/interface/Paginator";
 
-
 const spritemap = "./o/my-project/icons.svg";
 
 const Participantes = () => {
@@ -136,7 +135,7 @@ const Participantes = () => {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [
-                    {  name: "nombre", value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                    {  name: items.searchField, value : (items.search && typeof items.search !== 'undefined')?items.search:""},
                 ],
                 order : items.order,
             },

@@ -314,5 +314,5 @@ export const form = {
             key: "tc6",
         },
     },
-    searchFields: ['nombre', 'documento','apellido1','provinciaId'],
+    searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId'],
 };
