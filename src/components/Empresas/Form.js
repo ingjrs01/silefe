@@ -195,6 +195,16 @@ export const form = {
             columnType: "string",
             key: "c3",
         },
+        emailDefault: {
+            columnTitle: Liferay.Language.get('Email'),
+            columnType: "string",
+            key: "c4",
+        },
+        telefonoDefault: {
+            columnTitle: Liferay.Language.get('Email'),
+            columnType: "string",
+            key: "c5",
+        },
     },
-    searchFields: ['razonSocial'],
+    searchFields: ['documento', 'razonSocial'],
 };

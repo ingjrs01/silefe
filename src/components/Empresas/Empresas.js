@@ -36,7 +36,7 @@ const Empresas = () => {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [
-                    {name: "razonSocial", value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""},
+                    {name: items.searchField, value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""},
                 ],
                 order: items.order
             },
@@ -48,11 +48,17 @@ const Empresas = () => {
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
 
         const tmp = await data.map(i => {
+            if (i.email != null && i.email.length > 0) {
+                console.log("el email");
+                console.log(JSON.parse(i.email)[0].value);
+            } 
             return ({
                 ...i,
                 id: i.empresaId,
                 email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
+                emailDefault :  (i.email != null && i.email.length > 0) ? JSON.parse(i.email)[0].value : "",
                 telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
+                telefonoDefault: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono)[0].value : "",
                 checked: false
             })
         });
