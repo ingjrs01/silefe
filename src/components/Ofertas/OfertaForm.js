@@ -344,6 +344,17 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
+        empresaI: {
+            columnTitle: Liferay.Language.get('Empresa'),
+            columnType: "string",
+            key: "c4",
+        },
+        estado: {
+            columnTitle: Liferay.Language.get('Estado'),
+            columnType: "string",
+            key: "c5",
+        },
+        
     },
-    searchFields: ['titulo'],
+    searchFields: ['titulo','estado'],
 };
