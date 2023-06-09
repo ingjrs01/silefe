@@ -204,6 +204,26 @@ export const form = {
             columnType: "string",
             key: "c3",
         },
+        apellidos: {
+            columnTitle: Liferay.Language.get("Apellidos"),
+            columnType: "string",
+            key: "c4",
+        },
+        fechaNacimiento: {
+            columnTitle: Liferay.Language.get("FechaNacimiento"),
+            columnType: "string",
+            key: "c5",
+        },
+        provincia: {
+            columnTitle: Liferay.Language.get("Provincia"),
+            columnType: "multilang",
+            key: "c6",
+        },
+        localidad: {
+            columnTitle: Liferay.Language.get("Localidad"),
+            columnType: "multilang",
+            key: "c7",
+        }
     },
-    searchFields: ['nombre'],
+    searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId'],
 };

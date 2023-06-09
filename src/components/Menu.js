@@ -13,8 +13,8 @@ const spritemap = "./o/my-project/icons.svg";
 
 const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formulario}) => {
 
-  //console.log("estoy en el menu");
-  //console.debug(formulario);
+  // console.log("estoy en el menu");
+  // console.debug(items);
 
   return (
     <>
@@ -23,13 +23,12 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
       <ClayToolbar.Nav>
         <ClayToolbar.Item className="text-left" expand>
           <ClayToolbar.Section>
-            {/*<label className="component-title form-control-inline">{ formulario.title }</label> */}
             <h2 className='h1'>{ formulario.title }</h2>
           </ClayToolbar.Section>
         </ClayToolbar.Item>
 
         {
-        formulario.searchFields.length > 1 &&
+        items.status == "list" && formulario.searchFields.length > 1 &&
         <ClayToolbar.Item>
               <ClaySelect aria-label="Select Label"
                 id={"fieldMenu"}
@@ -55,17 +54,21 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
         </ClayToolbar.Item>
         }
 
-        <ClayToolbar.Item>
-          <ClayInput.Group>
-            <ClayInput.GroupItem>
-              <ClayInput
-                className="form-contrl-inline"
-                placeholder={Liferay.Language.get("Texto a buscar")}
-                onChange={e => itemsHandle({type:ITEMS_ACTIONS.SEARCH,value:e.target.value})}
-              />
-            </ClayInput.GroupItem>
-          </ClayInput.Group>
-        </ClayToolbar.Item>
+        {
+          (items.status == "list") &&
+          <ClayToolbar.Item>
+            <ClayInput.Group>
+              <ClayInput.GroupItem>
+                <ClayInput
+                  className="form-contrl-inline"
+                  placeholder={Liferay.Language.get("Texto a buscar")}
+                  onChange={e => itemsHandle({type:ITEMS_ACTIONS.SEARCH,value:e.target.value})}
+                />
+              </ClayInput.GroupItem>
+            </ClayInput.Group>
+          </ClayToolbar.Item>
+        }
+
 
         <ClayToolbar.Item>
           <ClayToolbar.Section>

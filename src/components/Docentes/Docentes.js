@@ -6,7 +6,7 @@ import {useModal} from '@clayui/modal';
 import { getUserId, url_referer, getLanguageId} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
@@ -100,7 +100,7 @@ const Docentes = () => {
             pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [
-                    {name: "nombre", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                    {name: items.searchField, value: (items.search && typeof items.search !== 'undefined')?items.search:""},
                 ],
                 order:        items.order,
             },
@@ -115,6 +115,8 @@ const Docentes = () => {
                 telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono):[],
                 checked:false
             })});
+        await console.log("datos recibidos");
+        await console.debug(tmp);
 
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: totalItems,page:page});
     }

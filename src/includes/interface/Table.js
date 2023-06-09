@@ -11,6 +11,8 @@ const spritemap = "./o/my-project/icons.svg";
 const Table = ({ items, itemsHandle}) => {
 
   let lang = getLanguageId().replace("_","-");
+  //console.log("la table");
+  //console.debug(items);
   
   return (
     <ClayTable>
