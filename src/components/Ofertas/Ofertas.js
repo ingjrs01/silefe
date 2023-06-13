@@ -151,7 +151,7 @@ const Ofertas = () => {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [
-                    { name:"titulo", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                    { name: items.searchField, value: (items.search && typeof items.search !== 'undefined')?items.search:""},
                 ],
                 order: items.order,
             },
@@ -219,6 +219,8 @@ const Ofertas = () => {
         // cargamos los tipos de contrato
         fetchAPIData('/silefe.tipocontrato/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            console.log("tipos contrato:");
+            console.debug(opts);
             form.fields.tipoContratoId.options = opts;
         });
         // cargamos los candidatos: 
@@ -232,7 +234,7 @@ const Ofertas = () => {
         form.fields.informaticaRequerido.options = opciones_requerido;
         form.fields.experienciaRequerido.options = opciones_requerido;
         form.fields.generoId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Hombre"},{value:"2",label:"Mujer"}];
-        form.fields.estado.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Activa"},{value:"2",label:"Con Inserción"},{value:"3",label:"Cerrada"}];
+        form.fields.estadoId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"Activa"},{value:"2",label:"Con Inserción"},{value:"3",label:"Cerrada"}];
         form.fields.jornadaId.options = [{value:"0",label:seleccionarlabel},{value:"1",label:Liferay.Language.get("Completa")},{value:"2",label:Liferay.Language.get("Parcial")}];
 
     }

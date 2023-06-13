@@ -201,7 +201,7 @@ export const form = {
             key: "c4",
         },
         telefonoDefault: {
-            columnTitle: Liferay.Language.get('Email'),
+            columnTitle: Liferay.Language.get('Teléfono'),
             columnType: "string",
             key: "c5",
         },

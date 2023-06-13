@@ -44,6 +44,13 @@ export const form = {
             enabled:true,
             change: ()=>{console.log("cambia el select");}
         },
+        puesto: {
+            key: 33,
+            type: "text",
+            label: Liferay.Language.get('Puesto'), 
+            name: "puesto", 
+            enabled:true,
+        },
         proyectoId: {
             key: 30,
             type: "select",
@@ -212,14 +219,22 @@ export const form = {
             enabled:true,
             conditions: []
         },
-        estado: {
+        estadoId: {
             key: 26,
             type: "select",
+            label: Liferay.Language.get('Estado'), 
+            name: "estadoId", 
+            value:"lelele", 
+            enabled:true,
+            change: ()=>{console.log("cambia el select");}
+        },
+        estado: {
+            key: 32,
+            type: "text",
             label: Liferay.Language.get('Estado'), 
             name: "estado", 
             value:"lelele", 
             enabled:true,
-            change: ()=>{console.log("cambia el select");}
         },
         observaciones: {
             key: 27,
@@ -252,6 +267,22 @@ export const form = {
             type: "other",
             componentName: "Participantes",
             name: "participantes",
+        },
+        empresa: {
+            key: 34,
+            type: "text",
+            label: Liferay.Language.get('Empresa'), 
+            name: "empresa", 
+            value:"lelele", 
+            enabled:true,
+        },
+        centro: {
+            key: 35,
+            type: "text",
+            label: Liferay.Language.get('Centro'), 
+            name: "centro", 
+            value:"lelele", 
+            enabled:true,
         },
     },
     tabActive:0,
@@ -324,7 +355,7 @@ export const form = {
             rows: [
                 {
                     key: 71,
-                    cols: ['estado']
+                    cols: ['estadoId']
                 },
                 {
                     key: 72,
@@ -342,19 +373,39 @@ export const form = {
         titulo: {
             columnTitle: Liferay.Language.get('titulo'),
             columnType: "multilang",
+            key: "c2",
+        },
+        puesto: {
+            columnTitle: Liferay.Language.get('Puesto'),
+            columnType: "multilang",
             key: "c3",
         },
-        empresaI: {
+        empresa: {
             columnTitle: Liferay.Language.get('Empresa'),
             columnType: "string",
             key: "c4",
         },
-        estado: {
-            columnTitle: Liferay.Language.get('Estado'),
+        centro: {
+            columnTitle: Liferay.Language.get('Centro'),
             columnType: "string",
             key: "c5",
         },
+        fechaIncorporacion: {
+            columnTitle: Liferay.Language.get('Incorporación'),
+            columnType: "string",
+            key: "c6",
+        },
+        estado: {
+            columnTitle: Liferay.Language.get('Estado'),
+            columnType: "multilang",
+            key: "c7",
+        },
+        createDate: {
+            columnTitle: Liferay.Language.get('Fecha'),
+            columnType: "string",
+            key: "c8",
+        },
         
     },
-    searchFields: ['titulo','estado'],
+    searchFields: ['titulo','estado','puesto','empresa','estado','centro'],
 };
