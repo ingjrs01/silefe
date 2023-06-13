@@ -104,7 +104,7 @@ const TitulacionesNivel = () => {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [
-                    {name: "descripcion", value: ( items.search && typeof items.search !== "undefined")?items.search:"",},
+                    {name: items.searchField, value: ( items.search && typeof items.search !== "undefined")?items.search:"",},
                 ],
                 order: items.order
             },

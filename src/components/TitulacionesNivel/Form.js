@@ -30,7 +30,15 @@ export const form = {
             conditions: [],
             enabled:true,
             options: []  
-        },         
+        },
+        tipo: {
+            key:3,
+            type: "text",
+            label: Liferay.Language.get("Tipo"),
+            name: "tipo", 
+            value:"lalala", 
+            placeholder:"Identifier", 
+        },
     },
     rows: [
         {
@@ -64,5 +72,5 @@ export const form = {
             key: "c4",
         },
     },
-    searchFields: ['descripcion'],
+    searchFields: ['descripcion','tipo'],
 };
