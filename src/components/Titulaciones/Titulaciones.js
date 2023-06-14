@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import Table from '../../includes/interface/Table';
-//import DefaultForm from '../../includes/interface/DefaultForm';
 import { TitulacionForm } from './TitulacionForm';
 import Menu from '../Menu';
 import { useModal } from '@clayui/modal';
@@ -17,7 +16,7 @@ import {reducerTitulacion, TITULACIONES_ACTIONS} from '../../includes/reducers/t
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Titulaciones = () => {
-    const [items, itemsHandle]             = useReducer(red_items, initialState);// {arr:[],item:{id:0},pagination: {page:0,pageSize:10, sizes: [10,20,30],totalPages:0},load:0, search: '', order: []});
+    const [items, itemsHandle]             = useReducer(red_items, initialState);
     const [file,setFile]                   = useState();
     const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
@@ -70,10 +69,8 @@ const Titulaciones = () => {
     }
 
     const fetchData = async () => {
-        if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0) {
-            console.log("veo que es mejor consultar las titulaciones");
+        if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0) 
             queryTitulaciones();
-        }
 
         if (form.fields.titulacionTipoId.options == undefined || form.fields.titulacionTipoId.options.length == 0)
             initForm();
@@ -93,31 +90,12 @@ const Titulaciones = () => {
         if (error == 1) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
         }
-        await console.log("cargamos los datos");
-        await console.debug(redTitulaciones);
-        //debugger;
-        const tmp = await data.map(i => {
-            let tFamilia = "jajaja";
-//            let nivelId = 0;
-//            let tipoId = 0;
-//            let filtered = titulacionesFamiliaOptions.filter(o => o.titulacionFamId == i.titulacionFamiliaId);
-//            if (filtered.length > 0) {
-//                tFamilia = filtered[0].descripcion ;
-//                nivelId = filtered[0].titulacionNivelId;                
-//            } 
-//            if (nivelId != 0) {
-//                tipoId = opciones_nivel.filter(t => t.titulacionNivelId == nivelId)[0].titulacionTipoId;
-//            }
-
-            return ({ ...i, 
+        const tmp = await data.map(i => (
+            { ...i, 
                 id: i.titulacionId,
-                titulacionFamiliaDescripcion: tFamilia, 
-                //nivel: "mi nivel",
-                //tipo: "mi tipo",
-                //titulacionNivelId: nivelId,titulacionTipoId:tipoId,
-                checked: false })
-        });
-        
+                checked: false 
+            })
+        );
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages, total:totalItems,page:page });
     }
 
@@ -150,13 +128,11 @@ const Titulaciones = () => {
         console.log("Cargando los dados de reducer desde titulaciones");
         titulacionHandler({type:TITULACIONES_ACTIONS.START});
         const lang = getLanguageId();
-        //debugger;
         fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: lang }, "http://localhost:8080/titulaciones").then(response => {
             console.log("cargando los tipos");
             titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
         });
         fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "", lang: lang }, referer).then(response => {
-          //  debugger;
             titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: [...response.data] });
         });
         fetchAPIData('/silefe.titulacionfam/all', { descripcion: "", lang: lang }, referer).then(response => {
@@ -277,12 +253,6 @@ const Titulaciones = () => {
                     items={items}
                     save={handleSave}
                 />                
-                /*
-                <DefaultForm
-                    save={handleSave}
-                    itemsHandle={itemsHandle}
-                    items={items}
-                /> */
             }
             {
                 (items.status === 'list') &&

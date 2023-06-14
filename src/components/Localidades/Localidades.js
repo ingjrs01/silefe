@@ -72,17 +72,11 @@ const Localidades = () => {
     }
 
     const handleSave = async () => {
-        //const postdata = {
-        //    id:         items.item.id,
-        //    name:       items.item.nombre,
-        //    userId:     getUserId(),
-        //}
         let endpoint = '/silefe.municipio/save-municipio'
         if (items.status === 'new') 
             endpoint = '/silefe.municipio/add-municipio';
 
-        let obj = {obj: {...items.item, id:items.item.participanteId, userId: getUserId()}};
-        let {status, error} = await saveAPI(endpoint,obj,referer); 
+        let {status, error} = await saveAPI(endpoint,{obj: {...items.item, id:items.item.participanteId, userId: getUserId()}},referer); 
 
         if (status) {
             setToastItems([...toastItems, { title: Liferay.Language.get('Guardar'), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
