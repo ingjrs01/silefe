@@ -32,7 +32,7 @@ export const initialState = {
     item: {id:0,checked:false},
     pagination: {
         page: 0,
-        pageSize: 20,
+        pageSize: 10,
         sizes: [10,20,30],
         totalPages:0,
         total: 0,

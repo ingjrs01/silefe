@@ -102,7 +102,7 @@ const TitulacionesFam = () => {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [                    
-                    {name: "descripcion", value: ( items.search && typeof items.search !== "undefined")?items.search:"",}
+                    {name: items.searchField, value: ( items.search && typeof items.search !== "undefined")?items.search:"",}
                 ],
                 order: items.order,
             },
@@ -119,7 +119,7 @@ const TitulacionesFam = () => {
             return({
                 ...i,
                 id:i.titulacionFamId, 
-                titulacionNivelDescripcion:form.fields.titulacionNivelId.options.filter(o => o.value == i.titulacionNivelId)[0].label,
+                //titulacionNivelDescripcion:form.fields.titulacionNivelId.options.filter(o => o.value == i.titulacionNivelId)[0].label,
                 checked:false
             })
         });

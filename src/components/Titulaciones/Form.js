@@ -57,6 +57,22 @@ export const form = {
             placeholder: Liferay.Language.get('Familia'), 
             conditions: ["text"] 
         },
+        nivel: {
+            key:7,
+            type: "text",
+            label: Liferay.Language.get("Nivel"), 
+            name: "nivel", 
+            value:"lalala", 
+            placeholder:"Nivel", 
+        },
+        tipo: {
+            key:8,
+            type: "text",
+            label: Liferay.Language.get("Tipo"), 
+            name: "tipo", 
+            value:"lalala", 
+            placeholder:"Tipo", 
+        },
     },
     rows: [
         {
@@ -88,6 +104,16 @@ export const form = {
             columnType: "multilang",
             key: "c4",
         },
+        nivel: {
+            columnTitle: Liferay.Language.get("Nivel"),
+            columnType: "multilang",
+            key: "c5",
+        },
+        tipo: {
+            columnTitle: Liferay.Language.get("Tipo"),
+            columnType:"multilang",
+            key: "c6",
+        }
     },
-    searchFields: ['descripcion'],
+    searchFields: ['descripcion','familia','nivel','tipo'],
 };

@@ -12,7 +12,7 @@ export const form = {
             conditions: ["number"]
         },
         descripcion: {
-            key:3,
+            key:2,
             type: "multilang",
             label: Liferay.Language.get('Descripcion'), 
             name: "descripcion", 
@@ -21,7 +21,7 @@ export const form = {
             conditions: ["text"]
         },
         titulacionNivelId : {
-            key:2,
+            key:3,
             type: "select",
             label: Liferay.Language.get('Nivel'), 
             name: "titulacionNivelId", 
@@ -29,7 +29,21 @@ export const form = {
             conditions: [],
             options: []  
         },
-    },
+        nivel: {
+            key:4,
+            type: "text",
+            label: Liferay.Language.get("Nivel"), 
+            name: "nivel", 
+            value:"lalala", 
+        },
+        tipo: {
+            key:5,
+            type: "text",
+            label: Liferay.Language.get("Tipo"), 
+            name: "tipo", 
+            value:"lalala", 
+        },
+},
     rows: [
         {
             key:9,
@@ -58,9 +72,14 @@ export const form = {
         },
         titulacionNivelDescripcion: {
             columnTitle: Liferay.Language.get('Nivel'),
-            columnType: "string",
+            columnType: "multilang",
+            key: "c4",
+        },
+        titulacionTipoDescripcion: {
+            columnTitle: Liferay.Language.get('Tipo'),
+            columnType: "multilang",
             key: "c4",
         },
     },
-    searchFields: ['descripcion'],
+    searchFields: ['descripcion','nivel','tipo'],
 };
