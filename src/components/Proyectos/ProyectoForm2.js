@@ -155,7 +155,14 @@ export const form = {
             value:"lelele", 
             placeholder:Liferay.Language.get('Objetivos'),
             conditions:["text"]
-        }
+        },
+        convocatoria: {
+            key: 89,
+            type: "text",
+            label: Liferay.Language.get('Convocatoria'), 
+            name: "convocatoria", 
+            placeholder: Liferay.Language.get('Convocatoria'), 
+        },
     },
     rows: [
         {
@@ -204,7 +211,7 @@ export const form = {
         },        
         convocatoria: {
             columnTitle: Liferay.Language.get('Convocatoria'),
-            columnType: "string",
+            columnType: "multilang",
             key: "c10",
         },        
         descripcion: {
@@ -238,6 +245,6 @@ export const form = {
             key: "c8",
         },        
     },
-    searchFields: ['codigo', 'descripcion'],
+    searchFields: ['codigo', 'descripcion','convocatoria'],
 
 };

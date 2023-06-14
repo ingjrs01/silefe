@@ -127,8 +127,12 @@ const Proyectos = () => {
         }
         const postdata = {
             pagination:  {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            descripcion : (items.search && typeof items.search !== 'undefined')?items.search:"",
-            order : items.order
+            options: {
+                filters: [
+                    {name: items.searchField, value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order : items.order
+            }
         }
         let {data,totalPages,page, totalItems} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
         const tmp = await data.map(i => {            
@@ -137,8 +141,8 @@ const Proyectos = () => {
                 id                       : i.proyectoId,
                 inicio                   : (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
                 fin                      : (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
-                colectivos               : i.colectivos.map(colectivo => {return colectivo.toString()} ),
-                tecnicos                 : i.tecnicos.map(tecnico=> {return tecnico.toString()} ),
+                //colectivos               : i.colectivos.map(colectivo => {return colectivo.toString()} ),
+                //tecnicos                 : i.tecnicos.map(tecnico=> {return tecnico.toString()} ),
                 checked                  : false
             });
         });
