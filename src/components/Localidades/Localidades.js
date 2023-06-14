@@ -117,7 +117,7 @@ const Localidades = () => {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [
-                    {name: "nombre", value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                    {name: items.searchField, value: (items.search && typeof items.search !== 'undefined')?items.search:""},
                 ],
                 order: items.order,
             },

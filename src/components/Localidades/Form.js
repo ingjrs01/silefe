@@ -74,5 +74,5 @@ export const form = {
             key: "c4",
         },
     },
-    searchFields: ['nombre'],
+    searchFields: ['nombre','provincia'],
 };
