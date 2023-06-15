@@ -162,6 +162,7 @@ export const form = {
             label: Liferay.Language.get('Convocatoria'), 
             name: "convocatoria", 
             placeholder: Liferay.Language.get('Convocatoria'), 
+            validate: false,
         },
     },
     rows: [

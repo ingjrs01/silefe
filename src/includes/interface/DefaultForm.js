@@ -1,38 +1,45 @@
-import React, { useState } from "react";
+import React from "react";
 import ClayForm from '@clayui/form';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
-const spritemap = "./o/my-project/icons.svg";
-
+//const spritemap = "./o/my-project/icons.svg";
 
 const DefaultForm = ({ itemsHandle, save, items, notify }) => {
 
   const validateAll = () => {
     Object.keys(items.fields.fields).forEach( campo => {
       //console.log(campo);
-      switch (items.fields.fields[campo].type) {
-        case "text": 
-          if (!validate(campo, items.item[campo]))
-            return false;
-          break;
-        case "multilang":
-          if (!validateLocalized(campo, items.item[campo]))
-            return false;
-          break;
-        case "toggle":
-          break;
+      //debugger;
+      if ((items.fields.fields[campo].validate === undefined) || (items.fields.fields[campo].validate != false)) {
+        switch (items.fields.fields[campo].type) {
+          case "text": 
+            if (!validate(campo, items.item[campo]))
+              //console.log("no pasa texto");
+              return false;
+            break;
+          case "multilang":
+            if (!validateLocalized(campo, items.item[campo]))
+              //console.log("no pasa multi");
+              return false;
+            break;
+          case "toggle":
+            //console.log("toggle");
+            break;
+        }
       }
 
+
     });
+    //console.log("validado ok");
     return true;
   }
 
   const validate = (name, value) => {
     let condicion = "";
-    
+    //console.log("validating");
     for (condicion of items.fields.fields[name]["conditions"]) {
       if (condicion == "number") {
         if (isNaN(value)) {
@@ -49,6 +56,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
       }
     }    
     itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+//    console.log("validated");
     return true;
   }
 
