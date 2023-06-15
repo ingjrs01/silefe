@@ -116,16 +116,14 @@ const Localidades = () => {
                 order: items.order,
             },
         };
-        console.log("hecho del fetchData");
-
-        // TODO: Revisar si necesitamos cargar de todas las veces
-        fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
-            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.provinciaId.options = opts;
-        });
-
+        if (form.fields.provinciaId == undefined || form.fields.provinciaId.options.length == 0) {
+            fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
+                const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+                form.fields.provinciaId.options = opts;
+            });
+        }
         let {data,totalPages, totalItems, page}  = await fetchAPIData('/silefe.ayuntamiento/filter',postdata,referer);
-        const tmp = await data.map(i => {return({...i,checked:false})});
+        const tmp = await data.map(i => ({...i,checked:false}));
         await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages, total:totalItems,page:page});
     }
 
