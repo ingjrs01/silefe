@@ -14,19 +14,31 @@ export const DOCENTE_ACTIONS = {
     SELECT_ITEMS: 12,
     CHECK: 13,
     CHECKALL: 14,
-    SETITEMS: 15
-  }
-const initialState = {
+    SETITEMS: 15,
+    SETPAGE: 16,
+    SETSEARCHFIELD: 17,
+    LOAD: 18,
+}
+
+export const initialDocentes = {
     items: [],
     deleted: [],
     search: "",
     searchItems: [],
     status: "list",
     participanteId: 0,
+    // EU
+    searchField: "nombre",
+    pagination: {
+        page: 0,
+        pageSize: 4,
+        totalPages: 2,
+    },
+    load: 0,    
 }
 let tmpar= []; 
 
-export const reducerDocentes = (state=initialState, action ) => {
+export const reducerDocentes = (state, action ) => {
     switch (action.type) {
         case DOCENTE_ACTIONS.START:
             return {
@@ -153,6 +165,22 @@ export const reducerDocentes = (state=initialState, action ) => {
                 ...state,
                 checkAll: val,
                 items: [...state.items.map(item => ({...item,checked: val}))]
+            }
+        case DOCENTE_ACTIONS.SETPAGE: 
+            return {
+                ...state,
+                pagination: {...state.pagination, page: action.page},
+                load: state.load + 1,
+            }
+        case DOCENTE_ACTIONS.SETSEARCHFIELD: 
+            return {
+                ...state,
+                searchField: action.value,
+            }
+        case DOCENTE_ACTIONS.LOAD:
+            return {
+                ...state,
+                load: state.load + 1,
             }
        
         default: 

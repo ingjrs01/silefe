@@ -12,15 +12,15 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
-import {reducerDocentes, DOCENTE_ACTIONS} from '../../includes/reducers/docentes.reducer'; 
+import {reducerDocentes, DOCENTE_ACTIONS, initialDocentes} from '../../includes/reducers/docentes.reducer'; 
 import {reducerParticipantes, PARTICIPANTE_ACTIONS, initialParticipantes} from '../../includes/reducers/participantes.reducer';
 //import Papa from "papaparse";
 
 
 const Acciones = () => {
-    const [items,itemsHandle]            = useReducer(red_items,initialState);
-    const [docentes,docentesHandler]     = useReducer(reducerDocentes, {items: [], status:'list', item: {id:0}});
-    const [participantes,participantesHandler] = useReducer(reducerParticipantes, initialParticipantes);//{items: [], status:'list', item: {id:0}});
+    const [items,itemsHandle]                  = useReducer(red_items,initialState);
+    const [docentes,docentesHandler]           = useReducer(reducerDocentes, initialDocentes);
+    const [participantes,participantesHandler] = useReducer(reducerParticipantes, initialParticipantes);
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -218,6 +218,41 @@ const Acciones = () => {
         });
     }
 
+    const loadDocentes = () => {
+        let filters = [];
+        if (docentes.search.length > 0)
+            filters = [{name: docentes.searchField, value: docentes.search}];
+
+        const postdata = {
+            pagination: {
+                page: docentes.pagination.page, 
+                pageSize: 4
+            },
+            options : {
+                filters: filters,
+                order: [{ name: 'apellido1', direction: 'asc'}],
+                excludes: docentes.items.map(i => (i.participanteId)),
+            },
+        }
+
+        fetchAPIData('/silefe.docente/filter',postdata,referer).then(response => {
+            const pts = response.data.map( i => {                
+                let email = "";
+                if (i.email != null && i.email.length > 0) 
+                    email = JSON.parse(i.email)[0].value;
+                return {
+                    ...i, 
+                    apellidos: i.apellido1 + " " + i.apellido2, 
+                    nuevo: true,
+                    email: email
+                }
+            });
+            const totalPages = response.totalPages;
+            docentesHandler({type: DOCENTE_ACTIONS.SETSEARCHITEMS,items:pts, totalPages: totalPages});
+        });
+
+    }
+
     const loadForm = () => {
         const langSel = Liferay.Language.get("Seleccionar");
 
@@ -268,6 +303,10 @@ const Acciones = () => {
         loadParticipantes()
 
     }, [participantes.load]);
+
+    useEffect( () => {
+        loadDocentes()
+    }, [docentes.load])
 
     if (!items) 
         return (<div>Liferay.Language.get('Cargando')</div>)
