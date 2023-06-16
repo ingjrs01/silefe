@@ -1,5 +1,6 @@
 import React,{useEffect,useReducer,useRef,useState} from "react";
-import DefaultForm from '../../includes/interface/DefaultForm';
+import TabsForm from '../../includes/interface/TabsForm';
+//import DefaultForm from '../../includes/interface/DefaultForm';
 import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
@@ -10,8 +11,10 @@ import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
-import {form as formulario} from './ProyectoForm2';
+//import {form as formulario} from './ProyectoForm2';
+import {form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
+import OfertasRender from './OfertasRender';
 //import Papa from "papaparse";
 
 const Proyectos = () => {
@@ -168,6 +171,25 @@ const Proyectos = () => {
         form.fields.cofinanciacion.change = cofinanciacionChange;
     }
 
+    const notify = () => {
+        console.log("notify");
+    }
+
+    const plugin2 = () => {
+        return {
+            Ofertas:
+                <OfertasRender
+                    reducer={redCentros}
+                    centrosHandle={centrosHandle}
+                />,
+            Contactos: 
+                <ContactosRender
+                    redContactos={redContactos}
+                    contactosHandle={contactosHandle}
+                />
+        }
+    }
+
     if (!items) 
     return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -190,10 +212,12 @@ const Proyectos = () => {
                 itemsHandle={itemsHandle}
             />}
             {   (items.status === 'edit' || items.status === 'new') && 
-                <DefaultForm
+                <TabsForm
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
+                    notify={notify}
+                    plugin={plugin2}
                 />
             }            
             {
