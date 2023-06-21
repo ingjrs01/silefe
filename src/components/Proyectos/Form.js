@@ -164,6 +164,19 @@ export const form = {
             placeholder: Liferay.Language.get('Convocatoria'), 
             validate: false,
         },
+        acciones: {
+            key: 90,
+            type: "other",
+            componentName: "AccionesTable",
+            name: "acciones",
+        },
+        ofertas: {
+            key: 91,
+            type: "other",
+            componentName: "OfertasTable",
+            name: "ofertas",
+        },
+
     },
     tabActive: 0,
     tabs: [
@@ -207,13 +220,13 @@ export const form = {
             ]
         },
         {
-            caption: "Otros",
+            caption: "Ofertas",
             key: 2,
             ariacontrols: "tabpanel-2",
             rows: [
                 {
                     key: 13,
-                    cols: ['objetivos']
+                    cols: ['ofertas']
                 },
             ]
         },

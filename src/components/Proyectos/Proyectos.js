@@ -1,24 +1,27 @@
 import React,{useEffect,useReducer,useRef,useState} from "react";
 import TabsForm from '../../includes/interface/TabsForm';
-//import DefaultForm from '../../includes/interface/DefaultForm';
 import Table from '../../includes/interface/Table';
 import Menu from '../Menu';
 import {useModal} from '@clayui/modal';
 import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
+import {SUBTABLE_ACTIONS,iniState,reducerSubtable} from '../../includes/reducers/subtable.reducer';
 import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
-//import {form as formulario} from './ProyectoForm2';
 import {form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
-import OfertasRender from './OfertasRender';
+import AccionesTable from "./AccionesTable";
+import OfertasTable from './OfertasTable';
+//import {form as formulario} from './ProyectoForm2';
+//import OfertasRender from './OfertasRender';
 //import Papa from "papaparse";
 
 const Proyectos = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
+    const [acciones, accionesHandle]     = useReducer(reducerSubtable,iniState);
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -177,18 +180,33 @@ const Proyectos = () => {
 
     const plugin2 = () => {
         return {
-            Ofertas:
-                <OfertasRender
-                    reducer={redCentros}
-                    centrosHandle={centrosHandle}
-                />,
-            Contactos: 
-                <ContactosRender
-                    redContactos={redContactos}
-                    contactosHandle={contactosHandle}
-                />
+            //Acciones:
+            //    <AccionesTable
+            //        data={acciones}
+            //        handle={accionesHandle}
+            //    />,
+            Ofertas: 
+                <OfertasTable />
+                
         }
     }
+
+    //const plugin3 = () => {
+    //    return {
+    //        Centros:
+    //            <CentrosRender
+    //                reducer={redCentros}
+    //                centrosHandle={centrosHandle}
+    //            />,
+    //        Contactos: 
+    //            <ContactosRender
+    //                redContactos={redContactos}
+    //                contactosHandle={contactosHandle}
+    //            />
+    //    }
+    //}
+
+
 
     if (!items) 
     return (<div>{Liferay.Language.get('Cargando')}</div>)

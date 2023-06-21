@@ -52,7 +52,7 @@ const OfertasRender = ({reducer,centrosHandle}) =>  {
             </>
         }
         {
-            (reducer.status === 'edit') &&  
+           /* (reducer.status === 'edit') &&  
             /*
             <CentrosForm 
                 reducer={reducer}
