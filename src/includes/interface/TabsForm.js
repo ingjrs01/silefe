@@ -73,7 +73,7 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
         <ClayCard.Description truncate={false} displayType="text">
         <ClayForm>
 
-        <ClayTabs active={items.fields.tabActive} modern onActiveChange={e => {console.log("cambiando");}}>
+        <ClayTabs active={items.fields.tabActive} modern >
           { items.fields.tabs.map((tab,index) => {
             return (
               <ClayTabs.Item

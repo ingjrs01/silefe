@@ -18,8 +18,10 @@ export const SUBTABLE_ACTIONS = {
     SETPAGE: 16,
     SETSEARCHFIELD: 17,
     LOAD: 18,
+    SETFORM: 19,
   }
 export const iniState = {
+    form: {},
     items: [],
     deleted: [],
     search: "",
@@ -38,6 +40,11 @@ let tmpar= [];
 
 export const reducerSubtable = (state, action ) => {
     switch (action.type) {
+        case SUBTABLE_ACTIONS.SETFORM: 
+            return {
+                ...state,
+                form: action.form,
+            }
         case SUBTABLE_ACTIONS.START:
             return {
                 ...state,

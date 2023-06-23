@@ -1,9 +1,10 @@
 import React from "react";
 //const spritemap = "./o/my-project/icons.svg";
 
-const OfertasTable = ({data,handler}) =>  {
-
-    console.log("estamos en OfertasTable");
+const OfertasTable = () =>  {
+//
+    //console.log("estamos en OfertasTable");
+    //debugger;
 
     return (
         <>

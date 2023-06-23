@@ -15,6 +15,8 @@ import {form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 import AccionesTable from "./AccionesTable";
 import OfertasTable from './OfertasTable';
+// probando
+import {form as aform} from './AccionForm';
 //import {form as formulario} from './ProyectoForm2';
 //import OfertasRender from './OfertasRender';
 //import Papa from "papaparse";
@@ -30,8 +32,12 @@ const Proyectos = () => {
     const referer = `${url_referer}/proyectos`;
     const form = formulario;
 
+    
     useEffect(()=>{
-		if (!isInitialized.current) {
+        if (!isInitialized.current) {
+            console.log("iniciandose");
+            console.debug(aform);
+            accionesHandle({type: SUBTABLE_ACTIONS.SETFORM,form: aform});
             fetchData();
 			isInitialized.current = true;
 		} else {
@@ -39,6 +45,10 @@ const Proyectos = () => {
 			return () => clearTimeout(timeoutId);
 		}
     },[items.load]);
+
+    useEffect ( ()=> {
+        loadAcciones();
+    },[acciones.load]);
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -153,6 +163,21 @@ const Proyectos = () => {
             });
         });
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: toastItems,page:page});
+
+    }
+    
+    const loadAcciones =  () => {
+        const postdata = {
+            pagination:  {page: acciones.pagination.page, pageSize: 5},
+            options: {
+                filters: [{name: "proyectoId", value: items.item.id}],
+            }
+        }
+    
+        fetchAPIData('/silefe.accion/filter',postdata,referer).then(response => {
+            accionesHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:response.data});
+        })
+
     }
 
     const initForm = () => {
@@ -168,9 +193,9 @@ const Proyectos = () => {
         fetchAPIData('/silefe.convocatoria/all', {lang: getLanguageId()},referer).then(response => {
             form.fields.convocatoriaId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
-        fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
-            form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 
-        });
+        //fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
+        //    form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 
+        //});
         form.fields.cofinanciacion.change = cofinanciacionChange;
     }
 
@@ -178,35 +203,16 @@ const Proyectos = () => {
         console.log("notify");
     }
 
-    const plugin2 = () => {
+    const plugin = () => {
         return {
-            //Acciones:
-            //    <AccionesTable
-            //        data={acciones}
-            //        handle={accionesHandle}
-            //    />,
-            Ofertas: 
-                <OfertasTable />
-                
+            Ofertas: <OfertasTable />,
+            Acciones: 
+                <AccionesTable 
+                    data={acciones}
+                    handler={accionesHandle}
+                />,
         }
     }
-
-    //const plugin3 = () => {
-    //    return {
-    //        Centros:
-    //            <CentrosRender
-    //                reducer={redCentros}
-    //                centrosHandle={centrosHandle}
-    //            />,
-    //        Contactos: 
-    //            <ContactosRender
-    //                redContactos={redContactos}
-    //                contactosHandle={contactosHandle}
-    //            />
-    //    }
-    //}
-
-
 
     if (!items) 
     return (<div>{Liferay.Language.get('Cargando')}</div>)
@@ -235,7 +241,7 @@ const Proyectos = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     notify={notify}
-                    plugin={plugin2}
+                    plugin={plugin}
                 />
             }            
             {
@@ -253,7 +259,7 @@ const Proyectos = () => {
                 </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
-            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
+            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }            
         </>
     )
 }

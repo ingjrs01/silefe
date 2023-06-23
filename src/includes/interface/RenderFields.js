@@ -30,7 +30,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
     const [act2,setAct2] = useState(0);
 
-    console.debug(plugin);
+    //console.debug(plugin);
     
     const validateAll = () => {
       console.log("validando todo");
@@ -92,7 +92,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
               return (
                 <div className="row">
                   { row.cols.map(it => {
-                    console.log(items.fields.fields[it]);
+                    //console.debug(items.fields.fields[it]);
                     return (
                       <>
                         <ClayForm.Group className={`${items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ "Group-" + items.fields.fields[it].key} >
@@ -301,7 +301,6 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             {(items.fields.fields[it].type === 'other') &&
                             <>
                               {
-                                console.log(items.fields.fields[it].componentName) &&
                                 plugin()[items.fields.fields[it].componentName] 
                               }
                             </>}

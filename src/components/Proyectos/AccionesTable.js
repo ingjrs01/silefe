@@ -1,17 +1,19 @@
 import React, {useState} from "react";
 import ClayTable from '@clayui/table';
-import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
+import {ClayButtonWithIcon} from '@clayui/button';
 import { ClayInput, ClayCheckbox, ClaySelect } from '@clayui/form';
 import { PARTICIPANTE_ACTIONS } from "../../includes/reducers/participantes.reducer";
+import { SUBTABLE_ACTIONS } from "../../includes/reducers/subtable.reducer";
 import ClayUpperToolbar from '@clayui/upper-toolbar';
+import {getLanguageId } from   '../../includes/LiferayFunctions';
 import { MiniPaginator } from "../../includes/interface/MiniPaginator";
 import ClayIcon from '@clayui/icon';
 
 const spritemap = "./o/my-project/icons.svg";
 
 const AccionesTable = ({data,handler}) =>  {
+    let lang = getLanguageId().replace("_","-");
 
-    console.log("estamos en AccionesTable");
     const [showSearch, setShowSearch] = useState(false);
 
     if (!data.items) 
@@ -19,7 +21,6 @@ const AccionesTable = ({data,handler}) =>  {
 
     return (
         <>
-        <h4>lalalala</h4>
         { ( data.status === "list" ) &&
         <>
             <ClayUpperToolbar>
@@ -148,11 +149,23 @@ const AccionesTable = ({data,handler}) =>  {
                 <ClayTable.Row>
                 <ClayTable.Cell headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({type: PARTICIPANTE_ACTIONS.CHECKALL})} />
                 </ClayTable.Cell>
-                <ClayTable.Cell headingCell>{Liferay.Language.get("Nombre")}</ClayTable.Cell>
-                <ClayTable.Cell headingCell>{Liferay.Language.get("Apellidos")}</ClayTable.Cell>
-                <ClayTable.Cell headingCell>{Liferay.Language.get("Documento")}</ClayTable.Cell>
-                <ClayTable.Cell expanded headingCell>{Liferay.Language.get("Email")}</ClayTable.Cell>
-                <ClayTable.Cell headingCell>{"Acciones"}</ClayTable.Cell>
+
+                {
+                    data.form.table.map(column => (
+                        <ClayTable.Cell headingCell>{ column.columnTitle }</ClayTable.Cell>
+                    ))
+                }
+                {
+                    /*
+                    <ClayTable.Cell expanded headingCell>{Liferay.Language.get("Nombre")}</ClayTable.Cell>
+                    <ClayTable.Cell headingCell>{Liferay.Language.get("Formacion")}</ClayTable.Cell>
+                    <ClayTable.Cell headingCell>{Liferay.Language.get("Teórica")}</ClayTable.Cell>
+                    <ClayTable.Cell headingCell>{Liferay.Language.get("Práctica")}</ClayTable.Cell>
+                    <ClayTable.Cell headingCell>{Liferay.Language.get("Grupal")}</ClayTable.Cell>
+                    <ClayTable.Cell headingCell>{Liferay.Language.get("Horas")}</ClayTable.Cell>
+                    <ClayTable.Cell headingCell>{"Acciones"}</ClayTable.Cell>                    
+                    */
+                }
                 </ClayTable.Row>
             </ClayTable.Head>
             <ClayTable.Body>
@@ -161,10 +174,23 @@ const AccionesTable = ({data,handler}) =>  {
                 <ClayTable.Row key={"k-"+item.id}>
                 <ClayTable.Cell><ClayCheckbox checked={item.checked} onChange={() => handler({type: PARTICIPANTE_ACTIONS.CHECK, index: index})} />
                 </ClayTable.Cell>
-                <ClayTable.Cell key={"krow-"+ item.nombre + item.id}>{item.nombre}</ClayTable.Cell>
-                <ClayTable.Cell key={"krow-"+ item.apellidos + item.id}>{item.apellidos}</ClayTable.Cell>
-                <ClayTable.Cell key={"krow-"+ item.documento + item.id}>{item.documento}</ClayTable.Cell>
-                <ClayTable.Cell key={"krow-"+item.email+item.id} headingTitle>{ item.email}</ClayTable.Cell>
+
+                {
+                    data.form.table.map(column => {
+                        switch (column.columnType) {
+                            case "multilang":
+                              return (<ClayTable.Cell> { item[column.columnName][lang] } </ClayTable.Cell> )
+                            case "string":                        
+                              return (<ClayTable.Cell>{ item[column.columnName] }</ClayTable.Cell> )                              
+                            case "boolean": 
+                              return (<ClayTable.Cell key={column.columName + item.id}>
+                                {<ClayCheckbox checked={item[column.columnName]}  disabled  />}
+                              </ClayTable.Cell>)
+                        }
+                        <ClayTable.Cell headingCell>{ item[column.columnName] }</ClayTable.Cell>
+                    })
+                }
+
                 <ClayTable.Cell>
                     <ClayButtonWithIcon
                         aria-label={Liferay.Language.get("Quitar")}
@@ -182,6 +208,11 @@ const AccionesTable = ({data,handler}) =>  {
 
             </ClayTable.Body>
             </ClayTable>
+            <MiniPaginator 
+                items={data} 
+                itemsHandle={handler} 
+                ITEMS_ACTIONS={SUBTABLE_ACTIONS}
+            />
             </>
         }
         </>

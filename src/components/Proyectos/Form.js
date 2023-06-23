@@ -13,7 +13,7 @@ export const form = {
             conditions: ["number"]
         },
         codigo: {
-            key:1,
+            key:2,
             type: "text",
             label: Liferay.Language.get('Codigo'), 
             name: "codigo", 
@@ -31,7 +31,7 @@ export const form = {
             conditions:["text"]
         },
         inicio: {
-            key:51,
+            key:4,
             type: "date",
             label: Liferay.Language.get('Inicio'), 
             name: "inicio", 
@@ -42,7 +42,7 @@ export const form = {
             conditions:[]
         },
         fin: {
-            key:22,
+            key:5,
             type: "date",
             label: Liferay.Language.get('Fin'), 
             name: "fin", 
@@ -54,7 +54,7 @@ export const form = {
             conditions:[]
         },
         participantes: {
-            key:22,
+            key:6,
             type: "text",
             label: Liferay.Language.get('Participantes'), 
             name: "participantes", 
@@ -62,7 +62,7 @@ export const form = {
             conditions:["number"]
         },
         fondos_propios: {
-            key:71,
+            key:7,
             type: "toggle",
             label: Liferay.Language.get('FondosPropios'), 
             name: "fondos_propios", 
@@ -70,7 +70,7 @@ export const form = {
             change: ()=>{console.log("cambia fondos propios");}
         },
         cofinanciacion: {
-            key:72,
+            key:8,
             type: "toggle",
             label: Liferay.Language.get('Cofinanciacion'), 
             name: "cofinanciacion", 
@@ -79,7 +79,7 @@ export const form = {
             change: ()=>{console.log("cambia cofinanciacion");}
         },        
         convocatoriaId: {
-            key:77,
+            key:9,
             type: "select",
             label: Liferay.Language.get('Convocatoria'), 
             name: "convocatoriaId", 
@@ -87,7 +87,7 @@ export const form = {
             change: ()=>{console.log("cambia el select");}
         },
         entidadId: {
-            key:73,
+            key:10,
             type: "select",
             label: Liferay.Language.get('Entidad'), 
             name: "entidadId", 
@@ -96,7 +96,7 @@ export const form = {
             change: ()=>{console.log("cambia el select");}
         },
         ambito_geo: {
-            key:73,
+            key:11,
             type: "text",
             label: Liferay.Language.get('Ambito'), 
             name: "ambito_geo", 
@@ -105,7 +105,7 @@ export const form = {
             conditions: []
         },
         presupuesto: {
-            key: 80,
+            key: 12,
             type: "text",
             label: Liferay.Language.get("Presupuesto"),
             name: "presupuesto",
@@ -114,7 +114,7 @@ export const form = {
             conditions:["number"]
         },
         porcentaje_total: {
-            key: 81,
+            key: 13,
             type: "text",
             label: Liferay.Language.get("Porcentaje"),
             name: "porcentaje_total",
@@ -123,7 +123,7 @@ export const form = {
             conditions:["number"]
         },
         porcentaje_cofinanciacion: {
-            key: 82,
+            key: 14,
             type: "text",
             label: Liferay.Language.get("Porcentaje_cofinanciacion"),
             name: "porcentaje_cofinanciacion",
@@ -132,24 +132,24 @@ export const form = {
             conditions:["number"]
         },
         colectivos: {
-            key: 83,
+            key: 15,
             typexperienciaRequeridoe: "multilist",
             label: Liferay.Language.get("Colectivos"),
             name: 'colectivos',
             placeholder: 'lalala',
             enabled: true
         },
-        tecnicos: {
-            key: 88,
-            type: "multilist",
-            label: Liferay.Language.get("Tecnicos"),
-            name: 'tecnicos',
-            //placeholder: 'lalala',
-            enabled: true
-        },
+        //tecnicos: {
+        //    key: 16,
+        //    type: "multilist",
+        //    label: Liferay.Language.get("Tecnicos"),
+        //    name: 'tecnicos',
+        //    //placeholder: 'lalala',
+        //    enabled: true
+        //},
         objetivos: {
-            key:55,
-            type: "textarea",
+            key:17,
+            type: "text",// "textarea",
             label: Liferay.Language.get('Objetivos'), 
             name: "objetivos", 
             value:"lelele", 
@@ -157,7 +157,7 @@ export const form = {
             conditions:["text"]
         },
         convocatoria: {
-            key: 89,
+            key: 18,
             type: "text",
             label: Liferay.Language.get('Convocatoria'), 
             name: "convocatoria", 
@@ -165,16 +165,16 @@ export const form = {
             validate: false,
         },
         acciones: {
-            key: 90,
+            key: 19,
             type: "other",
-            componentName: "AccionesTable",
+            componentName: "Acciones",
             name: "acciones",
         },
         ofertas: {
-            key: 91,
+            key: 20,
             type: "other",
-            componentName: "OfertasTable",
-            name: "ofertas",
+            componentName: "Ofertas",
+            name: "Ofertas",
         },
 
     },
@@ -194,11 +194,11 @@ export const form = {
                     cols: ['descripcion', 'ambito_geo' ]
                 },
                 {
-                    key: 5,
+                    key: 7,
                     cols: [ 'inicio','fin', 'participantes' ]
                 },
                 {
-                    key: 7,
+                    key: 8,
                     cols: ['fondos_propios', 'cofinanciacion', 'entidadId']
                 },
                 {
@@ -209,10 +209,10 @@ export const form = {
                     key: 11,
                     cols: ['colectivos']
                 },
-                {
-                    key: 12,
-                    cols: ['tecnicos']
-                },
+                //{
+                //    key: 12,
+                //    cols: ['tecnicos']
+                //},
                 {
                     key: 13,
                     cols: ['objetivos']
@@ -220,18 +220,27 @@ export const form = {
             ]
         },
         {
-            caption: "Ofertas",
+            caption: Liferay.Language.get("Acciones"),
             key: 2,
             ariacontrols: "tabpanel-2",
             rows: [
                 {
-                    key: 13,
+                    key: 14,
+                    cols: ['acciones']
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Ofertas"),
+            key: 3,
+            ariacontrols: "tabpanel-3",
+            rows: [
+                {
+                    key: 15,
                     cols: ['ofertas']
                 },
             ]
         },
-    ],
-    rows: [
     ],
     table: {
         id: {
@@ -281,5 +290,4 @@ export const form = {
         },        
     },
     searchFields: ['codigo', 'descripcion','convocatoria'],
-
 };
