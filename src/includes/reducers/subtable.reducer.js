@@ -16,9 +16,10 @@ export const SUBTABLE_ACTIONS = {
     CHECKALL: 14,
     SETITEMS: 15,
     SETPAGE: 16,
-    SETSEARCHFIELD: 17,
-    LOAD: 18,
-    SETFORM: 19,
+    SETPAGES: 17,
+    SETSEARCHFIELD: 18,
+    LOAD: 19,
+    SETFORM: 20,
   }
 export const iniState = {
     form: {},
@@ -32,7 +33,7 @@ export const iniState = {
     pagination: {
         page: 0,
         pageSize: 4,
-        totalPages: 2,
+        totalPages: 1,
     },
     load: 0,
 }
@@ -62,6 +63,7 @@ export const reducerSubtable = (state, action ) => {
             return {
                 ...state,
                 items: action.items,
+                pagination: {...state.pagination, totalPages: action.pages}
             }
 
         case SUBTABLE_ACTIONS.SELECT_ITEM:
@@ -177,6 +179,11 @@ export const reducerSubtable = (state, action ) => {
                 ...state,
                 pagination: {...state.pagination, page: action.page},
                 load: state.load + 1,
+            }
+        case SUBTABLE_ACTIONS.SETPAGES:
+            return {
+                ...state,
+                pagination: {...state.pagination, totalPages: action.pages}
             }
         case SUBTABLE_ACTIONS.SETSEARCHFIELD: 
             return {

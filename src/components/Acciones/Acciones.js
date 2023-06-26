@@ -14,6 +14,7 @@ import { form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 import {reducerDocentes, DOCENTE_ACTIONS, initialDocentes} from '../../includes/reducers/docentes.reducer'; 
 import {reducerParticipantes, PARTICIPANTE_ACTIONS, initialParticipantes} from '../../includes/reducers/participantes.reducer';
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 //import Papa from "papaparse";
 
 
@@ -25,9 +26,17 @@ const Acciones = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
+    // esto es una prueba: 
+    const { id } = useParams();
+    const {state} = useLocation();
+    const navigate = useNavigate();
 
     let form = formulario;
     const referer = `${url_referer}/acciones`;
+    // console.log("Estamos en Acciones");
+    // console.log(id);
+    // console.debug(state);
+    // debugger;
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
@@ -85,11 +94,16 @@ const Acciones = () => {
                 });
             }
 
+            
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);            
         }
         else 
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);            
+        setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);            
+
+        if (state != 'undefined' && state.backUrl.length > 0) {
+            navigate('/proyectos');
+        }
     }
 
     const handleDelete = () => {
@@ -291,6 +305,16 @@ const Acciones = () => {
 
     useEffect(()=>{
 		if (!isInitialized.current) {
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS,form:form});
+            console.debug(id);
+            // editar directamente
+            debugger;
+            if (id != 'undefined' && id > 0) {
+                //items.arr.
+                debugger;
+                itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM});
+            }
+
             fetchData();
 			isInitialized.current = true;
 		} else {

@@ -8,11 +8,14 @@ import ClayUpperToolbar from '@clayui/upper-toolbar';
 import {getLanguageId } from   '../../includes/LiferayFunctions';
 import { MiniPaginator } from "../../includes/interface/MiniPaginator";
 import ClayIcon from '@clayui/icon';
+import { Link } from "react-router-dom";
 
 const spritemap = "./o/my-project/icons.svg";
 
 const AccionesTable = ({data,handler}) =>  {
     let lang = getLanguageId().replace("_","-");
+    const lid = 13;
+    const backUrl = '/proyectos';
 
     const [showSearch, setShowSearch] = useState(false);
 
@@ -213,6 +216,7 @@ const AccionesTable = ({data,handler}) =>  {
                 itemsHandle={handler} 
                 ITEMS_ACTIONS={SUBTABLE_ACTIONS}
             />
+            <Link to={{pathname: `/accion/${lid}`}} state={{ backUrl}}  > {"Prueba"}  </Link>
             </>
         }
         </>

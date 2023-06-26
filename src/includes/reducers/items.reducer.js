@@ -7,6 +7,7 @@ export const ITEMS_ACTIONS = {
     SET: 5,
     SELECT_ITEM: 6,
     NEW_ITEM: 7,
+    EDIT_ITEM: 26,
     CANCEL: 8,
     ADDERROR: 9,
     CLEARERRORS: 10,
@@ -25,6 +26,7 @@ export const ITEMS_ACTIONS = {
     DELETE_ORDER: 23,
     SET_PAGESIZE: 24,
     SET_SEARCHFIELD: 25,
+    SET_FIELDS: 27,
   }
 
 export const initialState = {
@@ -67,12 +69,45 @@ const resetErrors = (fields) => {
     return errores;
 }
 
+const createItem = form => {
+    let tmp_item = {};
+
+    Object.keys(form.fields).forEach(j => {
+        switch (form.fields[j].type) {
+            case "multilang":
+                let tt = {}
+                form.languages.forEach(el => {tt[el]=""});
+                tmp_item[j] = tt;
+                break;
+            case "multitext": 
+                let tt2 = []
+
+                tt2.push({key:8,value:"correo",default:false});
+                tt2.push({key:9,value:"correo@correo.es",default:false});
+                tmp_item[j] = tt2;
+                break;
+            default:
+                tmp_item[j] = [];
+                break;
+        }
+    });
+    return tmp_item;
+
+}
+
 let index = 0;
 let tmp = []
 
 export const red_items = (state, action ) => {
     switch (action.type) {
+        case ITEMS_ACTIONS.SET_FIELDS: 
+            return {
+                ...state,
+                fields: action.fields,
+                item: createItem(action.form),
+            }
         case ITEMS_ACTIONS.START: 
+            //debugger;
             let tmp_item = {};
             if (state.load == 0) {
                 Object.keys(action.fields.fields).forEach(j => {
@@ -94,6 +129,7 @@ export const red_items = (state, action ) => {
                             break;
                     }
                 });
+                //tmp_item = createItem(action.fields.fields);
             }
             else 
                 tmp_item = state.fields;
@@ -148,6 +184,15 @@ export const red_items = (state, action ) => {
                 }
             }
             return state;                    
+
+        case ITEMS_ACTIONS.EDIT_ITEM: 
+            console.debug(state.fields);
+            debugger;
+            return {
+                ...state,
+                status: 'edit',
+                load: (state.load + 1) % 17                
+            }
         case ITEMS_ACTIONS.NEW_ITEM:
             tmp_item = {};
             Object.keys(state.fields.fields).forEach(fila => {

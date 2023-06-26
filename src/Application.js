@@ -87,8 +87,9 @@ const Application = () => {
                             <Route path='/carnets'       element={ <Carnets /> } />
                             <Route path='/estados'       element={ <Estados /> } />
                             <Route path='/prestaciones'  element={ <Prestaciones/>} />
-                            <Route path='/plataformas'  element={ <Plataformas/>} />
+                            <Route path='/plataformas'   element={ <Plataformas/>} />
                             <Route path='/accionestipo'  element={ <AccionesTipo /> } />
+                            <Route path='/accion/:id'     element={ <Acciones /> } />
                             <Route path='/acciones'      element={ <Acciones /> } />
                             <Route path='AccionesTipoFormacion' element={<AccionesTipoFormacion />} />
                         </Routes>

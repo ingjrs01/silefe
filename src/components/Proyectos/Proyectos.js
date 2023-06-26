@@ -125,7 +125,7 @@ const Proyectos = () => {
     }
 
     const beforeEdit = () => {
-        console.log("loadSelects");
+        loadAcciones();
     }
 
     const miEvento = () => {
@@ -167,16 +167,20 @@ const Proyectos = () => {
     }
     
     const loadAcciones =  () => {
-        const postdata = {
-            pagination:  {page: acciones.pagination.page, pageSize: 5},
-            options: {
-                filters: [{name: "proyectoId", value: items.item.id}],
+        const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
+        if (selected.length > 0) {    
+            const postdata = {
+                pagination:  {page: acciones.pagination.page, pageSize: 5},
+                options: {
+                    filters: [{name: "proyectoId", value: selected[0]}],
+                }
             }
+            fetchAPIData('/silefe.accion/filter',postdata,referer).then(response => {
+                accionesHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:response.data, pages: response.totalPages});
+            })
         }
+
     
-        fetchAPIData('/silefe.accion/filter',postdata,referer).then(response => {
-            accionesHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:response.data});
-        })
 
     }
 
