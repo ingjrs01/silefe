@@ -99,15 +99,16 @@ let index = 0;
 let tmp = []
 
 export const red_items = (state, action ) => {
+    // debugger;
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS: 
             return {
                 ...state,
-                fields: action.fields,
+                fields: action.form,
+                status: 'edit',
                 item: createItem(action.form),
             }
         case ITEMS_ACTIONS.START: 
-            //debugger;
             let tmp_item = {};
             if (state.load == 0) {
                 Object.keys(action.fields.fields).forEach(j => {
@@ -186,12 +187,37 @@ export const red_items = (state, action ) => {
             return state;                    
 
         case ITEMS_ACTIONS.EDIT_ITEM: 
+            //console.debug(state.arr);
+            console.debug(action.item);
             console.debug(state.fields);
+            tmp_item = {};
+
+                Object.keys(state.fields.fields).forEach(j => {
+                    switch (state.fields.fields[j].type) {
+                        case "multilang":
+                            let tt = {}
+                            state.fields.languages.forEach(el => {tt[el]=""});
+                            tmp_item[j] = tt;
+                            break;
+                        case "multitext": 
+                            let tt2 = []
+                            //action.fields.languages.forEach(el => {tt2[el]=""});
+                            tt2.push({key:8,value:"correo",default:false});
+                            tt2.push({key:9,value:"correo@correo.es",default:false});
+                            tmp_item[j] = tt2;
+                            break;
+                        default:
+                            tmp_item[j] = [];
+                            break;
+                    }
+                });
+
             debugger;
             return {
                 ...state,
                 status: 'edit',
-                load: (state.load + 1) % 17                
+                item:  tmp_item,//action.item,
+                //load: (state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.NEW_ITEM:
             tmp_item = {};

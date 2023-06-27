@@ -35,6 +35,35 @@ export const fetchAPIData = async (endpoint, postdata, referer) => {
     return {data, error,totalPages, page, totalItems}
 }
 
+export const fetchAPIRow = async (endpoint, postdata, referer) => {
+        const auth = getAuthToken();
+        
+        const response = await fetch(url_api, {
+            "credentials": "include",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                "Accept": "*/*",
+                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                "contenttype": "undefined",
+                "x-csrf-token": auth,
+                "Content-Type": "text/plain;charset=UTF-8",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            },
+            "referrer": `\"${referer}\"`,
+            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
+            "method": "POST",
+            "mode": "cors"
+        });
+        try {
+            let { data, status } = await JSON.parse(await response.json());
+            return {data,status}
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
 
 export const deleteAPI = async (endpoint,ids,referer) => {
     const auth = getAuthToken();

@@ -5,7 +5,7 @@ import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import { deleteAPI, fetchAPIData, saveAPI, deleteAPIParams } from "../../includes/apifunctions";
+import { deleteAPI, fetchAPIData, saveAPI, deleteAPIParams, fetchAPIRow } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
@@ -302,24 +302,30 @@ const Acciones = () => {
         form.fields.cursoId.options = [{value: 0, label:langSel}, {value: 1, label: "Curso 1"},{value: 2, label: "Curso 2"}];
 
     }
+    
+    const loadAccion = (id) => {
+        fetchAPIRow('/silefe.accion/get',{id:id},referer).then (r => itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:r})) ;
+    }
 
     useEffect(()=>{
 		if (!isInitialized.current) {
-            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS,form:form});
-            console.debug(id);
-            // editar directamente
             debugger;
+            loadForm();
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS,form:form});
             if (id != 'undefined' && id > 0) {
-                //items.arr.
-                debugger;
-                itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM});
+                loadAccion(id);
             }
-
-            fetchData();
+            else 
+                fetchData();
 			isInitialized.current = true;
 		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
+            if (id != 'undefined' && id > 0) {
+                loadAccion(id);
+            }
+            else {  
+                const timeoutId = setTimeout(fetchData, 350);
+                return () => clearTimeout(timeoutId);
+            }
 		}
     },[items.load]);
 

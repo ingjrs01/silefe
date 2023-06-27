@@ -14,7 +14,7 @@ const spritemap = "./o/my-project/icons.svg";
 
 const AccionesTable = ({data,handler}) =>  {
     let lang = getLanguageId().replace("_","-");
-    const lid = 13;
+    const lid = 12;
     const backUrl = '/proyectos';
 
     const [showSearch, setShowSearch] = useState(false);
