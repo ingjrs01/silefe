@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import ClayTable from '@clayui/table';
-import {ClayButtonWithIcon} from '@clayui/button';
+import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
+//import {ClayButtonWithIcon}, ClayButton from '@clayui/button';
+import ClayToolbar from '@clayui/toolbar';
 import { ClayInput, ClayCheckbox, ClaySelect } from '@clayui/form';
 import { PARTICIPANTE_ACTIONS } from "../../includes/reducers/participantes.reducer";
 import { SUBTABLE_ACTIONS } from "../../includes/reducers/subtable.reducer";
@@ -195,15 +197,36 @@ const AccionesTable = ({data,handler}) =>  {
                 }
 
                 <ClayTable.Cell>
-                    <ClayButtonWithIcon
-                        aria-label={Liferay.Language.get("Quitar")}
-                        key={"bi-"+item.id}
-                        spritemap={spritemap}
-                        symbol="minus-circle"
-                        title="quitar"
-                        displayType="danger"
-                        onClick={ () => handler({type: PARTICIPANTE_ACTIONS.DELETE_ITEM, index: index}) }
-                    />                    
+                    <ClayToolbar>
+                      <ClayToolbar.Nav>
+                        <ClayToolbar.Item className="text-left">
+                        <ClayButton.Group>
+                            <Link to={{pathname:`/accion/${item.id}`}} state={{ backUrl }}  > {
+                                <ClayButtonWithIcon
+                                    aria-label={Liferay.Language.get("Editar")}
+                                    key={"edit-"+item.id}
+                                    className="nav-btn nav-btn-monospaced"
+                                    spritemap={spritemap}
+                                    symbol="pencil"
+                                    title="editar"
+                                    displayType="primary"
+                                />                        
+                            }  </Link>
+                            <ClayButtonWithIcon
+                                aria-label={Liferay.Language.get("Quitar")}
+                                key={"bi-"+item.id}
+                                className="nav-btn nav-btn-monospaced"
+                                spritemap={spritemap}
+                                symbol="minus-circle"
+                                title="quitar"
+                                displayType="danger"
+                                onClick={ () => handler({type: PARTICIPANTE_ACTIONS.DELETE_ITEM, index: index}) }
+                            />                    
+                            </ClayButton.Group>
+                        </ClayToolbar.Item>
+
+                        </ClayToolbar.Nav>
+                    </ClayToolbar>
                 </ClayTable.Cell>
                 </ClayTable.Row>
                 </> 
@@ -216,7 +239,6 @@ const AccionesTable = ({data,handler}) =>  {
                 itemsHandle={handler} 
                 ITEMS_ACTIONS={SUBTABLE_ACTIONS}
             />
-            <Link to={{pathname: `/accion/${lid}`}} state={{ backUrl}}  > {"Prueba"}  </Link>
             </>
         }
         </>

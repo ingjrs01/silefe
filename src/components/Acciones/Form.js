@@ -86,6 +86,7 @@ export const form = {
             name: "plataformaId", 
             value:"lelele", 
             placeholder: Liferay.Language.get('Plataforma'), 
+            options: [{value: 0, label:"bla bla"}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}],
         },
 		categoriaId: {
             key: 11,
@@ -126,6 +127,7 @@ export const form = {
             label: Liferay.Language.get('Estado'), 
             name: "estadoId", 
             placeholder: Liferay.Language.get('Estado'), 
+            options: [{value: 0, label: Liferay.Language.get("Seleccionar")}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}]
         },
         observaciones: {
             key: 16,

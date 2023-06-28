@@ -188,15 +188,17 @@ export const red_items = (state, action ) => {
 
         case ITEMS_ACTIONS.EDIT_ITEM: 
             //console.debug(state.arr);
-            console.debug(action.item);
-            console.debug(state.fields);
+            //console.log("poniendo los datos");
+            //console.debug(action.item);
+            //console.debug(state.fields);
             tmp_item = {};
 
                 Object.keys(state.fields.fields).forEach(j => {
+                    //console.log(state.fields.fields[j].type);
                     switch (state.fields.fields[j].type) {
                         case "multilang":
                             let tt = {}
-                            state.fields.languages.forEach(el => {tt[el]=""});
+                            state.fields.languages.forEach(el => {tt[el]=action.item.data[j][el]});
                             tmp_item[j] = tt;
                             break;
                         case "multitext": 
@@ -206,13 +208,16 @@ export const red_items = (state, action ) => {
                             tt2.push({key:9,value:"correo@correo.es",default:false});
                             tmp_item[j] = tt2;
                             break;
+                        //case "select":
+
                         default:
-                            tmp_item[j] = [];
+                      //      console.log("para otros campos: " + j);
+                            tmp_item[j] = action.item.data[j];
                             break;
                     }
                 });
 
-            debugger;
+            //debugger;
             return {
                 ...state,
                 status: 'edit',

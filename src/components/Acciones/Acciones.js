@@ -93,16 +93,16 @@ const Acciones = () => {
                     console.log("Se han borrado los participantes");
                 });
             }
-
-            
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);            
         }
         else 
         setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);            
 
+        // Ver a donde hay que navegar ahora
         if (state != 'undefined' && state.backUrl.length > 0) {
-            navigate('/proyectos');
+            //debugger;
+            navigate(state.backUrl);
         }
     }
 
@@ -280,10 +280,10 @@ const Acciones = () => {
             form.fields.accionTipoFormacionId.options = opts;
         });
 
-        fetchAPIData('/silefe.tecnico/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName } })];
-            form.fields.tecnicoId.options = opts;
-        });
+        //fetchAPIData('/silefe.tecnico/all', { lang: getLanguageId() }, referer).then(response => {
+        //    const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName } })];
+        //    form.fields.tecnicoId.options = opts;
+        //});
         
         fetchAPIData('/silefe.plataforma/all', {options: {}}, referer).then(response => {
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.plataformaId, label: obj.nombre } })];
@@ -309,7 +309,7 @@ const Acciones = () => {
 
     useEffect(()=>{
 		if (!isInitialized.current) {
-            debugger;
+            //debugger;
             loadForm();
             itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS,form:form});
             if (id != 'undefined' && id > 0) {
