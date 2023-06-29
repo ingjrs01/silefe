@@ -14,13 +14,12 @@ import { Link } from "react-router-dom";
 
 const spritemap = "./o/my-project/icons.svg";
 
-const AccionesTable = ({data,handler}) =>  {
+const AccionesTable = ({data,handler,editUrl,backUrl}) =>  {
     let lang = getLanguageId().replace("_","-");
-    const lid = 12;
-    const backUrl = '/proyectos';
+    //const backUrl = '/proyectos';
 
     const [showSearch, setShowSearch] = useState(false);
-
+    
     if (!data.items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -149,7 +148,7 @@ const AccionesTable = ({data,handler}) =>  {
 
             {/*--------------------------------------------------------------------------------------------------------*/ }
             <ClayTable>
-            <caption>{ Liferay.Language.get("Participantes") }</caption>
+            <caption>{ data.form.title }</caption>
             <ClayTable.Head>
                 <ClayTable.Row>
                 <ClayTable.Cell headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({type: PARTICIPANTE_ACTIONS.CHECKALL})} />
@@ -201,7 +200,7 @@ const AccionesTable = ({data,handler}) =>  {
                       <ClayToolbar.Nav>
                         <ClayToolbar.Item className="text-left">
                         <ClayButton.Group>
-                            <Link to={{pathname:`/accion/${item.id}`}} state={{ backUrl }}  > {
+                            <Link to={{pathname:`${editUrl}${item.id}`}} state={{ backUrl }}  > {
                                 <ClayButtonWithIcon
                                     aria-label={Liferay.Language.get("Editar")}
                                     key={"edit-"+item.id}

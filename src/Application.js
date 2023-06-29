@@ -82,6 +82,7 @@ const Application = () => {
                             <Route path='/tiposvia'      element={ <TiposVia /> } />
                             <Route path='/tipocontrato'  element={ <TipoContrato /> } />
                             <Route path='/empresas'      element={ <Empresas /> } />
+                            <Route path='/oferta/:id'    element={ <Ofertas /> } />
                             <Route path='/ofertas'       element={ <Ofertas /> } />
                             <Route path='/edades'        element={ <Edades /> } />
                             <Route path='/carnets'       element={ <Carnets /> } />
@@ -89,7 +90,7 @@ const Application = () => {
                             <Route path='/prestaciones'  element={ <Prestaciones/>} />
                             <Route path='/plataformas'   element={ <Plataformas/>} />
                             <Route path='/accionestipo'  element={ <AccionesTipo /> } />
-                            <Route path='/accion/:id'     element={ <Acciones /> } />
+                            <Route path='/accion/:id'    element={ <Acciones /> } />
                             <Route path='/acciones'      element={ <Acciones /> } />
                             <Route path='AccionesTipoFormacion' element={<AccionesTipoFormacion />} />
                         </Routes>

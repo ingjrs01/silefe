@@ -14,9 +14,9 @@ import { Errors } from '../../includes/Errors';
 import {form as formulario} from './Form';
 import { Paginator } from "../../includes/interface/Paginator";
 import AccionesTable from "./AccionesTable";
-import OfertasTable from './OfertasTable';
-// probando
+//import OfertasTable from './OfertasTable';
 import {form as aform} from './AccionForm';
+import {form as oform} from './OfertaForm';
 //import {form as formulario} from './ProyectoForm2';
 //import OfertasRender from './OfertasRender';
 //import Papa from "papaparse";
@@ -24,6 +24,7 @@ import {form as aform} from './AccionForm';
 const Proyectos = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
     const [acciones, accionesHandle]     = useReducer(reducerSubtable,iniState);
+    const [ofertas, ofertasHandle]       = useReducer(reducerSubtable,iniState);
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -35,9 +36,8 @@ const Proyectos = () => {
     
     useEffect(()=>{
         if (!isInitialized.current) {
-            console.log("iniciandose");
-            console.debug(aform);
             accionesHandle({type: SUBTABLE_ACTIONS.SETFORM,form: aform});
+            ofertasHandle({type: SUBTABLE_ACTIONS.SETFORM, form: oform});
             fetchData();
 			isInitialized.current = true;
 		} else {
@@ -50,13 +50,15 @@ const Proyectos = () => {
         loadAcciones();
     },[acciones.load]);
 
+    useEffect( ()=> {
+        loadOfertas();
+    }, [ofertas.load]);
+
     const loadCsv = () => {
-        console.log("Cargando un csv");
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
     const processCsv = () => {
-        console.log("processCsv");
         //if (file) {
         //    const reader = new FileReader();
         // 
@@ -126,6 +128,7 @@ const Proyectos = () => {
 
     const beforeEdit = () => {
         loadAcciones();
+        loadOfertas();
     }
 
     const miEvento = () => {
@@ -177,11 +180,28 @@ const Proyectos = () => {
             }
             fetchAPIData('/silefe.accion/filter',postdata,referer).then(response => {
                 accionesHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:response.data, pages: response.totalPages});
-            })
+            });
         }
+    }
 
-    
-
+    const loadOfertas = () => {
+        const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
+        if (selected.length > 0) {    
+            const postdata = {
+                pagination:  {page: acciones.pagination.page, pageSize: 5},
+                options: {
+                    filters: [{name: "proyectoId", value: selected[0]}],
+                }
+            };            
+            fetchAPIData('/silefe.oferta/filter',postdata,referer).then(response => {
+                const itms = response.data.map(i => ({
+                    ...i,
+                    fechaIncorporacion: (i.fechaIncorporacion != null)?new Date(i.fechaIncorporacion).toISOString().substring(0, 10):"",
+                    //fechaIncorporacion: (i.fechaIncorporacion != null)?new Date(i.fechaIncorporacion).toISOString().substring(0, 10):"",
+                }));
+                ofertasHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:itms, pages: response.totalPages});
+            });
+        }
     }
 
     const initForm = () => {
@@ -207,13 +227,20 @@ const Proyectos = () => {
         console.log("notify");
     }
 
-    const plugin = () => {
+    const plugin = () => {        
         return {
-            Ofertas: <OfertasTable />,
+            Ofertas: <AccionesTable 
+                data={ofertas}
+                handler={ofertasHandle}
+                editUrl={"/oferta/"}
+                backUrl={"/proyectos"}
+            />,
             Acciones: 
                 <AccionesTable 
                     data={acciones}
                     handler={accionesHandle}
+                    editUrl={"/accion/"}
+                    backUrl={"/proyectos"}
                 />,
         }
     }
