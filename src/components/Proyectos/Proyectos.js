@@ -245,7 +245,7 @@ const Proyectos = () => {
         }
     }
 
-    if (!items) 
+    if (!items || items.arr.length == 0) 
     return (<div>{Liferay.Language.get('Cargando')}</div>)
 
     return (
