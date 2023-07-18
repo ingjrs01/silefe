@@ -57,41 +57,43 @@ const Application = () => {
                 <div className='col-10'>
                     <div className="sheet-section">
                         <Routes>
-                            <Route path='/home'          element={ <Home /> } />
-                            <Route path='/titnivel'      element={ <TitulacionesNivel /> } />
-                            <Route path='/tittipo'       element={ <TitulacionesTipo /> } />
-                            <Route path='/titulaciones'  element={ <Titulaciones /> } />
-                            <Route path='/docentes'      element={ <Docentes /> } />
-                            <Route path='/colectivos'    element={ <Colectivos /> }   />
-                            <Route path='/provincias'    element={ <Provincias /> }   />
-                            <Route path='/cnaes'         element={ <Cnaes /> }   />
-                            <Route path='/cnos'          element={ <Cnos /> }   />
-                            <Route path='/experiencias'  element={ <Experiencias /> }   />
-                            <Route path='/salarios'      element={ <Salarios /> }   />
-                            <Route path='/mbaja'         element={ <MBaja /> }   />
-                            <Route path='/horarios'      element={ <Horarios /> }   />
-                            <Route path='/titulacionesf' element={ <TitulacionesFam /> }   />
-                            <Route path='/dgeografica'   element={ <DGeografica /> }   />                            
-                            <Route path='/cofinanciadas' element={ <Cofinanciadas /> }   />
-                            <Route path='/tecnicos'      element={ <Tecnicos /> }   />
-                            <Route path='/convocatorias' element={ <Convocatorias /> }   />
-                            <Route path='/proyectos'     element={ <Proyectos /> }   />
-                            <Route path='/ambitos'       element={ <Ambitos /> }   />
-                            <Route path='/participantes' element={ <Participantes /> }   />
-                            <Route path='/localidades'   element={ <Localidades /> } />
-                            <Route path='/tiposvia'      element={ <TiposVia /> } />
-                            <Route path='/tipocontrato'  element={ <TipoContrato /> } />
-                            <Route path='/empresas'      element={ <Empresas /> } />
-                            <Route path='/oferta/:id'    element={ <Ofertas /> } />
-                            <Route path='/ofertas'       element={ <Ofertas /> } />
-                            <Route path='/edades'        element={ <Edades /> } />
-                            <Route path='/carnets'       element={ <Carnets /> } />
-                            <Route path='/estados'       element={ <Estados /> } />
-                            <Route path='/prestaciones'  element={ <Prestaciones/>} />
-                            <Route path='/plataformas'   element={ <Plataformas/>} />
-                            <Route path='/accionestipo'  element={ <AccionesTipo /> } />
-                            <Route path='/accion/:id'    element={ <Acciones /> } />
-                            <Route path='/acciones'      element={ <Acciones /> } />
+                            <Route path='/home'             element={ <Home /> } />
+                            <Route path='/titnivel'         element={ <TitulacionesNivel /> } />
+                            <Route path='/tittipo'          element={ <TitulacionesTipo /> } />
+                            <Route path='/titulaciones'     element={ <Titulaciones /> } />
+                            <Route path='/docentes'         element={ <Docentes /> } />
+                            <Route path='/colectivos'       element={ <Colectivos /> }   />
+                            <Route path='/provincias'       element={ <Provincias /> }   />
+                            <Route path='/cnaes'            element={ <Cnaes /> }   />
+                            <Route path='/cnos'             element={ <Cnos /> }   />
+                            <Route path='/experiencias'     element={ <Experiencias /> }   />
+                            <Route path='/salarios'         element={ <Salarios /> }   />
+                            <Route path='/mbaja'            element={ <MBaja /> }   />
+                            <Route path='/horarios'         element={ <Horarios /> }   />
+                            <Route path='/titulacionesf'    element={ <TitulacionesFam /> }   />
+                            <Route path='/dgeografica'      element={ <DGeografica /> }   />                            
+                            <Route path='/cofinanciadas'    element={ <Cofinanciadas /> }   />
+                            <Route path='/tecnicos'         element={ <Tecnicos /> }   />
+                            <Route path='/convocatorias'    element={ <Convocatorias /> }   />
+                            <Route path='/proyectos'        element={ <Proyectos /> }   />
+                            <Route path='/ambitos'          element={ <Ambitos /> }   />
+                            <Route path='/participante/:id' element={ <Participantes /> }   />
+                            <Route path='/participantes'    element={ <Participantes /> }   />
+                            <Route path='/localidades'      element={ <Localidades /> } />
+                            <Route path='/tiposvia'         element={ <TiposVia /> } />
+                            <Route path='/tipocontrato'     element={ <TipoContrato /> } />
+                            <Route path='/empresa/:id'      element={ <Empresas /> } />
+                            <Route path='/empresas'         element={ <Empresas /> } />
+                            <Route path='/oferta/:id'       element={ <Ofertas /> } />
+                            <Route path='/ofertas'          element={ <Ofertas /> } />
+                            <Route path='/edades'           element={ <Edades /> } />
+                            <Route path='/carnets'          element={ <Carnets /> } />
+                            <Route path='/estados'          element={ <Estados /> } />
+                            <Route path='/prestaciones'     element={ <Prestaciones/>} />
+                            <Route path='/plataformas'      element={ <Plataformas/>} />
+                            <Route path='/accionestipo'     element={ <AccionesTipo /> } />
+                            <Route path='/accion/:id'       element={ <Acciones /> } />
+                            <Route path='/acciones'         element={ <Acciones /> } />
                             <Route path='AccionesTipoFormacion' element={<AccionesTipoFormacion />} />
                         </Routes>
                     </div>

@@ -6,7 +6,7 @@ import { useModal } from '@clayui/modal';
 import { getUserId, getLanguageId, url_referer } from '../../includes/LiferayFunctions';
 import { red_items, ITEMS_ACTIONS, initialState } from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI, fetchAPIRow } from "../../includes/apifunctions";
 import { LoadFiles } from '../../includes/interface/LoadFiles'
 import { FAvisos } from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
@@ -17,6 +17,7 @@ import { reducerCentros, CENTROS_ACTIONS } from "../../includes/reducers/centros
 import { reducerContactos, CONTACTOS_ACTIONS } from "../../includes/reducers/contactos.reducer";
 import ContactosRender from "./ContactosRender";
 import { Paginator } from "../../includes/interface/Paginator";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Empresas = () => {
     const [items, itemsHandle] = useReducer(red_items,initialState);
@@ -26,9 +27,14 @@ const Empresas = () => {
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
     const isInitialized = useRef(null);
+    const { id } = useParams();
+    const { state } = useLocation();
+    const navigate = useNavigate();
 
     const referer = `${url_referer}/empresas`;
     const form = formulario;
+
+    console.log("Estoy en empresas");
 
     const fetchData = async () => {
         contactosHandle({type:CONTACTOS_ACTIONS.START});
@@ -128,6 +134,11 @@ const Empresas = () => {
             } else {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
             }
+            // Ver a donde hay que navegar ahora
+            if (state != 'undefined' && state.backUrl.length > 0) {
+                //debugger;
+                navigate(state.backUrl);
+            }            
         });
     }
 
@@ -186,13 +197,29 @@ const Empresas = () => {
         }
     }
 
+
+    const loadItem = () => {
+        fetchAPIRow('/silefe.empresa/get',{id:id},referer).then (r => itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:r})) ;
+    }
+
     useEffect(() => {
         if (!isInitialized.current) {
-            fetchData();
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+            if (id != 'undefined' && id > 0) {
+                loadItem(id);
+            }
+            else
+                fetchData();
+
             isInitialized.current = true;
         } else {
-            const timeoutId = setTimeout(fetchData, 350);
-            return () => clearTimeout(timeoutId);
+            if (id != 'undefined' && id > 0) {
+                loadItem(id);
+            }
+            else {
+                const timeoutId = setTimeout(fetchData, 350);
+                return () => clearTimeout(timeoutId);
+            }
         }
     }, [items.load]);
 

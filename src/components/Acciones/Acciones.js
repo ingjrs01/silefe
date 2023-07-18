@@ -295,12 +295,9 @@ const Acciones = () => {
             form.fields.estadoId.options = opts;
         });
 
-
         // TODO: Categoria: 
         form.fields.categoriaId.options = [{value: 0, label:langSel}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}];
-
         form.fields.cursoId.options = [{value: 0, label:langSel}, {value: 1, label: "Curso 1"},{value: 2, label: "Curso 2"}];
-
     }
     
     const loadAccion = (id) => {

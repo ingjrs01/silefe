@@ -208,7 +208,11 @@ const Proyectos = () => {
                 }
             }
             fetchAPIData('/silefe.participante/filter-by-project',postdata,referer).then(response => {
-                participantesHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:response.data, pages: response.totalPages});
+                const tmp = response.data.map( item => ({
+                    ...item,
+                    id: item.participanteId
+                }));
+                participantesHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:tmp, pages: response.totalPages});
             });
         }
     }
@@ -295,14 +299,14 @@ const Proyectos = () => {
                 <AccionesTable
                     data={participantes}
                     handler={participantesHandle}
-                    editUrl={"/participante"}
+                    editUrl={"/participante/"}
                     backUrl={"/participantes"}
                 />,
             Empresas: 
                 <AccionesTable
                     data={empresas}
                     handler={empresasHandle}
-                    editUrl={"/empresa"}
+                    editUrl={"/empresa/"}
                     backUrl={"/empresas"}
                 />
 }
