@@ -53,7 +53,7 @@ export const form = {
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             conditions:[]
         },
-        participantes: {
+        nparticipantes: {
             key:6,
             type: "text",
             label: Liferay.Language.get('Participantes'), 
@@ -176,6 +176,18 @@ export const form = {
             componentName: "Ofertas",
             name: "Ofertas",
         },
+        participantes: {
+            key: 21,
+            type: "other",
+            componentName: "Participantes",
+            name: "Participantes",
+        },
+        empresas: {
+            key: 22,
+            type: "other",
+            componentName: "Empresas",
+            name: "Empresas",
+        }
 
     },
     tabActive: 0,
@@ -195,7 +207,7 @@ export const form = {
                 },
                 {
                     key: 7,
-                    cols: [ 'inicio','fin', 'participantes' ]
+                    cols: [ 'inicio','fin', 'nparticipantes' ]
                 },
                 {
                     key: 8,
@@ -238,6 +250,28 @@ export const form = {
                 {
                     key: 15,
                     cols: ['ofertas']
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Participantes"),
+            key: 4,
+            ariacontrols: "tabpanel-4",
+            rows: [
+                {
+                    key: 15,
+                    cols: ['participantes']
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Empresas"),
+            key: 5,
+            ariacontrols: "tabpanel-5",
+            rows: [
+                {
+                    key: 16,
+                    cols: ['empresas']
                 },
             ]
         },

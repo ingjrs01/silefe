@@ -17,6 +17,8 @@ import AccionesTable from "./AccionesTable";
 //import OfertasTable from './OfertasTable';
 import {form as aform} from './AccionForm';
 import {form as oform} from './OfertaForm';
+import {form as pform} from './ParticipantesForm';
+import {form as eform} from './EmpresaForm';
 //import {form as formulario} from './ProyectoForm2';
 //import OfertasRender from './OfertasRender';
 //import Papa from "papaparse";
@@ -25,6 +27,8 @@ const Proyectos = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
     const [acciones, accionesHandle]     = useReducer(reducerSubtable,iniState);
     const [ofertas, ofertasHandle]       = useReducer(reducerSubtable,iniState);
+    const [participantes,participantesHandle] = useReducer(reducerSubtable,iniState);
+    const [empresas, empresasHandle]     = useReducer(reducerSubtable, iniState);
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -38,6 +42,8 @@ const Proyectos = () => {
         if (!isInitialized.current) {
             accionesHandle({type: SUBTABLE_ACTIONS.SETFORM,form: aform});
             ofertasHandle({type: SUBTABLE_ACTIONS.SETFORM, form: oform});
+            participantesHandle({type:SUBTABLE_ACTIONS.SETFORM,form: pform});
+            empresasHandle({type: SUBTABLE_ACTIONS.SETFORM,form:eform});
             fetchData();
 			isInitialized.current = true;
 		} else {
@@ -53,6 +59,14 @@ const Proyectos = () => {
     useEffect( ()=> {
         loadOfertas();
     }, [ofertas.load]);
+
+    useEffect( () => {
+        loadParticipantes();
+    }, [participantes.load]);
+
+    useEffect( ()=>{
+        loadEmpresas();
+    },empresas.load);
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
@@ -129,6 +143,8 @@ const Proyectos = () => {
     const beforeEdit = () => {
         loadAcciones();
         loadOfertas();
+        loadParticipantes();
+        loadEmpresas();
     }
 
     const miEvento = () => {
@@ -154,19 +170,16 @@ const Proyectos = () => {
             }
         }
         let {data,totalPages,page, totalItems} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
-        const tmp = await data.map(i => {            
-            return({
+        const tmp = await data.map(i => ({
                 ...i,
-                id                       : i.proyectoId,
-                inicio                   : (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
-                fin                      : (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
-                //colectivos               : i.colectivos.map(colectivo => {return colectivo.toString()} ),
-                //tecnicos                 : i.tecnicos.map(tecnico=> {return tecnico.toString()} ),
-                checked                  : false
-            });
-        });
+                id            : i.proyectoId,
+                nparticipantes: i.participantes,
+                inicio        : (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
+                fin           : (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
+                checked       : false
+            })
+        );
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: toastItems,page:page});
-
     }
     
     const loadAcciones =  () => {
@@ -183,6 +196,42 @@ const Proyectos = () => {
             });
         }
     }
+
+    const loadParticipantes = () => {
+        const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
+        if (selected.length > 0) {    
+            const postdata = {
+                id: selected[0],
+                options: {
+                    pagination:  {page: participantes.pagination.page, pageSize: 5},
+                    filters: [{name: "proyectoId", value: selected[0]}],
+                }
+            }
+            fetchAPIData('/silefe.participante/filter-by-project',postdata,referer).then(response => {
+                participantesHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:response.data, pages: response.totalPages});
+            });
+        }
+    }
+
+    const loadEmpresas = () => {
+        const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
+        if (selected.length > 0) {    
+            const postdata = {
+                id : selected[0], // TODO: esto cambiar por el projectId
+                options: {
+                    pagination:  {page: empresas.pagination.page, pageSize: 5},
+                    filters: [{name: "proyectoId", value: selected[0]}],
+                }
+            }
+            fetchAPIData('/silefe.empresa/filter-by-project',postdata,referer).then(response => {
+                const tmp = response.data.map( i => ({
+                    ...i,
+                    telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono)[0].value:"",                    
+                }));
+                empresasHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:tmp, pages: response.totalPages});
+            });
+        }
+    }    
 
     const loadOfertas = () => {
         const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
@@ -242,7 +291,21 @@ const Proyectos = () => {
                     editUrl={"/accion/"}
                     backUrl={"/proyectos"}
                 />,
-        }
+            Participantes: 
+                <AccionesTable
+                    data={participantes}
+                    handler={participantesHandle}
+                    editUrl={"/participante"}
+                    backUrl={"/participantes"}
+                />,
+            Empresas: 
+                <AccionesTable
+                    data={empresas}
+                    handler={empresasHandle}
+                    editUrl={"/empresa"}
+                    backUrl={"/empresas"}
+                />
+}
     }
 
     if (!items || items.arr.length == 0) 
