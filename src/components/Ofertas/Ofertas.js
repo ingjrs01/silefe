@@ -12,13 +12,13 @@ import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import {form as formulario} from './OfertaForm';
-import { reducerCandidatos, PARTICIPANTES_OPTIONS } from "../../includes/reducers/candidatos.reducer";
+import { reducerCandidatos, PARTICIPANTES_OPTIONS, initialState as iniPart } from "../../includes/reducers/candidatos.reducer";
 import {ParticipantesRender} from "./ParticipantesRender";
 import { Paginator } from "../../includes/interface/Paginator";
 
 const Ofertas = () => {
     const [items,itemsHandle]               = useReducer(red_items,initialState);
-    const [redParticipantes, participantesHandle] = useReducer(reducerCandidatos);
+    const [redParticipantes, participantesHandle] = useReducer(reducerCandidatos, iniPart);
     const [toastItems,setToastItems]        = useState([]);    
     const {observer, onOpenChange, open}    = useModal();
     const [file,setFile]                    = useState();
@@ -38,7 +38,6 @@ const Ofertas = () => {
     },[items.load]);
 
     const loadCsv = () => {
-        console.log("Cargando un csv");
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
@@ -112,7 +111,9 @@ const Ofertas = () => {
         const s = items.arr.filter(item => item.checked).map( i => {return i.id})[0];
       
         fetchAPIData('/silefe.oferta/participantes-oferta', {ofertaId: s },referer).then(response => {
-          participantesHandle({type: PARTICIPANTES_OPTIONS.LOAD,items:response.data});
+            console.log("estoy dentro de beforeEdit");
+            console.debug(response);
+            participantesHandle({type: PARTICIPANTES_OPTIONS.LOAD,items:response.data});
         });
     }
 
@@ -177,9 +178,6 @@ const Ofertas = () => {
                 checked            : false
             });
         });
-        console.log("fetchData");
-        console.log(data);
-        console.log(totalPages);
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages,total: totalItems,page:page});
     }
 
@@ -240,7 +238,7 @@ const Ofertas = () => {
     }
 
     const initFormParticipantes = () => {
-
+        console.log("estamos cargando el formulario");
         // Cargamos algunos datos para las ofertas: 
         fetchAPIData('/silefe.salario/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
@@ -264,10 +262,12 @@ const Ofertas = () => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
             participantesHandle({type: PARTICIPANTES_OPTIONS.SET_OCUPACIONES,ocupaciones:opts});
         });
-
+        
         // Cargamos algunos datos para los colectivos
         fetchAPIData('/silefe.colectivo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
+            console.log("estos son los colectivos");
+            console.debug(opts);
             participantesHandle({type: PARTICIPANTES_OPTIONS.SET_COLECTIVOS,colectivos:opts});
         });
         
@@ -275,8 +275,6 @@ const Ofertas = () => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
             participantesHandle({type: PARTICIPANTES_OPTIONS.SET_JORNADAS,jornadas:opts});
         });
-
-
     }
 
     if (!items) 

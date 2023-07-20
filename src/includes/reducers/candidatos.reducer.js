@@ -23,7 +23,7 @@ export const PARTICIPANTES_OPTIONS = {
   SET_COLECTIVOS: 21,
 }
 
-const initialState = {
+export const initialState = {
   items: [],
   item: {},
   modified: [],

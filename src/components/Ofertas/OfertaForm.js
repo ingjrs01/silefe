@@ -57,6 +57,7 @@ export const form = {
             label: Liferay.Language.get('Proyecto'), 
             name: "proyectoId", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         cnaeId: {
@@ -407,5 +408,5 @@ export const form = {
         },
         
     },
-    searchFields: ['titulo','estado','puesto','empresa','estado','centro'],
+    searchFields: ['titulo','estado','puesto','empresa','centro'],
 };

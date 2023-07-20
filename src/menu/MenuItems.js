@@ -32,7 +32,7 @@ const MenuItems = [
     {key:25, url: '/edades',       caption: 'Rangos Edad'},
     {key:27, url: '/carnets',      caption: 'Carnets'},
     {key:30, url: '/prestaciones', caption: 'Prestaciones'},
-    {key:32, url: '/estados',      caption: 'Estados'},
+    {key:35, url: '/estados',      caption: 'Estados'},
     {key:34, url: '/plataformas',  caption: 'Plataformas'},
 ]
 
