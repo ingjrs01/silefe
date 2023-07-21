@@ -92,10 +92,10 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
               return (
                 <div className="row">
                   { row.cols.map(it => {
-                    //console.debug(items.fields.fields[it]);
+                    console.debug(items.fields.fields[it]);
                     return (
                       <>
-                        <ClayForm.Group className={`${items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ "Group-" + items.fields.fields[it].key} >
+                        <ClayForm.Group className={`${items.errors[it] != 'undefined' && items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ "Group-" + items.fields.fields[it].key} >
                           {(items.fields.fields[it].type === 'text') &&
                             <>
                               <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
@@ -305,7 +305,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                               }
                             </>}
                           {
-                            items.errors[it].length > 0 && //  -> items.fields.rows[it].name
+                            items.errors[it] != 'undefined' && items.errors[it].length > 0 && //  -> items.fields.rows[it].name
                             <ClayForm.FeedbackGroup>
                               <ClayForm.FeedbackItem>
                                 <ClayForm.FeedbackIndicator

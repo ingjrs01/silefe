@@ -26,17 +26,12 @@ const Acciones = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
-    // esto es una prueba: 
     const { id } = useParams();
     const {state} = useLocation();
     const navigate = useNavigate();
 
     let form = formulario;
     const referer = `${url_referer}/acciones`;
-    // console.log("Estamos en Acciones");
-    // console.log(id);
-    // console.debug(state);
-    // debugger;
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});

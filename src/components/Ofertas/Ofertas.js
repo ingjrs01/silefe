@@ -15,6 +15,7 @@ import {form as formulario} from './OfertaForm';
 import { reducerCandidatos, PARTICIPANTES_OPTIONS, initialState as iniPart } from "../../includes/reducers/candidatos.reducer";
 import {ParticipantesRender} from "./ParticipantesRender";
 import { Paginator } from "../../includes/interface/Paginator";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Ofertas = () => {
     const [items,itemsHandle]               = useReducer(red_items,initialState);
@@ -23,17 +24,33 @@ const Ofertas = () => {
     const {observer, onOpenChange, open}    = useModal();
     const [file,setFile]                    = useState();
     const isInitialized                     = useRef(null);
+    const {id}                              = useParams();
+    const {state}                           = useLocation();
+    const navigate                          = useNavigate();
 
     const referer = `${url_referer}/oferta`;
     const form = formulario;
 
     useEffect(()=>{
-		if (!isInitialized.current) {
-            fetchData();
-			isInitialized.current = true;
+		if (!isInitialized.current) {            
+            initForm();
+            console.log("initForm");
+            itemsHandle({type:ITEMS_ACTIONS.SET_FIELDS,form:form});
+            if (id != 'undefined' && id > 0) {
+                loadOferta(id);
+            }
+            else 
+                fetchData();
+            
+            isInitialized.current = true;
 		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
+            if (id != 'undefined' && id > 0) {
+                loadOferta(id);
+            }
+            else {
+                const timeoutId = setTimeout(fetchData, 350);
+                return () => clearTimeout(timeoutId);
+            }
 		}
     },[items.load]);
 
@@ -81,6 +98,10 @@ const Ofertas = () => {
           }
           else {
               setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);        
+          }
+
+          if (state != 'undefined' && state.backUrl.length > 0) {
+            navigate(state.backUrl);
           }
         });
     }
@@ -146,6 +167,33 @@ const Ofertas = () => {
       });
     }
 
+    const loadOferta = (id) => {        
+        fetchAPIRow('/silefe.oferta/get',{id:id},referer).then ((r) => {
+            console.log("recupramos los datos de la oferta");
+            console.debug(r);
+            console.debug(redParticipantes);
+            debugger;
+            const datatmp = {
+                ...r,
+                data: {...r.data,
+                    centro       : "undefined",
+                    colectivos   : "undefined",
+                    empresa      : "undefined",
+                    estado       : "undefined",
+                    objetivos    : "undefined",
+                    participantes: "undefined",
+                    puesto       : "undefined",
+                }
+            }
+            itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:datatmp});
+        }).catch(error => {
+            console.log("error");
+            console.debug(error);
+        });
+
+
+    }
+
     const fetchData = async () => {
         participantesHandle({type:PARTICIPANTES_OPTIONS.START,search:searchCandidatos,showError: showError });
         const postdata = {
@@ -201,9 +249,16 @@ const Ofertas = () => {
         });
         // consultados los proyectos
         fetchAPIData('/silefe.proyecto/all', {lang: getLanguageId()},referer).then(response => {
+            console.debug(response);
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
             form.fields.proyectoId.options = opts;
+        }).catch((error)=>{
+            console.log("hay errores");
+            console.log(error);
         });
+        //console.debug(items);
+        //console.debug(form);
+        //debugger;
         // consulto los cno's
         fetchAPIData('/silefe.cno/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];

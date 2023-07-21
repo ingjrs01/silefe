@@ -206,7 +206,7 @@ export const form = {
             key: 24,
             type: "select",
             label: Liferay.Language.get('Edad'), 
-            name: "generoId", 
+            name: "edadId", 
             value:"lelele", 
             enabled:true,
             change: ()=>{console.log("cambia el select");}

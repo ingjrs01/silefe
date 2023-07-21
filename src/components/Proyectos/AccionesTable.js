@@ -119,7 +119,7 @@ const AccionesTable = ({data,handler,editUrl,backUrl}) =>  {
                             case "string":                        
                               return (<ClayTable.Cell>{ item[column.columnName] }</ClayTable.Cell> )                              
                             case "boolean": 
-                              return (<ClayTable.Cell key={column.columName + item.id}>
+                              return (<ClayTable.Cell key={column.columnName + item.id}>
                                 {<ClayCheckbox checked={item[column.columnName]}  disabled  />}
                               </ClayTable.Cell>)
                         }

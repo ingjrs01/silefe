@@ -102,7 +102,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                   {Object.keys(row.cols).map(it => {
                     return (
                       <>
-                        <ClayForm.Group className={`${items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={row.cols[it].key} >
+                        <ClayForm.Group className={`${items.errors != 'undefined' && items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={row.cols[it].key} >
                           {(row.cols[it].type === 'text') &&
                             <>
                               <label htmlFor="basicInput">{row.cols[it].label}</label>
@@ -188,7 +188,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
                             </>}
 
                           {
-                            items.errors[it].length > 0 && //  -> items.fields.rows[it].name
+                            items.errors != 'undefined' && items.errors[it].length > 0 && //  -> items.fields.rows[it].name
                             <ClayForm.FeedbackGroup>
                               <ClayForm.FeedbackItem>
                                 <ClayForm.FeedbackIndicator
