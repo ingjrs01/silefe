@@ -141,6 +141,49 @@ export const saveAPI = async (endpoint,postdata,referer) => {
     return { data, status, error };
 }
 
+export const  saveFileAPI = async (endpoint, file, referer) => {
+    debugger;
+    console.log("saveFileAPI");
+    //fetch(endpoint, {
+    //  method: 'POST',
+    //  body: file,
+    //  headers: {
+    //    'content-type': file.type,
+    //    'content-length': `${file.size}`, // 👈 Headers need to be a string
+    //  },
+    //})
+    //  .then((res) => {        
+    //    console.log("llego hasta aquí");
+    //    console.log(res);
+    //    debugger;
+    //    res.json();
+    //})
+    //.then((data) => console.log(data))
+    //.catch((err) => console.error(err));
+    const auth = getAuthToken();
+    const response = await fetch(url_api, {
+        "credentials": "include",
+        "headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+            "Accept": "*/*",
+            "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+            "contenttype": "undefined",
+            "x-csrf-token": auth,
+            "Content-Type": "text/plain;charset=UTF-8",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin"
+        },
+        "referrer": `\"${referer}\"`,
+        "body": `{\"${endpoint}\":${file}}`,
+        "method": "POST",
+        "mode": "cors"
+    });
+    let { data, status, error } = await response.json();
+    return { data, status, error };
+
+}
+
 export const batchAPI = async (endpoint,ttmp,referer) => {
     const auth = getAuthToken();
 

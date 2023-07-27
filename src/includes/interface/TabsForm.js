@@ -33,7 +33,6 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
 
   const validate = (name, value) => {
     let condicion = "";
-    
     for (condicion of items.fields.fields[name]["conditions"]) {
       if (condicion == "number") {
         if (isNaN(value)) {

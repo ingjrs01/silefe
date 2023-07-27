@@ -58,8 +58,9 @@ const Table = ({ items, itemsHandle}) => {
           items.arr.map( (row,index )=> {
             return (
               <ClayTable.Row key={row.id} >
-                {
+                {                  
                   Object.keys(items.fields.table).map(columName => {
+                    //console.log(columName);
                     switch (items.fields.table[columName].columnType) {
                       case "multilang":
                         return (<ClayTable.Cell key={columName+row.id}>{ row[columName][lang] }</ClayTable.Cell> )

@@ -106,7 +106,7 @@ export const red_items = (state, action ) => {
                 ...state,
                 fields: action.form,
                 errors: resetErrors(action.form),
-                status: 'edit',
+                status: 'list',
                 item: createItem(action.form),
             }
         case ITEMS_ACTIONS.START: 
@@ -188,11 +188,11 @@ export const red_items = (state, action ) => {
             return state;                    
 
         case ITEMS_ACTIONS.EDIT_ITEM: 
-            debugger;
-            console.log("poniendo los datos");
-            console.debug(state.arr);
-            console.debug(action.item);
-            console.debug(state.fields);
+            // debugger;
+            // console.log("poniendo los datos");
+            // console.debug(state.arr);
+            // console.debug(action.item);
+            // console.debug(state.fields);
             tmp_item = {};
 
             Object.keys(state.fields.fields).forEach(j => {

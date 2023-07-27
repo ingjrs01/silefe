@@ -19,6 +19,17 @@ export const form = {
             value:"lelele", 
             placeholder: Liferay.Language.get('Descripcion'), 
             conditions: ["text"]
+        },
+        fichero: {
+            key:4,
+            type: "file",
+            label: Liferay.Language.get('Fichero'), 
+            data: null,
+            name: "fichero", 
+            value:"lelele", 
+            //placeholder: Liferay.Language.get('Descripcion'), 
+            //conditions: ["text"]
+
         }
     },
     rows: [
@@ -30,6 +41,10 @@ export const form = {
             key:7,
             cols: ['descripcion']
         },
+        {
+            key: 8,
+            cols: ['fichero'],
+        }
     ],
     table: {
         id: {

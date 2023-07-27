@@ -92,7 +92,8 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
               return (
                 <div className="row">
                   { row.cols.map(it => {
-                    console.debug(items.fields.fields[it]);
+                    //console.log("iterando");
+                    //console.debug(items.fields.fields[it]);
                     return (
                       <>
                         <ClayForm.Group className={`${items.errors[it] != 'undefined' && items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ "Group-" + items.fields.fields[it].key} >
@@ -187,7 +188,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
                                 }}
                                 value={items.item[it]} >
-                                {items.fields.fields[it].options.map(item => (
+                                { items.fields.fields[it].options !== 'undefined' && items.fields.fields[it].options.map(item => (
                                   <ClaySelect.Option
                                     key={it + "option-" + item.value}
                                     label={item.label}
@@ -257,7 +258,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 onChange={ evt => {console.log("este es el general")}}
                                 inline
                               >
-                                {items.fields.fields[it].options.map(it5 => {
+                                {items.fields.fields[it].options != "undefined" && items.fields.fields[it].options.map(it5 => {
                                   return (
                                     <ClayRadio 
                                       key={items.fields.fields[it].name + it5.key}
@@ -298,6 +299,16 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 }}
                               />
                             </>}
+                            {
+                              (items.fields.fields[it].type === 'file') && 
+                              <div class="form-group">
+	                              <label class="sr-only" for="inputFile">FILE UPLOAD</label>
+	                              <input id="inputFile" type="file" onChange={(e) => {
+                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.files[0] }); 
+                                  // setFile(e.target.files[0]);
+                                }} />
+                              </div>
+                            }
                             {(items.fields.fields[it].type === 'other') &&
                             <>
                               {

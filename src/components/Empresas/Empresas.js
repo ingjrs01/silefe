@@ -56,7 +56,7 @@ const Empresas = () => {
         const tmp = await data.map(i => {
             if (i.email != null && i.email.length > 0) {
                 console.log("el email");
-                console.log(JSON.parse(i.email)[0].value);
+                //console.log(JSON.parse(i.email)[0].value);
             } 
             return ({
                 ...i,
@@ -68,6 +68,8 @@ const Empresas = () => {
                 checked: false
             })
         });
+        await console.log("voy a ver los items");
+        await console.debug(tmp);
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
     }
 
@@ -146,11 +148,13 @@ const Empresas = () => {
         console.log("delete");
     }
 
-    const beforeEdit = () => {
+    const beforeEdit = () => {        
         let sel = items.arr.filter(i => i.checked);
         if (sel.length > 0) {
             const empresaId = sel[0].id;
             fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
+                console.log("Consultados los centors");
+                console.debug(response);
                 let centros = response.data.map(i => {
                     return {
                         ...i,
@@ -161,6 +165,8 @@ const Empresas = () => {
             });
 
             fetchAPIData('/silefe.contacto/filter-by-empresa', { empresaId: empresaId }, referer).then(response2 => {
+                console.log("Consultados los contactos");
+                console.debug(response2);
                 let contacts = response2.data.map( j => {
                     return {
                         ...j,
@@ -203,6 +209,8 @@ const Empresas = () => {
     }
 
     useEffect(() => {
+        debugger;
+        initCentrosForm();
         if (!isInitialized.current) {
             itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
             if (id != 'undefined' && id > 0) {

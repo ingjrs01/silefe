@@ -6,7 +6,7 @@ import {useModal} from '@clayui/modal';
 import { getUserId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI, saveFileAPI } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
@@ -56,8 +56,16 @@ const Cnaes = () => {
         const data = {
             id:          items.item.id,
             descripcion: items.item.descripcion,
+            obj: items.item,
             userId:      getUserId()
         }
+        console.log("esto es el fihcero: ");
+        console.debug(items.item.fichero);
+        debugger;
+        await saveFileAPI('/silefe.cnae/save-file',{messageId: "1",file: items.item.fichero},referer);
+        //debugger;
+
+        console.log("ahora mandamos el resto");
         let endpoint = '/silefe.cnae/save-cnae';
         if (items.status === 'new')
             endpoint = '/silefe.cnae/add-cnae';

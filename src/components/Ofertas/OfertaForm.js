@@ -26,6 +26,7 @@ export const form = {
             label: Liferay.Language.get('Empresa'), 
             name: "empresaId", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         centroId: {
@@ -34,6 +35,7 @@ export const form = {
             label: Liferay.Language.get('Centro'), 
             name: "centroId", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         puestoId: {
@@ -42,6 +44,7 @@ export const form = {
             label: Liferay.Language.get('Puesto'), 
             name: "puestoId", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         puesto: {
@@ -50,6 +53,7 @@ export const form = {
             label: Liferay.Language.get('Puesto'), 
             name: "puesto", 
             enabled:true,
+            conditions: [],
         },
         proyectoId: {
             key: 30,
@@ -66,6 +70,7 @@ export const form = {
             label: Liferay.Language.get('Cnae'), 
             name: "cnaeId", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         vacantes: {
@@ -83,6 +88,7 @@ export const form = {
             label: Liferay.Language.get('Incorporacion'), 
             name: "fechaIncorporacion", 
             value:"yyyy-mm-dd", 
+            //value: null,
             yearmin: 5,
             yearmax: 5,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
@@ -94,6 +100,7 @@ export const form = {
             label: Liferay.Language.get('TipoContrato'), 
             name: "tipoContratoId", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         duracionMeses: {
@@ -110,6 +117,7 @@ export const form = {
             label: Liferay.Language.get('Jornada'), 
             name: "jornadaId", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         infoJornada: {
@@ -142,6 +150,7 @@ export const form = {
             label: Liferay.Language.get('Titulacion'), 
             name: "titulacionRequerido", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         idiomasRequerido: {
@@ -150,6 +159,7 @@ export const form = {
             label: Liferay.Language.get('Idiomas'), 
             name: "idiomasRequerido", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         informaticaRequerido: {
@@ -158,6 +168,7 @@ export const form = {
             label: Liferay.Language.get('Informatica'), 
             name: "informaticaRequerido", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         experienciaRequerido: {
@@ -166,6 +177,7 @@ export const form = {
             label: Liferay.Language.get('Experiencia'), 
             name: "experienciaRequerido", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         permisos: {
@@ -175,6 +187,7 @@ export const form = {
             name: "permisos", 
             placeholder: "",
             enabled: true,
+            options: [],
             conditions:["text"]
         },
         vehiculo: {
@@ -183,6 +196,7 @@ export const form = {
             label: Liferay.Language.get('Vehiculo'), 
             name: "vehiculo", 
             value:"lelele", 
+            options: [],
             change: ()=>{console.log("cambia fondos propios");}
         },
         necesitaVehiculo: {
@@ -191,6 +205,7 @@ export const form = {
             label: Liferay.Language.get('NecesitaVehiculo'), 
             name: "necesitaVehiculo", 
             value:"lelele", 
+            options: [],
             change: ()=>{console.log("cambia fondos propios");}
         },
         generoId: {
@@ -200,6 +215,7 @@ export const form = {
             name: "generoId", 
             value:"lelele", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         edadId: {
@@ -209,6 +225,7 @@ export const form = {
             name: "edadId", 
             value:"lelele", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         habilidades: {
@@ -227,6 +244,7 @@ export const form = {
             name: "estadoId", 
             value:"lelele", 
             enabled:true,
+            options: [],
             change: ()=>{console.log("cambia el select");}
         },
         estado: {
@@ -236,6 +254,7 @@ export const form = {
             name: "estado", 
             value:"lelele", 
             enabled:true,
+            conditions: []
         },
         observaciones: {
             key: 27,
@@ -252,6 +271,7 @@ export const form = {
             label: Liferay.Language.get("Colectivos"),
             name: 'colectivos',
             placeholder: 'lalala',
+            options: [],
             enabled: true
         },
         objetivos: {
@@ -276,6 +296,7 @@ export const form = {
             name: "empresa", 
             value:"lelele", 
             enabled:true,
+            conditions: [],
         },
         centro: {
             key: 35,
@@ -284,6 +305,7 @@ export const form = {
             name: "centro", 
             value:"lelele", 
             enabled:true,
+            conditions: [],
         },
     },
     tabActive:0,
@@ -401,11 +423,11 @@ export const form = {
             columnType: "multilang",
             key: "c7",
         },
-        createDate: {
-            columnTitle: Liferay.Language.get('Fecha'),
-            columnType: "string",
-            key: "c8",
-        },
+        //createDate: {
+        //    columnTitle: Liferay.Language.get('Fecha'),
+        //    columnType: "string",
+        //    key: "c8",
+        //},
         
     },
     searchFields: ['titulo','estado','puesto','empresa','centro'],
