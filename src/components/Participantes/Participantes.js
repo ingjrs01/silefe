@@ -6,39 +6,72 @@ import {useModal} from '@clayui/modal';
 import { getUserId,getLanguageId,  url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI, fetchAPIRow } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
-import {TITULACIONES_ACTIONS, reducerTitulacion} from '../../includes/reducers/titulaciones.reducer';
+import {TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni} from '../../includes/reducers/titulaciones.reducer';
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { Paginator } from "../../includes/interface/Paginator";
-
-const spritemap = "./o/my-project/icons.svg";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Participantes = () => {
-    const [items,itemsHandle]            = useReducer(red_items,initialState );
-    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{lele: [], deleted: [], status: "list"});
+    const [items,itemsHandle]                    = useReducer(red_items,initialState );
+    const [redTitulaciones, titulacionHandler]   = useReducer(reducerTitulacion,titsIni);
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list", participanteId: 0});
-    const [toastItems,setToastItems]     = useState([]);    
-    const {observer, onOpenChange, open} = useModal();
-    const [file,setFile]                 = useState();
-    const isInitialized                  = useRef;
+    const [toastItems,setToastItems]             = useState([]);    
+    const {observer, onOpenChange, open}         = useModal();
+    const [file,setFile]                         = useState();
+    const isInitialized                          = useRef;
+    const {id}                                   = useParams();
+    const {state}                                = useLocation();
+    const navigate                               = useNavigate();
 
     const referer = `${url_referer}/participantes`;
     const form = formulario;
 
     useEffect(()=>{
 		if (!isInitialized.current) {
-            fetchData();
+            initForm();
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form:form});
+            if (id != 'undefined' && id > 0) 
+                loadParticipante(id);
+            else    
+                fetchData();
+
 			isInitialized.current = true;
+
 		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
+            if (id != 'undefined' && id > 0)
+                loadParticipante(id);
+            else {
+                const timeoutId = setTimeout(fetchData, 350);
+                return () => clearTimeout(timeoutId);
+            }
 		}
     },[items.load]);
+
+    const loadParticipante = (id) => {
+        beforeFormacion(id);
+        console.debug(redTitulaciones);
+        fetchAPIRow('/silefe.participante/get',{id:id},referer).then ((r) => {
+            const datatmp = {
+                ...r,
+                data: {...r.data,
+                    fechaNacimiento: (r.data.fechaNacimiento != null)?new Date(r.data.fechaNacimiento).toISOString().substring(0, 10):"",
+                    email: (r.data.email != null && r.data.email.length > 0)?JSON.parse(r.data.email):[],
+                    telefono: (r.data.telefono != null && r.data.telefono.length > 0)?JSON.parse(r.data.telefono):[],
+                }
+            }
+            console.debug(datatmp);
+            itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:datatmp});
+        }).catch(error => {
+            console.log("error");
+            console.debug(error);
+        });
+    }
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -99,9 +132,11 @@ const Participantes = () => {
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
         }
-        else {
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);        
-        }
+        else 
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);                
+        
+        if (state != 'undefined' && state.backUrl.length > 0) 
+            navigate(state.backUrl);            
     }
 
     const handleDelete = () => {
@@ -117,9 +152,8 @@ const Participantes = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);                
                 fetchData();        
             }
-            else {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
-            }
+            else 
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);            
         })
     }
 
@@ -185,7 +219,6 @@ const Participantes = () => {
         });
         form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];        
         form.fields.sexo.options = [{key: 0, value:"H",label:Liferay.Language.get('Hombre')},{key:1, value:"M",label: Liferay.Language.get('Mujer')}];
-
     }
 
     const changeProvince = (id) => {
@@ -200,43 +233,33 @@ const Participantes = () => {
     }
 
     const beforeEdit = () => {
-        let sel = items.arr.filter(i => i.checked)[0]['provinciaId'];
-        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel},referer).then(response => {
+        //queryTitulaciones();
+        let sel = items.arr.filter(i => i.checked);   //[0]['provinciaId'];
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel[0]['provinciaId']},referer).then(response => {
             const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
         });
-        beforeFormacion();
+        beforeFormacion(sel[0].id);
         beforeExperiencia();
     }
 
-    const beforeFormacion = () => {
-        let sel = items.arr.filter(i => i.checked);
-        if (sel.length > 0) {
-            const participanteId = sel[0].id;            
-            fetchAPIData('/silefe.formacionparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
-                const tits = response.data.map( i => {
-                    const familiaId = redTitulaciones.titulaciones.filter(t => t.titulacionId == i.titulacion)[0].titulacionFamiliaId;
-                    const nivelId = redTitulaciones.familias.filter(f => f.id == familiaId)[0].titulacionNivelId;
-                    const tipoId = redTitulaciones.niveles.filter(n => n.id == nivelId)[0].titulacionTipoId;
-                    let names = redTitulaciones.titulaciones.filter(t => t.titulacionId == i.titulacion);
-                    let name = Liferay.Language.get("No_disponible");
-                    if (names.length > 0)
-                        name = names[0].descripcion;
-                    return {
-                        ...i,
-                        id: i.formacionParticipanteId,
-                        titulacionTipoId: tipoId,
-                        titulacionNivelId: nivelId,
-                        titulacionFamiliaId: familiaId,
-                        titulacionId: i.titulacion,
-                        ini: (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
-                        fin: (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
-                        titulacionName:name,
-                    }
-                });
-                titulacionHandler({type:TITULACIONES_ACTIONS.LOAD_ITEMS,items: tits})
-            })    
-        }
+    const beforeFormacion = (participanteId) => {
+        fetchAPIData('/silefe.formacionparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
+            const tits = response.data.map( i => {
+                return {
+                    ...i,
+                    id: i.formacionParticipanteId,
+                    ini: (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
+                    fin: (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
+                    titulacionName: i.titulacion,
+                }
+            });
+            titulacionHandler({type:TITULACIONES_ACTIONS.LOAD_ITEMS,items: tits})
+        }).catch( (e) => {
+            debugger;
+            console.log("error");
+            console.debug(e);
+        })    
     }
 
     const beforeExperiencia = () => {

@@ -93,15 +93,13 @@ const Ofertas = () => {
               }
 
               fetchData();
-              setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
+              setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
           }
-          else {
-              setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);        
-          }
+          else 
+              setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);
 
-          if (state != 'undefined' && state.backUrl.length > 0) {
+          if (state != 'undefined' && state.backUrl.length > 0)
             navigate(state.backUrl);
-          }
         });
     }
 

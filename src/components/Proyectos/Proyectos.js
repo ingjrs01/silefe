@@ -300,14 +300,14 @@ const Proyectos = () => {
                     data={participantes}
                     handler={participantesHandle}
                     editUrl={"/participante/"}
-                    backUrl={"/participantes"}
+                    backUrl={"/proyectos"}
                 />,
             Empresas: 
                 <AccionesTable
                     data={empresas}
                     handler={empresasHandle}
                     editUrl={"/empresa/"}
-                    backUrl={"/empresas"}
+                    backUrl={"/proyectos"}
                 />
 }
     }

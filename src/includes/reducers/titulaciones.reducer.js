@@ -17,9 +17,12 @@ export const TITULACIONES_ACTIONS = {
     NEW_ITEM: 14,
     SAVE_ITEM: 15,
   }
-const initialState = {
+
+export const initialState = {
     titulacionTipoOptions: [],
     titulacionNivelOptions: [],
+    deleted: [], 
+    status: "list",
 }
 
 let newniveles = [];
@@ -30,7 +33,7 @@ let tmpTipoId = 0;
 let tmpNivelId = 0;
 let tmpFamiliaId = 0;
 
-export const reducerTitulacion = (state=initialState, action ) => {
+export const reducerTitulacion = (state, action ) => {
     switch (action.type) {
         case TITULACIONES_ACTIONS.START:
             return {
@@ -166,6 +169,8 @@ export const reducerTitulacion = (state=initialState, action ) => {
                 titulacion: {...state.titulacion,titulacionId: action.value, titulacionName: titulacionName},                
             }
         case TITULACIONES_ACTIONS.LOAD_ITEMS: 
+            console.debug(action.items);
+            debugger;
             return {
                 ...state,
                 items: action.items

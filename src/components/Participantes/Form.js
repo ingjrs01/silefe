@@ -119,7 +119,7 @@ export const form = {
             name: "nombreVia", 
             value:"", 
             placeholder: Liferay.Language.get('NombreVia'), 
-            conditions: ["text"]
+            conditions: []
         },
         numero: {
             key: 19,
