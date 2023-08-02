@@ -11,7 +11,6 @@ import { getLanguageId } from '../../includes/LiferayFunctions';
 
 const spritemap = "./o/my-project/icons.svg";
 
-
 const RenderFields =  ({ rows,  itemsHandle, items }) => {
 
     const locales = [

@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 
 const spritemap = "./o/my-project/icons.svg";
 
-const AccionesTable = ({data,handler,editUrl,backUrl}) =>  {
+const AccionesTable = ({data,handler,editUrl,backUrl, ancestorId}) =>  {
     let lang = getLanguageId().replace("_","-");
     //const backUrl = '/proyectos';
     const [showSearch, setShowSearch] = useState(false);
@@ -132,7 +132,7 @@ const AccionesTable = ({data,handler,editUrl,backUrl}) =>  {
                       <ClayToolbar.Nav>
                         <ClayToolbar.Item className="text-left">
                         <ClayButton.Group>
-                            <Link to={{pathname:`${editUrl}${item.id}`}} state={{ backUrl }}  > {
+                            <Link to={{pathname:`${editUrl}${item.id}`}} state={{ backUrl, ancestorId }}  > {
                                 <ClayButtonWithIcon
                                     aria-label={Liferay.Language.get("Editar")}
                                     key={"edit-"+item.id}

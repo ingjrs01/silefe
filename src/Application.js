@@ -75,6 +75,7 @@ const Application = () => {
                             <Route path='/cofinanciadas'    element={ <Cofinanciadas /> }   />
                             <Route path='/tecnicos'         element={ <Tecnicos /> }   />
                             <Route path='/convocatorias'    element={ <Convocatorias /> }   />
+                            <Route path='/proyecto/:id'     element={ <Proyectos /> }   />
                             <Route path='/proyectos'        element={ <Proyectos /> }   />
                             <Route path='/ambitos'          element={ <Ambitos /> }   />
                             <Route path='/participante/:id' element={ <Participantes /> }   />

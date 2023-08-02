@@ -14,7 +14,7 @@ export const CONTACTOS_ACTIONS = {
   DELETE: 10,
 }
 
-const initialState = {
+export const initialState = {
   items: [],
   item: {},
   modified: [],

@@ -13,23 +13,23 @@ import { FModal } from '../../includes/interface/FModal';
 import { Errors } from '../../includes/Errors';
 import { form as formulario } from "./Form";
 import CentrosRender from "./CentrosRender";
-import { reducerCentros, CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
-import { reducerContactos, CONTACTOS_ACTIONS } from "../../includes/reducers/contactos.reducer";
+import { reducerCentros, CENTROS_ACTIONS, initialState as iniCentros } from "../../includes/reducers/centros.reducer";
+import { reducerContactos, CONTACTOS_ACTIONS, initialState as iniContactos } from "../../includes/reducers/contactos.reducer";
 import ContactosRender from "./ContactosRender";
 import { Paginator } from "../../includes/interface/Paginator";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Empresas = () => {
-    const [items, itemsHandle] = useReducer(red_items,initialState);
-    const [redCentros, centrosHandle] = useReducer(reducerCentros);
-    const [redContactos, contactosHandle] = useReducer(reducerContactos);
-    const [toastItems, setToastItems] = useState([]);
+    const [items, itemsHandle]             = useReducer(red_items,initialState);
+    const [redCentros, centrosHandle]      = useReducer(reducerCentros, iniCentros);
+    const [redContactos, contactosHandle]  = useReducer(reducerContactos, iniContactos);
+    const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const [file, setFile] = useState();
-    const isInitialized = useRef(null);
-    const { id } = useParams();
-    const { state } = useLocation();
-    const navigate = useNavigate();
+    const [file, setFile]                  = useState();
+    const isInitialized                    = useRef(null);
+    const { id }                           = useParams();
+    const { state }                        = useLocation();
+    const navigate                         = useNavigate();
 
     const referer = `${url_referer}/empresas`;
     const form = formulario;
@@ -68,8 +68,6 @@ const Empresas = () => {
                 checked: false
             })
         });
-        await console.log("voy a ver los items");
-        await console.debug(tmp);
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
     }
 
@@ -136,10 +134,9 @@ const Empresas = () => {
             } else {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
             }
-            // Ver a donde hay que navegar ahora
-            if (state != 'undefined' && state.backUrl.length > 0) {
-                //debugger;
-                navigate(state.backUrl);
+            
+            if (state != 'undefined' && state.backUrl.length > 0) {            
+                navigate(state.backUrl + state.ancestorId);
             }            
         });
     }
@@ -148,13 +145,19 @@ const Empresas = () => {
         console.log("delete");
     }
 
-    const beforeEdit = () => {        
-        let sel = items.arr.filter(i => i.checked);
-        if (sel.length > 0) {
-            const empresaId = sel[0].id;
+    const beforeEdit = (id) => { 
+        let empresaId = 0;
+        if (id === undefined) {
+            empresaId = items.arr.filter(i => i.checked)[0].id;
+        }
+        else
+            empresaId = id;
+
+        //if (sel.length > 0) {
+            //empresaId = sel[0].id;
             fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
-                console.log("Consultados los centors");
-                console.debug(response);
+                //console.log("Consultados los centors");
+                //console.debug(response);
                 let centros = response.data.map(i => {
                     return {
                         ...i,
@@ -177,7 +180,7 @@ const Empresas = () => {
                 });
                 contactosHandle({type:CONTACTOS_ACTIONS.LOAD,items: contacts });
             });
-        }
+        //}
     }
 
     const loadCsv = () => {
@@ -203,13 +206,22 @@ const Empresas = () => {
         }
     }
 
-
-    const loadItem = () => {
-        fetchAPIRow('/silefe.empresa/get',{id:id},referer).then (r => itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:r})) ;
+    const loadItem = (id) => {
+        beforeEdit(id);
+        fetchAPIRow('/silefe.empresa/get',{id:id},referer).then (r => {
+            const tmp = {
+                ...r,
+                data: {
+                    ...r.data,                    
+                    email: (r.data.email != null && r.data.email.length > 0)?JSON.parse(r.data.email):[],
+                    telefono: (r.data.telefono != null && r.data.telefono.length > 0)?JSON.parse(r.data.telefono):[],
+                }
+            }
+            itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:tmp});
+        }) ;
     }
 
     useEffect(() => {
-        debugger;
         initCentrosForm();
         if (!isInitialized.current) {
             itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});

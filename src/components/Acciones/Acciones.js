@@ -94,11 +94,9 @@ const Acciones = () => {
         else 
         setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);            
 
-        // Ver a donde hay que navegar ahora
-        if (state != 'undefined' && state.backUrl.length > 0) {
-            //debugger;
-            navigate(state.backUrl);
-        }
+        if (state != 'undefined' && state.backUrl.length > 0) 
+            navigate(state.backUrl+state.ancestorId);  
+        
     }
 
     const handleDelete = () => {

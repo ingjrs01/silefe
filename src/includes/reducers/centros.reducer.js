@@ -12,7 +12,7 @@ export const CENTROS_ACTIONS = {
     TIPOS_VIA: 10,
   }
 
-const initialState = {
+export const initialState = {
     items: [],
     item: {},
     modified: [],

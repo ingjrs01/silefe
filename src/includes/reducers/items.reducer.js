@@ -83,6 +83,7 @@ const createItem = form => {
                 let tt2 = []
 
                 tt2.push({key:8,value:"correo",default:false});
+                // TODO: Ver como mejorar esto ---------------------------------------->
                 tt2.push({key:9,value:"correo@correo.es",default:false});
                 tmp_item[j] = tt2;
                 break;
@@ -108,6 +109,7 @@ export const red_items = (state, action ) => {
                 errors: resetErrors(action.form),
                 status: 'list',
                 item: createItem(action.form),
+                load: 1,
             }
         case ITEMS_ACTIONS.START: 
             let tmp_item = {};
@@ -188,15 +190,12 @@ export const red_items = (state, action ) => {
             return state;                    
 
         case ITEMS_ACTIONS.EDIT_ITEM: 
-            // debugger;
-            // console.log("poniendo los datos");
-            // console.debug(state.arr);
-            // console.debug(action.item);
-            // console.debug(state.fields);
+            //console.debug(action.item);
+            //debugger;
             tmp_item = {};
-
             Object.keys(state.fields.fields).forEach(j => {
-                //console.log(state.fields.fields[j].type);
+                console.log(j);
+                console.debug(action.item.data);
                 switch (state.fields.fields[j].type) {
                     case "multilang":
                         let tt = {}
@@ -205,22 +204,19 @@ export const red_items = (state, action ) => {
                         break;
                     case "multitext": 
                         let tt2 = []
-                        //action.fields.languages.forEach(el => {tt2[el]=""});
-                        tt2.push({key:8,value:"correo",default:false});
-                        tt2.push({key:9,value:"correo@correo.es",default:false});
+                        action.item.data[j].forEach(ite => { tt2.push({key:ite.key,value:ite.value,default:false})})
                         tmp_item[j] = tt2;
                         break;
                     //case "select":
 
                     default:
-                    //      console.log("para otros campos: " + j);
                         tmp_item[j] = action.item.data[j];
                         break;
                 }
             });
-
-            //debugger;
             //let err2 = resetErrors(state.fields);
+            //console.debug(tmp_item);
+            //debugger;
             return {
                 ...state,
                 status: 'edit',

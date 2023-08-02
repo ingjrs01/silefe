@@ -6,7 +6,7 @@ import {useModal} from '@clayui/modal';
 import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
 import {SUBTABLE_ACTIONS,iniState,reducerSubtable} from '../../includes/reducers/subtable.reducer';
-import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import { deleteAPI, fetchAPIData, saveAPI, fetchAPIRow } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
 import { FModal } from '../../includes/interface/FModal';
@@ -19,8 +19,7 @@ import {form as aform} from './AccionForm';
 import {form as oform} from './OfertaForm';
 import {form as pform} from './ParticipantesForm';
 import {form as eform} from './EmpresaForm';
-//import {form as formulario} from './ProyectoForm2';
-//import OfertasRender from './OfertasRender';
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 //import Papa from "papaparse";
 
 const Proyectos = () => {
@@ -33,40 +32,79 @@ const Proyectos = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
+    const {id}                           = useParams();
+    const {state}                        = useLocation();
+    const navigate                       = useNavigate();
 
     const referer = `${url_referer}/proyectos`;
     const form = formulario;
-
     
     useEffect(()=>{
         if (!isInitialized.current) {
+            initForm();
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form:form});
             accionesHandle({type: SUBTABLE_ACTIONS.SETFORM,form: aform});
             ofertasHandle({type: SUBTABLE_ACTIONS.SETFORM, form: oform});
             participantesHandle({type:SUBTABLE_ACTIONS.SETFORM,form: pform});
             empresasHandle({type: SUBTABLE_ACTIONS.SETFORM,form:eform});
-            fetchData();
+
+            if (id != 'undefined' && id > 0)
+                loadProyecto(id);
+            else {
+                fetchData();
+            }
+
 			isInitialized.current = true;
 		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
+            if (id != 'undefined' && id > 0)
+                loadProyecto(id)
+            else {
+                const timeoutId = setTimeout(fetchData, 350);
+                return () => clearTimeout(timeoutId);
+            }
 		}
     },[items.load]);
 
     useEffect ( ()=> {
-        loadAcciones();
+        if (items.item.id != 'undefined' && items.item.id > 0)
+            loadAcciones(items.item.id);
     },[acciones.load]);
 
     useEffect( ()=> {
-        loadOfertas();
+        if (items.item.id != 'undefined' && items.item.id > 0)
+            loadOfertas(items.item.id);
     }, [ofertas.load]);
 
     useEffect( () => {
-        loadParticipantes();
+        if (items.item.id != 'undefined' && items.item.id > 0)
+            loadParticipantes(items.item.id);
     }, [participantes.load]);
 
     useEffect( ()=>{
-        loadEmpresas();
-    },empresas.load);
+        if (items.item.id != 'undefined' && items.item.id > 0)
+            loadEmpresas(items.item.id);
+    }, [empresas.load]);
+
+    const loadProyecto = id => {
+        initForm();
+        beforeEdit(id);
+        fetchAPIRow('/silefe.proyecto/get',{id:id},referer).then ((r) => {
+            const datatmp = {
+                ...r,
+                data: {...r.data,
+                    id            : r.data.proyectoId,
+                    nparticipantes: r.data.participantes,
+                    inicio        : (r.data.inicio != null)?new Date(r.data.inicio).toISOString().substring(0, 10):"",
+                    fin           : (r.data.fin != null)?new Date(r.data.fin).toISOString().substring(0, 10):"",    
+                }
+            }
+            itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:datatmp});
+        }).catch(error => {
+            console.log("error");
+            console.debug(error);
+        });
+
+    }
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
@@ -140,11 +178,19 @@ const Proyectos = () => {
         })
     }
 
-    const beforeEdit = () => {
-        loadAcciones();
-        loadOfertas();
-        loadParticipantes();
-        loadEmpresas();
+    const beforeEdit = (id) => {
+        let lid = 0;
+        if (id === undefined ) 
+            lid = items.arr.filter(item=>item.checked)[0].id;
+        else 
+            lid = id;
+
+        if ( lid > 0) {    
+            loadAcciones(lid);
+            loadOfertas(lid);
+            loadParticipantes(lid);
+            loadEmpresas(lid);
+        }
     }
 
     const miEvento = () => {
@@ -156,7 +202,7 @@ const Proyectos = () => {
         }
     }
 
-    const fetchData = async () => {
+    const fetchData = () => {
         if (form.fields.entidadId.options == undefined) {
             initForm();
         }
@@ -169,42 +215,42 @@ const Proyectos = () => {
                 order : items.order
             }
         }
-        let {data,totalPages,page, totalItems} = await fetchAPIData('/silefe.proyecto/filter',postdata,referer);
-        const tmp = await data.map(i => ({
+        fetchAPIData('/silefe.proyecto/filter',postdata,referer).then(({data,totalPages,page, totalItems}) => {
+            const tmp = data.map(i => ({
                 ...i,
                 id            : i.proyectoId,
                 nparticipantes: i.participantes,
                 inicio        : (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
                 fin           : (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
-                checked       : false
-            })
-        );
-        await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: toastItems,page:page});
+                checked       : false})
+            );
+            itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: toastItems,page:page});
+        });
     }
     
-    const loadAcciones =  () => {
-        const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
-        if (selected.length > 0) {    
+    const loadAcciones =  (id) => {
+        if (id != 'undefined' ) {
+
             const postdata = {
                 pagination:  {page: acciones.pagination.page, pageSize: 5},
                 options: {
-                    filters: [{name: "proyectoId", value: selected[0]}],
+                    filters: [{name: "proyectoId", value: id}],
                 }
             }
             fetchAPIData('/silefe.accion/filter',postdata,referer).then(response => {
                 accionesHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:response.data, pages: response.totalPages});
             });
+            
         }
     }
 
-    const loadParticipantes = () => {
-        const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
-        if (selected.length > 0) {    
+    const loadParticipantes = (id) => {
+        if (id != 'undefined') {
             const postdata = {
-                id: selected[0],
+                id: id,
                 options: {
                     pagination:  {page: participantes.pagination.page, pageSize: 5},
-                    filters: [{name: "proyectoId", value: selected[0]}],
+                    filters: [{name: "proyectoId", value: id}],
                 }
             }
             fetchAPIData('/silefe.participante/filter-by-project',postdata,referer).then(response => {
@@ -217,14 +263,13 @@ const Proyectos = () => {
         }
     }
 
-    const loadEmpresas = () => {
-        const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
-        if (selected.length > 0) {    
+    const loadEmpresas = (id) => {
+        if (id != 'undefined') {
             const postdata = {
-                id : selected[0], // TODO: esto cambiar por el projectId
+                id : id, // TODO: esto cambiar por el projectId
                 options: {
                     pagination:  {page: empresas.pagination.page, pageSize: 5},
-                    filters: [{name: "proyectoId", value: selected[0]}],
+                    filters: [{name: "proyectoId", value: id}],
                 }
             }
             fetchAPIData('/silefe.empresa/filter-by-project',postdata,referer).then(response => {
@@ -237,13 +282,12 @@ const Proyectos = () => {
         }
     }    
 
-    const loadOfertas = () => {
-        const selected = items.arr.filter(item => item.checked).map( i => {return i.id})
-        if (selected.length > 0) {    
+    const loadOfertas = (id) => {
+        if (id != 'undefined') {
             const postdata = {
                 pagination:  {page: acciones.pagination.page, pageSize: 5},
                 options: {
-                    filters: [{name: "proyectoId", value: selected[0]}],
+                    filters: [{name: "proyectoId", value: id}],
                 }
             };            
             fetchAPIData('/silefe.oferta/filter',postdata,referer).then(response => {
@@ -286,34 +330,38 @@ const Proyectos = () => {
                 data={ofertas}
                 handler={ofertasHandle}
                 editUrl={"/oferta/"}
-                backUrl={"/proyectos"}
-            />,
+                backUrl={"/proyecto/"}
+                ancestorId={items.item.id}
+                />,
             Acciones: 
                 <AccionesTable 
                     data={acciones}
                     handler={accionesHandle}
                     editUrl={"/accion/"}
-                    backUrl={"/proyectos"}
+                    backUrl={"/proyecto/"}
+                    ancestorId={items.item.id}
                 />,
             Participantes: 
                 <AccionesTable
                     data={participantes}
                     handler={participantesHandle}
                     editUrl={"/participante/"}
-                    backUrl={"/proyectos"}
+                    backUrl={"/proyecto/"}
+                    ancestorId={items.item.id}
                 />,
             Empresas: 
                 <AccionesTable
                     data={empresas}
                     handler={empresasHandle}
                     editUrl={"/empresa/"}
-                    backUrl={"/proyectos"}
+                    backUrl={"/proyecto/"}
+                    ancestorId={items.item.id}
                 />
 }
     }
 
-    if (!items || items.arr.length == 0) 
-    return (<div>{Liferay.Language.get('Cargando')}</div>)
+    //if (!items || items.arr.length == 0) 
+    //return (<div>{Liferay.Language.get('Cargando')}</div>)
 
     return (
         <>

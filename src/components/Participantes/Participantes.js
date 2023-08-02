@@ -24,7 +24,7 @@ const Participantes = () => {
     const [toastItems,setToastItems]             = useState([]);    
     const {observer, onOpenChange, open}         = useModal();
     const [file,setFile]                         = useState();
-    const isInitialized                          = useRef;
+    const isInitialized                          = useRef(null);
     const {id}                                   = useParams();
     const {state}                                = useLocation();
     const navigate                               = useNavigate();
@@ -55,7 +55,8 @@ const Participantes = () => {
 
     const loadParticipante = (id) => {
         beforeFormacion(id);
-        console.debug(redTitulaciones);
+        beforeExperiencia(id);
+        //console.debug(redTitulaciones);
         fetchAPIRow('/silefe.participante/get',{id:id},referer).then ((r) => {
             const datatmp = {
                 ...r,
@@ -65,7 +66,9 @@ const Participantes = () => {
                     telefono: (r.data.telefono != null && r.data.telefono.length > 0)?JSON.parse(r.data.telefono):[],
                 }
             }
-            console.debug(datatmp);
+            //console.log("dato a cargar");
+            //console.debug(datatmp);
+            //debugger;
             itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:datatmp});
         }).catch(error => {
             console.log("error");
@@ -135,8 +138,10 @@ const Participantes = () => {
         else 
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);                
         
+        //console.debug(state.ancestorId);
+        //debugger;
         if (state != 'undefined' && state.backUrl.length > 0) 
-            navigate(state.backUrl);            
+            navigate(state.backUrl+state.ancestorId);            
     }
 
     const handleDelete = () => {
@@ -240,7 +245,7 @@ const Participantes = () => {
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
         });
         beforeFormacion(sel[0].id);
-        beforeExperiencia();
+        beforeExperiencia(sel[0].id);
     }
 
     const beforeFormacion = (participanteId) => {
@@ -262,11 +267,13 @@ const Participantes = () => {
         })    
     }
 
-    const beforeExperiencia = () => {
-        let sel = items.arr.filter(i => i.checked);
-        if (sel.length > 0) {
-            const participanteId = sel[0].id;            
+    const beforeExperiencia = (participanteId) => {
+        //let sel = items.arr.filter(i => i.checked);
+        //if (sel.length > 0) {
+            //const participanteId = sel[0].id;            
             fetchAPIData('/silefe.experienciaparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
+                console.log("experiencias");
+                console.debug(response);
                 const experiencias = response.data.map( item => {
                     return {
                         ...item,
@@ -278,7 +285,7 @@ const Participantes = () => {
                 });
                 experienciasHandler({type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias, participanteId:participanteId});
             });
-        }
+        //}
     }
 
     const queryTitulaciones = () => {

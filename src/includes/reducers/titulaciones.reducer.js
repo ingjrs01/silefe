@@ -169,8 +169,6 @@ export const reducerTitulacion = (state, action ) => {
                 titulacion: {...state.titulacion,titulacionId: action.value, titulacionName: titulacionName},                
             }
         case TITULACIONES_ACTIONS.LOAD_ITEMS: 
-            console.debug(action.items);
-            debugger;
             return {
                 ...state,
                 items: action.items
