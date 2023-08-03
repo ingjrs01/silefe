@@ -81,10 +81,6 @@ const createItem = form => {
                 break;
             case "multitext": 
                 let tt2 = []
-
-                tt2.push({key:8,value:"correo",default:false});
-                // TODO: Ver como mejorar esto ---------------------------------------->
-                tt2.push({key:9,value:"correo@correo.es",default:false});
                 tmp_item[j] = tt2;
                 break;
             default:
