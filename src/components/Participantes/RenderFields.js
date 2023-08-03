@@ -185,11 +185,11 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                   }
                                   else
                                     console.log("no tiene change");
-                                  
+
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
                                 }}
                                 value={items.item[it]} >
-                                {items.fields.fields[it].options.map(item => (
+                                {items.fields.fields[it].options !== 'undefined' && items.fields.fields[it].options.map(item => (
                                   <ClaySelect.Option
                                     key={it + "option-" + item.value}
                                     label={item.label}
@@ -253,9 +253,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                             <>
                               <ClayRadioGroup
                                 active={act2}
-                                defaultValue="H"
-                                //onActiveChange={setAct2}
-                                onChange={ evt => {console.log("este es el general")}}
+                                value={items.item[it]}
                                 inline
                               >
                                 {items.fields.fields[it].options.map(it5 => {
@@ -264,7 +262,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                       key={items.fields.fields[it].name + it5.key}
                                       label={it5.label}
                                       value={it5.value}
-                                      onClick={a => {console.log("man hecho click")}}
+                                      onClick={a => itemsHandle({type: ITEMS_ACTIONS.SET, fieldname:it, value: a.target.value})}
                                     />
                                   )
                                 })}

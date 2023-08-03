@@ -66,9 +66,6 @@ const Participantes = () => {
                     telefono: (r.data.telefono != null && r.data.telefono.length > 0)?JSON.parse(r.data.telefono):[],
                 }
             }
-            //console.log("dato a cargar");
-            //console.debug(datatmp);
-            //debugger;
             itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:datatmp});
         }).catch(error => {
             console.log("error");
@@ -268,24 +265,18 @@ const Participantes = () => {
     }
 
     const beforeExperiencia = (participanteId) => {
-        //let sel = items.arr.filter(i => i.checked);
-        //if (sel.length > 0) {
-            //const participanteId = sel[0].id;            
-            fetchAPIData('/silefe.experienciaparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
-                console.log("experiencias");
-                console.debug(response);
-                const experiencias = response.data.map( item => {
-                    return {
-                        ...item,
-                        id: item.experienciaParticipanteId,
-                        participanteId: participanteId,
-                        ini: (item.inicio != null)?new Date(item.inicio).toISOString().substring(0, 10):"",
-                        fin: (item.fin    != null)?new Date(item.fin).toISOString().substring(0, 10):"",
-                    }
-                });
-                experienciasHandler({type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias, participanteId:participanteId});
+        fetchAPIData('/silefe.experienciaparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
+            const experiencias = response.data.map( item => {
+                return {
+                    ...item,
+                    id: item.experienciaParticipanteId,
+                    participanteId: participanteId,
+                    ini: (item.inicio != null)?new Date(item.inicio).toISOString().substring(0, 10):"",
+                    fin: (item.fin    != null)?new Date(item.fin).toISOString().substring(0, 10):"",
+                }
             });
-        //}
+            experienciasHandler({type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias, participanteId:participanteId});
+        });
     }
 
     const queryTitulaciones = () => {

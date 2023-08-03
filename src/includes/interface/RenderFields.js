@@ -252,10 +252,10 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             <>
                               <ClayRadioGroup
                                 active={act2}
-                                defaultValue="M"
+                                //defaultValue="M"
                                 value={items.item[it]}
                                 //onActiveChange={setAct2}
-                                onChange={ evt => {console.log("este es el general")}}
+                                //onChange={ evt => {console.log("este es el general")}}
                                 inline
                               >
                                 {items.fields.fields[it].options != "undefined" && items.fields.fields[it].options.map(it5 => {
