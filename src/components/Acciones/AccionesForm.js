@@ -215,6 +215,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
               </ClayTabs.TabPane>
 
               <ClayTabs.TabPane aria-labelledby="tab-2" key={"tab-content-2"}>
+
                 <ClayInput
                   placeholder={"prueba2"}
                   type="text"
@@ -223,6 +224,33 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                   value={"bbb"}
                 >
                 </ClayInput>
+
+                {
+                  (items.item.accionTipoId == 1 || items.item.accionTipoId == 3) &&
+                  <>
+                    <ClayInput
+                      placeholder={"prueba2"}
+                      type="text"
+                      name={"escondido-2"}
+                      key={"prueba-3"}
+                      value={"campo ocultado"}
+                    >
+                  </ClayInput>
+                  <ClayInput
+                    placeholder={"prueba2"}
+                    type="time"
+                    name={"escondido-3"}
+                    key={"prueba-4"}
+                    onChange={evt => {
+                      console.log("poniendo una hora");
+                      console.debug(evt.target.value);
+                    }}
+                  >
+                </ClayInput>
+                  </>
+
+                }
+
               </ClayTabs.TabPane>
 
               <ClayTabs.TabPane aria-labelledby="tab-3" key={"tab-content-3"}>

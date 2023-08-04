@@ -25,6 +25,7 @@ const MenuItems = [
     {key:11, url: '/mbaja',        caption: 'Mot. Baja'},
     {key:12, url: '/horarios',     caption: 'Horarios'},
     {key:13, url: '/dgeografica',  caption: 'Geográficas'},
+    {key:37, url: '/lugares',      caption: 'Lugares'},
     {key:14, url: '/cofinanciadas',caption: 'Cofinanciadas'},
     {key:15, url: '/tecnicos',     caption: 'Tecnicos'},
     {key:16, url: '/convocatorias',caption: 'Convocatorias'},
