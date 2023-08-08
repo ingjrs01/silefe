@@ -3,13 +3,20 @@ import ClayTabs from '@clayui/tabs';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
+import ClayPanel from '@clayui/panel';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import DocentesTable from "./DocentesTable";
 import ParticipantesTable from "./ParticipantesTable";
 import ClayLocalizedInput from '@clayui/localized-input';
+import { Formacion } from './Formacion';
 
-const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler }) => {
+const spritemap = "./o/my-project/icons.svg";
+
+
+const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler }) => {
   const [tab, setTab] = useState(0);
+
+  console.log("Accionesform");
 
   const locales = [
     {
@@ -236,17 +243,52 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                       value={"campo ocultado"}
                     >
                   </ClayInput>
-                  <ClayInput
-                    placeholder={"prueba2"}
-                    type="time"
-                    name={"escondido-3"}
-                    key={"prueba-4"}
-                    onChange={evt => {
-                      console.log("poniendo una hora");
-                      console.debug(evt.target.value);
-                    }}
+                  <ClayPanel
+                    collapsable
+                    displayTitle="Formación Teórica"
+                    displayType="secondary"
+                    showCollapseIcon={true}
+                    spritemap={spritemap}
                   >
-                </ClayInput>
+                  <ClayPanel.Body>
+                    <Formacion 
+                      ejecucion={ejecucion}
+                      ejecucionHandler={ejecucionHandler}
+                    />
+                  </ClayPanel.Body>
+                  </ClayPanel>                    
+
+                  <ClayPanel
+                    collapsable
+                    displayTitle="Formación Práctica"
+                    displayType="secondary"
+                    showCollapseIcon={true}
+                    spritemap={spritemap}
+                  >
+                  <ClayPanel.Body>
+                    <Formacion
+                      ejecucion={ejecucion}
+                      ejecucionHandler={ejecucionHandler}
+                    />
+                  </ClayPanel.Body>
+                  </ClayPanel>                    
+
+                  <ClayPanel
+                    collapsable
+                    displayTitle="Formación Grupal"
+                    displayType="secondary"
+                    showCollapseIcon={true}
+                    spritemap={spritemap}
+                  >
+                  <ClayPanel.Body>
+                    <Formacion 
+                      ejecucion={ejecucion}
+                      ejecucionHandler={ejecucionHandler}
+                    />
+                  </ClayPanel.Body>
+                  </ClayPanel>                    
+
+
                   </>
 
                 }

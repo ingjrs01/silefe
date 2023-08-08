@@ -1,10 +1,11 @@
 import React, {useEffect, useReducer, useRef, useState} from "react";
-import DefaultForm from "./AccionesForm";
+import AccionesForm from "./AccionesForm";
 import Menu from '../Menu';
 import Table from '../../includes/interface/Table';
 import {useModal} from '@clayui/modal';
 import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
 import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
+import { EJECUCION_ACTIONS,iniState as iniEjecucion, reducerEjecucion} from './Ejecucion.reducer';
 import { deleteAPI, fetchAPIData, saveAPI, deleteAPIParams, fetchAPIRow } from "../../includes/apifunctions";
 import {LoadFiles} from '../../includes/interface/LoadFiles'
 import {FAvisos} from '../../includes/interface/FAvisos'
@@ -17,11 +18,11 @@ import {reducerParticipantes, PARTICIPANTE_ACTIONS, initialParticipantes} from '
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 //import Papa from "papaparse";
 
-
 const Acciones = () => {
     const [items,itemsHandle]                  = useReducer(red_items,initialState);
     const [docentes,docentesHandler]           = useReducer(reducerDocentes, initialDocentes);
     const [participantes,participantesHandler] = useReducer(reducerParticipantes, initialParticipantes);
+    const [ejecucion, ejecucionHandler]  = useReducer(reducerEjecucion, iniEjecucion);
     const [toastItems,setToastItems]     = useState([]);    
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
@@ -120,6 +121,7 @@ const Acciones = () => {
     const fetchData = async () => {
         docentesHandler({type: DOCENTE_ACTIONS.START});
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
+        ejecucionHandler({type:EJECUCION_ACTIONS.START});
                 
         const postdata = {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
@@ -141,9 +143,13 @@ const Acciones = () => {
     }
 
     const beforeEdit = () => {
+        //debugger;
         fetchAPIData('/silefe.docente/all', {lang: getLanguageId()}).then(response => {
             const tits = response.data.map( i => {                
                 let tt = JSON.parse(i.email);
+                //let tt = (i.email != null && i.email.length > 0)?JSON.parse(i.email)[0].value:""  ;
+                
+                //debugger;
                 return {
                     ...i, 
                     apellidos: i.apellido1 + " " + i.apellido2, 
@@ -350,7 +356,7 @@ const Acciones = () => {
                 itemsHandle={itemsHandle}
             />}       
             { (items.status === 'edit' || items.status === 'new') && 
-                <DefaultForm 
+                <AccionesForm 
                     save={ handleSave} 
                     itemsHandle={itemsHandle}
                     items={items}
@@ -358,6 +364,8 @@ const Acciones = () => {
                     docentesHandler={docentesHandler}
                     participantes={participantes}
                     participantesHandler={participantesHandler}
+                    ejecucion={ejecucion}
+                    ejecucionHandler={ejecucionHandler}
                 />
             }
             {
