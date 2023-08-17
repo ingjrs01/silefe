@@ -25,7 +25,7 @@ const Acciones = () => {
     const [ejecucionT, ejecucionHandlerT]      = useReducer(reducerEjecucion, iniEjecucion);
     const [ejecucionP, ejecucionHandlerP]      = useReducer(reducerEjecucion, iniEjecucion);
     const [ejecucionG, ejecucionHandlerG]      = useReducer(reducerEjecucion, iniEjecucion);
-    const [toastItems,setToastItems]           = useState([]);    
+    const [toastItems,setToastItems]           = useState([]);
     const {observer, onOpenChange, open}       = useModal();
     const [file,setFile]                       = useState();
     const isInitialized                        = useRef(null);
@@ -42,10 +42,10 @@ const Acciones = () => {
 
 //    const processCsv = () => {
 //        if (file) {
-//            const reader = new FileReader();         
+//            const reader = new FileReader();
 //            reader.onload = async ({ target }) => {
 //                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-//                const parsedData = csv?.data;                                
+//                const parsedData = csv?.data;
 //                let end = '/silefe.cnae/add-multiple';
 //                let ttmp = { cnaes:parsedData,userId:getUserId()};
 //                batchAPI(end,ttmp,referer).then( res2 => {
@@ -53,7 +53,7 @@ const Acciones = () => {
 //                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);                    
 //                        fetchData();
 //                    }
-//                    else 
+//                    else
 //                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
 //                });
 //            };
@@ -70,7 +70,7 @@ const Acciones = () => {
             obj: items.item,
             userId:      getUserId()
         }
-        
+
         let endpoint = '/silefe.accion/save-accion';
         if (items.status === 'new')
             endpoint = '/silefe.accion/add-accion';
@@ -91,15 +91,19 @@ const Acciones = () => {
                     console.log("Se han borrado los participantes");
                 });
             }
+            // Vamos a guardar las formaciones:
+            const obj4 = {id: data.accionId, obj: ejecucionHandlerT.item};
+            respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion',obj4,referer);
+            //debugger;
             fetchData();
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);            
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
         }
-        else 
-        setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);            
+        else
+        setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
 
-        if (state != 'undefined' && state.backUrl.length > 0) 
-            navigate(state.backUrl+state.ancestorId);  
-        
+        if (state != 'undefined' && state.backUrl.length > 0)
+            navigate(state.backUrl+state.ancestorId);
+
     }
 
     const handleDelete = () => {
@@ -116,7 +120,7 @@ const Acciones = () => {
                 fetchData();
             }
             else
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);            
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
         })
     }
 
@@ -149,28 +153,28 @@ const Acciones = () => {
     const beforeEdit = () => {
         //debugger;
         fetchAPIData('/silefe.docente/all', {lang: getLanguageId()}).then(response => {
-            const tits = response.data.map( i => {                
+            const tits = response.data.map( i => {
                 let tt = JSON.parse(i.email);
                 //let tt = (i.email != null && i.email.length > 0)?JSON.parse(i.email)[0].value:""  ;
-                
+
                 //debugger;
                 return {
-                    ...i, 
-                    apellidos: i.apellido1 + " " + i.apellido2, 
+                    ...i,
+                    apellidos: i.apellido1 + " " + i.apellido2,
                     nuevo: true,
                     email: tt[0].value,
                 }
             });
             docentesHandler({type: DOCENTE_ACTIONS.SETSEARCHITEMS,items:tits});
         })
-               
-        let sel = items.arr.filter(i => i.checked);        
+
+        let sel = items.arr.filter(i => i.checked);
         if (sel.length > 0) {
-            const accionId = sel[0].accionId;              
-            fetchAPIData('/silefe.accion/filter-docentes-by-accion', {accionId: accionId},referer).then(response => {                
+            const accionId = sel[0].accionId;
+            fetchAPIData('/silefe.accion/filter-docentes-by-accion', {accionId: accionId},referer).then(response => {
                 const tits = response.data.map( i => {
                     let email = '';
-                    if (i.email.length > 0) 
+                    if (i.email.length > 0)
                         email = JSON.parse(i.email)[0].value;
 
                     return {
@@ -182,11 +186,11 @@ const Acciones = () => {
                 });
                 docentesHandler({type: DOCENTE_ACTIONS.SETITEMS,items:tits});
             });
-        
-            fetchAPIData('/silefe.accion/filter-participantes-by-accion', {accionId: accionId},referer).then(response => {                
+
+            fetchAPIData('/silefe.accion/filter-participantes-by-accion', {accionId: accionId},referer).then(response => {
                 const tits = response.data.map( i => {
                     let email = '';
-                    if (i.email != null && i.email.length > 0) 
+                    if (i.email != null && i.email.length > 0)
                         email = JSON.parse(i.email)[0].value;
 
                     return {
@@ -196,7 +200,7 @@ const Acciones = () => {
                         email: email
                     }
                 });
-                participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:tits});            
+                participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:tits});
             });
         }
     }
@@ -208,7 +212,7 @@ const Acciones = () => {
 
         const postdata = {
             pagination: {
-                page: participantes.pagination.page, 
+                page: participantes.pagination.page,
                 pageSize: 4
             },
             options : {
@@ -219,13 +223,13 @@ const Acciones = () => {
         }
 
         fetchAPIData('/silefe.participante/filter',postdata,referer).then(response => {
-            const pts = response.data.map( i => {                
+            const pts = response.data.map( i => {
                 let email = "";
-                if (i.email != null && i.email.length > 0) 
+                if (i.email != null && i.email.length > 0)
                     email = JSON.parse(i.email)[0].value;
                 return {
-                    ...i, 
-                    apellidos: i.apellido1 + " " + i.apellido2, 
+                    ...i,
+                    apellidos: i.apellido1 + " " + i.apellido2,
                     nuevo: true,
                     email: email
                 }
@@ -242,7 +246,7 @@ const Acciones = () => {
 
         const postdata = {
             pagination: {
-                page: docentes.pagination.page, 
+                page: docentes.pagination.page,
                 pageSize: 4
             },
             options : {
@@ -253,13 +257,13 @@ const Acciones = () => {
         }
 
         fetchAPIData('/silefe.docente/filter',postdata,referer).then(response => {
-            const pts = response.data.map( i => {                
+            const pts = response.data.map( i => {
                 let email = "";
-                if (i.email != null && i.email.length > 0) 
+                if (i.email != null && i.email.length > 0)
                     email = JSON.parse(i.email)[0].value;
                 return {
-                    ...i, 
-                    apellidos: i.apellido1 + " " + i.apellido2, 
+                    ...i,
+                    apellidos: i.apellido1 + " " + i.apellido2,
                     nuevo: true,
                     email: email
                 }
@@ -287,7 +291,7 @@ const Acciones = () => {
         //    const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName } })];
         //    form.fields.tecnicoId.options = opts;
         //});
-        
+
         fetchAPIData('/silefe.plataforma/all', {options: {}}, referer).then(response => {
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.plataformaId, label: obj.nombre } })];
             form.fields.plataformaId.options = opts;
@@ -298,11 +302,11 @@ const Acciones = () => {
             form.fields.estadoId.options = opts;
         });
 
-        // TODO: Categoria: 
+        // TODO: Categoria:
         form.fields.categoriaId.options = [{value: 0, label:langSel}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}];
         form.fields.cursoId.options = [{value: 0, label:langSel}, {value: 1, label: "Curso 1"},{value: 2, label: "Curso 2"}];
     }
-    
+
     const loadAccion = (id) => {
         fetchAPIRow('/silefe.accion/get',{id:id},referer).then (r => itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:r})) ;
     }
@@ -315,14 +319,14 @@ const Acciones = () => {
             if (id != 'undefined' && id > 0) {
                 loadAccion(id);
             }
-            else 
+            else
                 fetchData();
 			isInitialized.current = true;
 		} else {
             if (id != 'undefined' && id > 0) {
                 loadAccion(id);
             }
-            else {  
+            else {
                 const timeoutId = setTimeout(fetchData, 350);
                 return () => clearTimeout(timeoutId);
             }
@@ -338,14 +342,14 @@ const Acciones = () => {
         loadDocentes()
     }, [docentes.load])
 
-    if (!items) 
+    if (!items)
         return (<div>Liferay.Language.get('Cargando')</div>)
 
     return (
         <>
-            <Menu 
-                handleSave={handleSave} 
-                handleDelete={handleDelete} 
+            <Menu
+                handleSave={handleSave}
+                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
@@ -353,15 +357,15 @@ const Acciones = () => {
                 beforeEdit={beforeEdit}
                 formulario={formulario}
             />
-            { (items.status === 'load') && 
-            <LoadFiles 
+            { (items.status === 'load') &&
+            <LoadFiles
                 setFile={setFile}
                 processCsv={processCsv}
                 itemsHandle={itemsHandle}
-            />}       
-            { (items.status === 'edit' || items.status === 'new') && 
-                <AccionesForm 
-                    save={ handleSave} 
+            />}
+            { (items.status === 'edit' || items.status === 'new') &&
+                <AccionesForm
+                    save={ handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
                     docentes={docentes}
@@ -375,13 +379,13 @@ const Acciones = () => {
             {
                 (items.status === 'list') &&
                 <>
-                    <Table 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Table
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
-                    <Paginator 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Paginator
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
                 </>
             }
