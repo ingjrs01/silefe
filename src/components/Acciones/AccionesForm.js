@@ -252,11 +252,11 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                   >
                   <ClayPanel.Body>
                     <Formacion 
-                      ejecucion={ejecucion}
-                      ejecucionHandler={ejecucionHandler}
+                      ejecucion={ejecucion[0]}
+                      ejecucionHandler={ejecucionHandler[0]}
                     />
                   </ClayPanel.Body>
-                  </ClayPanel>                    
+                  </ClayPanel>
 
                   <ClayPanel
                     collapsable
@@ -267,11 +267,11 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                   >
                   <ClayPanel.Body>
                     <Formacion
-                      ejecucion={ejecucion}
-                      ejecucionHandler={ejecucionHandler}
+                      ejecucion={ejecucion[1]}
+                      ejecucionHandler={ejecucionHandler[1]}
                     />
                   </ClayPanel.Body>
-                  </ClayPanel>                    
+                  </ClayPanel>
 
                   <ClayPanel
                     collapsable
@@ -282,11 +282,11 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                   >
                   <ClayPanel.Body>
                     <Formacion 
-                      ejecucion={ejecucion}
-                      ejecucionHandler={ejecucionHandler}
+                      ejecucion={ejecucion[2]}
+                      ejecucionHandler={ejecucionHandler[2]}
                     />
                   </ClayPanel.Body>
-                  </ClayPanel>                    
+                  </ClayPanel>
 
 
                   </>

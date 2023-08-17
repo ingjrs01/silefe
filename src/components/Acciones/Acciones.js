@@ -22,11 +22,13 @@ const Acciones = () => {
     const [items,itemsHandle]                  = useReducer(red_items,initialState);
     const [docentes,docentesHandler]           = useReducer(reducerDocentes, initialDocentes);
     const [participantes,participantesHandler] = useReducer(reducerParticipantes, initialParticipantes);
-    const [ejecucion, ejecucionHandler]  = useReducer(reducerEjecucion, iniEjecucion);
-    const [toastItems,setToastItems]     = useState([]);    
-    const {observer, onOpenChange, open} = useModal();
-    const [file,setFile]                 = useState();
-    const isInitialized                  = useRef(null);
+    const [ejecucionT, ejecucionHandlerT]      = useReducer(reducerEjecucion, iniEjecucion);
+    const [ejecucionP, ejecucionHandlerP]      = useReducer(reducerEjecucion, iniEjecucion);
+    const [ejecucionG, ejecucionHandlerG]      = useReducer(reducerEjecucion, iniEjecucion);
+    const [toastItems,setToastItems]           = useState([]);    
+    const {observer, onOpenChange, open}       = useModal();
+    const [file,setFile]                       = useState();
+    const isInitialized                        = useRef(null);
     const { id } = useParams();
     const {state} = useLocation();
     const navigate = useNavigate();
@@ -102,7 +104,7 @@ const Acciones = () => {
 
     const handleDelete = () => {
         if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
+            onOpenChange(true);
     }
 
     const confirmDelete = async () => {
@@ -111,9 +113,9 @@ const Acciones = () => {
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_ok') }]);
-                fetchData();        
+                fetchData();
             }
-            else 
+            else
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);            
         })
     }
@@ -121,8 +123,10 @@ const Acciones = () => {
     const fetchData = async () => {
         docentesHandler({type: DOCENTE_ACTIONS.START});
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
-        ejecucionHandler({type:EJECUCION_ACTIONS.START});
-                
+        ejecucionHandlerT({type:EJECUCION_ACTIONS.START});
+        ejecucionHandlerP({type:EJECUCION_ACTIONS.START});
+        ejecucionHandlerG({type:EJECUCION_ACTIONS.START});
+
         const postdata = {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
@@ -364,8 +368,8 @@ const Acciones = () => {
                     docentesHandler={docentesHandler}
                     participantes={participantes}
                     participantesHandler={participantesHandler}
-                    ejecucion={ejecucion}
-                    ejecucionHandler={ejecucionHandler}
+                    ejecucion={[ejecucionT,ejecucionP,ejecucionG]}
+                    ejecucionHandler={[ejecucionHandlerT,ejecucionHandlerP,ejecucionHandlerG]}
                 />
             }
             {

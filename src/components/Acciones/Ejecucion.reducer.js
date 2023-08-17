@@ -66,9 +66,22 @@ export const reducerEjecucion = (state, action ) => {
             return {
                 ...state,
                 item: {
-                    id: 0,                    
+                    id: 0,
                     inicio: "2023-06-11",
                     entidadId: 2,
+                    hIni1: 0,
+                    hFin1: 0,
+                    hIni2: 0,
+                    hFin2: 0,
+                    dias: {
+                        L: {label: "L", value:false},
+                        M: {label: "M", value:false},
+                        X: {label: "X", value:false},
+                        J: {label: "J", value:false},
+                        V: {label: "V", value:false},
+                        S: {label: "S", value:false},
+                        D: {label: "D", value:false},
+                    },
                 },
                 items: [],
                 deleted: [],
@@ -100,18 +113,21 @@ export const reducerEjecucion = (state, action ) => {
         case EJECUCION_ACTIONS.SETFIELD:
             //console.debug(action);
             //debugger;
-            if (state.fieldname == "dias")
+            if (action.fieldname == "dias") {
+                //debugger;
+                //console.debug(action);
+                let ldias = {...state.item.dias};
+                ldias[action.value] = {label: action.value, value:!ldias[action.value].value};
                 return {
                     ...state,
                     item: {
                         ...state.item,
                         dias: {
-                            ...state.item.dias, 
-                            [action.value]: true 
+                            ...ldias
                         }
                     }
                 };
-
+            }
             return {
                 ...state,
                 item: {...state.item, [action.fieldname]:action.value}
