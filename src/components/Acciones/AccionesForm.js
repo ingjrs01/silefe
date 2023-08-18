@@ -187,6 +187,21 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                           toggled={items.item['grupal']}
                         />
                       </ClayForm.Group>
+
+                      <ClayForm.Group className={'has-success  col'} key={"Group-nhoras"} >
+                    <label htmlFor="basicInput">{items.fields.fields['horas'].label}</label>
+                    <ClayInput
+                      placeholder={items.fields.fields['horas'].placeholder}
+                      type="text"
+                      name={items.fields.fields['horas'].name}
+                      key={items.fields.fields['horas'].name}
+                      value={items.item['horas']}
+                      onChange={e => {
+                        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
+                      }}>
+                    </ClayInput>
+                  </ClayForm.Group>
+
                     </div>
                   </>
                 }

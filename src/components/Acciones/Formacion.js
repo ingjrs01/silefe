@@ -119,27 +119,19 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                     </div>
 
 
-
-
-
-
-
-
-
                 </div>
                 <div class="row">
 
                     <ClayForm.Group className={"col-2"} key={"Group-110"} >
-                        <label htmlFor="basicInput">{"Hora Inicia M."}</label>
+                        <label htmlFor="basicInput">{"Hora Inicio M."}</label>
                         <ClayInput
                             placeholder={"prueba2"}
                             type="time"
                             name={"escondido-3"}
                             key={"prueba-4"}
-                            onChange={evt => {
-                                console.log("poniendo una hora");
-                                console.debug(evt.target.value);
-                            }}
+                            value={ejecucion.item.hIni1}
+                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hIni1", value:evt.target.value })
+                            }
                         >
                         </ClayInput>
                     </ClayForm.Group>

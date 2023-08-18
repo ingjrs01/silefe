@@ -67,9 +67,10 @@ export const reducerEjecucion = (state, action ) => {
                 ...state,
                 item: {
                     id: 0,
-                    inicio: "2023-06-11",
+                    inicio: "",
+                    fin: "18/08/2023",
                     entidadId: 2,
-                    hIni1: 0,
+                    hIni1: "08:00",
                     hFin1: 0,
                     hIni2: 0,
                     hFin2: 0,
@@ -128,6 +129,7 @@ export const reducerEjecucion = (state, action ) => {
                     }
                 };
             }
+            debugger;
             return {
                 ...state,
                 item: {...state.item, [action.fieldname]:action.value}

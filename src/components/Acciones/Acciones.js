@@ -92,7 +92,7 @@ const Acciones = () => {
                 });
             }
             // Vamos a guardar las formaciones:
-            const obj4 = {id: data.accionId, obj: ejecucionHandlerT.item};
+            const obj4 = {id: data.accionId, obj: ejecucionT.item};
             respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion',obj4,referer);
             //debugger;
             fetchData();
