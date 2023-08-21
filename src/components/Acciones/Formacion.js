@@ -12,9 +12,6 @@ const spritemap = "./o/my-project/icons.svg";
 
 export const Formacion = ({ ejecucion, ejecucionHandler }) => {
 
-    console.log("Formacion");
-    console.debug(ejecucion);
-
     return (
         <>
             <div class="container">
@@ -25,7 +22,6 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                         <label htmlFor="basicInput">{"Fecha Inicio"}</label>
                         <ClayDatePicker
                             onChange={val => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "inicio", value: val })}
-                            //placeholder={items.fields.fields[it].placeholder}
                             firstDayOfWeek={1}
                             months={getMonths(getLanguageId())}
                             spritemap={spritemap}
@@ -114,11 +110,8 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"D" })}
                                 />
                             </ClayForm.Group>
-
                         </div>
                     </div>
-
-
                 </div>
                 <div class="row">
 
@@ -183,7 +176,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                             key={"aaa"}
                             disabled={false}
                             onChange={evt => {
-                                console.log("probando el cambio de mepresa");
+                                console.log("probando el cambio de empresa");
                                 ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "entidadId", value: evt.target.value })
                             }}
                             value={ejecucion.item.entidadId} >
@@ -200,9 +193,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                             />
 
                         </ClaySelect>
-
                     </ClayForm.Group>
-
                 </div>
 
                 <div class="row">
@@ -228,17 +219,11 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                                 label={"Aula poligono Barro"}
                                 value={2}
                             />
-
                         </ClaySelect>
-
                     </ClayForm.Group>
-
                 </div>
-
             </div>
         </>
-
     )
-
 
 }

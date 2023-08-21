@@ -91,10 +91,15 @@ const Acciones = () => {
                     console.log("Se han borrado los participantes");
                 });
             }
-            // Vamos a guardar las formaciones:
-            const obj4 = {id: data.accionId, obj: ejecucionT.item};
+
+            // TODO: Revisar según el tpo de formaicon que sea: 
+            let obj4 = {id: ejecucionT.item.id, obj: ejecucionT.item};
             respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion',obj4,referer);
-            //debugger;
+            obj4 = {id: ejecucionP.item.id, obj: ejecucionP.item};
+            respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion',obj4,referer);
+            obj4 = {id: ejecucionG.item.id, obj: ejecucionG.item};
+            respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion',obj4,referer);
+
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
         }
@@ -127,9 +132,9 @@ const Acciones = () => {
     const fetchData = async () => {
         docentesHandler({type: DOCENTE_ACTIONS.START});
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
-        ejecucionHandlerT({type:EJECUCION_ACTIONS.START});
-        ejecucionHandlerP({type:EJECUCION_ACTIONS.START});
-        ejecucionHandlerG({type:EJECUCION_ACTIONS.START});
+        ejecucionHandlerT({type:EJECUCION_ACTIONS.START, tipoFormacion: 1});
+        ejecucionHandlerP({type:EJECUCION_ACTIONS.START, tipoFormacion: 2});
+        ejecucionHandlerG({type:EJECUCION_ACTIONS.START, tipoFormacion: 3});
 
         const postdata = {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
@@ -151,13 +156,9 @@ const Acciones = () => {
     }
 
     const beforeEdit = () => {
-        //debugger;
         fetchAPIData('/silefe.docente/all', {lang: getLanguageId()}).then(response => {
             const tits = response.data.map( i => {
                 let tt = JSON.parse(i.email);
-                //let tt = (i.email != null && i.email.length > 0)?JSON.parse(i.email)[0].value:""  ;
-
-                //debugger;
                 return {
                     ...i,
                     apellidos: i.apellido1 + " " + i.apellido2,
@@ -171,6 +172,9 @@ const Acciones = () => {
         let sel = items.arr.filter(i => i.checked);
         if (sel.length > 0) {
             const accionId = sel[0].accionId;
+            ejecucionHandlerT({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
+            ejecucionHandlerP({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
+            ejecucionHandlerG({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
             fetchAPIData('/silefe.accion/filter-docentes-by-accion', {accionId: accionId},referer).then(response => {
                 const tits = response.data.map( i => {
                     let email = '';
