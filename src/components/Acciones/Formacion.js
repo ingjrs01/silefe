@@ -130,8 +130,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                             name={"escondido-3"}
                             key={"prueba-4"}
                             value={ejecucion.item.hIni1}
-                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hIni1", value:evt.target.value })
-                            }
+                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hIni1", value:evt.target.value })}
                         >
                         </ClayInput>
                     </ClayForm.Group>
@@ -143,10 +142,8 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                             type="time"
                             name={"escondido-3"}
                             key={"prueba-4"}
-                            onChange={evt => {
-                                console.log("poniendo una hora");
-                                console.debug(evt.target.value);
-                            }}
+                            value={ejecucion.item.hFin1}
+                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hFin1", value:evt.target.value })}
                         >
                         </ClayInput>
                     </ClayForm.Group>
@@ -158,10 +155,8 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                             type="time"
                             name={"escondido-3"}
                             key={"prueba-4"}
-                            onChange={evt => {
-                                console.log("poniendo una hora");
-                                console.debug(evt.target.value);
-                            }}
+                            value={ejecucion.item.hIni2}
+                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hIni2", value:evt.target.value })}
                         >
                         </ClayInput>
                     </ClayForm.Group>
@@ -172,10 +167,8 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                             type="time"
                             name={"escondido-3"}
                             key={"prueba-4"}
-                            onChange={evt => {
-                                console.log("poniendo una hora");
-                                console.debug(evt.target.value);
-                            }}
+                            value={ejecucion.item.hFin2}
+                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hFin2", value:evt.target.value })}
                         >
                         </ClayInput>
                     </ClayForm.Group>

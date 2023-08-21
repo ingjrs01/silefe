@@ -112,11 +112,7 @@ export const reducerEjecucion = (state, action ) => {
                 status: "edit",
             }
         case EJECUCION_ACTIONS.SETFIELD:
-            //console.debug(action);
-            //debugger;
             if (action.fieldname == "dias") {
-                //debugger;
-                //console.debug(action);
                 let ldias = {...state.item.dias};
                 ldias[action.value] = {label: action.value, value:!ldias[action.value].value};
                 return {
@@ -129,7 +125,6 @@ export const reducerEjecucion = (state, action ) => {
                     }
                 };
             }
-            debugger;
             return {
                 ...state,
                 item: {...state.item, [action.fieldname]:action.value}
