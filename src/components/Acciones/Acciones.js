@@ -310,18 +310,18 @@ const Acciones = () => {
         // TODO: Categoria:
         form.fields.categoriaId.options = [{value: 0, label:langSel}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}];
         form.fields.cursoId.options = [{value: 0, label:langSel}, {value: 1, label: "Curso 1"},{value: 2, label: "Curso 2"}];
-        // Cargo también los datos de eform: 
-        console.log("consultando empresas");
+        
+        
         fetchAPIData('/silefe.empresa/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.id, label: obj.razonSocial } })];
             eform.fields.empresaId.options = opts;
         });
+
         fetchAPIData('/silefe.lugar/all', {}, referer).then(response => {
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             eform.fields.lugarId.options = opts; 
         });
 
-        //debugger;
         ejecucionHandlerT({type: EJECUCION_ACTIONS.SETFORM, form: eform});
         ejecucionHandlerP({type: EJECUCION_ACTIONS.SETFORM, form: eform});
         ejecucionHandlerG({type: EJECUCION_ACTIONS.SETFORM, form: eform});

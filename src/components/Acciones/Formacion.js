@@ -1,7 +1,4 @@
 import React from "react";
-//import ClayTabs from '@clayui/tabs';
-//import ClayCard from "@clayui/card";
-//import ClayButton from '@clayui/button';
 import ClayForm, { ClayInput, ClaySelect, ClayCheckbox } from '@clayui/form';
 import ClayDatePicker from '@clayui/date-picker';
 import { getMonths, getDays } from '../../includes/interface/DatesLang';

@@ -3,9 +3,12 @@ import ClayTabs from '@clayui/tabs';
 import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
 import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
+import ClayDatePicker from '@clayui/date-picker';
 import ClayPanel from '@clayui/panel';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
+import { getMonths, getDays } from '../../includes/interface/DatesLang';
 import DocentesTable from "./DocentesTable";
+import { getLanguageId } from '../../includes/LiferayFunctions';
 import ParticipantesTable from "./ParticipantesTable";
 import ClayLocalizedInput from '@clayui/localized-input';
 import { Formacion } from './Formacion';
@@ -237,27 +240,50 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
               </ClayTabs.TabPane>
 
               <ClayTabs.TabPane aria-labelledby="tab-2" key={"tab-content-2"}>
+                {
+                  (items.item.accionTipoId != 1) &&
+                  <>
+                  <div class="row">
 
-                <ClayInput
-                  placeholder={"prueba2"}
-                  type="text"
-                  name={"prueba-2"}
-                  key={"prueba-2"}
-                  value={"bbb"}
-                >
-                </ClayInput>
+                    <ClayForm.Group className={"col-6"} key={"Group-91"} >
+                            <label htmlFor="basicInput">{"Fecha Inicio"}</label>
+                            <ClayDatePicker
+                                onChange={val => console.log("aaa")}
+                                firstDayOfWeek={1}
+                                months={getMonths(getLanguageId())}
+                                spritemap={spritemap}
+                                timezone="GMT+01:00"
+                                value={"2023-08-23"}
+                                weekdaysShort={getDays(getLanguageId())}
+                                years={{
+                                  end: (((new Date().getFullYear()) + 2)),
+                                  start: ((new Date().getFullYear() - 0))
+                                }}
+                                />
+                    </ClayForm.Group>
 
+                    <ClayForm.Group className={"col-6"} key={"Group-92"} >
+                            <label htmlFor="basicInput">{"Fecha Fin"}</label>
+                            <ClayDatePicker
+                                onChange={val => console.log("aaa")}
+                                firstDayOfWeek={1}
+                                months={getMonths(getLanguageId())}
+                                spritemap={spritemap}
+                                timezone="GMT+01:00"
+                                value={"2023-08-01"}
+                                weekdaysShort={getDays(getLanguageId())}
+                                years={{
+                                  end: (((new Date().getFullYear()) + 2)),
+                                  start: ((new Date().getFullYear() - 0))
+                                }}
+                                />
+                    </ClayForm.Group>
+                    </div>
+                  </>
+                }
                 {
                   (items.item.accionTipoId == 1 || items.item.accionTipoId == 3) &&
                   <>
-                    <ClayInput
-                      placeholder={"prueba2"}
-                      type="text"
-                      name={"escondido-2"}
-                      key={"prueba-3"}
-                      value={"campo ocultado"}
-                    >
-                  </ClayInput>
                   <ClayPanel
                     collapsable
                     displayTitle="Formación Teórica"

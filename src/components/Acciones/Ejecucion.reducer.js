@@ -1,7 +1,5 @@
 export const EJECUCION_ACTIONS = {
     START: 0,
-    //LOAD_ITEMS: 1,
-    //SELECT_ITEM: 2,
     NEW_ITEM: 3,
     SETFIELD: 4,
     SETSEARCH: 5,
@@ -11,10 +9,10 @@ export const EJECUCION_ACTIONS = {
     SAVE: 9,
     CANCEL: 10,
     DELETE_ITEM:11,
-    SELECT_ITEMS: 12,
+    //SELECT_ITEMS: 12,
     //CHECK: 13,
     //CHECKALL: 14,
-    SETITEMS: 15,
+    SETITEM: 15,
     SETSEARCHFIELD: 18,
     LOAD: 19,
     SETFORM: 20,
@@ -202,27 +200,11 @@ export const reducerEjecucion = (state, action ) => {
                 items: [...state.items,...tmpar.map(i => ({...i,checked:false}))],
                 searchItems: tmpPar2,
             }
-        case EJECUCION_ACTIONS.SETITEMS: 
+        case EJECUCION_ACTIONS.SETITEM: 
             return {
                 ...state,
-                items: [...action.items.map(item=>({...item, checked:false}))]
+                item: action.item
             }
-        //case EJECUCION_ACTIONS.CHECK: 
-        //    tmpar = state.items;
-        //    tmpar[action.index].checked = !tmpar[action.index].checked;
-//
-        //    return {
-        //        ...state,
-        //        items: tmpar
-        //    }
-        //case EJECUCION_ACTIONS.CHECKALL: 
-        //    const val = !state.checkAll;
-        //    return {
-        //        ...state,
-        //        checkAll: val,
-        //        items: [...state.items.map(item => ({...item,checked: val}))]
-        //    }
-//
         case EJECUCION_ACTIONS.SETSEARCHFIELD: 
             return {
                 ...state,
