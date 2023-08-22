@@ -1,7 +1,7 @@
 export const EJECUCION_ACTIONS = {
     START: 0,
-    LOAD_ITEMS: 1,
-    SELECT_ITEM: 2,
+    //LOAD_ITEMS: 1,
+    //SELECT_ITEM: 2,
     NEW_ITEM: 3,
     SETFIELD: 4,
     SETSEARCH: 5,
@@ -17,7 +17,7 @@ export const EJECUCION_ACTIONS = {
     SETITEMS: 15,
     SETSEARCHFIELD: 18,
     LOAD: 19,
-    //SETFORM: 20,
+    SETFORM: 20,
   }
 export const iniState = {
     item: {
@@ -43,7 +43,7 @@ export const iniState = {
         entidadId: 2,
         lugarId: 0,
     },
-    //form: {},
+    form: {},
     items: [],
     deleted: [],
     search: "",
@@ -57,11 +57,12 @@ let tmpar= [];
 
 export const reducerEjecucion = (state, action ) => {
     switch (action.type) {
-        //case EJECUCION_ACTIONS.SETFORM: 
-        //    return {
-        //        ...state,
-        //        //form: action.form,
-        //    }
+        case EJECUCION_ACTIONS.SETFORM: 
+            //debugger;
+            return {
+                ...state,
+                form: action.form,
+            }
         case EJECUCION_ACTIONS.START:
             return {
                 ...state,
@@ -86,11 +87,12 @@ export const reducerEjecucion = (state, action ) => {
                         D: {label: "D", value:false},
                     },
                 },
-                items: [],
+                //form: {},
+                //items: [],
                 deleted: [],
                 searchItems: [],
-                checkAllSearch: false,
-                checkAll: false,
+                //checkAllSearch: false,
+                //checkAll: false,
                 status: "list",
             }
         case EJECUCION_ACTIONS.LOAD_ITEMS:

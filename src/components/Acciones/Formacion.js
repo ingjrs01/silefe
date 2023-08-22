@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import ClayTabs from '@clayui/tabs';
-import ClayCard from "@clayui/card";
-import ClayButton from '@clayui/button';
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
+import React from "react";
+//import ClayTabs from '@clayui/tabs';
+//import ClayCard from "@clayui/card";
+//import ClayButton from '@clayui/button';
+import ClayForm, { ClayInput, ClaySelect, ClayCheckbox } from '@clayui/form';
 import ClayDatePicker from '@clayui/date-picker';
-import { getMonths, getDays } from '../../includes/interface/DatesLang'; //'./DatesLang';
+import { getMonths, getDays } from '../../includes/interface/DatesLang';
 import { getLanguageId } from '../../includes/LiferayFunctions';
 import { EJECUCION_ACTIONS } from './Ejecucion.reducer';
 
@@ -171,31 +171,28 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                     <ClayForm.Group className={"col-4"} key={"Group-114"} >
                         <label htmlFor="basicInput">{"Empresa"}</label>
                         <ClaySelect aria-label="Select Label"
-                            id={"a"}
+                            id={"entidadId"}
                             name={"entidadId"}
-                            key={"aaa"}
+                            key={"entidadId"}
                             disabled={false}
                             onChange={evt => {
                                 console.log("probando el cambio de empresa");
                                 ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "entidadId", value: evt.target.value })
                             }}
                             value={ejecucion.item.entidadId} >
-
-                            <ClaySelect.Option
-                                key={"option-"}
-                                label={"Diputación de Pontevedra"}
-                                value={1}
-                            />
-                            <ClaySelect.Option
-                                key={"option-"}
-                                label={"Otra empresa"}
-                                value={2}
-                            />
+                            {
+                                ejecucion.form.fields.empresaId.options.map( option => (
+                                    <ClaySelect.Option
+                                        key={"option-"+option.label+option.value}
+                                        label={option.label}
+                                        value={option.value}
+                                    />
+                                ))
+                            }
 
                         </ClaySelect>
                     </ClayForm.Group>
                 </div>
-
                 <div class="row">
                     <ClayForm.Group className={"col-4"} key={"Group-115"} >
                         <label htmlFor="basicInput">{"Centro"}</label>
@@ -207,18 +204,16 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                             onChange={evt => {
                                 ejecucionHandler({type: EJECUCION_ACTIONS.SETFIELD, fieldname: "lugarId", value:evt.target.value})
                             }}
-                            value={ejecucion.item.lugarId} >
-
-                            <ClaySelect.Option
-                                key={"option-"}
-                                label={"Aula CeMIT"}
-                                value={1}
-                            />
-                            <ClaySelect.Option
-                                key={"option-"}
-                                label={"Aula poligono Barro"}
-                                value={2}
-                            />
+                            value={ejecucion.item.lugarId} >                                
+                            {
+                                ejecucion.form.fields.lugarId.options.map( option => (
+                                    <ClaySelect.Option
+                                        key={"option-"+option.label+option.value}
+                                        label={option.label}
+                                        value={option.value}
+                                    />
+                                ))
+                            }
                         </ClaySelect>
                     </ClayForm.Group>
                 </div>
