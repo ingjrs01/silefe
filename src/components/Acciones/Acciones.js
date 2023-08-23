@@ -207,6 +207,11 @@ const Acciones = () => {
                 });
                 participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:tits});
             });
+            // Cargando los datos de las acciones: 
+            fetchAPIData('/silefe.formacionaccion/get-formacion-accion', {accionId: accionId,formacinId: 1},referer).then(response => {
+                console.log("datos de la accion cargado");
+                console.debug(response);
+            });
         }
     }
 
