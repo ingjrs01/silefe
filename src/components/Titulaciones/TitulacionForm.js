@@ -1,13 +1,10 @@
-import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox, ClaySelectWithOption } from '@clayui/form';
-import ClayLocalizedInput from '@clayui/localized-input';
-import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import ClayDatePicker from '@clayui/date-picker';
-import { getMonths, getDays } from '../../includes/interface/DatesLang';
-import { getLanguageId } from '../../includes/LiferayFunctions'
-import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
+import ClayCard from "@clayui/card";
+import ClayForm, { ClaySelect } from '@clayui/form';
+import ClayLocalizedInput from '@clayui/localized-input';
+import React, { useState } from "react";
 import { ITEMS_ACTIONS } from "../../includes/reducers/items.reducer";
+import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 
 const spritemap = "./o/my-project/icons.svg";
 
@@ -49,7 +46,7 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,
                                 key={"it"}
                                 disabled={ false }
                                 onChange={evt => { 
-                                  titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value:evt.target.value});                                  
+                                  titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value:evt.target.value});
                                  }}
                                 value={redTitulaciones.titulacion.titulacionTipoId} >
                                   {
@@ -120,6 +117,7 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,
                                 key={"tdescripcion"}
                                 label={"Descripcion"}
                                 locales={locales}
+                                spritemap={spritemap}
                                 onSelectedLocaleChange={setSelectedLocale}
                                 onTranslationsChange={evt => {
                                   //validateLocalized(it, evt);

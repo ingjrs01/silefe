@@ -1,20 +1,19 @@
-import React, { useState } from "react";
-import ClayTabs from '@clayui/tabs';
-import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
+import ClayCard from "@clayui/card";
 import ClayDatePicker from '@clayui/date-picker';
-import ClayPanel from '@clayui/panel';
-import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
-import { getMonths, getDays } from '../../includes/interface/DatesLang';
-import DocentesTable from "./DocentesTable";
-import { getLanguageId } from '../../includes/LiferayFunctions';
-import ParticipantesTable from "./ParticipantesTable";
+import ClayForm, { ClayInput, ClaySelect, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
+import ClayPanel from '@clayui/panel';
+import ClayTabs from '@clayui/tabs';
+import React, { useState } from "react";
+import { getLanguageId } from '../../includes/LiferayFunctions';
+import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
+import DocentesTable from "./DocentesTable";
 import { Formacion } from './Formacion';
+import ParticipantesTable from "./ParticipantesTable";
 
 const spritemap = "./o/my-project/icons.svg";
-
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler }) => {
   const [tab, setTab] = useState(0);
@@ -118,6 +117,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                         key={items.fields.fields['nombre'].key}
                         label={items.fields.fields['nombre'].label}
                         locales={locales}
+                        spritemap={spritemap}
                         onSelectedLocaleChange={setSelectedLocale}
                         onTranslationsChange={evt => {
                           itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: 'nombre', value: evt });

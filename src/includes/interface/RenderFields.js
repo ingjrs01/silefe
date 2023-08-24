@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
-import ClayTable from '@clayui/table';
-import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import ClayDatePicker from '@clayui/date-picker';
 import ClayAutocomplete from '@clayui/autocomplete';
-import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
+import ClayDatePicker from '@clayui/date-picker';
+import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
-import { getMonths, getDays } from './DatesLang';
-import { getLanguageId } from '../LiferayFunctions'
+import React, { useState } from "react";
+import { getLanguageId } from '../LiferayFunctions';
+import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { getDays, getMonths } from './DatesLang';
 
 const spritemap = "./o/my-project/icons.svg";
 
@@ -37,7 +36,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
       Object.keys(items.fields.fields).forEach( campo => {
         //console.log(campo);
         switch (items.fields.fields[campo].type) {
-          case "text": 
+          case "text":
             if (!validate(campo, items.item[campo]))
               return false;
             break;
@@ -159,6 +158,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                               key={it}
                               label={items.fields.fields[it].label}
                               locales={locales}
+                              spritemap={spritemap}
                               onSelectedLocaleChange={setSelectedLocale}
                               onTranslationsChange={evt => {
                                 validateLocalized(it, evt);

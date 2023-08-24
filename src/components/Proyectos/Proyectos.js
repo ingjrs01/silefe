@@ -1,25 +1,25 @@
-import React,{useEffect,useReducer,useRef,useState} from "react";
-import TabsForm from '../../includes/interface/TabsForm';
-import Table from '../../includes/interface/Table';
-import Menu from '../Menu';
-import {useModal} from '@clayui/modal';
-import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import {SUBTABLE_ACTIONS,iniState,reducerSubtable} from '../../includes/reducers/subtable.reducer';
-import { deleteAPI, fetchAPIData, saveAPI, fetchAPIRow } from "../../includes/apifunctions";
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
+import { useModal } from '@clayui/modal';
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Errors } from '../../includes/Errors';
-import {form as formulario} from './Form';
+import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import TabsForm from '../../includes/interface/TabsForm';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
+import Menu from '../Menu';
 import AccionesTable from "./AccionesTable";
+import { form as formulario } from './Form';
 //import OfertasTable from './OfertasTable';
-import {form as aform} from './AccionForm';
-import {form as oform} from './OfertaForm';
-import {form as pform} from './ParticipantesForm';
-import {form as eform} from './EmpresaForm';
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { form as aform } from './AccionForm';
+import { form as eform } from './EmpresaForm';
+import { form as oform } from './OfertaForm';
+import { form as pform } from './ParticipantesForm';
 //import Papa from "papaparse";
 
 const Proyectos = () => {
@@ -389,7 +389,7 @@ const Proyectos = () => {
                     notify={notify}
                     plugin={plugin}
                 />
-            }            
+            }
             {
                 (items.status === 'list') &&
                 <>
@@ -405,7 +405,7 @@ const Proyectos = () => {
                 </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
-            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }            
+            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>
     )
 }
