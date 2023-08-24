@@ -1,19 +1,18 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import DefaultForm from '../../includes/interface/DefaultForm';
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
 import { useModal } from '@clayui/modal';
-import { getUserId, getLanguageId, url_referer } from '../../includes/LiferayFunctions';
-import { red_items, ITEMS_ACTIONS, initialState } from '../../includes/reducers/items.reducer';
-import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI, fetchAPIRow } from "../../includes/apifunctions";
-import { LoadFiles } from '../../includes/interface/LoadFiles'
-import { FAvisos } from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
-import { Errors } from '../../includes/Errors';
-import { form as formulario } from "./Form";
-import { Paginator } from "../../includes/interface/Paginator";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Errors } from '../../includes/Errors';
+import { getLanguageId, url_referer } from '../../includes/LiferayFunctions';
+import { fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import DefaultForm from '../../includes/interface/DefaultForm';
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
+import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import { form as formulario } from "./Form";
 
 const Lugares = () => {
     const [items, itemsHandle]             = useReducer(red_items,initialState);
@@ -27,8 +26,6 @@ const Lugares = () => {
 
     const referer = `${url_referer}/lugares`;
     const form = formulario;
-
-    console.log("Estoy en lugares");
 
     const fetchData = async () => {
         beforeEdit();
@@ -62,9 +59,9 @@ const Lugares = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
             }
             
-            if (state != 'undefined' && state.backUrl.length > 0) {            
+            if (state != 'undefined' && state.backUrl.length > 0) {
                 navigate(state.backUrl + state.ancestorId);
-            }            
+            }
         });
     }
 
@@ -72,7 +69,7 @@ const Lugares = () => {
         console.log("delete");
     }
 
-    const beforeEdit = (id) => { 
+    const beforeEdit = (id) => {
         console.log("beforeEdit");
 
 
@@ -82,11 +79,27 @@ const Lugares = () => {
             //});            
             
     }
+    const loadMunicipiosProvincia = () => {
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: items.item.provinciaId },referer).then(response => {
+            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            return opts;
+            //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
+        });
+
+    }
         
     const initForm = () => {
+        console.log("initform");
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         form.fields.paisId.options = [{value:"0", label: seleccionarlabel}, {value:"1", label: "España"}];
-        form.fields.provinciaId.options = [{value:"0", label: seleccionarlabel}, {value:"1", label: "Pontevedra"}];
+        //debugger;
+        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId()},referer).then(response => {
+            form.fields.provinciaId.options = [{value:"0", label: seleccionarlabel}, ...response.data.map(item => ({label: item.nombre, value: item.provinciaId})) ];
+            //form.fields.provinciaId.change =  () => { 
+            //    itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: loadMunicipiosProvincia()});
+            //}
+        }
+        );
         form.fields.municipioId.options = [{value:"0", label: seleccionarlabel}, {value:"1", label: "Pontevedra"}];
         form.fields.tipoViaId.options = [{value:"0", label: seleccionarlabel}, {value:"1", label: "Calle"}];
     }

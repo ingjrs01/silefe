@@ -1,27 +1,27 @@
-import React,{useEffect,useReducer,useRef,useState} from "react";
-import TabsForm from './TabsForm';
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
-import {useModal} from '@clayui/modal';
-import { getUserId,getLanguageId,  url_referer} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
+import { useModal } from '@clayui/modal';
 import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI, fetchAPIRow } from "../../includes/apifunctions";
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
-import { Errors } from '../../includes/Errors';
-import { form as formulario } from "./Form";
-import {TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni} from '../../includes/reducers/titulaciones.reducer';
-import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
-import { Paginator } from "../../includes/interface/Paginator";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Errors } from '../../includes/Errors';
+import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { batchAPI, deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
+import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
+import Menu from '../Menu';
+import { form as formulario } from "./Form";
+import TabsForm from './TabsForm';
 
 const Participantes = () => {
     const [items,itemsHandle]                    = useReducer(red_items,initialState );
     const [redTitulaciones, titulacionHandler]   = useReducer(reducerTitulacion,titsIni);
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, {items: [], deleted: [], item: {}, status: "list", participanteId: 0});
-    const [toastItems,setToastItems]             = useState([]);    
+    const [toastItems,setToastItems]             = useState([]);
     const {observer, onOpenChange, open}         = useModal();
     const [file,setFile]                         = useState();
     const isInitialized                          = useRef(null);
@@ -56,7 +56,7 @@ const Participantes = () => {
     const loadParticipante = (id) => {
         beforeFormacion(id);
         beforeExperiencia(id);
-        //console.debug(redTitulaciones);
+
         fetchAPIRow('/silefe.participante/get',{id:id},referer).then ((r) => {
             const datatmp = {
                 ...r,
@@ -81,21 +81,21 @@ const Participantes = () => {
     const processCsv = () => {
         if (file) {
             const reader = new FileReader();
-         
+
             reader.onload = async ({ target }) => {
                 const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                const parsedData = csv?.data;                                
+                const parsedData = csv?.data;
                 let end = '/silefe.participante/add-multiple';
                 let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
 
                 batchAPI(end,ttmp,referer).then(res2 => {
                     if (res2.ok) {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);                        
+                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
                         fetchData();
                     }
                     else {
                         setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-                    }                    
+                    }
                 });
             };
             reader.readAsText(file);
@@ -111,7 +111,7 @@ const Participantes = () => {
             endpoint = '/silefe.participante/new-participante';
 
         let obj = {obj: items.item, id:items.item.participanteId};
-        let {data, status, error} = await saveAPI(endpoint,obj,referer); 
+        let {data, status, error} = await saveAPI(endpoint,obj,referer);
         if (status) {
             const obj2 = {id:data.participanteId,titulaciones:redTitulaciones.items,userId: getUserId()};
             let respon = await saveAPI('/silefe.formacionparticipante/save-formaciones-by-participante',obj2,referer);
@@ -124,26 +124,26 @@ const Participantes = () => {
                 deleteAPI('/silefe.experienciaparticipante/remove-experiencias',delExperiencias,referer).then(res => {
                     console.log("delete experiencias");
                     //if (res) {
-                    //    setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);    
+                    //    setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                     //}
                 });
-            }            
+            }
 
             fetchData();
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
         }
-        else 
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);                
+        else
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);
         
         //console.debug(state.ancestorId);
         //debugger;
-        if (state != 'undefined' && state.backUrl.length > 0) 
-            navigate(state.backUrl+state.ancestorId);            
+        if (state != 'undefined' && state.backUrl.length > 0)
+            navigate(state.backUrl+state.ancestorId);
     }
 
     const handleDelete = () => {
         if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
+            onOpenChange(true);
     }
 
     const confirmDelete = async () => {
