@@ -1,22 +1,23 @@
-import React, {useEffect, useReducer, useRef, useState} from "react";
-import AccionesForm from "./AccionesForm";
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
-import {useModal} from '@clayui/modal';
-import { getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import { EJECUCION_ACTIONS,iniState as iniEjecucion, reducerEjecucion} from './Ejecucion.reducer';
-import { deleteAPI, fetchAPIData, saveAPI, deleteAPIParams, fetchAPIRow } from "../../includes/apifunctions";
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
-import { Errors } from '../../includes/Errors';
-import { form as formulario} from './Form';
-import { form as eform } from './EjecucionForm';
-import { Paginator } from "../../includes/interface/Paginator";
-import {reducerDocentes, DOCENTE_ACTIONS, initialDocentes} from '../../includes/reducers/docentes.reducer'; 
-import {reducerParticipantes, PARTICIPANTE_ACTIONS, initialParticipantes} from '../../includes/reducers/participantes.reducer';
+import { useModal } from '@clayui/modal';
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Errors } from '../../includes/Errors';
+import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, deleteAPIParams, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
+import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import { DOCENTE_ACTIONS, initialDocentes, reducerDocentes } from '../../includes/reducers/docentes.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { PARTICIPANTE_ACTIONS, initialParticipantes, reducerParticipantes } from '../../includes/reducers/participantes.reducer';
+import { toHours } from '../../includes/utils';
+import Menu from '../Menu';
+import AccionesForm from "./AccionesForm";
+import { EJECUCION_ACTIONS, iniState as iniEjecucion, reducerEjecucion } from './Ejecucion.reducer';
+import { form as eform } from './EjecucionForm';
+import { form as formulario } from './Form';
 //import Papa from "papaparse";
 
 const Acciones = () => {
@@ -208,10 +209,46 @@ const Acciones = () => {
                 participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:tits});
             });
             // Cargando los datos de las acciones: 
-            fetchAPIData('/silefe.formacionaccion/get-formacion-accion', {accionId: accionId,formacinId: 1},referer).then(response => {
-                console.log("datos de la accion cargado");
-                console.debug(response);
+            fetchAPIData('/silefe.formacionaccion/get-formacion-accion', {accionId: accionId,tipoFormacion: 1},referer).then(response => {
+                const item  =  {
+                    ...response.data,
+                    inicio : (response.data.inicio != null)?new Date(response.data.inicio).toISOString().substring(0, 10):"",
+                    fin : (response.data.fin != null)?new Date(response.data.fin).toISOString().substring(0, 10):"",
+                    hIni1 :  toHours(response.data.hIni1),
+                    hIni2 :  toHours(response.data.hIni2),
+                    hFin1 :  toHours(response.data.hFin1),
+                    hFin2 :  toHours(response.data.hFin2),
+                    dias:  JSON.parse(response.data.dias),
+                };
+                ejecucionHandlerT({type: EJECUCION_ACTIONS.SETITEM, item: item});
             });
+            fetchAPIData('/silefe.formacionaccion/get-formacion-accion', {accionId: accionId,tipoFormacion: 2},referer).then(response => {
+                const item  =  {
+                    ...response.data,
+                    inicio : (response.data.inicio != null)?new Date(response.data.inicio).toISOString().substring(0, 10):"",
+                    fin : (response.data.fin != null)?new Date(response.data.fin).toISOString().substring(0, 10):"",
+                    hIni1 :  toHours(response.data.hIni1),
+                    hIni2 :  toHours(response.data.hIni2),
+                    hFin1 :  toHours(response.data.hFin1),
+                    hFin2 :  toHours(response.data.hFin2),
+                    dias: JSON.parse(response.data.dias),
+                };
+                ejecucionHandlerP({type: EJECUCION_ACTIONS.SETITEM, item: item});
+            });
+            fetchAPIData('/silefe.formacionaccion/get-formacion-accion', {accionId: accionId,tipoFormacion: 3},referer).then(response => {
+                const item  =  {
+                    ...response.data,
+                    inicio : (response.data.inicio != null)?new Date(response.data.inicio).toISOString().substring(0, 10):"",
+                    fin : (response.data.fin != null)?new Date(response.data.fin).toISOString().substring(0, 10):"",
+                    hIni1 :  toHours(response.data.hIni1),
+                    hIni2 :  toHours(response.data.hIni2),
+                    hFin1 :  toHours(response.data.hFin1),
+                    hFin2 :  toHours(response.data.hFin2),
+                    dias: JSON.parse(response.data.dias),
+                };
+                ejecucionHandlerG({type: EJECUCION_ACTIONS.SETITEM, item: item});
+            });
+
         }
     }
 
