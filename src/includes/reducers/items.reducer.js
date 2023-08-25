@@ -167,6 +167,32 @@ export const red_items = (state, action ) => {
                 checkall: false
             }
         case ITEMS_ACTIONS.SET:
+            if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
+                //state.fields.fields[action.fieldname].change(action.value).then(response => {
+                //    console.log("esperando la promesa");
+                //    console.log(response);
+                //});
+                //console.log(lalala);
+                state.fields.fields[action.fieldname].change(action.value).then( (response) => {
+                    console.log("datos recibidos");
+                    console.debug(response);
+                    debugger;
+                    return {
+                        ...state,
+                        cosas: "pending",
+                        item: {...state.item,[action.fieldname]:action.value},
+                        //fields: { ...state.fields,
+                        //    fields: {...state.fields.fields,
+                        //        [state.fields.fields[action.fieldname].sonfield] : {...[state.fields.fields[action.fieldname].sonfield],options: response}
+                        //    }
+                        //},
+                    }
+                });
+                return {
+                    ...state,
+                    cosas: 'malas',
+                }
+            }
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
@@ -183,9 +209,9 @@ export const red_items = (state, action ) => {
                     status: 'edit',
                 }
             }
-            return state;                    
+            return state;
 
-        case ITEMS_ACTIONS.EDIT_ITEM: 
+        case ITEMS_ACTIONS.EDIT_ITEM:
             //console.debug(action.item);
             //debugger;
             tmp_item = {};

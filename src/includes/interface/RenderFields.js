@@ -178,12 +178,12 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 key={it}
                                 disabled={ !items.fields.fields[it].enabled }
                                 onChange={evt => {
-                                  if (items.fields.fields[it].hasOwnProperty('change')) {
-                                    console.log("tiene change");
-                                    items.fields.fields[it].change(evt.target.value);
-                                  }
-                                  else
-                                    console.log("no tiene change");
+                                  //if (items.fields.fields[it].hasOwnProperty('change')) {
+                                  //  console.log("tiene change");
+                                  //  items.fields.fields[it].change(evt.target.value);
+                                  //}
+                                  //else
+                                  //  console.log("no tiene change");
                                   
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
                                 }}

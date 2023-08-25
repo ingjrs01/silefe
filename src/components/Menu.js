@@ -1,10 +1,9 @@
-import React from 'react';
-import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import {ClayIconSpriteContext} from '@clayui/icon';
-import {ClayInput, ClaySelect} from '@clayui/form';
-import {ClayDropDownWithItems} from '@clayui/drop-down';
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
+import { ClayInput, ClaySelect } from '@clayui/form';
+import { ClayIconSpriteContext } from '@clayui/icon';
 import ClayToolbar from '@clayui/toolbar';
-import {ITEMS_ACTIONS} from '../includes/reducers/items.reducer';
+import React from 'react';
+import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
 
 import { MgtToolbar } from '../includes/interface/MgtToolbar';
 
@@ -34,7 +33,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
                 id={"fieldMenu"}
                 name={"fieldMenu"}
                 key={"fieldMenu"}
-                onChange={evt => {                  
+                onChange={evt => {
                   itemsHandle({ type: ITEMS_ACTIONS.SET_SEARCHFIELD,value:evt.target.value});
                 }}
                 value={ items.searchField } >
@@ -106,7 +105,7 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
             }
 
             {
-              (status === 'list') &&                    
+              (status === 'list') &&
               <ClayButtonWithIcon
                 aria-label="Add"
                 className="nav-btn nav-btn-monospaced"
