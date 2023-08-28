@@ -275,12 +275,12 @@ const Proyectos = () => {
             fetchAPIData('/silefe.empresa/filter-by-project',postdata,referer).then(response => {
                 const tmp = response.data.map( i => ({
                     ...i,
-                    telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono)[0].value:"",                    
+                    telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono)[0].value:"",
                 }));
                 empresasHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:tmp, pages: response.totalPages});
             });
         }
-    }    
+    }
 
     const loadOfertas = (id) => {
         if (id != 'undefined') {
@@ -289,7 +289,7 @@ const Proyectos = () => {
                 options: {
                     filters: [{name: "proyectoId", value: id}],
                 }
-            };            
+            };
             fetchAPIData('/silefe.oferta/filter',postdata,referer).then(response => {
                 const itms = response.data.map(i => ({
                     ...i,

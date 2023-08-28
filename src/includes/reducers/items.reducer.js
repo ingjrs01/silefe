@@ -168,30 +168,7 @@ export const red_items = (state, action ) => {
             }
         case ITEMS_ACTIONS.SET:
             if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
-                //state.fields.fields[action.fieldname].change(action.value).then(response => {
-                //    console.log("esperando la promesa");
-                //    console.log(response);
-                //});
-                //console.log(lalala);
-                state.fields.fields[action.fieldname].change(action.value).then( (response) => {
-                    console.log("datos recibidos");
-                    console.debug(response);
-                    debugger;
-                    return {
-                        ...state,
-                        cosas: "pending",
-                        item: {...state.item,[action.fieldname]:action.value},
-                        //fields: { ...state.fields,
-                        //    fields: {...state.fields.fields,
-                        //        [state.fields.fields[action.fieldname].sonfield] : {...[state.fields.fields[action.fieldname].sonfield],options: response}
-                        //    }
-                        //},
-                    }
-                });
-                return {
-                    ...state,
-                    cosas: 'malas',
-                }
+                state.fields.fields[action.fieldname].change(action.value);
             }
             return {
                 ...state,

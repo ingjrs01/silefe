@@ -33,7 +33,7 @@ const Lugares = () => {
             pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
             options: {
                 filters: [
-                    {name: items.searchField, value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""},
+                    {name: items.searchField, value : (items.search && typeof items.search !== 'undefined')?items.search:""},
                 ],
                 order: items.order
             },
@@ -80,42 +80,35 @@ const Lugares = () => {
             
     }
     const loadMunicipiosProvincia = (pId) => {
-        console.log("loadMunicipiosProvincia");
         const provinciaId = pId ?? 1;
-
-
-        const tarea = new Promise( (resolve, reject) => {
-            fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: provinciaId },referer).then(response => {
-                const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-                console.log("lalla");
-                console.debug(opts);
-
-                resolve (opts);
-                //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
-            }).catch (error => reject([]));
-
-        }  );
-        return tarea;
-
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: provinciaId },referer).then(response => {
+            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            console.log("ayuntamientos");
+            console.debug(opts);
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
+        }).catch (error => console.error(error));
     }
         
     const initForm = () => {
         console.log("initform");
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
-        form.fields.paisId.options = [{value:"0", label: seleccionarlabel}, {value:"1", label: "España"}];
+        form.fields.paisId.options = [{value:"1", label: "España"}];
         fetchAPIData('/silefe.provincia/all', { lang: getLanguageId()},referer).then(response => {
             form.fields.provinciaId.options = [{value:"0", label: seleccionarlabel}, ...response.data.map(item => ({label: item.nombre, value: item.provinciaId})) ];
-            form.fields.provinciaId.change = loadMunicipiosProvincia;  //() => {
-            form.fields.provinciaId.sonfield = 'municipioId';
-            //    itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: loadMunicipiosProvincia()});
-            //}
+            form.fields.provinciaId.change = loadMunicipiosProvincia;
         }
         ).catch(error => {
             console.log("error");
             console.error(error);
         });
-        form.fields.municipioId.options = [{value:"0", label: seleccionarlabel}, {value:"1", label: "Pontevedra"}];
-        form.fields.tipoViaId.options = [{value:"0", label: seleccionarlabel}, {value:"1", label: "Calle"}];
+
+        //form.fields.municipioId.options = [{value:"0", label: seleccionarlabel}];
+        fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId()},referer).then(response => {
+            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.tiposViaId,label:obj.nombre}})];
+            //debugger;
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'tipoViaId', options: opts});
+        }).catch (error => reject([]));
+
     }
 
     const loadCsv = () => {
