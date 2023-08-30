@@ -36,9 +36,9 @@ const Participantes = () => {
 		if (!isInitialized.current) {
             initForm();
             itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form:form});
-            if (id != 'undefined' && id > 0) 
+            if (id != 'undefined' && id > 0)
                 loadParticipante(id);
-            else    
+            else
                 fetchData();
 
 			isInitialized.current = true;
@@ -115,6 +115,12 @@ const Participantes = () => {
         if (status) {
             const obj2 = {id:data.participanteId,titulaciones:redTitulaciones.items,userId: getUserId()};
             let respon = await saveAPI('/silefe.formacionparticipante/save-formaciones-by-participante',obj2,referer);
+            if (redTitulaciones.deleted.length > 0) {
+                const delTitulaciones = redTitulaciones.deleted.map( d => {return (d.formacionParticipanteId)});
+                deleteAPI('/silefe.formacionparticipante/remove-titulaciones',delTitulaciones,referer).then(res => {
+                    titulacionHandler({type: TITULACIONES_ACTIONS.EMPTY_DELETED});
+                });
+            }
 
             const obj3 = {experiencias:redExperiencias.items,userId: getUserId()};
             respon = await saveAPI('/silefe.experienciaparticipante/add-multiple',obj3,referer);
@@ -151,20 +157,20 @@ const Participantes = () => {
 
         deleteAPI('/silefe.participante/delete-participantes',s,referer).then(res => {
             if (res) {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);                
-                fetchData();        
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+                fetchData();
             }
-            else 
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);            
+            else
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
         })
     }
 
     const fetchData = async () => {
         experienciasHandler({type:EXPERIENCIA_ACTIONS.START});
-        if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0) 
+        if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0)
             queryTitulaciones();
 
-        if (form.fields.situacionLaboral.options == undefined)  
+        if (form.fields.situacionLaboral.options == undefined)
             await initForm();
             
         const postdata = {
@@ -176,7 +182,7 @@ const Participantes = () => {
                 order : items.order,
             },
         }
-        let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.participante/filter',postdata,referer);        
+        let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.participante/filter',postdata,referer);
         const tmp = await data.map(i => {
             return({
                 ...i,
@@ -206,20 +212,20 @@ const Participantes = () => {
         });
         fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.provinciaId.options = opts;            
+            form.fields.provinciaId.options = opts;
             form.fields.provinciaId.change = changeProvince;
         });
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.municipioId.options = opts;            
+            form.fields.municipioId.options = opts;
             form.fields.municipioId.change = change2;
         });
         fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.tipoviaId.options = opts;            
+            form.fields.tipoviaId.options = opts;
             form.fields.tipoviaId.change = () => {console.log("cambiando el tipo de via")};
         });
-        form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];        
+        form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];
         form.fields.sexo.options = [{key: 0, value:"H",label:Liferay.Language.get('Hombre')},{key:1, value:"M",label: Liferay.Language.get('Mujer')}];
     }
 
@@ -261,7 +267,7 @@ const Participantes = () => {
             debugger;
             console.log("error");
             console.debug(e);
-        })    
+        })
     }
 
     const beforeExperiencia = (participanteId) => {
@@ -282,7 +288,7 @@ const Participantes = () => {
     const queryTitulaciones = () => {
         titulacionHandler({type:TITULACIONES_ACTIONS.START});
         
-        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, "http://localhost:8080/titulaciones").then(response => {
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
         });
         fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
@@ -298,7 +304,7 @@ const Participantes = () => {
             experienciasHandler({type: EXPERIENCIA_ACTIONS.CONTRATOS,contratoOptions: [...response.data]})
         });
         fetchAPIData('/silefe.mbaja/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            let motivos = [...response.data];            
+            let motivos = [...response.data];
             motivos.unshift({id:0,descripcion: " "});
             experienciasHandler({type: EXPERIENCIA_ACTIONS.MOTIVOS,motivos: motivos});
         });
@@ -306,15 +312,15 @@ const Participantes = () => {
             experienciasHandler({type: EXPERIENCIA_ACTIONS.OCUPACIONES,ocupaciones: [...response.data]})
         });
     }
-  
-    if (!items) 
+
+    if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
     return (
         <>
-            <Menu 
-                handleSave={handleSave} 
-                handleDelete={handleDelete} 
+            <Menu
+                handleSave={handleSave}
+                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
@@ -322,13 +328,13 @@ const Participantes = () => {
                 items={items}
                 formulario={formulario}
             />
-            { (items.status === 'load') && 
-            <LoadFiles 
+            { (items.status === 'load') &&
+            <LoadFiles
                 setFile={setFile}
                 processCsv={processCsv}
                 itemsHandle={itemsHandle}
             />}
-            {   (items.status === 'edit' || items.status === 'new') && 
+            {   (items.status === 'edit' || items.status === 'new') &&
                 <TabsForm
                     save={handleSave}
                     itemsHandle={itemsHandle}
@@ -338,20 +344,20 @@ const Participantes = () => {
                     titulacionHandler={titulacionHandler}
                     experienciasHandler={experienciasHandler}
                 />
-            }            
+            }
             {
                 (items.status === 'list') &&
                 <>
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
+                <Table
+                    items={items}
+                    itemsHandle={itemsHandle}
                 />
-                <Paginator 
+                <Paginator
                     itemsHandle={itemsHandle}
                     items={items}
                 />
                 </>
-            }           
+            }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>

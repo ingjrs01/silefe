@@ -16,12 +16,13 @@ export const TITULACIONES_ACTIONS = {
     DELETE_ITEM: 13,
     NEW_ITEM: 14,
     SAVE_ITEM: 15,
-  }
+    EMPTY_DELETED: 16,
+}
 
 export const initialState = {
     titulacionTipoOptions: [],
     titulacionNivelOptions: [],
-    deleted: [], 
+    deleted: [],
     status: "list",
 }
 
@@ -47,7 +48,7 @@ export const reducerTitulacion = (state, action ) => {
                     titulacionFamiliaId: 1,
                     titulacionId: 1,
                 },
-                items: [],                
+                items: [],
                 tipoOptions: [],
                 nivelOptions: initialState.titulacionNivelOptions,
                 familiaOptions: [],
@@ -81,23 +82,23 @@ export const reducerTitulacion = (state, action ) => {
                 ...state,
                 titulaciones:action.titulaciones,
             }
-        case TITULACIONES_ACTIONS.SET_TITULACION: 
+        case TITULACIONES_ACTIONS.SET_TITULACION:
             return {
                 ...state,
                 titulacion: action.titulacion
             }
-        case TITULACIONES_ACTIONS.SET_TITULACIONTIPO:            
+        case TITULACIONES_ACTIONS.SET_TITULACIONTIPO:
             tmpTipoId = 0;
-            if (action.value == "0") 
+            if (action.value == "0")
                 tmpTipoId = state.tipoOptions[0].value
-            else 
-                tmpTipoId = action.value 
+            else
+                tmpTipoId = action.value
 
             newniveles = state.niveles.filter(i => i.titulacionTipoId == tmpTipoId).map(i => {return {value:i.titulacionNivelId,label:i.descripcion}})
             tmpNivelId = 0;
             tmpFamiliaId = 0;
             newtitulaciones = [];
-            newfamilias = [];            
+            newfamilias = [];
 
             if (newniveles.length > 0) {
                 tmpNivelId = newniveles[0].value;
@@ -142,7 +143,7 @@ export const reducerTitulacion = (state, action ) => {
                     titulacionNivelId: action.value,
                     titulacionFamiliaId: (newfamilias.length > 0)?newfamilias[0].value:0,
                     titulacionId:        (newtitulaciones.length > 0)?newtitulaciones[0].value:0,
-                },                
+                },
                 familiaOptions: newfamilias,
                 titulacionOptions: newtitulaciones,
             }
@@ -159,47 +160,48 @@ export const reducerTitulacion = (state, action ) => {
                     ...state.titulacion,
                     titulacionFamiliaId: action.value,
                     titulacionId:        (newtitulaciones.length > 0)?newtitulaciones[0].value:0,
-                },                
+                },
                 titulacionOptions: newtitulaciones,
             }
         case TITULACIONES_ACTIONS.SET_TITULACIONID:
             const titulacionName = state.titulaciones.filter(i => i.titulacionId == action.value)[0].descripcion
             return {
                 ...state,
-                titulacion: {...state.titulacion,titulacionId: action.value, titulacionName: titulacionName},                
+                titulacion: {...state.titulacion,titulacionId: action.value, titulacionName: titulacionName},
             }
-        case TITULACIONES_ACTIONS.LOAD_ITEMS: 
+        case TITULACIONES_ACTIONS.LOAD_ITEMS:
             return {
                 ...state,
                 items: action.items
             }
-        case TITULACIONES_ACTIONS.SELECT_ITEM: 
+        case TITULACIONES_ACTIONS.SELECT_ITEM:
             return {
                 ...state,
                 titulacion: state.items[action.index],
                 status: "edit",
             }
-        case TITULACIONES_ACTIONS.CANCEL: 
+        case TITULACIONES_ACTIONS.CANCEL:
             return {
                 ...state,
                 status: "list"
             }
 
-        case TITULACIONES_ACTIONS.DELETE_ITEM:                            
+        case TITULACIONES_ACTIONS.DELETE_ITEM:
             let obj = {...state.items[action.index]};
             tmp = [...state.items];
             tmp.splice(action.index,1);
-
+            const tmp_del = obj.formacionParticipanteId > 0?[obj]:[];
+            
             return {
                 ...state,
                 items: tmp,
-                deleted: [...state.deleted,obj],
+                deleted: [...state.deleted,...tmp_del],
             }
-        case TITULACIONES_ACTIONS.NEW_ITEM: 
+        case TITULACIONES_ACTIONS.NEW_ITEM:
             return {
                 ...state,
                 titulacion: {
-                    id: 0,                    
+                    id: 0,
                     ini: "2023-02-17",
                     fin: "2023-02-17",
                     titulacionTipoId: 0,
@@ -209,9 +211,9 @@ export const reducerTitulacion = (state, action ) => {
                     comentarios: "",
                 },
                 status: "edit",
-            }    
+            }
         case TITULACIONES_ACTIONS.SAVE_ITEM:
-            if (state.titulacion.id == 0) {            
+            if (state.titulacion.id == 0) {
                 tmp = [...state.items,state.titulacion];
             }
             else {
@@ -225,7 +227,12 @@ export const reducerTitulacion = (state, action ) => {
                 items: tmp,
                 status: "list"
             }
-        default: 
+        case TITULACIONES_ACTIONS.EMPTY_DELETED:
+            return {
+                ...state,
+                deleted: []
+            }
+        default:
             throw new Error ("Ación no válida");
     }
 }
