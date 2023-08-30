@@ -70,15 +70,15 @@ const Lugares = () => {
     }
 
     const beforeEdit = (id) => {
-        console.log("beforeEdit");
-        console.debug(items);
-
-        //fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
-            //    const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
-            //    form.fields.situacionLaboral.options = opts;
-            //});
-            
+        let lugarId = 0;
+        if (id == undefined)
+            lugarId = items.arr.filter(i => i.checked)[0].provinciaId;
+        else
+            lugarId = items.arr.filter(i => i.id = id)[0].provinciaId;
+        
+        loadMunicipiosProvincia(lugarId)
     }
+    
     const loadMunicipiosProvincia = (pId) => {
         const provinciaId = pId ?? 1;
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: provinciaId },referer).then(response => {

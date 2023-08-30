@@ -1,7 +1,7 @@
-import React from "react";
-import ClayForm from '@clayui/form';
-import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
+import ClayCard from "@clayui/card";
+import ClayForm from '@clayui/form';
+import React from "react";
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
@@ -11,8 +11,8 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
 
   const validateAll = () => {
     Object.keys(items.fields.fields).forEach( campo => {
-      //console.log(campo);
-      //debugger;
+      console.log(campo);
+      debugger;
       if ((items.fields.fields[campo].validate === undefined) || (items.fields.fields[campo].validate != false)) {
         switch (items.fields.fields[campo].type) {
           case "text": 

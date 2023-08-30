@@ -63,6 +63,7 @@ export const form = {
             label: Liferay.Language.get('Municipio'),
             name: "municipio",
             enabled:true,
+            conditions: [],
         },
         localidad: {
             key: 7,

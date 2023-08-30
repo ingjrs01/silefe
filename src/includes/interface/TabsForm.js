@@ -1,8 +1,8 @@
-import React from "react";
+import ClayButton from '@clayui/button';
+import ClayCard from "@clayui/card";
 import ClayForm from '@clayui/form';
 import ClayTabs from '@clayui/tabs';
-import ClayCard from "@clayui/card";
-import ClayButton from '@clayui/button';
+import React from "react";
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
@@ -10,8 +10,10 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
   //const [active, setActive] = useState(0);
 
   const validateAll = () => {
+    debugger;
     console.log("validando todo");
     Object.keys(items.fields.fields).forEach( campo => {
+      debugger;
       console.log(campo);
       switch (items.fields.fields[campo].type) {
         case "text": 

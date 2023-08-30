@@ -34,6 +34,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
       console.log("validando todo");
       Object.keys(items.fields.fields).forEach( campo => {
         //console.log(campo);
+        debugger;
         switch (items.fields.fields[campo].type) {
           case "text":
             if (!validate(campo, items.item[campo]))
@@ -69,7 +70,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
             return false;
           }
         }
-      }    
+      }
       itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
       return true;
     }
@@ -149,7 +150,6 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 
                               }}>{"Añadir"}</ClayButton>
                             </>}
-
 
                             {items.fields.fields[it].type == 'multilang' &&
                             <ClayLocalizedInput
@@ -273,7 +273,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             }
 
                             {(items.fields.fields[it].type === 'multilist') &&
-                            <>                            
+                            <>
                               <ClaySelectBox
                                 items={items.fields.fields[it].options}
                                 label={items.fields.fields[it].label}
@@ -282,10 +282,10 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 onSelectChange={val => {itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
                                 spritemap={spritemap}
                                 value={items.item[it]}
-                              />                            
+                              />
                             </>}
                             {(items.fields.fields[it].type === 'textarea') &&
-                            <>                            
+                            <>
                               <label htmlFor="basicInputText">{items.fields.fields[it].label}</label>
                               <ClayInput
                                 component="textarea"
@@ -294,16 +294,16 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 type="text"
                                 value={items.item[it]}
                                 onChange={e => { 
-                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value }); 
+                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value });
                                 }}
                               />
                             </>}
                             {
-                              (items.fields.fields[it].type === 'file') && 
+                              (items.fields.fields[it].type === 'file') &&
                               <div class="form-group">
 	                              <label class="sr-only" for="inputFile">FILE UPLOAD</label>
 	                              <input id="inputFile" type="file" onChange={(e) => {
-                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.files[0] }); 
+                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.files[0] });
                                   // setFile(e.target.files[0]);
                                 }} />
                               </div>
@@ -337,7 +337,6 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
 
         </>
     );
-
 }
 
 export default RenderFields;
