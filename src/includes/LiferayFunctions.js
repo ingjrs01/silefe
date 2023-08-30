@@ -1,7 +1,7 @@
 //import React from "react";
 
-export const url_api = "http://localhost:8080/api/jsonws/invoke";
-export const url_referer = "http://localhost:8080";
+export const url_api = "http://lfdevapps01.depo.es:8080/api/jsonws/invoke";
+export const url_referer = "http://lfdevapps01.depo.es:8080";
 
 export function getAuthToken() {
     return Liferay.authToken;

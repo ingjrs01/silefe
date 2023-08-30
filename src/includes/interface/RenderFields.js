@@ -29,7 +29,6 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
     const [act2,setAct2] = useState(0);
 
-    //console.debug(plugin);
     
     const validateAll = () => {
       console.log("validando todo");
