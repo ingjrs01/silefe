@@ -2,10 +2,9 @@ import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import { ClayCheckbox } from '@clayui/form';
 import ClayTable from '@clayui/table';
 import React from "react";
+import { spritemap } from '../../includes/LiferayFunctions';
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 import { TableForm } from "./TableForm";
-
-const spritemap = "./o/my-project/icons.svg";
 
 const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
 
@@ -48,11 +47,12 @@ const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
                         />
 
                         <ClayButtonWithIcon
-                          onClick={e => titulacionHandler({ type: TITULACIONES_ACTIONS.DELETE_ITEM, index: index })}
+                          className='ml-1'
+                          onClick={() => titulacionHandler({ type: TITULACIONES_ACTIONS.DELETE_ITEM, index: index })}
                           aria-label="Close"
                           displayType={"danger"}
                           spritemap={spritemap}
-                          symbol="times"
+                          symbol="trash"
                           title="Close"
                         />
 
@@ -66,7 +66,6 @@ const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
             </ClayTable.Body>
           </ClayTable>
           <ClayButton onClick={e => {
-            //editTitulacion(-1);
             titulacionHandler({ type: TITULACIONES_ACTIONS.NEW_ITEM })
           }}
             displayType="primary">{Liferay.Language.get('Nuevo')}

@@ -3,17 +3,11 @@ import { ClayInput, ClaySelect } from '@clayui/form';
 import { ClayIconSpriteContext } from '@clayui/icon';
 import ClayToolbar from '@clayui/toolbar';
 import React from 'react';
+import { spritemap } from '../includes/LiferayFunctions';
+import { MgtToolbar } from '../includes/interface/MgtToolbar';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
 
-import { MgtToolbar } from '../includes/interface/MgtToolbar';
-
-
-const spritemap = "./o/my-project/icons.svg";
-
 const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formulario}) => {
-
-  // console.log("estoy en el menu");
-  // console.debug(items);
 
   return (
     <>

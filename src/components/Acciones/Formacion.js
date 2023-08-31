@@ -1,11 +1,9 @@
-import React from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayCheckbox } from '@clayui/form';
 import ClayDatePicker from '@clayui/date-picker';
-import { getMonths, getDays } from '../../includes/interface/DatesLang';
-import { getLanguageId } from '../../includes/LiferayFunctions';
+import ClayForm, { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
+import React from "react";
+import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
+import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import { EJECUCION_ACTIONS } from './Ejecucion.reducer';
-
-const spritemap = "./o/my-project/icons.svg";
 
 export const Formacion = ({ ejecucion, ejecucionHandler }) => {
 

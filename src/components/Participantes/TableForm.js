@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox, ClaySelectWithOption } from '@clayui/form';
-import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
+import ClayCard from "@clayui/card";
 import ClayDatePicker from '@clayui/date-picker';
-import { getMonths, getDays } from '../../includes/interface/DatesLang';
-import { getLanguageId } from '../../includes/LiferayFunctions'
+import ClayForm, { ClayInput, ClaySelect } from '@clayui/form';
+import React from "react";
+import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
+import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
-
-const spritemap = "./o/my-project/icons.svg";
 
 export const TableForm = ({redTitulaciones, titulacionHandler}) => {
 

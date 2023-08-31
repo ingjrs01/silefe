@@ -1,10 +1,10 @@
-import React from "react";
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import { ClayCheckbox } from '@clayui/form';
 import ClayTable from '@clayui/table';
-import ClayButton from '@clayui/button';
+import React from "react";
+import { spritemap } from '../../includes/LiferayFunctions';
 import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/experiencias.reducer";
 import { ExperienciaForm } from "./ExperienciaForm";
-
 
 const ExperienciaRender = ({experiencias,experienciasHandler,  edit}) =>  {
 
@@ -39,16 +39,24 @@ const ExperienciaRender = ({experiencias,experienciasHandler,  edit}) =>  {
                 <ClayTable.Cell>{item.fin}</ClayTable.Cell>
                 <ClayTable.Cell headingTitle>{ item.puesto}</ClayTable.Cell>
                 <ClayTable.Cell>
-                    <ClayButton onClick={e => {
-                        experienciasHandler({type: EXPERIENCIA_ACTIONS.SELECT_ITEM , index:index});
-                    }} 
-                    displayType="secondary">{"E"} 
-                    </ClayButton>
-                    <ClayButton onClick={e => {
-                        experienciasHandler({type:EXPERIENCIA_ACTIONS.DELETE_ITEM,index:index});
-                    }} 
-                    displayType="danger">{"B"} 
-                    </ClayButton>
+                    <ClayButtonWithIcon 
+                        onClick={e => {
+                            experienciasHandler({type: EXPERIENCIA_ACTIONS.SELECT_ITEM , index:index});
+                        }} 
+                        displayType="secondary"
+                        spritemap={spritemap}
+                        symbol="pencil"
+                        title="Edit"
+                    />
+                    <ClayButtonWithIcon 
+                        className='ml-1'
+                        onClick={e => experienciasHandler({type:EXPERIENCIA_ACTIONS.DELETE_ITEM,index:index}) }
+                        displayType="danger"
+                        spritemap={spritemap}
+                        symbol="trash"
+                        title="Close"
+                    />
+                    
                 </ClayTable.Cell>
                 </ClayTable.Row>
                 </> 

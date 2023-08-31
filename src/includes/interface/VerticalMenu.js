@@ -1,8 +1,7 @@
+import { ClayVerticalNav } from '@clayui/nav';
 import React from 'react';
-import {ClayVerticalNav} from '@clayui/nav';
-import {Link, useNavigate} from 'react-router-dom';
-
-const spritemap = "./o/my-project/icons.svg";
+import { Link, useNavigate } from 'react-router-dom';
+import { spritemap } from '../LiferayFunctions';
 
 export const VerticalMenu = () => {
     const navigate = useNavigate();

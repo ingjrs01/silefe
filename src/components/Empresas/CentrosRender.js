@@ -1,7 +1,8 @@
-import React from "react";
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import { ClayCheckbox } from '@clayui/form';
 import ClayTable from '@clayui/table';
-import ClayButton from '@clayui/button';
+import React from "react";
+import { spritemap } from '../../includes/LiferayFunctions';
 import { CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
 import { CentrosForm } from "./CentrosForm";
 
@@ -33,37 +34,48 @@ const CentrosRender = ({reducer,centrosHandle}) =>  {
                 <ClayTable.Cell>{item.cp}</ClayTable.Cell>
                 <ClayTable.Cell headingTitle>{ item.localidad}</ClayTable.Cell>
                 <ClayTable.Cell>
-                    <ClayButton onClick={ () =>  centrosHandle({type: CENTROS_ACTIONS.SELECT_ITEM,index: index})} 
-                    displayType="secondary">{"E"} 
-                    </ClayButton>
-                    <ClayButton onClick={ () => centrosHandle({type: CENTROS_ACTIONS.DELETE, index:index}) } 
-                    displayType="danger">{"B"} 
-                    </ClayButton>
+                    <div className="btn-toolbar pull-right">
+                            <ClayButtonWithIcon
+                                onClick={ () =>  centrosHandle({type: CENTROS_ACTIONS.SELECT_ITEM,index: index})}
+                                displayType="secondary"
+                                spritemap={spritemap}
+                                aria-label="Edit"
+                                symbol="pencil"
+                                title="Edit"
+                            />
+                            <ClayButtonWithIcon
+                                className='ml-1'
+                                onClick={ () => centrosHandle({type: CENTROS_ACTIONS.DELETE, index:index}) }
+                                displayType="danger"
+                                spritemap={spritemap}
+                                aria-label="Delete"
+                                symbol="trash"
+                                title="Delete"
+                            />
+                    </div>
                 </ClayTable.Cell>
                 </ClayTable.Row>
-                </> 
+                </>
                 );})}
 
             </ClayTable.Body>
             </ClayTable>
-            <ClayButton onClick={ () => centrosHandle({type: CENTROS_ACTIONS.NEW_ITEM}) } 
-                displayType="primary">{Liferay.Language.get('Nuevo')} 
+            <ClayButton onClick={ () => centrosHandle({type: CENTROS_ACTIONS.NEW_ITEM}) }
+                displayType="primary">{Liferay.Language.get('Nuevo')}
             </ClayButton>
             </>
         }
 
         {
-            (reducer.status === 'edit') &&  
-            
-            <CentrosForm 
+            (reducer.status === 'edit') &&
+            <CentrosForm
                 reducer={reducer}
                 centrosHandle={centrosHandle}
-            /> 
+            />
             
         }
 
         </>
-      
     );
 }
 

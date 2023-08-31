@@ -4,11 +4,9 @@ import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
-import { getLanguageId } from '../LiferayFunctions';
+import { getLanguageId, spritemap } from '../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import { getDays, getMonths } from './DatesLang';
-
-const spritemap = "./o/my-project/icons.svg";
 
 const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
 
@@ -34,7 +32,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
       console.log("validando todo");
       Object.keys(items.fields.fields).forEach( campo => {
         //console.log(campo);
-        debugger;
+        //debugger;
         switch (items.fields.fields[campo].type) {
           case "text":
             if (!validate(campo, items.item[campo]))

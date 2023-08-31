@@ -1,13 +1,12 @@
-import React, {useState} from "react";
-import ClayTable from '@clayui/table';
-import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import ClayForm, { ClayInput, ClayCheckbox, ClaySelect } from '@clayui/form';
-import { PARTICIPANTE_ACTIONS } from "../../includes/reducers/participantes.reducer";
-import ClayUpperToolbar from '@clayui/upper-toolbar';
-import { MiniPaginator } from "../../includes/interface/MiniPaginator";
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
+import { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
-
-const spritemap = "./o/my-project/icons.svg";
+import ClayTable from '@clayui/table';
+import ClayUpperToolbar from '@clayui/upper-toolbar';
+import React, { useState } from "react";
+import { spritemap } from "../../includes/LiferayFunctions";
+import { MiniPaginator } from "../../includes/interface/MiniPaginator";
+import { PARTICIPANTE_ACTIONS } from "../../includes/reducers/participantes.reducer";
 
 const ParticipantesTable = ({participantes,participantesHandler}) =>  {
 

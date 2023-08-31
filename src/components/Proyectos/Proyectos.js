@@ -28,7 +28,7 @@ const Proyectos = () => {
     const [ofertas, ofertasHandle]       = useReducer(reducerSubtable,iniState);
     const [participantes,participantesHandle] = useReducer(reducerSubtable,iniState);
     const [empresas, empresasHandle]     = useReducer(reducerSubtable, iniState);
-    const [toastItems,setToastItems]     = useState([]);    
+    const [toastItems,setToastItems]     = useState([]);
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
@@ -95,7 +95,7 @@ const Proyectos = () => {
                     id            : r.data.proyectoId,
                     nparticipantes: r.data.participantes,
                     inicio        : (r.data.inicio != null)?new Date(r.data.inicio).toISOString().substring(0, 10):"",
-                    fin           : (r.data.fin != null)?new Date(r.data.fin).toISOString().substring(0, 10):"",    
+                    fin           : (r.data.fin != null)?new Date(r.data.fin).toISOString().substring(0, 10):"",
                 }
             }
             itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:datatmp});
@@ -113,21 +113,21 @@ const Proyectos = () => {
     const processCsv = () => {
         //if (file) {
         //    const reader = new FileReader();
-        // 
+        //
         //    reader.onload = async ({ target }) => {
         //        const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-        //        const parsedData = csv?.data;                                
+        //        const parsedData = csv?.data;
         //        let end = '/silefe.cno/add-multiple';
         //        let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
 //
         //        batchAPI(end,ttmp,referer).then(res2 => {
         //            if (res2.ok) {
-        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);                        
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
         //                fetchData();
         //            }
         //            else {
         //                setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-        //            }                    
+        //            }
         //        });
         //    };
         //    reader.readAsText(file);
@@ -153,16 +153,16 @@ const Proyectos = () => {
         let {status, error} = await saveAPI(endpoint,data,referer); 
         if (status) {
             fetchData();
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);        
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
         }
         else {
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);        
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);
         }
     }
 
     const handleDelete = () => {
         if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
+            onOpenChange(true);
     }
 
     const confirmDelete = async () => {
@@ -170,7 +170,7 @@ const Proyectos = () => {
         deleteAPI('/silefe.proyecto/remove-proyectos',s,referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
-                fetchData();        
+                fetchData();
             }
             else {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
@@ -180,12 +180,12 @@ const Proyectos = () => {
 
     const beforeEdit = (id) => {
         let lid = 0;
-        if (id === undefined ) 
+        if (id === undefined )
             lid = items.arr.filter(item=>item.checked)[0].id;
-        else 
+        else
             lid = id;
 
-        if ( lid > 0) {    
+        if ( lid > 0) {
             loadAcciones(lid);
             loadOfertas(lid);
             loadParticipantes(lid);
@@ -324,24 +324,24 @@ const Proyectos = () => {
         console.log("notify");
     }
 
-    const plugin = () => {        
+    const plugin = () => {
         return {
-            Ofertas: <AccionesTable 
+            Ofertas: <AccionesTable
                 data={ofertas}
                 handler={ofertasHandle}
                 editUrl={"/oferta/"}
                 backUrl={"/proyecto/"}
                 ancestorId={items.item.id}
                 />,
-            Acciones: 
-                <AccionesTable 
+            Acciones:
+                <AccionesTable
                     data={acciones}
                     handler={accionesHandle}
                     editUrl={"/accion/"}
                     backUrl={"/proyecto/"}
                     ancestorId={items.item.id}
                 />,
-            Participantes: 
+            Participantes:
                 <AccionesTable
                     data={participantes}
                     handler={participantesHandle}
@@ -349,7 +349,7 @@ const Proyectos = () => {
                     backUrl={"/proyecto/"}
                     ancestorId={items.item.id}
                 />,
-            Empresas: 
+            Empresas:
                 <AccionesTable
                     data={empresas}
                     handler={empresasHandle}
@@ -360,14 +360,14 @@ const Proyectos = () => {
 }
     }
 
-    //if (!items || items.arr.length == 0) 
+    //if (!items || items.arr.length == 0)
     //return (<div>{Liferay.Language.get('Cargando')}</div>)
 
     return (
         <>
-            <Menu 
-                handleSave={handleSave} 
-                handleDelete={handleDelete} 
+            <Menu
+                handleSave={handleSave}
+                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
@@ -375,13 +375,13 @@ const Proyectos = () => {
                 items={items}
                 formulario={formulario}
             />
-            { (items.status === 'load') && 
-            <LoadFiles 
+            { (items.status === 'load') &&
+            <LoadFiles
                 setFile={setFile}
                 processCsv={processCsv}
                 itemsHandle={itemsHandle}
             />}
-            {   (items.status === 'edit' || items.status === 'new') && 
+            {   (items.status === 'edit' || items.status === 'new') &&
                 <TabsForm
                     save={handleSave}
                     itemsHandle={itemsHandle}
@@ -393,13 +393,13 @@ const Proyectos = () => {
             {
                 (items.status === 'list') &&
                 <>
-                    <Table 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Table
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
                     <Paginator
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
 
                 </>

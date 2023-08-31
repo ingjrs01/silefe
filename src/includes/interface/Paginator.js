@@ -1,11 +1,10 @@
-import React, {useState} from "react";
-import { ITEMS_ACTIONS} from '../reducers/items.reducer';
-import {ClayPaginationWithBasicItems} from '@clayui/pagination';
-import ClayPaginationBar from '@clayui/pagination-bar';
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
-
-const spritemap = "./o/my-project/icons.svg";
+import { ClayPaginationWithBasicItems } from '@clayui/pagination';
+import ClayPaginationBar from '@clayui/pagination-bar';
+import React, { useState } from "react";
+import { spritemap } from "../LiferayFunctions";
+import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 
 export const Paginator = ({itemsHandle,items}) => {
   const [active, setActive] = useState(items.pagination.page+1);

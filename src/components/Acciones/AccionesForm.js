@@ -6,14 +6,12 @@ import ClayLocalizedInput from '@clayui/localized-input';
 import ClayPanel from '@clayui/panel';
 import ClayTabs from '@clayui/tabs';
 import React, { useState } from "react";
-import { getLanguageId } from '../../includes/LiferayFunctions';
+import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import DocentesTable from "./DocentesTable";
 import { Formacion } from './Formacion';
 import ParticipantesTable from "./ParticipantesTable";
-
-const spritemap = "./o/my-project/icons.svg";
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler }) => {
   const [tab, setTab] = useState(0);

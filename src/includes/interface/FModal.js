@@ -1,9 +1,7 @@
-import React from "react";
-import ClayModal from '@clayui/modal';
 import ClayButton from '@clayui/button';
-
-const spritemap = "./o/my-project/icons.svg";
-
+import ClayModal from '@clayui/modal';
+import React from "react";
+import { spritemap } from '../LiferayFunctions';
 
 export const FModal = ({onOpenChange,confirmDelete, observer }) => {
 

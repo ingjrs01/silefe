@@ -1,13 +1,12 @@
-import React, {useState} from "react";
-import ClayTable from '@clayui/table';
-import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import  { ClayInput, ClayCheckbox, ClaySelect } from '@clayui/form';
-import { DOCENTE_ACTIONS } from "../../includes/reducers/docentes.reducer";
-import ClayUpperToolbar from '@clayui/upper-toolbar';
-import { MiniPaginator } from "../../includes/interface/MiniPaginator";
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
+import { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
-
-const spritemap = "./o/my-project/icons.svg";
+import ClayTable from '@clayui/table';
+import ClayUpperToolbar from '@clayui/upper-toolbar';
+import React, { useState } from "react";
+import { spritemap } from "../../includes/LiferayFunctions";
+import { MiniPaginator } from "../../includes/interface/MiniPaginator";
+import { DOCENTE_ACTIONS } from "../../includes/reducers/docentes.reducer";
 
 const DocentesTable = ({docentes,docentesHandler}) =>  {
     const [showSearch, setShowSearch] = useState(false);
@@ -23,14 +22,14 @@ const DocentesTable = ({docentes,docentesHandler}) =>  {
                 <ClayUpperToolbar.Item className="text-left">
                     <label htmlFor="basicInput">{Liferay.Language.get("Buscar")}</label>
                 </ClayUpperToolbar.Item>
-                <ClayUpperToolbar.Item className="text-left">                    
-                    <ClayIcon 
-                        symbol="view" 
-                        spritemap={spritemap} 
+                <ClayUpperToolbar.Item className="text-left">
+                    <ClayIcon
+                        symbol="view"
+                        spritemap={spritemap}
                         onClick={() => {
                             docentesHandler({type: DOCENTE_ACTIONS.LOAD});
                             setShowSearch(!showSearch);
-                        }} 
+                        }}
                     />
                 </ClayUpperToolbar.Item>
                 {
@@ -59,17 +58,17 @@ const DocentesTable = ({docentes,docentesHandler}) =>  {
                                 key={"option-1"}
                                 label={"Nombre"}
                                 value={"nombre"}
-                            />                            
+                            />
                             <ClaySelect.Option
                                 key={"option-2"}
                                 label={"Apellidos"}
                                 value={"apellidos"}
-                            />                            
+                            />
                             <ClaySelect.Option
                                 key={"option-3"}
                                 label={"Documento"}
                                 value={"documento"}
-                            />                            
+                            />
                     </ClaySelect>
                 </ClayUpperToolbar.Item>
                 <ClayUpperToolbar.Item className="text-left" expand>
@@ -118,11 +117,11 @@ const DocentesTable = ({docentes,docentesHandler}) =>  {
                                 symbol="plus"
                                 title="quitar"
                                 displayType="primary"
-                            />                    
+                            />
 
                         </ClayTable.Cell>
                         </ClayTable.Row>
-                        </> 
+                        </>
                         );})}
 
                     </ClayTable.Body>
@@ -170,14 +169,14 @@ const DocentesTable = ({docentes,docentesHandler}) =>  {
                         aria-label={Liferay.Language.get("Quitar")}
                         key={"bi-"+item.id}
                         spritemap={spritemap}
-                        symbol="minus-circle"
+                        symbol="trash"
                         title="quitar"
                         displayType="danger"
                         onClick={ () => docentesHandler({type: DOCENTE_ACTIONS.DELETE_ITEM, index: index}) }
-                    />                    
+                    />
                 </ClayTable.Cell>
                 </ClayTable.Row>
-                </> 
+                </>
                 );})}
 
             </ClayTable.Body>

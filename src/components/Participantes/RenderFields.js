@@ -1,15 +1,12 @@
-import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox } from '@clayui/form';
-import ClayTable from '@clayui/table';
-import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import ClayDatePicker from '@clayui/date-picker';
 import ClayAutocomplete from '@clayui/autocomplete';
-import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
+import { ClayButtonWithIcon } from '@clayui/button';
+import ClayDatePicker from '@clayui/date-picker';
+import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
-import { getMonths, getDays } from '../../includes/interface/DatesLang';
-import { getLanguageId } from '../../includes/LiferayFunctions';
-
-const spritemap = "./o/my-project/icons.svg";
+import React, { useState } from "react";
+import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
+import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 
 const RenderFields =  ({ rows,  itemsHandle, items }) => {
 

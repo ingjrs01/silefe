@@ -1,12 +1,9 @@
-import React from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox, ClaySelectWithOption } from '@clayui/form';
-import ClayCard from "@clayui/card";
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
-import { getMonths, getDays } from '../../includes/interface/DatesLang';
-import { getLanguageId } from '../../includes/LiferayFunctions'
+import ClayCard from "@clayui/card";
+import ClayForm, { ClayCheckbox, ClayInput } from '@clayui/form';
+import React from "react";
+import { spritemap } from '../../includes/LiferayFunctions';
 import { CONTACTOS_ACTIONS } from "../../includes/reducers/contactos.reducer";
-
-const spritemap = "./o/my-project/icons.svg";
 
 export const ContactosForm = ({ redContactos, contactosHandle }) => {
 

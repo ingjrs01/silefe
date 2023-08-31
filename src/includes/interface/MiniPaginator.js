@@ -1,8 +1,7 @@
-import React, {useState} from "react";
-import {ClayPaginationWithBasicItems} from '@clayui/pagination';
+import { ClayPaginationWithBasicItems } from '@clayui/pagination';
 import ClayPaginationBar from '@clayui/pagination-bar';
-
-const spritemap = "./o/my-project/icons.svg";
+import React, { useState } from "react";
+import { spritemap } from "../LiferayFunctions";
 
 export const MiniPaginator = ({itemsHandle,items, ITEMS_ACTIONS}) => {
   const [active, setActive] = useState(items.pagination.page+1);

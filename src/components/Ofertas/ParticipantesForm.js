@@ -1,13 +1,9 @@
-import React from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle, ClaySelectBox, ClayRadio, ClayRadioGroup, ClayCheckbox, ClaySelectWithOption } from '@clayui/form';
-import ClayTable from '@clayui/table';
+import ClayButton from '@clayui/button';
 import ClayCard from "@clayui/card";
-import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
-import { getMonths, getDays } from '../../includes/interface/DatesLang';
-import { getLanguageId } from '../../includes/LiferayFunctions'
+import ClayForm, { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
+import ClayTable from '@clayui/table';
+import React from "react";
 import { PARTICIPANTES_OPTIONS } from "../../includes/reducers/candidatos.reducer";
-
-const spritemap = "./o/my-project/icons.svg";
 
 export const ParticipantesForm = ({ redParticipantes, participantesHandle }) => {
 

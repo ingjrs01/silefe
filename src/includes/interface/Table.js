@@ -1,12 +1,9 @@
-import React from 'react';
-import ClayTable from '@clayui/table';
-import {ClayCheckbox} from '@clayui/form';
+import { ClayCheckbox } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
-
-import { ITEMS_ACTIONS } from '../reducers/items.reducer'
-import {getLanguageId } from '../LiferayFunctions';
-
-const spritemap = "./o/my-project/icons.svg";
+import ClayTable from '@clayui/table';
+import React from 'react';
+import { getLanguageId, spritemap } from '../LiferayFunctions';
+import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 
 const Table = ({ items, itemsHandle}) => {
 

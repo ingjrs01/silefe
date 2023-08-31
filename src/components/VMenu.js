@@ -1,9 +1,9 @@
+import ClayIcon from '@clayui/icon';
 import React from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { spritemap } from '../includes/LiferayFunctions';
 import MenuItems from '../menu/MenuItems';
-import ClayIcon, {ClayIconSpriteContext} from '@clayui/icon';
 
-const spritemap = "./o/my-project/icons.svg";
 const VMenu = () => {
     const location = useLocation(); 
 

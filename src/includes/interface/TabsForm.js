@@ -10,11 +10,11 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
   //const [active, setActive] = useState(0);
 
   const validateAll = () => {
-    debugger;
+    //debugger;
     console.log("validando todo");
     Object.keys(items.fields.fields).forEach( campo => {
-      debugger;
-      console.log(campo);
+      //debugger;
+      //console.log(campo);
       switch (items.fields.fields[campo].type) {
         case "text": 
           if (!validate(campo, items.item[campo]))
@@ -49,7 +49,7 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
           return false;
         }
       }
-    }    
+    }
     itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
     return true;
   }
@@ -92,10 +92,10 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
       <ClayTabs.Content activeIndex={items.fields.tabActive} fade>
           { items.fields.tabs.map( tab => {
             return (
-              <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-" + tab.key}>                
-                <RenderFields 
+              <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-" + tab.key}>
+                <RenderFields
                 rows={tab.rows}
-                itemsHandle={itemsHandle} 
+                itemsHandle={itemsHandle}
                 items={items}
                 plugin={plugin}
                 />

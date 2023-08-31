@@ -2,6 +2,7 @@
 
 export const url_api = "http://lfdevapps01.depo.es:8080/api/jsonws/invoke";
 export const url_referer = "http://lfdevapps01.depo.es:8080";
+export const spritemap = `${url_referer}/o/my-project/icons.svg`;
 
 export function getAuthToken() {
     return Liferay.authToken;

@@ -1,14 +1,12 @@
-import React, { useState } from "react";
-import ClayForm, { ClayInput, ClaySelect, ClayToggle } from '@clayui/form';
-import ClayDatePicker from '@clayui/date-picker';
-import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
-import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
+import ClayCard from "@clayui/card";
+import ClayDatePicker from '@clayui/date-picker';
+import ClayForm, { ClayInput, ClaySelect, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
-import {getMonths, getDays} from '../includes/interface/DatesLang';
-import {getLanguageId} from '../includes/LiferayFunctions';
-
-const spritemap = "./o/my-project/icons.svg";
+import React, { useState } from "react";
+import { getLanguageId, spritemap } from '../includes/LiferayFunctions';
+import { getDays, getMonths } from '../includes/interface/DatesLang';
+import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
 
 const DefaultForm = ({ itemsHandle, save, items, notify }) => {
   const locales = [

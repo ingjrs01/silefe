@@ -1,9 +1,8 @@
+import ClayIcon, { ClayIconSpriteContext } from '@clayui/icon';
 import React from "react";
-import ClayIcon, {ClayIconSpriteContext} from '@clayui/icon';
 //import {ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import { spritemap } from "../LiferayFunctions";
 import { ITEMS_ACTIONS } from "../reducers/items.reducer";
-
-const spritemap = "./o/my-project/icons.svg";
 
 export const MgtToolbar = ({items, itemsHandle}) => {
     return (

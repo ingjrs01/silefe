@@ -5,8 +5,6 @@ import React from "react";
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
-const spritemap = "./o/my-project/icons.svg";
-
 const DefaultForm = ({ itemsHandle, save, items, notify }) => {
 
   const validateAll = () => {
