@@ -195,10 +195,16 @@ const Acciones = () => {
             });
 
             fetchAPIData('/silefe.accion/filter-participantes-by-accion', {accionId: accionId},referer).then(response => {
+                console.log("Acabamos de recibir los participantes de la accion" + accionId) ;
+                console.debug(response);
                 const tits = response.data.map( i => {
                     let email = '';
-                    if (i.email != null && i.email.length > 0)
-                        email = JSON.parse(i.email)[0].value;
+                    if (i.email != null && i.email.length > 0) {
+                        const tmp = JSON.parse(i.email);
+                        if (tmp.length > 0)
+                            email = tmp[0].value;
+                        //email = JSON.parse(i.email)[0].value;
+                    }
 
                     return {
                         ...i,
@@ -273,8 +279,11 @@ const Acciones = () => {
         fetchAPIData('/silefe.participante/filter',postdata,referer).then(response => {
             const pts = response.data.map( i => {
                 let email = "";
-                if (i.email != null && i.email.length > 0)
-                    email = JSON.parse(i.email)[0].value;
+                if (i.email != null && i.email.length > 0) {
+                    const tmpmail = JSON.parse(i.email);
+                    if  (tmpmail.length > 0)
+                        email = JSON.parse(i.email)[0].value;
+                }
                 return {
                     ...i,
                     apellidos: i.apellido1 + " " + i.apellido2,
