@@ -32,11 +32,11 @@ export const initialDocentes = {
     pagination: {
         page: 0,
         pageSize: 4,
-        totalPages: 2,
+        totalPages: 1,
     },
-    load: 0,    
+    load: 0,
 }
-let tmpar= []; 
+let tmpar= [];
 
 export const reducerDocentes = (state, action ) => {
     switch (action.type) {
@@ -44,7 +44,7 @@ export const reducerDocentes = (state, action ) => {
             return {
                 ...state,
                 item: {
-                    id: 0,                    
+                    id: 0,
                 },
                 items: [],
                 deleted: [],

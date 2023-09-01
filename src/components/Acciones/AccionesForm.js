@@ -338,18 +338,18 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 
                 <DocentesTable
                   docentes={docentes}
-                  docentesHandler={docentesHandler} 
+                  docentesHandler={docentesHandler}
                 />
                 
               </ClayTabs.TabPane>
 
-              <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}>                  
+              <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}>
                 <ParticipantesTable
                   participantes={participantes}
-                  participantesHandler={participantesHandler} 
-                />                
+                  participantesHandler={participantesHandler}
+                />
               </ClayTabs.TabPane>
-              <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-5"}>                  
+              <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-5"}>
                 <h3>{"ELEARNING"}</h3>
                 <div className="row">
                   <ClayForm.Group className={'has-success  col'} key={"Group-plataforma"} >
@@ -487,9 +487,9 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                         onChange={evt => {
                           itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
                         }}
-                        value={items.item['observaciones']} 
+                        value={items.item['observaciones']}
                         />
-                    </ClayForm.Group>                  
+                    </ClayForm.Group>
 
                 </div>
                 
@@ -502,9 +502,9 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
 
         <div className="btn-group">
           <div className="btn-group-item">
-            <ClayButton 
-              aria-label="Cancel" 
-              onClick={e => itemsHandle({type: ITEMS_ACTIONS.CANCEL})} 
+            <ClayButton
+              aria-label="Cancel"
+              onClick={e => itemsHandle({type: ITEMS_ACTIONS.CANCEL})}
               displayType="secondary">{Liferay.Language.get('Cancelar')}
             </ClayButton>
           </div>

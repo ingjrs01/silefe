@@ -10,8 +10,6 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
   //const [active, setActive] = useState(0);
 
   const validateAll = () => {
-    //debugger;
-    console.log("validando todo");
     Object.keys(items.fields.fields).forEach( campo => {
       //debugger;
       //console.log(campo);
@@ -124,5 +122,4 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
     </ClayCard>
   );
 }
-
 export default TabsForm;

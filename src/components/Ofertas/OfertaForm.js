@@ -5,26 +5,26 @@ export const form = {
         id: {
             key:1,
             type: "text",
-            label: "ID", 
-            name: "id", 
-            value:"lalala", 
-            placeholder:"Identifier", 
+            label: "ID",
+            name: "id",
+            value:"lalala",
+            placeholder:"Identifier",
             conditions: ["number"]
         },
         titulo: {
             key:2,
             type: "multilang",
-            label: Liferay.Language.get('Titulo'), 
-            name: "titulo", 
-            value:"titulo", 
+            label: Liferay.Language.get('Titulo'),
+            name: "titulo",
+            value:"titulo",
             placeholder:Liferay.Language.get('Titulo'),
             conditions:["text"]
         },
         empresaId: {
             key: 3,
             type: "select",
-            label: Liferay.Language.get('Empresa'), 
-            name: "empresaId", 
+            label: Liferay.Language.get('Empresa'),
+            name: "empresaId",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -32,8 +32,8 @@ export const form = {
         centroId: {
             key: 4,
             type: "select",
-            label: Liferay.Language.get('Centro'), 
-            name: "centroId", 
+            label: Liferay.Language.get('Centro'),
+            name: "centroId",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -41,8 +41,8 @@ export const form = {
         puestoId: {
             key: 5,
             type: "select",
-            label: Liferay.Language.get('Puesto'), 
-            name: "puestoId", 
+            label: Liferay.Language.get('Puesto'),
+            name: "puestoId",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -50,16 +50,16 @@ export const form = {
         puesto: {
             key: 33,
             type: "text",
-            label: Liferay.Language.get('Puesto'), 
-            name: "puesto", 
+            label: Liferay.Language.get('Puesto'),
+            name: "puesto",
             enabled:true,
             conditions: [],
         },
         proyectoId: {
             key: 30,
             type: "select",
-            label: Liferay.Language.get('Proyecto'), 
-            name: "proyectoId", 
+            label: Liferay.Language.get('Proyecto'),
+            name: "proyectoId",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -67,8 +67,8 @@ export const form = {
         cnaeId: {
             key: 7,
             type: "select",
-            label: Liferay.Language.get('Cnae'), 
-            name: "cnaeId", 
+            label: Liferay.Language.get('Cnae'),
+            name: "cnaeId",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -76,18 +76,18 @@ export const form = {
         vacantes: {
             key:8,
             type: "text",
-            label: Liferay.Language.get('Vacantes'), 
+            label: Liferay.Language.get('Vacantes'),
             value: "0",
-            name: "vacantes", 
+            name: "vacantes",
             placeholder: "0",
             conditions:["number"]
         },
         fechaIncorporacion: {
             key:9,
             type: "date",
-            label: Liferay.Language.get('Incorporacion'), 
-            name: "fechaIncorporacion", 
-            value:"yyyy-mm-dd", 
+            label: Liferay.Language.get('Incorporacion'),
+            name: "fechaIncorporacion",
+            value:"yyyy-mm-dd",
             //value: null,
             yearmin: 5,
             yearmax: 5,
@@ -97,8 +97,8 @@ export const form = {
         tipoContratoId: {
             key: 10,
             type: "select",
-            label: Liferay.Language.get('TipoContrato'), 
-            name: "tipoContratoId", 
+            label: Liferay.Language.get('TipoContrato'),
+            name: "tipoContratoId",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -106,16 +106,16 @@ export const form = {
         duracionMeses: {
             key:11,
             type: "text",
-            label: Liferay.Language.get('Duracion'), 
-            name: "duracionMeses", 
+            label: Liferay.Language.get('Duracion'),
+            name: "duracionMeses",
             placeholder: "0",
             conditions:["number"]
         },
         jornadaId: {
             key: 12,
             type: "select",
-            label: Liferay.Language.get('Jornada'), 
-            name: "jornadaId", 
+            label: Liferay.Language.get('Jornada'),
+            name: "jornadaId",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -123,32 +123,32 @@ export const form = {
         infoJornada: {
             key: 13,
             type: "text",
-            label: Liferay.Language.get('InfoJornada'), 
-            name: "infoJornada", 
+            label: Liferay.Language.get('InfoJornada'),
+            name: "infoJornada",
             placeholder: "",
             conditions:["text"]
         },
         infoColectivos: {
             key: 14,
             type: "text",
-            label: Liferay.Language.get('InfoColectivos'), 
-            name: "infoJornada", 
+            label: Liferay.Language.get('InfoColectivos'),
+            name: "infoJornada",
             placeholder: "",
             conditions:["text"]
         },
         tareas: {
             key: 15,
             type: "text",
-            label: Liferay.Language.get('Tareas'), 
-            name: "tareas", 
+            label: Liferay.Language.get('Tareas'),
+            name: "tareas",
             placeholder: "",
             conditions:["text"]
         },
         titulacionRequerido: {
             key: 16,
             type: "select",
-            label: Liferay.Language.get('Titulacion'), 
-            name: "titulacionRequerido", 
+            label: Liferay.Language.get('Titulacion'),
+            name: "titulacionRequerido",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -156,8 +156,8 @@ export const form = {
         idiomasRequerido: {
             key: 17,
             type: "select",
-            label: Liferay.Language.get('Idiomas'), 
-            name: "idiomasRequerido", 
+            label: Liferay.Language.get('Idiomas'),
+            name: "idiomasRequerido",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -165,8 +165,8 @@ export const form = {
         informaticaRequerido: {
             key: 18,
             type: "select",
-            label: Liferay.Language.get('Informatica'), 
-            name: "informaticaRequerido", 
+            label: Liferay.Language.get('Informatica'),
+            name: "informaticaRequerido",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -174,8 +174,8 @@ export const form = {
         experienciaRequerido: {
             key: 19,
             type: "select",
-            label: Liferay.Language.get('Experiencia'), 
-            name: "experienciaRequerido", 
+            label: Liferay.Language.get('Experiencia'),
+            name: "experienciaRequerido",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -183,8 +183,8 @@ export const form = {
         permisos: {
             key: 20,
             type: "multilist",
-            label: Liferay.Language.get('Permisos'), 
-            name: "permisos", 
+            label: Liferay.Language.get('Permisos'),
+            name: "permisos",
             placeholder: "",
             enabled: true,
             options: [],
@@ -193,27 +193,27 @@ export const form = {
         vehiculo: {
             key: 21,
             type: "toggle",
-            label: Liferay.Language.get('Vehiculo'), 
-            name: "vehiculo", 
-            value:"lelele", 
+            label: Liferay.Language.get('Vehiculo'),
+            name: "vehiculo",
+            value:"lelele",
             options: [],
             change: ()=>{console.log("cambia fondos propios");}
         },
         necesitaVehiculo: {
             key: 22,
             type: "toggle",
-            label: Liferay.Language.get('NecesitaVehiculo'), 
-            name: "necesitaVehiculo", 
-            value:"lelele", 
+            label: Liferay.Language.get('NecesitaVehiculo'),
+            name: "necesitaVehiculo",
+            value:"lelele",
             options: [],
             change: ()=>{console.log("cambia fondos propios");}
         },
         generoId: {
             key: 23,
             type: "select",
-            label: Liferay.Language.get('Genero'), 
-            name: "generoId", 
-            value:"lelele", 
+            label: Liferay.Language.get('Genero'),
+            name: "generoId",
+            value:"lelele",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -221,9 +221,9 @@ export const form = {
         edadId: {
             key: 24,
             type: "select",
-            label: Liferay.Language.get('Edad'), 
-            name: "edadId", 
-            value:"lelele", 
+            label: Liferay.Language.get('Edad'),
+            name: "edadId",
+            value:"lelele",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -231,18 +231,18 @@ export const form = {
         habilidades: {
             key: 25,
             type: "text",
-            label: Liferay.Language.get('Habilidades'), 
-            name: "habilidades", 
-            value:"lelele", 
+            label: Liferay.Language.get('Habilidades'),
+            name: "habilidades",
+            value:"lelele",
             enabled:true,
             conditions: []
         },
         estadoId: {
             key: 26,
             type: "select",
-            label: Liferay.Language.get('Estado'), 
-            name: "estadoId", 
-            value:"lelele", 
+            label: Liferay.Language.get('Estado'),
+            name: "estadoId",
+            value:"lelele",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -250,18 +250,18 @@ export const form = {
         estado: {
             key: 32,
             type: "text",
-            label: Liferay.Language.get('Estado'), 
-            name: "estado", 
-            value:"lelele", 
+            label: Liferay.Language.get('Estado'),
+            name: "estado",
+            value:"lelele",
             enabled:true,
             conditions: []
         },
         observaciones: {
             key: 27,
             type: "text",
-            label: Liferay.Language.get('Observaciones'), 
-            name: "observaciones", 
-            value:"lelele", 
+            label: Liferay.Language.get('Observaciones'),
+            name: "observaciones",
+            value:"lelele",
             enabled:true,
             conditions: []
         },
@@ -277,9 +277,9 @@ export const form = {
         objetivos: {
             key: 29,
             type: "textarea",
-            label: Liferay.Language.get('Objetivos'), 
-            name: "objetivos", 
-            value:"lelele", 
+            label: Liferay.Language.get('Objetivos'),
+            name: "objetivos",
+            value:"lelele",
             placeholder:Liferay.Language.get('Objetivos'),
             conditions:["text"]
         },
@@ -292,18 +292,18 @@ export const form = {
         empresa: {
             key: 34,
             type: "text",
-            label: Liferay.Language.get('Empresa'), 
-            name: "empresa", 
-            value:"lelele", 
+            label: Liferay.Language.get('Empresa'),
+            name: "empresa",
+            value:"lelele",
             enabled:true,
             conditions: [],
         },
         centro: {
             key: 35,
             type: "text",
-            label: Liferay.Language.get('Centro'), 
-            name: "centro", 
-            value:"lelele", 
+            label: Liferay.Language.get('Centro'),
+            name: "centro",
+            value:"lelele",
             enabled:true,
             conditions: [],
         },
@@ -322,19 +322,19 @@ export const form = {
                 {
                     key:42,
                     cols: ['duracionMeses', 'vacantes', 'empresaId','centroId']
-                },        
+                },
                 {
                     key:43,
                     cols: ['proyectoId','puestoId','cnaeId']
-                },        
+                },
                 {
                     key:44,
                     cols: ['tipoContratoId','fechaIncorporacion','duracionMeses', 'jornadaId']
-                },        
+                },
                 {
                     key:45,
                     cols: ['tareas']
-                },        
+                },
             ]
         },
         {

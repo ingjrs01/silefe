@@ -30,7 +30,7 @@ export const initialParticipantes = {
     pagination: {
         page: 0,
         pageSize: 4,
-        totalPages: 2,
+        totalPages: 1,
     },
     load: 0,
 }

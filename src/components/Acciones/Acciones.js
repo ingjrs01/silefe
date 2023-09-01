@@ -177,6 +177,7 @@ const Acciones = () => {
             ejecucionHandlerT({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
             ejecucionHandlerP({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
             ejecucionHandlerG({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
+            
             fetchAPIData('/silefe.accion/filter-docentes-by-accion', {accionId: accionId},referer).then(response => {
                 const tits = response.data.map( i => {
                     let email = '';
@@ -265,7 +266,7 @@ const Acciones = () => {
             options : {
                 filters: filters,
                 order: [{ name: 'apellido1', direction: 'asc'}],
-                excludes: participantes.items.map(i => (i.participanteId)),
+                excludes: (participantes.items.length > 0)?participantes.items.map(i => (i.participanteId)):[],
             },
         }
 
@@ -299,7 +300,7 @@ const Acciones = () => {
             options : {
                 filters: filters,
                 order: [{ name: 'apellido1', direction: 'asc'}],
-                excludes: docentes.items.map(i => (i.participanteId)),
+                excludes: (docentes.items.length > 0)?docentes.items.map(i => (i.docenteId)):[],
             },
         }
 
