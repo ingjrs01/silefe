@@ -8,10 +8,10 @@ import ClayTabs from '@clayui/tabs';
 import React, { useState } from "react";
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import ParticipantesTable from '../../includes/interface/ParticipantesTable'; //"../   ParticipantesTable";
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import DocentesTable from "./DocentesTable";
 import { Formacion } from './Formacion';
-import ParticipantesTable from "./ParticipantesTable";
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler }) => {
   const [tab, setTab] = useState(0);
