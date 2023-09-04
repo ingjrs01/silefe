@@ -286,7 +286,7 @@ export const form = {
         participantes: {
             key: 31,
             type: "other",
-            componentName: "Participantes",
+            componentName: "ParticipantesTable",
             name: "participantes",
         },
         empresa: {
@@ -361,7 +361,7 @@ export const form = {
             ]
         },
         {
-            caption: "Cantidatos",
+            caption: Liferay.Language.get("Candidatos"),
             key: 3,
             ariacontrols: "tabpanel-3",
             rows: [
@@ -372,7 +372,7 @@ export const form = {
             ]
         },
         {
-            caption: "Estado",
+            caption: Liferay.Language.get("Estado"),
             key: 4,
             ariacontrols: "tabpanel-4",
             rows: [

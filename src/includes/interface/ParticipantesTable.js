@@ -14,7 +14,7 @@ const ParticipantesTable = ({participantes,participantesHandler}) =>  {
 
     if (!participantes.items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
-
+    
     return (
         <>
         { ( participantes.status === "list" ) &&
