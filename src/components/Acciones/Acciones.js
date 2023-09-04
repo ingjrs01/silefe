@@ -9,7 +9,7 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { DOCENTE_ACTIONS, initialDocentes, reducerDocentes } from '../../includes/reducers/docentes.reducer';
+//import { PARTICIPANTE_ACTIONS } from '../../includes/reducers/docentes.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { PARTICIPANTE_ACTIONS, initialParticipantes, reducerParticipantes } from '../../includes/reducers/participantes.reducer';
 import { toHours } from '../../includes/utils';
@@ -22,7 +22,7 @@ import { form as formulario } from './Form';
 
 const Acciones = () => {
     const [items,itemsHandle]                  = useReducer(red_items,initialState);
-    const [docentes,docentesHandler]           = useReducer(reducerDocentes, initialDocentes);
+    const [docentes,docentesHandler]           = useReducer(reducerParticipantes, initialParticipantes);
     const [participantes,participantesHandler] = useReducer(reducerParticipantes, initialParticipantes);
     const [ejecucionT, ejecucionHandlerT]      = useReducer(reducerEjecucion, iniEjecucion);
     const [ejecucionP, ejecucionHandlerP]      = useReducer(reducerEjecucion, iniEjecucion);
@@ -132,7 +132,7 @@ const Acciones = () => {
     }
 
     const fetchData = async () => {
-        docentesHandler({type: DOCENTE_ACTIONS.START});
+        docentesHandler({type: PARTICIPANTE_ACTIONS.START});
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
         ejecucionHandlerT({type:EJECUCION_ACTIONS.START, tipoFormacion: 1});
         ejecucionHandlerP({type:EJECUCION_ACTIONS.START, tipoFormacion: 2});
@@ -168,7 +168,7 @@ const Acciones = () => {
                     email: tt[0].value,
                 }
             });
-            docentesHandler({type: DOCENTE_ACTIONS.SETSEARCHITEMS,items:tits});
+            docentesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:tits});
         })
 
         let sel = items.arr.filter(i => i.checked);
@@ -191,7 +191,7 @@ const Acciones = () => {
                         email: email
                     }
                 });
-                docentesHandler({type: DOCENTE_ACTIONS.SETITEMS,items:tits});
+                docentesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:tits});
             });
 
             fetchAPIData('/silefe.accion/filter-participantes-by-accion', {accionId: accionId},referer).then(response => {
@@ -326,7 +326,7 @@ const Acciones = () => {
                 }
             });
             const totalPages = response.totalPages;
-            docentesHandler({type: DOCENTE_ACTIONS.SETSEARCHITEMS,items:pts, totalPages: totalPages});
+            docentesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:pts, totalPages: totalPages});
         });
 
     }

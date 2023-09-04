@@ -8,9 +8,8 @@ import ClayTabs from '@clayui/tabs';
 import React, { useState } from "react";
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
-import ParticipantesTable from '../../includes/interface/ParticipantesTable'; //"../   ParticipantesTable";
+import ParticipantesTable from '../../includes/interface/ParticipantesTable';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
-import DocentesTable from "./DocentesTable";
 import { Formacion } from './Formacion';
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler }) => {
@@ -336,9 +335,9 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
 
               <ClayTabs.TabPane aria-labelledby="tab-3" key={"tab-content-3"}>
                 
-                <DocentesTable
-                  docentes={docentes}
-                  docentesHandler={docentesHandler}
+                <ParticipantesTable
+                  participantes={docentes}
+                  participantesHandler={docentesHandler}
                 />
                 
               </ClayTabs.TabPane>
