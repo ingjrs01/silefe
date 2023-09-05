@@ -9,7 +9,6 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-//import { PARTICIPANTE_ACTIONS } from '../../includes/reducers/docentes.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { PARTICIPANTE_ACTIONS, initialParticipantes, reducerParticipantes } from '../../includes/reducers/participantes.reducer';
 import { toHours } from '../../includes/utils';
@@ -69,7 +68,7 @@ const Acciones = () => {
     const handleSave = async () => {
         const pdata = {
             id:  items.item.id,
-            obj: items.item,
+            obj: {...items.item, userId: getUserId()},
             userId:      getUserId()
         }
 
@@ -255,7 +254,6 @@ const Acciones = () => {
                 };
                 ejecucionHandlerG({type: EJECUCION_ACTIONS.SETITEM, item: item});
             });
-
         }
     }
 
@@ -357,6 +355,7 @@ const Acciones = () => {
         fetchAPIData('/silefe.estado/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.estadoId, label: obj.nombre } })];
             form.fields.estadoId.options = opts;
+            form.fields.estadoId.change = () => itemsHandle({type: ITEMS_ACTIONS.SET, fieldname: "observaciones", value: ""});
         });
 
         // TODO: Categoria:

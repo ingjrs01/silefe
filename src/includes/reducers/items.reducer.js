@@ -137,7 +137,7 @@ export const red_items = (state, action ) => {
             return {
                 ...state,
                 arr: action.items,
-                pagination: {...state.pagination,totalPages: action.totalPages, total: action.total,},                
+                pagination: {...state.pagination,totalPages: action.totalPages, total: action.total,},
                 fields: action.fields,
                 item: tmp_item,
                 errors: resetErrors(action.fields),
