@@ -9,8 +9,8 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
 
   const validateAll = () => {
     Object.keys(items.fields.fields).forEach( campo => {
-      console.log(campo);
-      debugger;
+      //console.log(campo);
+      //debugger;
       if ((items.fields.fields[campo].validate === undefined) || (items.fields.fields[campo].validate != false)) {
         switch (items.fields.fields[campo].type) {
           case "text": 

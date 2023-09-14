@@ -2,6 +2,7 @@ import ClayAutocomplete from '@clayui/autocomplete';
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
+import ClayIcon from '@clayui/icon';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
 import { getLanguageId, spritemap } from '../LiferayFunctions';
@@ -114,7 +115,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             <>
                               <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
                               {
-                                items.item[it].map( (v,k) => {return ( 
+                                items.item[it].map( (v,k) => {return (
                                   <>
                                   <ClayInput.Group spaced={"any"}>
                                   <ClayInput
@@ -192,6 +193,10 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                     value={item.value}
                                   />
                                 ))}
+
+                                <span className="inline-item inline-item-before">
+                                  <ClayIcon spritemap={spritemap} symbol="times" />
+                                </span>
                               </ClaySelect>
                             </>
                           }
@@ -206,7 +211,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                               value={items.item[it]}
                               placeholder="Introduzca las primeras letras"
                             >
-                            {items.fields.fields[it].options.map(item => { 
+                            {items.fields.fields[it].options.map(item => {
                               return(
                                 <ClayAutocomplete.Item key={it + "option-" + item.value}>{item.label}</ClayAutocomplete.Item>
                               )})}
@@ -215,13 +220,13 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                           }
                           {items.fields.fields[it].type == 'toggle' &&
                             <>
-                              <ClayToggle 
-                                label={items.fields.fields[it].label} 
+                              <ClayToggle
+                                label={items.fields.fields[it].label}
                                 onToggle={val => {
                                   if (items.fields.fields[it].hasOwnProperty("change"))
                                     items.fields.fields[it].change(val);
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });
-                                }} 
+                                }}
                                 toggled={items.item[it]}
                               />
                             </>
@@ -257,7 +262,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                               >
                                 {items.fields.fields[it].options != "undefined" && items.fields.fields[it].options.map(it5 => {
                                   return (
-                                    <ClayRadio 
+                                    <ClayRadio
                                       key={items.fields.fields[it].name + it5.key}
                                       label={it5.label}
                                       value={it5.value}
@@ -291,7 +296,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 placeholder={items.fields.fields[it].placeholder}
                                 type="text"
                                 value={items.item[it]}
-                                onChange={e => { 
+                                onChange={e => {
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value });
                                 }}
                               />
@@ -309,7 +314,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             {(items.fields.fields[it].type === 'other') &&
                             <>
                               {
-                                plugin()[items.fields.fields[it].componentName] 
+                                plugin()[items.fields.fields[it].componentName]
                               }
                             </>}
                           {
