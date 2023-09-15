@@ -40,10 +40,6 @@ export const VerticalMenu = () => {
               ],
               label: "Projects"
             },
-            {
-              href: "#7",
-              label: "Seven"
-            }
           ]}
           large={false}
           spritemap={spritemap}

@@ -1,43 +1,43 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
-import { QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import { Route, Routes } from 'react-router-dom';
-import VMenu from './components/VMenu';
-import Titulaciones from './components/Titulaciones/Titulaciones';
-import Colectivos from './components/Colectivos/Colectivos';
-import Provincias from './components/Provincias/Provincia';
-import Cnaes from './components/Cnaes/Cnaes';
-import Cnos from './components/Cnos/Cnos';
-import Experiencias from './components/Experiencias/Experiencias';
-import Salarios from './components/Salarios/Salarios';
-import MBaja from './components/MBaja/MBaja';
-import Horarios from './components/Horarios/Horarios';
-import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
-import DGeografica from './components/DGeografica/DGeografica';
-import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
-import TitulacionesNivel from './components/TitulacionesNivel/TitulacionesNivel';
-import Cofinanciadas from './components/Cofinanciadas/Cofinanciadas';
-import Tecnicos from './components/Tecnicos/Tecnicos';
-import Convocatorias from './components/Convocatorias/Convocatorias';
-import Proyectos from './components/Proyectos/Proyectos';
-import Ambitos from './components/Ambitos/Ambitos';
-import Participantes from './components/Participantes/Participantes';
-import Localidades from './components/Localidades/Localidades';
-import TiposVia from './components/TiposVia/TiposVia';
-import TipoContrato from './components/TipoContrato/TipoContrato';
-import Empresas from './components/Empresas/Empresas';
-import Ofertas from  './components/Ofertas/Ofertas';
-import Edades from './components/Edades/Edades';
-import Carnets from './components/Carnets/Carnets';
 import Acciones from './components/Acciones/Acciones';
 import AccionesTipo from './components/AccionesTipo/AccionesTipo';
 import AccionesTipoFormacion from './components/AccionesTipoFormacion/AccionesTipoFormacion';
-import Home from './components/Home/Home';
-import Prestaciones from './components/Prestaciones/Prestacion';
-import Estados from './components/Estados/Estados';
+import Ambitos from './components/Ambitos/Ambitos';
+import Carnets from './components/Carnets/Carnets';
+import Cnaes from './components/Cnaes/Cnaes';
+import Cnos from './components/Cnos/Cnos';
+import Cofinanciadas from './components/Cofinanciadas/Cofinanciadas';
+import Colectivos from './components/Colectivos/Colectivos';
+import Convocatorias from './components/Convocatorias/Convocatorias';
+import DGeografica from './components/DGeografica/DGeografica';
 import Docentes from './components/Docentes/Docentes';
-import {VerticalMenu} from './includes/interface/VerticalMenu';
-import Plataformas from './components/Plataforma/Plataformas';
+import Edades from './components/Edades/Edades';
+import Empresas from './components/Empresas/Empresas';
+import Estados from './components/Estados/Estados';
+import Experiencias from './components/Experiencias/Experiencias';
+import Home from './components/Home/Home';
+import Horarios from './components/Horarios/Horarios';
+import Localidades from './components/Localidades/Localidades';
 import Lugares from './components/Lugares/Lugares';
+import MBaja from './components/MBaja/MBaja';
+import Ofertas from './components/Ofertas/Ofertas';
+import Participantes from './components/Participantes/Participantes';
+import Plataformas from './components/Plataforma/Plataformas';
+import Prestaciones from './components/Prestaciones/Prestacion';
+import Provincias from './components/Provincias/Provincia';
+import Proyectos from './components/Proyectos/Proyectos';
+import Salarios from './components/Salarios/Salarios';
+import Tecnicos from './components/Tecnicos/Tecnicos';
+import TipoContrato from './components/TipoContrato/TipoContrato';
+import TiposVia from './components/TiposVia/TiposVia';
+import Titulaciones from './components/Titulaciones/Titulaciones';
+import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
+import TitulacionesNivel from './components/TitulacionesNivel/TitulacionesNivel';
+import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
+import VMenu from './components/VMenu';
+import { VerticalMenu } from './includes/interface/VerticalMenu';
 
 const queryClient = new QueryClient();
 
@@ -72,7 +72,7 @@ const Application = () => {
                             <Route path='/mbaja'            element={ <MBaja /> }   />
                             <Route path='/horarios'         element={ <Horarios /> }   />
                             <Route path='/titulacionesf'    element={ <TitulacionesFam /> }   />
-                            <Route path='/dgeografica'      element={ <DGeografica /> }   />                            
+                            <Route path='/dgeografica'      element={ <DGeografica /> }   />
                             <Route path='/cofinanciadas'    element={ <Cofinanciadas /> }   />
                             <Route path='/tecnicos'         element={ <Tecnicos /> }   />
                             <Route path='/convocatorias'    element={ <Convocatorias /> }   />
