@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 //import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router } from 'react-router-dom';
 import Application from './Application';
 
 
@@ -17,9 +16,7 @@ import Application from './Application';
 export default function main({portletNamespace, contextPath, portletElementId, configuration}) {
     const root = ReactDOM.createRoot(document.getElementById(portletElementId));
     root.render(
-        <Router>
-            <Application />        
-        </Router>
+            <Application />
     );
 
   //  reportWebVitals();
