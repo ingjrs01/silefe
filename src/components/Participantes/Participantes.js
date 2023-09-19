@@ -74,7 +74,6 @@ const Participantes = () => {
     }
 
     const loadCsv = () => {
-        console.log("Cargando un csv");
         itemsHandle({type:ITEMS_ACTIONS.LOAD})
     }
 
@@ -241,6 +240,7 @@ const Participantes = () => {
     }
 
     const beforeEdit = () => {
+        //debugger;
         //queryTitulaciones();
         let sel = items.arr.filter(i => i.checked);   //[0]['provinciaId'];
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel[0]['provinciaId']},referer).then(response => {
@@ -252,22 +252,20 @@ const Participantes = () => {
     }
 
     const beforeFormacion = (participanteId) => {
-        fetchAPIData('/silefe.formacionparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
-            const tits = response.data.map( i => {
-                return {
-                    ...i,
-                    id: i.formacionParticipanteId,
-                    ini: (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
-                    fin: (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
-                    titulacionName: i.titulacion,
-                }
-            });
-            titulacionHandler({type:TITULACIONES_ACTIONS.LOAD_ITEMS,items: tits})
-        }).catch( (e) => {
-            debugger;
-            console.log("error");
-            console.debug(e);
-        })
+        if (participanteId != undefined) {
+            fetchAPIData('/silefe.formacionparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
+                const tits = response.data.map( i => ({...i,
+                        id: i.formacionParticipanteId,
+                        ini: (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
+                        inicio: (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
+                        fin: (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
+                        titulacionName: i.titulacion,}));
+                titulacionHandler({type:TITULACIONES_ACTIONS.LOAD_ITEMS,items: tits})
+            }).catch( (e) => {
+                console.log("Error cargando las titulaciones de un alumno");
+                console.error(e);
+            })
+        }
     }
 
     const beforeExperiencia = (participanteId) => {
@@ -286,7 +284,7 @@ const Participantes = () => {
     }
 
     const queryTitulaciones = () => {
-        titulacionHandler({type:TITULACIONES_ACTIONS.START});
+        //titulacionHandler({type:TITULACIONES_ACTIONS.START});
         
         fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });

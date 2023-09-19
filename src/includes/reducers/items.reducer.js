@@ -193,8 +193,8 @@ export const red_items = (state, action ) => {
             //debugger;
             tmp_item = {};
             Object.keys(state.fields.fields).forEach(j => {
-                console.log(j);
-                console.debug(action.item.data);
+                //console.log(j);
+                //console.debug(action.item.data);
                 switch (state.fields.fields[j].type) {
                     case "multilang":
                         let tt = {}

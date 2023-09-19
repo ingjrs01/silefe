@@ -8,6 +8,9 @@ import { TableForm } from "./TableForm";
 
 const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
 
+  console.log("redTitulaciones");
+  console.debug(redTitulaciones);
+  
   return (
     <>
       {redTitulaciones.status == "list" &&
@@ -16,7 +19,7 @@ const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
             <caption>{Liferay.Language.get("Titulaciones")}</caption>
             <ClayTable.Head>
               <ClayTable.Row>
-                <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() => console.log("lalala")} />
+                <ClayTable.Cell headingCell><ClayCheckbox checked={false} />
                 </ClayTable.Cell>
                 <ClayTable.Cell headingCell>{"Inicio"}</ClayTable.Cell>
                 <ClayTable.Cell headingCell>{"Fin"}</ClayTable.Cell>
@@ -29,7 +32,7 @@ const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
                 return (
                   <>
                     <ClayTable.Row>
-                      <ClayTable.Cell><ClayCheckbox checked={false} onChange={() => console.log("lalala")} />
+                      <ClayTable.Cell><ClayCheckbox checked={false} />
                       </ClayTable.Cell>
                       <ClayTable.Cell>{item.ini}</ClayTable.Cell>
                       <ClayTable.Cell>{item.fin}</ClayTable.Cell>
@@ -83,7 +86,6 @@ const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
 
     </>
   )
-
 }
 
 export default TitulacionesRender;

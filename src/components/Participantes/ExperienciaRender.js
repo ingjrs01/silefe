@@ -8,8 +8,6 @@ import { ExperienciaForm } from "./ExperienciaForm";
 
 const ExperienciaRender = ({experiencias,experienciasHandler,  edit}) =>  {
 
-    console.debug(experiencias);
-
     if (!experiencias.items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -21,7 +19,7 @@ const ExperienciaRender = ({experiencias,experienciasHandler,  edit}) =>  {
             <caption>Experiencias</caption>
             <ClayTable.Head>
                 <ClayTable.Row>
-                <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
+                <ClayTable.Cell headingCell><ClayCheckbox checked={false} />
                 </ClayTable.Cell>
                 <ClayTable.Cell headingCell>{"Inicio"}</ClayTable.Cell>
                 <ClayTable.Cell headingCell>{"Fin"}</ClayTable.Cell>
@@ -33,7 +31,7 @@ const ExperienciaRender = ({experiencias,experienciasHandler,  edit}) =>  {
                 { experiencias.items.map( (item,index) => { return(
                 <>
                 <ClayTable.Row>
-                <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
+                <ClayTable.Cell><ClayCheckbox checked={false} />
                 </ClayTable.Cell>
                 <ClayTable.Cell>{item.ini}</ClayTable.Cell>
                 <ClayTable.Cell>{item.fin}</ClayTable.Cell>

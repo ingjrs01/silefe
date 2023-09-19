@@ -1,22 +1,20 @@
-import React from "react";
+import ClayButton from '@clayui/button';
+import ClayCard from "@clayui/card";
 import ClayForm from '@clayui/form';
 import ClayTabs from '@clayui/tabs';
-import ClayCard from "@clayui/card";
-import ClayButton from '@clayui/button';
+import React from "react";
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
-import RenderFields from "./RenderFields";
 import ExperienciaRender from "./ExperienciaRender";
+import RenderFields from "./RenderFields";
 import TitulacionesRender from "./TitulacionesRender";
 
 const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,  redTitulaciones, titulacionHandler }) => {
 
   const validateAll = () => {
-    console.log("validando todo");
     let error = false;
     Object.keys(items.fields.fields).forEach( campo => {
-      console.log(campo);
       switch (items.fields.fields[campo].type) {
-        case "text": 
+        case "text":
           if (!validate(campo, items.item[campo])) {
             error = true;
             return false;
@@ -54,7 +52,7 @@ const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,
           return false;
         }
       }
-    }    
+    }
     itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
     return true;
   }
@@ -83,7 +81,7 @@ const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,
         <ClayCard.Description truncate={false} displayType="text">
         <ClayForm>
 
-        <ClayTabs active={items.fields.tabActive} modern onActiveChange={e => {console.log("cambiando");}}>
+        <ClayTabs active={items.fields.tabActive} modern >
           { items.fields.tabs.map((tab,index) => {
             return (
               <ClayTabs.Item
@@ -118,24 +116,24 @@ const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,
       <ClayTabs.Content activeIndex={items.fields.tabActive} fade>
           { items.fields.tabs.map( tab => {
             return (
-              <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-" + tab.key}>                
-                <RenderFields 
+              <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-" + tab.key}>
+                <RenderFields
                 rows={tab.rows}
-                itemsHandle={itemsHandle} 
+                itemsHandle={itemsHandle}
                 items={items}
                 />
               </ClayTabs.TabPane>
 
             );
-          })}          
-          <ClayTabs.TabPane aria-labelledby="tab-3" key={"tab-content-3"}>  
+          })}
+          <ClayTabs.TabPane aria-labelledby="tab-3" key={"tab-content-3"}>
             <TitulacionesRender
               redTitulaciones={redTitulaciones}
               titulacionHandler={titulacionHandler}
             />
           </ClayTabs.TabPane>
 
-          <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}>  
+          <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}> 
             <ExperienciaRender
               experiencias={experiencias}
               experienciasHandler={experienciasHandler}
@@ -156,8 +154,6 @@ const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,
               if (validateAll() ) {
                 save();
               }
-              else
-                console.log("No ha pasado la validación");
             }}
               displayType="primary">{Liferay.Language.get('Guardar')}
             </ClayButton>

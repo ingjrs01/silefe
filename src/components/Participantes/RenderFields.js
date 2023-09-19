@@ -26,11 +26,9 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
     ]
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
     const [act2,setAct2] = useState(0);
-    
+
     const validateAll = () => {
-      console.log("validando todo");
       Object.keys(items.fields.fields).forEach( campo => {
-        //console.log(campo);
         switch (items.fields.fields[campo].type) {
           case "text": 
             if (!validate(campo, items.item[campo]))
@@ -45,7 +43,6 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
         }
   
       });
-      console.log("todo ok");
       return true;
     }
   
@@ -66,7 +63,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
             return false;
           }
         }
-      }    
+      }
       itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
       return true;
     }
@@ -110,7 +107,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                             <>
                               <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
                               {
-                                items.item[it].map( (v,k) => {return ( 
+                                items.item[it].map( (v,k) => {return (
                                   <>
                                   <ClayInput.Group spaced={"any"}>
                                   <ClayInput
@@ -130,8 +127,8 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                     containerProps={{ id: "test"}}
                                     onChange={() => itemsHandle({ type: ITEMS_ACTIONS.SET_MULTIFIELDCHECK, fieldname: it,pos: k})}
                                   />
-                                  <ClayButtonWithIcon 
-                                    //className="col-1" 
+                                  <ClayButtonWithIcon
+                                    //className="col-1"
                                     aria-label="Close" displayType="secondary" spritemap={spritemap} symbol="times" title="Close"
                                     onClick={e => itemsHandle({ type: ITEMS_ACTIONS.REMOVE_MULTIFIELD, fieldname: it, pos:k })}
                                   />
@@ -139,17 +136,15 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 </>
                                 )})
                               }
-                              <ClayButtonWithIcon 
-                                aria-label="Add" 
-                                displayType="secondary" 
-                                spritemap={spritemap} 
-                                symbol="plus" 
+                              <ClayButtonWithIcon
+                                aria-label="Add"
+                                displayType="secondary"
+                                spritemap={spritemap}
+                                symbol="plus"
                                 title="Add"
                                 onClick={ () => itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: it }) }
                               />
-
                             </>}
-
 
                             {items.fields.fields[it].type == 'multilang' &&
                             <ClayLocalizedInput
@@ -177,11 +172,8 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 disabled={ !items.fields.fields[it].enabled }
                                 onChange={evt => {
                                   if (items.fields.fields[it].hasOwnProperty('change')) {
-                                    console.log("tiene change");
                                     items.fields.fields[it].change(evt.target.value);
                                   }
-                                  else
-                                    console.log("no tiene change");
 
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
                                 }}
@@ -207,7 +199,7 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                               value={items.item[it]}
                               placeholder="Introduzca las primeras letras"
                             >
-                            {items.fields.fields[it].options.map(item => { 
+                            {items.fields.fields[it].options.map(item => {
                               return(
                                 <ClayAutocomplete.Item key={it + "option-" + item.value}>{item.label}</ClayAutocomplete.Item>
                               )})}
@@ -216,13 +208,13 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                           }
                           {items.fields.fields[it].type == 'toggle' &&
                             <>
-                              <ClayToggle 
-                                label={items.fields.fields[it].label} 
+                              <ClayToggle
+                                label={items.fields.fields[it].label}
                                 onToggle={val => {
                                   if (items.fields.fields[it].hasOwnProperty("change"))
                                     items.fields.fields[it].change(val);
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });
-                                }} 
+                                }}
                                 toggled={items.item[it]}
                               />
                             </>
@@ -263,25 +255,23 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                     />
                                   )
                                 })}
-
                               </ClayRadioGroup>
                             </>
                             }
 
                             {(items.fields.fields[it].type === 'multilist') &&
-                            <>                            
+                            <>
                               <ClaySelectBox
                                 items={items.fields.fields[it].options}
                                 label={items.fields.fields[it].label}
                                 multiple
-                                onItemsChange={console.log("Cambiando los items dentro de ClaySelecBox")}
                                 onSelectChange={val => {itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
                                 spritemap={spritemap}
                                 value={items.item[it]}
-                              />                            
+                              />
                             </>}
                             {(items.fields.fields[it].type === 'textarea') &&
-                            <>                            
+                            <>
                               <label htmlFor="basicInputText">{items.fields.fields[it].label}</label>
                               <ClayInput
                                 component="textarea"
@@ -289,13 +279,13 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                                 placeholder={items.fields.fields[it].placeholder}
                                 type="text"
                                 value={items.item[it]}
-                                onChange={e => { 
-                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value }); 
+                                onChange={e => {
+                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value });
                                 }}
                               />
                             </>}
                           {
-                            items.errors[it].length > 0 && 
+                            items.errors[it].length > 0 &&
                             <ClayForm.FeedbackGroup>
                               <ClayForm.FeedbackItem>
                                 <ClayForm.FeedbackIndicator
@@ -306,7 +296,6 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                               </ClayForm.FeedbackItem>
                             </ClayForm.FeedbackGroup>
                           }
-
                         </ClayForm.Group>
                       </>
                     )
@@ -315,10 +304,8 @@ const RenderFields =  ({ rows,  itemsHandle, items }) => {
                 </div>
               )
             })}
-
         </>
     );
-
 }
 
 export default RenderFields;

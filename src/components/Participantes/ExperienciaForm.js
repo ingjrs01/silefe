@@ -210,7 +210,6 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
             </div>
             <div className="btn-group-item">
               <ClayButton onClick={ e => {
-                console.log("guardando");
                 experienciasHandler({type: EXPERIENCIA_ACTIONS.SAVE});
               }}
                 displayType="primary">{Liferay.Language.get('Guardar')}

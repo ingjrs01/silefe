@@ -24,6 +24,7 @@ export const initialState = {
     titulacionNivelOptions: [],
     deleted: [],
     status: "list",
+    items: [],
 }
 
 let newniveles = [];

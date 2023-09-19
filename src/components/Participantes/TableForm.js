@@ -78,8 +78,8 @@ export const TableForm = ({redTitulaciones, titulacionHandler}) => {
                                 key={"it"}
                                 disabled={ false }
                                 onChange={evt => { 
-                                  titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value:evt.target.value});                                  
-                                 }}
+                                  titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value:evt.target.value});
+                                }}
                                 value={redTitulaciones.titulacion.titulacionTipoId} >
                                   {
                                     redTitulaciones.tipoOptions.map( option => { return (
@@ -99,7 +99,7 @@ export const TableForm = ({redTitulaciones, titulacionHandler}) => {
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { 
+                                onChange={evt => {
                                   titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value:evt.target.value})
                                 }}
                                 value={redTitulaciones.titulacion.titulacionNivelId} >
@@ -121,7 +121,7 @@ export const TableForm = ({redTitulaciones, titulacionHandler}) => {
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { 
+                                onChange={evt => {
                                   titulacionHandler({ type:TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA,value: evt.target.value}) 
                                 }}
                                   
@@ -177,19 +177,19 @@ export const TableForm = ({redTitulaciones, titulacionHandler}) => {
                                   });
                                 }}
                             />
-                            </ClayForm.Group>                            
+                            </ClayForm.Group>
                         </div>
 
                     </ClayForm>
-                    </ClayCard.Description>                
+                    </ClayCard.Description>
                     <div className="btn-group">
                         <div className="btn-group-item">
-                            <ClayButton onClick={e =>  titulacionHandler({type: TITULACIONES_ACTIONS.CANCEL }) } 
+                            <ClayButton onClick={e =>  titulacionHandler({type: TITULACIONES_ACTIONS.CANCEL }) }
                               displayType="secondary">{Liferay.Language.get('Cancelar')}
                             </ClayButton>
                         </div>
                         <div className="btn-group-item">
-                            <ClayButton onClick={e =>  titulacionHandler({type: TITULACIONES_ACTIONS.SAVE_ITEM}) } 
+                            <ClayButton onClick={e =>  titulacionHandler({type: TITULACIONES_ACTIONS.SAVE_ITEM}) }
                               displayType="primary">{Liferay.Language.get('Guardar')}
                             </ClayButton>
                         </div>

@@ -294,7 +294,6 @@ const Proyectos = () => {
                 const itms = response.data.map(i => ({
                     ...i,
                     fechaIncorporacion: (i.fechaIncorporacion != null)?new Date(i.fechaIncorporacion).toISOString().substring(0, 10):"",
-                    //fechaIncorporacion: (i.fechaIncorporacion != null)?new Date(i.fechaIncorporacion).toISOString().substring(0, 10):"",
                 }));
                 ofertasHandle({type:SUBTABLE_ACTIONS.LOAD_ITEMS, items:itms, pages: response.totalPages});
             });

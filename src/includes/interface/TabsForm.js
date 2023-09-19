@@ -1,10 +1,8 @@
 import ClayButton from '@clayui/button';
 import ClayCard from "@clayui/card";
 import ClayForm from '@clayui/form';
-import ClayIcon from '@clayui/icon';
 import ClayTabs from '@clayui/tabs';
 import React from "react";
-import { spritemap } from '../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
@@ -113,13 +111,9 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
             <ClayButton aria-label="Cancel" onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
           </div>
           <div className="btn-group-item">
-            <ClayButton aria-label="Save" 
+            <ClayButton aria-label="Save"
               onClick={e => { validateAll() && save() }}
               displayType="primary">{Liferay.Language.get('Guardar')}
-              >
-              <span className="inline-item inline-item-before">
-                <ClayIcon spritemap={spritemap} symbol="times" />
-              </span>
             </ClayButton>
           </div>
         </div>
