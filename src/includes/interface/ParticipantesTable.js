@@ -4,11 +4,12 @@ import ClayIcon from '@clayui/icon';
 import ClayTable from '@clayui/table';
 import ClayUpperToolbar from '@clayui/upper-toolbar';
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { spritemap } from "../../includes/LiferayFunctions";
 import { MiniPaginator } from "../../includes/interface/MiniPaginator";
 import { PARTICIPANTE_ACTIONS } from "../../includes/reducers/participantes.reducer";
 
-const ParticipantesTable = ({participantes,participantesHandler}) =>  {
+const ParticipantesTable = ({participantes,participantesHandler, editUrl, backUrl, ancestorId }) =>  {
 
     const [showSearch, setShowSearch] = useState(false);
 
@@ -164,15 +165,28 @@ const ParticipantesTable = ({participantes,participantesHandler}) =>  {
                 <ClayTable.Cell key={"krow-"+ item.documento + item.id}>{item.documento}</ClayTable.Cell>
                 <ClayTable.Cell key={"krow-"+item.email+item.id} headingTitle>{ item.email}</ClayTable.Cell>
                 <ClayTable.Cell>
-                    <ClayButtonWithIcon
-                        aria-label={Liferay.Language.get("Quitar")}
-                        key={"bi-"+item.id}
-                        spritemap={spritemap}
-                        symbol="minus-circle"
-                        title="quitar"
-                        displayType="danger"
-                        onClick={ () => participantesHandler({type: PARTICIPANTE_ACTIONS.DELETE_ITEM, index: index}) }
-                    />
+                    <div className="btn-toolbar pull-right">
+                        <Link to={{ pathname: `${editUrl}${item.id}` }} state={{ backUrl, ancestorId }}  > {
+                        <ClayButtonWithIcon
+                            aria-label={Liferay.Language.get("Editar")}
+                            key={"edit-" + item.id}
+                            spritemap={spritemap}
+                            symbol="pencil"
+                            title="Edit"
+                            displayType="secondary"
+                        />}</Link>
+                            <ClayButtonWithIcon
+                                aria-label={Liferay.Language.get("Quitar")}
+                                key={"bi-" + item.id}
+                                className="ml-1"
+                                spritemap={spritemap}
+                                symbol="trash"
+                                title="Delete"
+                                displayType="danger"
+                                onClick={() => participantesHandler({type: PARTICIPANTE_ACTIONS.DELETE_ITEM, index: index})}
+                            />
+                    </div>
+
                 </ClayTable.Cell>
                 </ClayTable.Row>
                 </>

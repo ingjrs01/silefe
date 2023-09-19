@@ -194,22 +194,21 @@ const Acciones = () => {
             });
 
             fetchAPIData('/silefe.accion/filter-participantes-by-accion', {accionId: accionId},referer).then(response => {
-                console.log("Acabamos de recibir los participantes de la accion" + accionId) ;
-                console.debug(response);
                 const tits = response.data.map( i => {
                     let email = '';
                     if (i.email != null && i.email.length > 0) {
                         const tmp = JSON.parse(i.email);
                         if (tmp.length > 0)
                             email = tmp[0].value;
-                        //email = JSON.parse(i.email)[0].value;
+                        
                     }
 
                     return {
                         ...i,
                         apellidos: i.apellido1 + " " + i.apellido2,
                         nuevo: false,
-                        email: email
+                        email: email,
+                        id: i.participanteId,
                     }
                 });
                 participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:tits});
@@ -286,7 +285,8 @@ const Acciones = () => {
                     ...i,
                     apellidos: i.apellido1 + " " + i.apellido2,
                     nuevo: true,
-                    email: email
+                    email: email,
+                    id: i.participanteId,
                 }
             });
             const totalPages = response.totalPages;

@@ -77,6 +77,7 @@ const Application = () => {
                                         <Route path='/titnivel'             element={<ProtectRoute isAllowed={true} redirectTo={url}> <TitulacionesNivel /> </ProtectRoute> } />
                                         <Route path='/tittipo'              element={<ProtectRoute isAllowed={true} redirectTo={url}><TitulacionesTipo /></ProtectRoute> } />
                                         <Route path='/titulaciones'         element={<ProtectRoute isAllowed={true} redirectTo={url}><Titulaciones /></ProtectRoute> } />
+                                        <Route path='/docente/:id'          element={<ProtectRoute isAllowed={true} redirectTo={url}><Docentes /></ProtectRoute> } />
                                         <Route path='/docentes'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Docentes /></ProtectRoute> } />
                                         <Route path='/colectivos'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Colectivos /></ProtectRoute> } />
                                         <Route path='/provincias'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Provincias /></ProtectRoute> } />

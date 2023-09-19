@@ -15,8 +15,6 @@ import { Formacion } from './Formacion';
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler }) => {
   const [tab, setTab] = useState(0);
 
-  console.log("Accionesform");
-
   const locales = [
     {
       label: "es-ES",
@@ -289,7 +287,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     spritemap={spritemap}
                   >
                   <ClayPanel.Body>
-                    <Formacion 
+                    <Formacion
                       ejecucion={ejecucion[0]}
                       ejecucionHandler={ejecucionHandler[0]}
                     />
@@ -319,7 +317,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     spritemap={spritemap}
                   >
                   <ClayPanel.Body>
-                    <Formacion 
+                    <Formacion
                       ejecucion={ejecucion[2]}
                       ejecucionHandler={ejecucionHandler[2]}
                     />
@@ -338,6 +336,10 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 <ParticipantesTable
                   participantes={docentes}
                   participantesHandler={docentesHandler}
+                  editUrl={"/docente/"}
+                  backUrl={"/accion/"}
+                  ancestorId={items.item.id}
+  
                 />
                 
               </ClayTabs.TabPane>
@@ -346,7 +348,10 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 <ParticipantesTable
                   participantes={participantes}
                   participantesHandler={participantesHandler}
-                />
+                  editUrl={"/participante/"}
+                  backUrl={"/accion/"}
+                  ancestorId={items.item.id}
+                  />
               </ClayTabs.TabPane>
               <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-5"}>
                 <h3>{"ELEARNING"}</h3>
