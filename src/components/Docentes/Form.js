@@ -118,6 +118,7 @@ export const form = {
             name: "provinciaId",
             value:"",
             enabled:true,
+            options: [],
             conditions: []
         },
         municipioId: {
@@ -127,6 +128,7 @@ export const form = {
             name: "municipioId",
             value:"",
             enabled:true,
+            options: [],
             conditions: []
         },
         localidad: {
@@ -146,6 +148,7 @@ export const form = {
             value:"",
             change: () => {console.log("tipoViaId")},
             enabled:true,
+            options: [],
             conditions: []
         },
         email: {

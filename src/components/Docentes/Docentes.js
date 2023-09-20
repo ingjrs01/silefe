@@ -133,13 +133,15 @@ const Docentes = () => {
         fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             form.fields.provinciaId.options = opts;
-            form.fields.provinciaId.change = changeProvince;
+            form.fields.provinciaId.change = () => console.log("cambiando provincia");//changeProvince;
         });
-        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
-            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.municipioId.options = opts;
-            form.fields.municipioId.change = change2;
-        });
+
+        //fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
+        //    const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+        //    form.fields.municipioId.options = opts;
+        //    form.fields.municipioId.change = () => console.log("cambiando el municipio");
+        //});
+        
         fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             form.fields.tipoviaId.options = opts;
@@ -157,12 +159,7 @@ const Docentes = () => {
         });
     }
 
-    const change2 = () => {
-        console.log("cambiando las otroas opcioens")
-    }
-
     useEffect(()=>{
-        debugger;
 		if (!isInitialized.current) {
             initForm();
             itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form});
@@ -182,6 +179,12 @@ const Docentes = () => {
             }
 		}
     },[items.load]);
+
+    useEffect( ()=>{
+        if (items.item.id != 'undefined' && items.item.id > 0) 
+            changeProvince(items.item.provinciaId);
+        
+    },[items.item.provinciaId]);
 
     const loadDocente = (id) => {
         fetchAPIRow('/silefe.docente/get',{id: id}, referer).then( i => {
