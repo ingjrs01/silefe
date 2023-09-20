@@ -53,6 +53,11 @@ const Participantes = () => {
 		}
     },[items.load]);
 
+    useEffect( () => {
+        if (items.item.id != 'undefined' && items.item.id > 0)
+            changeProvince(items.item.provinciaId);
+    }, [items.item.provinciaId]);
+
     const loadParticipante = (id) => {
         beforeFormacion(id);
         beforeExperiencia(id);
@@ -66,6 +71,8 @@ const Participantes = () => {
                     telefono: (r.data.telefono != null && r.data.telefono.length > 0)?JSON.parse(r.data.telefono):[],
                 }
             }
+            console.log("datos llegados");
+            console.debug(datatmp);
             itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:datatmp});
         }).catch(error => {
             console.log("error");
@@ -141,7 +148,6 @@ const Participantes = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);
         
         //console.debug(state.ancestorId);
-        //debugger;
         if (state != 'undefined' && state.backUrl.length > 0)
             navigate(state.backUrl+state.ancestorId);
     }
@@ -195,7 +201,7 @@ const Participantes = () => {
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,total: totalItems, totalPages:totalPages,page:page});
     }
 
-    const initForm = async () => {
+    const initForm = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
@@ -212,13 +218,13 @@ const Participantes = () => {
         fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             form.fields.provinciaId.options = opts;
-            form.fields.provinciaId.change = changeProvince;
+            form.fields.provinciaId.change =  () => console.log("cambia la provincia");//changeProvince;
         });
-        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
-            const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.municipioId.options = opts;
-            form.fields.municipioId.change = change2;
-        });
+        //fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
+        //    const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+        //    form.fields.municipioId.options = opts;
+        //    form.fields.municipioId.change = change2;
+        //});
         fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             form.fields.tipoviaId.options = opts;
@@ -240,7 +246,6 @@ const Participantes = () => {
     }
 
     const beforeEdit = () => {
-        //debugger;
         //queryTitulaciones();
         let sel = items.arr.filter(i => i.checked);   //[0]['provinciaId'];
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel[0]['provinciaId']},referer).then(response => {
