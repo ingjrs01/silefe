@@ -1,25 +1,28 @@
-import React, {useEffect, useReducer, useRef, useState} from "react";
-import DefaultForm from "../../includes/interface/DefaultForm";
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
-import {useModal} from '@clayui/modal';
-import { getUserId, url_referer, getLanguageId} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import Papa from "papaparse";
-import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
+import { useModal } from '@clayui/modal';
+import React, { useEffect, useReducer, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Errors } from '../../includes/Errors';
-import { form as formulario} from './Form';
+import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import DefaultForm from "../../includes/interface/DefaultForm";
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import { form as formulario } from './Form';
 
 const Docentes = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
-    const [toastItems,setToastItems]     = useState([]);    
+    const [toastItems,setToastItems]     = useState([]);
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
+    const {id}                           = useParams();
+    const {state}                        = useLocation();
+    const navigate                       = useNavigate();
 
     const form = formulario;
     const referer = `${url_referer}/docentes`;
@@ -30,18 +33,18 @@ const Docentes = () => {
 
 //    const processCsv = () => {
 //        if (file) {
-//            const reader = new FileReader();         
+//            const reader = new FileReader();
 //            reader.onload = async ({ target }) => {
 //                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-//                const parsedData = csv?.data;                                
+//                const parsedData = csv?.data;
 //                let end = '/silefe.cnae/add-multiple';
 //                let ttmp = { cnaes:parsedData,userId:getUserId()};
 //                batchAPI(end,ttmp,referer).then( res2 => {
 //                    if (res2.ok) {
-//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);                    
+//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
 //                        fetchData();
 //                    }
-//                    else 
+//                    else
 //                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
 //                });
 //            };
@@ -64,15 +67,18 @@ const Docentes = () => {
         let {status,error} = await saveAPI(endpoint,data,referer);
         if (status) {
             fetchData();
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);            
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
         }
-        else 
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);            
+        else
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
+
+        if (state != 'undefined' && state.backUrl.length > 0)
+        navigate(state.backUrl+state.ancestorId);
     }
 
     const handleDelete = () => {
         if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
+            onOpenChange(true);
     }
 
     const confirmDelete = async () => {
@@ -82,7 +88,7 @@ const Docentes = () => {
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_ok') }]);
-                fetchData();        
+                fetchData();
             }
             else {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
@@ -126,20 +132,20 @@ const Docentes = () => {
 
         fetchAPIData('/silefe.provincia/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.provinciaId.options = opts;            
+            form.fields.provinciaId.options = opts;
             form.fields.provinciaId.change = changeProvince;
         });
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.municipioId.options = opts;            
+            form.fields.municipioId.options = opts;
             form.fields.municipioId.change = change2;
         });
         fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            form.fields.tipoviaId.options = opts;            
+            form.fields.tipoviaId.options = opts;
             form.fields.tipoviaId.change = () => {console.log("cambiando el tipo de via")};
         });
-        form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];        
+        form.fields.tipoDoc.options = [{value:"0",label:seleccionarlabel},{value:"1",label:"DNI"},{value:"2",label:"NIE"},{value:"3",label:"Pasaporte"}];
         form.fields.sexo.options = [{key: 0, value:"H",label:Liferay.Language.get('Hombre')},{key:1, value:"M",label: Liferay.Language.get('Mujer')}];
 
     }
@@ -156,38 +162,67 @@ const Docentes = () => {
     }
 
     useEffect(()=>{
+        debugger;
 		if (!isInitialized.current) {
-            fetchData();
+            initForm();
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form});
+            if (id != 'undefined' && id > 0) {
+                loadDocente(id);
+            }
+            else
+                fetchData();
+
 			isInitialized.current = true;
 		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
+            if (id != 'undefined' && id > 0)
+                loadDocente(id)
+            else {
+                const timeoutId = setTimeout(fetchData, 350);
+                return () => clearTimeout(timeoutId);
+            }
 		}
     },[items.load]);
 
-    if (!items) 
+    const loadDocente = (id) => {
+        fetchAPIRow('/silefe.docente/get',{id: id}, referer).then( i => {
+            const data = {
+                ...i,
+                data: {...i.data,
+                    fechaNacimiento: (i.data.fechaNacimiento != null)?new Date(i.data.fechaNacimiento).toISOString().substring(0, 10):"",
+                    email: (i.data.email != null && i.data.email.length > 0)?JSON.parse(i.data.email):[],
+                    telefono: (i.data.telefono != null && i.data.telefono.length > 0)?JSON.parse(i.data.telefono):[],
+                }
+            };
+            itemsHandle({type: ITEMS_ACTIONS.EDIT_ITEM, item: data});
+        }).catch( error => {
+            cosole.error("Error cargando docente");
+            console.error(error);
+        })
+    }
+
+    if (!items)
         return (<div>Liferay.Language.get('Cargando')</div>)
 
     return (
         <>
-            <Menu 
-                handleSave={handleSave} 
-                handleDelete={handleDelete} 
+            <Menu
+                handleSave={handleSave}
+                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
                 formulario={formulario}
             />
-            { (items.status === 'load') && 
-            <LoadFiles 
+            { (items.status === 'load') &&
+            <LoadFiles
                 setFile={setFile}
                 processCsv={processCsv}
                 itemsHandle={itemsHandle}
-            />}       
-            { (items.status === 'edit' || items.status === 'new') && 
-                <DefaultForm 
-                    save={ handleSave} 
+            />}
+            { (items.status === 'edit' || items.status === 'new') &&
+                <DefaultForm
+                    save={ handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
                 />
@@ -195,13 +230,13 @@ const Docentes = () => {
             {
                 (items.status === 'list') &&
                 <>
-                    <Table 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Table
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
-                    <Paginator 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Paginator
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
                 </>
             }

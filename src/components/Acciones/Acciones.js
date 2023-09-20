@@ -187,7 +187,8 @@ const Acciones = () => {
                         ...i,
                         apellidos: i.apellido1 + " " + i.apellido2,
                         nuevo: false,
-                        email: email
+                        email: email,
+                        id: i.docenteId,
                     }
                 });
                 docentesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:tits});
