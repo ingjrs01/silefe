@@ -2,11 +2,7 @@ import ClayButton from '@clayui/button';
 import ClayCard from "@clayui/card";
 import ClayForm, { ClayInput, ClaySelect } from '@clayui/form';
 import React from "react";
-//import ClayDatePicker from '@clayui/date-picker';
-//import { getLanguageId } from '../../includes/LiferayFunctions'
 import { CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
-//import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
-
 
 export const CentrosForm = ({ reducer, centrosHandle }) => {
 

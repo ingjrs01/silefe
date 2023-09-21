@@ -10,7 +10,7 @@ export const CENTROS_ACTIONS = {
     PROVINCIAS: 8,
     MUNICIPIOS: 9,
     TIPOS_VIA: 10,
-  }
+}
 
 export const initialState = {
     items: [],
@@ -31,8 +31,8 @@ export const reducerCentros = (state=initialState, action ) => {
     switch (action.type) {
         case CENTROS_ACTIONS.START:
             return {
-              ...state,
-              modified: [],
+                ...state,
+                modified: [],
             }
         case CENTROS_ACTIONS.LOAD:
             return {
@@ -40,7 +40,8 @@ export const reducerCentros = (state=initialState, action ) => {
                 items: action.items,
                 modified: [],
             }
-        case CENTROS_ACTIONS.SELECT_ITEM: 
+
+        case CENTROS_ACTIONS.SELECT_ITEM:
             // tengo que cargar los municipios de la provincia activa
             tmp = state.all_municipios.filter(i => i.provinciaId == state.items[action.index].provinciaId).map(it => {return {value:it.id,label:it.nombre}});
             return {
@@ -49,9 +50,9 @@ export const reducerCentros = (state=initialState, action ) => {
                 municipios: tmp,
                 status: "edit"
             }
-        case CENTROS_ACTIONS.NEW_ITEM: 
+        case CENTROS_ACTIONS.NEW_ITEM:
             return {
-                ...state,                
+                ...state,
                 item: {...state.item,
                     id: 0,
                     nombre: "abc",
@@ -63,7 +64,7 @@ export const reducerCentros = (state=initialState, action ) => {
                     tipoViaId: 0,
                     nombreVia: "",
                     numero: "",
-                    piso: "",         
+                    piso: "",
                 },
                 status: "edit",
             }
@@ -74,13 +75,13 @@ export const reducerCentros = (state=initialState, action ) => {
                     ...state,
                     item: {...state.item,[action.fieldname]:action.value},
                     municipios: tmp,
-                }    
+                }
             }
             return {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
             }
-        case CENTROS_ACTIONS.CANCEL: 
+        case CENTROS_ACTIONS.CANCEL:
             return {
                 ...state,
                 modified: [],
@@ -88,8 +89,8 @@ export const reducerCentros = (state=initialState, action ) => {
                 status: "list",
             }
         case CENTROS_ACTIONS.SAVE:
-            if (state.item.id == 0) 
-                tmp = [...state.items, state.item];            
+            if (state.item.id == 0)
+                tmp = [...state.items, state.item];
             else  {
                 tmp = [...state.items];
                 const index = tmp.findIndex(item => item.id == state.item.id );
@@ -97,7 +98,7 @@ export const reducerCentros = (state=initialState, action ) => {
             }
             let modified = [...state.modified];
             if (!modified.includes(state.item.id)) {
-              modified.push(state.item.id);
+                modified.push(state.item.id);
             }
 
             return {
@@ -116,23 +117,23 @@ export const reducerCentros = (state=initialState, action ) => {
                 items: tmp,
                 deleted: [...state.deleted, item],
             }
-        case CENTROS_ACTIONS.PROVINCIAS: 
+        case CENTROS_ACTIONS.PROVINCIAS:
             return {
                 ...state,
                 provincias: action.provincias,
             }
-        case CENTROS_ACTIONS.MUNICIPIOS: 
+        case CENTROS_ACTIONS.MUNICIPIOS:
             return {
                 ...state,
                 all_municipios: action.municipios,
             }
-        case CENTROS_ACTIONS.TIPOS_VIA: 
+        case CENTROS_ACTIONS.TIPOS_VIA:
             return {
                 ...state,
                 tipos_via: action.tipos,
             }
 
-        default: 
+        default:
             return {...state}
     }
 }

@@ -1,23 +1,22 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import TabsForm from '../../includes/interface/TabsForm';
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
 import { useModal } from '@clayui/modal';
-import { getUserId, getLanguageId, url_referer } from '../../includes/LiferayFunctions';
-import { red_items, ITEMS_ACTIONS, initialState } from '../../includes/reducers/items.reducer';
-import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI, fetchAPIRow } from "../../includes/apifunctions";
-import { LoadFiles } from '../../includes/interface/LoadFiles'
-import { FAvisos } from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
-import { Errors } from '../../includes/Errors';
-import { form as formulario } from "./Form";
-import CentrosRender from "./CentrosRender";
-import { reducerCentros, CENTROS_ACTIONS, initialState as iniCentros } from "../../includes/reducers/centros.reducer";
-import { reducerContactos, CONTACTOS_ACTIONS, initialState as iniContactos } from "../../includes/reducers/contactos.reducer";
-import ContactosRender from "./ContactosRender";
-import { Paginator } from "../../includes/interface/Paginator";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Errors } from '../../includes/Errors';
+import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
+import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import TabsForm from '../../includes/interface/TabsForm';
+import { CENTROS_ACTIONS, initialState as iniCentros, reducerCentros } from "../../includes/reducers/centros.reducer";
+import { CONTACTOS_ACTIONS, initialState as iniContactos, reducerContactos } from "../../includes/reducers/contactos.reducer";
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import CentrosRender from "./CentrosRender";
+import ContactosRender from "./ContactosRender";
+import { form as formulario } from "./Form";
 
 const Empresas = () => {
     const [items, itemsHandle]             = useReducer(red_items,initialState);
@@ -57,7 +56,7 @@ const Empresas = () => {
             if (i.email != null && i.email.length > 0) {
                 console.log("el email");
                 //console.log(JSON.parse(i.email)[0].value);
-            } 
+            }
             return ({
                 ...i,
                 id: i.empresaId,
@@ -103,7 +102,7 @@ const Empresas = () => {
                 if (redCentros.modified.length > 0) {
                     const oo = redCentros.items.filter( i => redCentros.modified.includes( i.id )  );
                     saveAPI('/silefe.empresacentros/save-centros-by-empresa', {id: data.empresaId, centros: oo,userId: getUserId()} , referer).then(respon => {
-                         console.log("lalala")
+                        console.log("lalala")
                     });
                 }
                 // ahora tenemos que borrar los items que hallan sido borrados
@@ -116,11 +115,11 @@ const Empresas = () => {
 
                 // vamos a sincronizar los contactos, sólo si se han modificado
                 if (redContactos.modified.length > 0 ) {
-                  const contacts = redContactos.items.filter( i => redContactos.modified.includes( i.id )  );
-                  saveAPI('/silefe.contacto/save-by-empresa',{id: data.empresaId, contactos: contacts ,userId:getUserId() },referer).then( response => {
-                      console.log("a la vuelta de guardar los contactos");
-                      console.debug(response.data);
-                  });
+                    const contacts = redContactos.items.filter( i => redContactos.modified.includes( i.id )  );
+                    saveAPI('/silefe.contacto/save-by-empresa',{id: data.empresaId, contactos: contacts ,userId:getUserId() },referer).then( response => {
+                        console.log("a la vuelta de guardar los contactos");
+                        console.debug(response.data);
+                });
                 }
 
                 if (redContactos.deleted.length > 0) {
@@ -135,9 +134,9 @@ const Empresas = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
             }
             
-            if (state != 'undefined' && state.backUrl.length > 0) {            
+            if (state != 'undefined' && state.backUrl.length > 0) {
                 navigate(state.backUrl + state.ancestorId);
-            }            
+            }
         });
     }
 
@@ -145,7 +144,7 @@ const Empresas = () => {
         console.log("delete");
     }
 
-    const beforeEdit = (id) => { 
+    const beforeEdit = (id) => {
         let empresaId = 0;
         if (id === undefined) {
             empresaId = items.arr.filter(i => i.checked)[0].id;
@@ -153,34 +152,29 @@ const Empresas = () => {
         else
             empresaId = id;
 
-        //if (sel.length > 0) {
-            //empresaId = sel[0].id;
-            fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
-                //console.log("Consultados los centors");
-                //console.debug(response);
-                let centros = response.data.map(i => {
-                    return {
-                        ...i,
-                        id: i.empresaCentrosId
-                    }
-                });
-                centrosHandle({ type: CENTROS_ACTIONS.LOAD, items: centros });
+        fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
+            let centros = response.data.map(i => {
+                return {
+                    ...i,
+                    id: i.empresaCentrosId
+                }
             });
+            centrosHandle({ type: CENTROS_ACTIONS.LOAD, items: centros });
+        });
 
-            fetchAPIData('/silefe.contacto/filter-by-empresa', { empresaId: empresaId }, referer).then(response2 => {
-                console.log("Consultados los contactos");
-                console.debug(response2);
-                let contacts = response2.data.map( j => {
-                    return {
-                        ...j,
-                        id: j.contactoId,
-                        email: (j.email != null && j.email.length > 0) ? JSON.parse(j.email) : [],
-                        telefono: (j.telefono != null && j.telefono.length > 0) ? JSON.parse(j.telefono) : [],
-                    }
-                });
-                contactosHandle({type:CONTACTOS_ACTIONS.LOAD,items: contacts });
+        fetchAPIData('/silefe.contacto/filter-by-empresa', { empresaId: empresaId }, referer).then(response2 => {
+            console.log("Consultados los contactos");
+            console.debug(response2);
+            let contacts = response2.data.map( j => {
+                return {
+                    ...j,
+                    id: j.contactoId,
+                    email: (j.email != null && j.email.length > 0) ? JSON.parse(j.email) : [],
+                    telefono: (j.telefono != null && j.telefono.length > 0) ? JSON.parse(j.telefono) : [],
+                }
             });
-        //}
+            contactosHandle({type:CONTACTOS_ACTIONS.LOAD,items: contacts });
+        });
     }
 
     const loadCsv = () => {
@@ -198,7 +192,7 @@ const Empresas = () => {
                     reducer={redCentros}
                     centrosHandle={centrosHandle}
                 />,
-            Contactos: 
+            Contactos:
                 <ContactosRender
                     redContactos={redContactos}
                     contactosHandle={contactosHandle}
@@ -212,7 +206,7 @@ const Empresas = () => {
             const tmp = {
                 ...r,
                 data: {
-                    ...r.data,                    
+                    ...r.data,
                     email: (r.data.email != null && r.data.email.length > 0)?JSON.parse(r.data.email):[],
                     telefono: (r.data.telefono != null && r.data.telefono.length > 0)?JSON.parse(r.data.telefono):[],
                 }
@@ -282,8 +276,8 @@ const Empresas = () => {
                     />
                     
                     <Paginator
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
                 </>
             }
