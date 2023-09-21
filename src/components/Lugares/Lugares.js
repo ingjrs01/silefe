@@ -83,8 +83,6 @@ const Lugares = () => {
         const provinciaId = pId ?? 1;
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: provinciaId },referer).then(response => {
             const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            console.log("ayuntamientos");
-            console.debug(opts);
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
         }).catch (error => console.error(error));
     }
@@ -120,7 +118,6 @@ const Lugares = () => {
     }
 
     const loadItem = (id) => {
-        debugger;
         beforeEdit(id);
         fetchAPIRow('/silefe.lugar/get',{id:id},referer).then (r => {
             //const tmp = {
@@ -193,8 +190,8 @@ const Lugares = () => {
                     />
                     
                     <Paginator
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
                 </>
             }

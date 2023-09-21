@@ -1,3 +1,4 @@
+import ClayCard from '@clayui/card';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
 import React from "react";
@@ -60,48 +61,48 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
 
                             <ClayForm.Group className={"col-1"} key={"Group-104"} >
                                 <label htmlFor="basicInput">{"M"}</label>
-                                <ClayCheckbox 
-                                    checked={ejecucion.item.dias.M.value} 
+                                <ClayCheckbox
+                                    checked={ejecucion.item.dias.M.value}
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"M" })}
                                 />
                             </ClayForm.Group>
 
                             <ClayForm.Group className={"col-1"} key={"Group-105"} >
                                 <label htmlFor="basicInput">{"X"}</label>
-                                <ClayCheckbox 
-                                    checked={ejecucion.item.dias.X.value} 
+                                <ClayCheckbox
+                                    checked={ejecucion.item.dias.X.value}
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"X" })}
                                 />
                             </ClayForm.Group>
 
                             <ClayForm.Group className={"col-1"} key={"Group-106"} >
                                 <label htmlFor="basicInput">{"J"}</label>
-                                <ClayCheckbox 
-                                    checked={ejecucion.item.dias.J.value} 
+                                <ClayCheckbox
+                                    checked={ejecucion.item.dias.J.value}
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"J" })}
                                 />
                             </ClayForm.Group>
 
                             <ClayForm.Group className={"col-1"} key={"Group-107"} >
                                 <label htmlFor="basicInput">{"V"}</label>
-                                <ClayCheckbox 
-                                    checked={ejecucion.item.dias.V.value} 
+                                <ClayCheckbox
+                                    checked={ejecucion.item.dias.V.value}
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"V" })}
                                 />
                             </ClayForm.Group>
 
                             <ClayForm.Group className={"col-1"} key={"Group-108"} >
                                 <label htmlFor="basicInput">{"S"}</label>
-                                <ClayCheckbox 
-                                    checked={ejecucion.item.dias.S.value} 
+                                <ClayCheckbox
+                                    checked={ejecucion.item.dias.S.value}
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"S" })}
                                 />
                             </ClayForm.Group>
 
                             <ClayForm.Group className={"col-1"} key={"Group-109"} >
                                 <label htmlFor="basicInput">{"D"}</label>
-                                <ClayCheckbox 
-                                    checked={ejecucion.item.dias.D.value} 
+                                <ClayCheckbox
+                                    checked={ejecucion.item.dias.D.value}
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"D" })}
                                 />
                             </ClayForm.Group>
@@ -124,7 +125,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                     </ClayForm.Group>
 
                     <ClayForm.Group className={"col-2"} key={"Group-111"} >
-                        <label htmlFor="basicInput">{"Hora Inicio T."}</label>
+                        <label htmlFor="basicInput">{"Hora Fin M."}</label>
                         <ClayInput
                             placeholder={"prueba2"}
                             type="time"
@@ -164,7 +165,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
 
                 <div class="row">
                     <ClayForm.Group className={"col-4"} key={"Group-114"} >
-                        <label htmlFor="basicInput">{"Empresa"}</label>
+                        <label htmlFor="basicInput">{"Empresa Impartidora"}</label>
                         <ClaySelect aria-label="Select Label"
                             id={"entidadId"}
                             name={"entidadId"}
@@ -189,7 +190,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                     </ClayForm.Group>
                 </div>
                 <div class="row">
-                    <ClayForm.Group className={"col-4"} key={"Group-115"} >
+                    <ClayForm.Group className={"col-6"} key={"Group-115"} >
                         <label htmlFor="basicInput">{"Centro"}</label>
                         <ClaySelect aria-label="Select Label"
                             id={"lugarId"}
@@ -199,7 +200,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                             onChange={evt => {
                                 ejecucionHandler({type: EJECUCION_ACTIONS.SETFIELD, fieldname: "lugarId", value:evt.target.value})
                             }}
-                            value={ejecucion.item.lugarId} >                                
+                            value={ejecucion.item.lugarId} >
                             {
                                 ejecucion.form.fields.lugarId.options.map( option => (
                                     <ClaySelect.Option
@@ -210,6 +211,24 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                                 ))
                             }
                         </ClaySelect>
+                        <ClayCard>
+                            <ClayCard.Body>
+                            <ClayCard.Description displayType="title">
+                                {"Datos lugar"}
+                            </ClayCard.Description>
+                            <ClayCard.Description truncate={false} displayType="text">
+                                {
+                                    <>
+                                    <p></p>
+                                    <p>{ejecucion.item.lugar.nombre}</p>
+                                    <p>{ejecucion.item.lugar.provincia} - {ejecucion.item.lugar.municipio} - {ejecucion.item.lugar.localidad}</p>
+                                    <p>{ejecucion.item.lugar.via} - {ejecucion.item.lugar.numero} - {ejecucion.item.lugar.piso}</p>
+                                    </>
+                                }
+                            </ClayCard.Description>
+                            
+                            </ClayCard.Body>
+                        </ClayCard>
                     </ClayForm.Group>
                 </div>
             </div>

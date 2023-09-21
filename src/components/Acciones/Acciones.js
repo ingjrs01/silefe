@@ -51,7 +51,7 @@ const Acciones = () => {
 //                let ttmp = { cnaes:parsedData,userId:getUserId()};
 //                batchAPI(end,ttmp,referer).then( res2 => {
 //                    if (res2.ok) {
-//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);                    
+//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
 //                        fetchData();
 //                    }
 //                    else
@@ -93,7 +93,7 @@ const Acciones = () => {
                 });
             }
 
-            // TODO: Revisar según el tpo de formaicon que sea: 
+            // TODO: Revisar según el tpo de formaicon que sea:
             let obj4 = {id: ejecucionT.item.id, obj: ejecucionT.item};
             respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion',obj4,referer);
             obj4 = {id: ejecucionP.item.id, obj: ejecucionP.item};
@@ -371,7 +371,7 @@ const Acciones = () => {
 
         fetchAPIData('/silefe.lugar/all', {}, referer).then(response => {
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
-            eform.fields.lugarId.options = opts; 
+            eform.fields.lugarId.options = opts;
         });
 
         ejecucionHandlerT({type: EJECUCION_ACTIONS.SETFORM, form: eform});
@@ -383,9 +383,32 @@ const Acciones = () => {
         fetchAPIRow('/silefe.accion/get',{id:id},referer).then (r => itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:r})) ;
     }
 
+    const changeLugar = async (id) => {
+        const tag = getLanguageId().replace("_","-");
+        const {data} = await fetchAPIRow('/silefe.lugar/get',{id:id},referer);
+        return {...data,
+            municipio: data.municipio[tag],
+            provincia: data.provincia[tag],
+        };
+    }
+    
+    useEffect( () => {
+        if (ejecucionT.item.lugarId != 'undefined'  && ejecucionT.item.lugarId > 0)
+            changeLugar(ejecucionT.item.lugarId).then((data)=>ejecucionHandlerT({type: EJECUCION_ACTIONS.SETLUGAR,lugar:data}));
+    }, [ejecucionT.item.lugarId]);
+
+    useEffect( () => {
+        if (ejecucionP.item.lugarId != 'undefined'  && ejecucionP.item.lugarId > 0)
+            changeLugar(ejecucionP.item.lugarId).then((data)=>ejecucionHandlerP({type: EJECUCION_ACTIONS.SETLUGAR,lugar:data}));
+    }, [ejecucionP.item.lugarId]);
+
+    useEffect( () => {
+        if (ejecucionG.item.lugarId != 'undefined'  && ejecucionG.item.lugarId > 0)
+            changeLugar(ejecucionG.item.lugarId).then((data)=>ejecucionHandlerG({type: EJECUCION_ACTIONS.SETLUGAR,lugar:data}));
+    }, [ejecucionG.item.lugarId]);
+
     useEffect(()=>{
 		if (!isInitialized.current) {
-            //debugger;
             loadForm();
             itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS,form:form});
             if (id != 'undefined' && id > 0) {

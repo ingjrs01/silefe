@@ -28,7 +28,6 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
     const [act2,setAct2] = useState(0);
 
-    console.log("soy el RenderFields de interface");
     const validateAll = () => {
       console.log("validando todo");
       Object.keys(items.fields.fields).forEach( campo => {

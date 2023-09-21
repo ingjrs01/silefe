@@ -16,7 +16,8 @@ export const EJECUCION_ACTIONS = {
     SETSEARCHFIELD: 18,
     LOAD: 19,
     SETFORM: 20,
-  }
+    SETLUGAR: 21,
+}
 export const iniState = {
     item: {
         formacionAccionId: 0,
@@ -38,8 +39,20 @@ export const iniState = {
             S: {label: "S", value:false},
             D: {label: "D", value:false},
         },
-        entidadId: 2,
+        empresaId: 2,
         lugarId: 0,
+        lugar: {
+            id: 0,
+            nombre: "Aula Sin nombre",
+            provinciaId: 0,
+            provincia: "Provincia",
+            municipioId: 0,
+            municipio: "Municipio",
+            localidad: "Localidad",
+            via: "Via",
+            numero: "0",
+            piso: "piso",
+        }
     },
     form: {},
     items: [],
@@ -51,12 +64,11 @@ export const iniState = {
     participanteId: 0,
     load: 0,
 }
-let tmpar= []; 
+let tmpar= [];
 
 export const reducerEjecucion = (state, action ) => {
     switch (action.type) {
-        case EJECUCION_ACTIONS.SETFORM: 
-            //debugger;
+        case EJECUCION_ACTIONS.SETFORM:
             return {
                 ...state,
                 form: action.form,
@@ -68,7 +80,7 @@ export const reducerEjecucion = (state, action ) => {
                     id: 0,
                     inicio: "",
                     fin: "",
-                    entidadId: 2,
+                    entidadId: 3,
                     hIni1: "",
                     hFin1: "",
                     hIni2: "",
@@ -84,13 +96,21 @@ export const reducerEjecucion = (state, action ) => {
                         S: {label: "S", value:false},
                         D: {label: "D", value:false},
                     },
+                    lugar: {
+                        id: 0,
+                        nombre: "Aula Sin nombre",
+                        provinciaId: 0,
+                        provincia: "Provincia",
+                        municipioId: 0,
+                        municipio: "Municipio",
+                        localidad: "Localidad",
+                        via: "Via",
+                        numero: "0",
+                        piso: "piso",
+                    },
                 },
-                //form: {},
-                //items: [],
                 deleted: [],
                 searchItems: [],
-                //checkAllSearch: false,
-                //checkAll: false,
                 status: "list",
             }
         case EJECUCION_ACTIONS.LOAD_ITEMS:
@@ -123,26 +143,31 @@ export const reducerEjecucion = (state, action ) => {
                         ...state.item,
                         dias: {
                             ...ldias
+                        },
+                        lugar: {
+                            ...state.item.lugar
                         }
                     }
                 };
             }
+            if (state.form.fields[action.fieldname].hasOwnProperty('change')) 
+                state.form.fields[action.fieldname].change(action.value);
             return {
                 ...state,
                 item: {...state.item, [action.fieldname]:action.value}
             }
-        case EJECUCION_ACTIONS.SETSEARCH: 
+        case EJECUCION_ACTIONS.SETSEARCH:
             return {
                 ...state,
                 search: action.value
             }
-        case EJECUCION_ACTIONS.SETSEARCHITEMS: 
+        case EJECUCION_ACTIONS.SETSEARCHITEMS:
             return {
                 ...state,
                 searchItems: action.items.map(item => ({...item, checked:false})),
                 pagination: {...state.pagination, totalPages: action.totalPages},
             }
-        case EJECUCION_ACTIONS.CHECKSEARCH: 
+        case EJECUCION_ACTIONS.CHECKSEARCH:
             tmpar = state.searchItems;
             tmpar[action.index].checked = !tmpar[action.index].checked;
 
@@ -150,10 +175,10 @@ export const reducerEjecucion = (state, action ) => {
                 ...state,
                 searchItems: tmpar
             }
-        case EJECUCION_ACTIONS.CHECKALLSEARCH: 
+        case EJECUCION_ACTIONS.CHECKALLSEARCH:
             const check = !state.checkAllSearch;
             return {
-                ...state, 
+                ...state,
                 checkAllSearch: check,
                 searchItems: state.searchItems.map(i => ({...i,checked:check}))
             }
@@ -191,32 +216,45 @@ export const reducerEjecucion = (state, action ) => {
                 items: tmp,
                 deleted: (obj.nuevo)?[...state.deleted]:[...state.deleted,obj],
             }
-        case EJECUCION_ACTIONS.SELECT_ITEMS: 
-            tmpar = state.searchItems.filter(item => item.checked);
-            let tmpPar2 = state.searchItems.filter(item => item.checked == false);
-
+        //case EJECUCION_ACTIONS.SELECT_ITEMS:
+        //    tmpar = state.searchItems.filter(item => item.checked);
+        //    let tmpPar2 = state.searchItems.filter(item => item.checked == false);
+//
+        //    return {
+        //        ...state,
+        //        items: [...state.items,...tmpar.map(i => ({...i,checked:false}))],
+        //        searchItems: tmpPar2,
+        //    }
+        case EJECUCION_ACTIONS.SETITEM:
             return {
                 ...state,
-                items: [...state.items,...tmpar.map(i => ({...i,checked:false}))],
-                searchItems: tmpPar2,
+                item: {
+                    ...action.item,
+                    lugar: {...state.item.lugar}
+                }
             }
-        case EJECUCION_ACTIONS.SETITEM: 
-            return {
-                ...state,
-                item: action.item
-            }
-        case EJECUCION_ACTIONS.SETSEARCHFIELD: 
+        case EJECUCION_ACTIONS.SETSEARCHFIELD:
             return {
                 ...state,
                 searchField: action.value,
             }
-        case EJECUCION_ACTIONS.LOAD: 
+        case EJECUCION_ACTIONS.LOAD:
             return {
                 ...state,
                 load: state.load + 1,
             }
-       
-        default: 
+        case EJECUCION_ACTIONS.SETLUGAR: 
+            return {
+                ...state,
+                item: {
+                    ...state.item,
+                    lugar: {
+                        ...action.lugar
+                    }
+                }
+            }
+
+        default:
             throw new Error ("Ación no válida");
     }
 }
