@@ -27,6 +27,7 @@ export const form = {
             name: "paisId",
             enabled:true,
             conditions: [],
+            options: [],
             change: () => {console.log("cambiando el pais")}
         },
         cp: {
@@ -45,6 +46,7 @@ export const form = {
             name: "provincia",
             enabled:true,
             conditions: [],
+            options: [],
             change: () => {console.log("cambiando la provincia")}
         },
         municipioId: {
@@ -80,6 +82,7 @@ export const form = {
             name: "tipoViaId",
             enabled:true,
             conditions: [],
+            options: [],
             change: () => {console.log("cambiando el tipo de via")}
         },
         nombreVia: {

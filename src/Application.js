@@ -111,7 +111,7 @@ const Application = () => {
                                         <Route path='/accionestipo'         element={<ProtectRoute isAllowed={true} redirectTo={url}><AccionesTipo /></ProtectRoute> } />
                                         <Route path='/accion/:id'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Acciones /></ProtectRoute> } />
                                         <Route path='/acciones'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Acciones /></ProtectRoute> } />
-                                        <Route path='/lugar:id'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Lugares /></ProtectRoute> } />
+                                        <Route path='/lugar/:id'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Lugares /></ProtectRoute> } />
                                         <Route path='/lugares'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Lugares /></ProtectRoute> } />
                                         <Route path='AccionesTipoFormacion' element={<ProtectRoute isAllowed={true} redirectTo={url}><AccionesTipoFormacion /></ProtectRoute> } />
                                         <Route path='/login'                element={<ProtectRoute isAllowed={true} redirectTo={url}><Login /></ProtectRoute> } />

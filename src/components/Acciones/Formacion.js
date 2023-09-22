@@ -1,12 +1,19 @@
+import { ClayButtonWithIcon } from '@clayui/button';
 import ClayCard from '@clayui/card';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
 import React from "react";
+import { Link } from "react-router-dom";
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import { EJECUCION_ACTIONS } from './Ejecucion.reducer';
 
 export const Formacion = ({ ejecucion, ejecucionHandler }) => {
+    
+    const editUrl = "/lugar/";
+    const backUrl = "/accion/";
+    const ancestorId = "11";
+    const empresaUrl = '/empresa/';
 
     return (
         <>
@@ -195,7 +202,20 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                                 {
                                     <>
                                     <p></p>
-                                    <p>{ejecucion.item.empresa.razonSocial} - {ejecucion.item.empresa.documento}</p>
+                                    <p>{ejecucion.item.empresa.razonSocial} - {ejecucion.item.empresa.documento}
+                                    <Link to={{ pathname: `${empresaUrl}${ejecucion.item.lugarId}` }} state={{ backUrl, ancestorId }}  > {
+                                        <ClayButtonWithIcon
+                                            aria-label={Liferay.Language.get("Editar")}
+                                            spritemap={spritemap}
+                                            symbol="pencil"
+                                            title="editar"
+                                            displayType="secondary"
+                                            size="xs"
+                                            className='ml-1'
+                                        />
+                                    }</Link>
+
+                                    </p>
                                     </>
                                 }
                             </ClayCard.Description>
@@ -204,8 +224,6 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                         </ClayCard>
 
                     </ClayForm.Group>
-                {/*</div>
-                <div class="row">*/ }
                     <ClayForm.Group className={"col-6"} key={"Group-115"} >
                         <label htmlFor="basicInput">{"Centro"}</label>
                         <ClaySelect aria-label="Select Label"
@@ -236,7 +254,19 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                                 {
                                     <>
                                     <p></p>
-                                    <p>{ejecucion.item.lugar.nombre}</p>
+                                    <p>{ejecucion.item.lugar.nombre}
+                                    <Link to={{ pathname: `${editUrl}${ejecucion.item.lugarId}` }} state={{ backUrl, ancestorId }}  > {
+                                        <ClayButtonWithIcon
+                                            aria-label={Liferay.Language.get("Editar")}
+                                            spritemap={spritemap}
+                                            symbol="pencil"
+                                            title="editar"
+                                            displayType="secondary"
+                                            size="xs"
+                                            className='ml-1'
+                                        />
+                                    }</Link>
+                                    </p>
                                     <p>{ejecucion.item.lugar.provincia} - {ejecucion.item.lugar.municipio} - {ejecucion.item.lugar.localidad}</p>
                                     <p>{ejecucion.item.lugar.via} - {ejecucion.item.lugar.numero} - {ejecucion.item.lugar.piso}</p>
                                     </>

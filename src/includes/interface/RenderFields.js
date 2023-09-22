@@ -89,8 +89,8 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
               return (
                 <div className="row">
                   { row.cols.map(it => {
-                    //console.log("iterando");
-                    //console.debug(items.fields.fields[it]);
+                    console.log("iterando");
+                    console.debug(items.fields.fields[it]);
                     return (
                       <>
                         <ClayForm.Group className={`${items.errors[it] != 'undefined' && items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ "Group-" + items.fields.fields[it].key} >
