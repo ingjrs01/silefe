@@ -203,7 +203,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                                     <>
                                     <p></p>
                                     <p>{ejecucion.item.empresa.razonSocial} - {ejecucion.item.empresa.documento}
-                                    <Link to={{ pathname: `${empresaUrl}${ejecucion.item.lugarId}` }} state={{ backUrl, ancestorId }}  > {
+                                    <Link to={{ pathname: `${empresaUrl}${ejecucion.item.empresaId}` }} state={{ backUrl, ancestorId }}  > {
                                         <ClayButtonWithIcon
                                             aria-label={Liferay.Language.get("Editar")}
                                             spritemap={spritemap}
