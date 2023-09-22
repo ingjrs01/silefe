@@ -164,18 +164,18 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                 </div>
 
                 <div class="row">
-                    <ClayForm.Group className={"col-4"} key={"Group-114"} >
+                    <ClayForm.Group className={"col-6"} key={"Group-114"} >
                         <label htmlFor="basicInput">{"Empresa Impartidora"}</label>
                         <ClaySelect aria-label="Select Label"
-                            id={"entidadId"}
-                            name={"entidadId"}
-                            key={"entidadId"}
+                            id={"empresaId"}
+                            name={"empresaId"}
+                            key={"empresaId"}
                             disabled={false}
                             onChange={evt => {
                                 console.log("probando el cambio de empresa");
-                                ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "entidadId", value: evt.target.value })
+                                ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "empresaId", value: evt.target.value })
                             }}
-                            value={ejecucion.item.entidadId} >
+                            value={ejecucion.item.empresaId} >
                             {
                                 ejecucion.form.fields.empresaId.options.map( option => (
                                     <ClaySelect.Option
@@ -185,11 +185,27 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                                     />
                                 ))
                             }
-
                         </ClaySelect>
+                        <ClayCard>
+                            <ClayCard.Body>
+                            <ClayCard.Description displayType="title">
+                                {"Datos empresa"}
+                            </ClayCard.Description>
+                            <ClayCard.Description truncate={false} displayType="text">
+                                {
+                                    <>
+                                    <p></p>
+                                    <p>{ejecucion.item.empresa.razonSocial} - {ejecucion.item.empresa.documento}</p>
+                                    </>
+                                }
+                            </ClayCard.Description>
+                            
+                            </ClayCard.Body>
+                        </ClayCard>
+
                     </ClayForm.Group>
-                </div>
-                <div class="row">
+                {/*</div>
+                <div class="row">*/ }
                     <ClayForm.Group className={"col-6"} key={"Group-115"} >
                         <label htmlFor="basicInput">{"Centro"}</label>
                         <ClaySelect aria-label="Select Label"

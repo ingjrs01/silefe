@@ -9,14 +9,12 @@ export const EJECUCION_ACTIONS = {
     SAVE: 9,
     CANCEL: 10,
     DELETE_ITEM:11,
-    //SELECT_ITEMS: 12,
-    //CHECK: 13,
-    //CHECKALL: 14,
     SETITEM: 15,
     SETSEARCHFIELD: 18,
     LOAD: 19,
     SETFORM: 20,
     SETLUGAR: 21,
+    SETEMPRESA: 22,
 }
 export const iniState = {
     item: {
@@ -52,6 +50,13 @@ export const iniState = {
             via: "Via",
             numero: "0",
             piso: "piso",
+        },
+        empresa: {
+            id: 0,
+            razonSocial: "Sin nombre",
+            documento: "",
+            email: "",
+            telefono: "",
         }
     },
     form: {},
@@ -80,7 +85,7 @@ export const reducerEjecucion = (state, action ) => {
                     id: 0,
                     inicio: "",
                     fin: "",
-                    entidadId: 3,
+                    empresaId: 3,
                     hIni1: "",
                     hFin1: "",
                     hIni2: "",
@@ -108,6 +113,13 @@ export const reducerEjecucion = (state, action ) => {
                         numero: "0",
                         piso: "piso",
                     },
+                    empresa: {
+                        id: 0,
+                        razonSocial: "Sin nombre",
+                        documento: "",
+                        email: "",
+                        telefono: "",
+                    }
                 },
                 deleted: [],
                 searchItems: [],
@@ -146,10 +158,14 @@ export const reducerEjecucion = (state, action ) => {
                         },
                         lugar: {
                             ...state.item.lugar
+                        },
+                        empresa: {
+                            ...state.item.empresa
                         }
                     }
                 };
             }
+            
             if (state.form.fields[action.fieldname].hasOwnProperty('change')) 
                 state.form.fields[action.fieldname].change(action.value);
             return {
@@ -230,7 +246,8 @@ export const reducerEjecucion = (state, action ) => {
                 ...state,
                 item: {
                     ...action.item,
-                    lugar: {...state.item.lugar}
+                    lugar: {...state.item.lugar},
+                    empresa: {...state.item.empresa},
                 }
             }
         case EJECUCION_ACTIONS.SETSEARCHFIELD:
@@ -251,6 +268,15 @@ export const reducerEjecucion = (state, action ) => {
                     lugar: {
                         ...action.lugar
                     }
+                }
+            }
+        case EJECUCION_ACTIONS.SETEMPRESA:
+            return {
+                ...state,
+                item:{
+                    ...state.item,
+                    lugar: {...state.item.lugar},
+                    empresa: {...action.empresa}
                 }
             }
 

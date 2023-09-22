@@ -391,6 +391,11 @@ const Acciones = () => {
             provincia: data.provincia[tag],
         };
     }
+
+    const changeCompany = async (id) => {
+        const {data} = await fetchAPIRow('/silefe.empresa/get',{id:id},referer);
+        return {...data};
+    }
     
     useEffect( () => {
         if (ejecucionT.item.lugarId != 'undefined'  && ejecucionT.item.lugarId > 0)
@@ -406,6 +411,22 @@ const Acciones = () => {
         if (ejecucionG.item.lugarId != 'undefined'  && ejecucionG.item.lugarId > 0)
             changeLugar(ejecucionG.item.lugarId).then((data)=>ejecucionHandlerG({type: EJECUCION_ACTIONS.SETLUGAR,lugar:data}));
     }, [ejecucionG.item.lugarId]);
+    
+    useEffect( () => {
+        if (ejecucionT.item.empresaId != 'undefined'  && ejecucionT.item.empresaId > 0)
+            changeCompany(ejecucionT.item.empresaId).then((data)=>ejecucionHandlerT({type: EJECUCION_ACTIONS.SETEMPRESA,empresa:data}));
+    }, [ejecucionT.item.empresaId]);
+
+    useEffect( () => {
+        if (ejecucionP.item.empresaId != 'undefined'  && ejecucionP.item.empresaId > 0)
+            changeCompany(ejecucionP.item.empresaId).then((data)=>ejecucionHandlerP({type: EJECUCION_ACTIONS.SETEMPRESA,empresa:data}));
+    }, [ejecucionP.item.empresaId]);
+
+    useEffect( () => {
+        if (ejecucionG.item.empresaId != 'undefined'  && ejecucionG.item.empresaId > 0)
+            changeCompany(ejecucionG.item.empresaId).then((data)=>ejecucionHandlerG({type: EJECUCION_ACTIONS.SETEMPRESA,empresa:data}));
+    }, [ejecucionG.item.empresaId]);
+
 
     useEffect(()=>{
 		if (!isInitialized.current) {
