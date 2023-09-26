@@ -6,30 +6,15 @@ import ClayLocalizedInput from '@clayui/localized-input';
 import ClayPanel from '@clayui/panel';
 import ClayTabs from '@clayui/tabs';
 import React, { useState } from "react";
-import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
+import { getLanguageId, locales, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import ParticipantesTable from '../../includes/interface/ParticipantesTable';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import { Formacion } from './Formacion';
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler, loadHistory }) => {
-  const locales = [
-    {
-      label: "es-ES",
-      symbol: "es-es"
-    },
-    {
-      label: "en-US",
-      symbol: "en-us"
-    },
-    {
-      label: "gl-ES",
-      symbol: "gl-es"
-    }
-    ]
   const [tab, setTab] = useState(0);
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
-  const [act2,setAct2] = useState(0);
 
   return (
     <div className="container">

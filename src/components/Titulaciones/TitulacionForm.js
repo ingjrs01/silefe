@@ -3,25 +3,11 @@ import ClayCard from "@clayui/card";
 import ClayForm, { ClaySelect } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
-import { spritemap } from '../../includes/LiferayFunctions';
+import { locales, spritemap } from '../../includes/LiferayFunctions';
 import { ITEMS_ACTIONS } from "../../includes/reducers/items.reducer";
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 
 export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,items,save}) => {
-  const locales = [
-    {
-      label: "es-ES",
-      symbol: "es-ES"
-    },
-    {
-      label: "en-US",
-      symbol: "en-US"
-    },
-    {
-      label: "gl-ES",
-      symbol: "gl-ES"
-    }
-    ]
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
     return(

@@ -4,26 +4,11 @@ import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
-import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
+import { getLanguageId, locales, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 
 const RenderFields =  ({ rows,  itemsHandle, items }) => {
-
-    const locales = [
-    {
-      label: "es-ES",
-      symbol: "es-ES"
-    },
-    {
-      label: "en-US",
-      symbol: "en-US"
-    },
-    {
-      label: "gl-ES",
-      symbol: "gl-ES"
-    }
-    ]
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
     const [act2,setAct2] = useState(0);
 

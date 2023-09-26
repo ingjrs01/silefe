@@ -23,3 +23,18 @@ export const getRolesUser = () => {
     } );
 }
 
+export const locales = [
+    {
+        label: "es-ES",
+        symbol: "es-es"
+    },
+    {
+        label: "en-US",
+        symbol: "en-us"
+    },
+    {
+        label: "gl-ES",
+        symbol: "gl-es"
+    }
+]
+

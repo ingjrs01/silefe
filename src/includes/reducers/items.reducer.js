@@ -46,7 +46,7 @@ export const initialState = {
         empty: true,
         table: {},
     },
-    status: "list", /* values: new, edit, list, load  */
+    status: "list", /* values: new, edit, list, load, history */
     search: "",
     searchField: "",
     load: 0,

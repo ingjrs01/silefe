@@ -5,26 +5,11 @@ import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelec
 import ClayIcon from '@clayui/icon';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
-import { getLanguageId, spritemap } from '../LiferayFunctions';
+import { getLanguageId, locales, spritemap } from '../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import { getDays, getMonths } from './DatesLang';
 
 const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
-
-    const locales = [
-    {
-      label: "es-ES",
-      symbol: "es-es"
-    },
-    {
-      label: "en-US",
-      symbol: "en-us"
-    },
-    {
-      label: "gl-ES",
-      symbol: "gl-es"
-    }
-    ]
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
     const [act2,setAct2] = useState(0);
 
