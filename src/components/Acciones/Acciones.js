@@ -6,6 +6,7 @@ import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFun
 import { deleteAPI, deleteAPIParams, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
+import { History } from '../../includes/interface/History';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
@@ -29,18 +30,16 @@ const Acciones = () => {
     const [toastItems,setToastItems]           = useState([]);
     const {observer, onOpenChange, open}       = useModal();
     const [file,setFile]                       = useState();
+    const { id }                               = useParams();
+    const {state}                              = useLocation();
+    const navigate                             = useNavigate();
     const isInitialized                        = useRef(null);
-    const { id } = useParams();
-    const {state} = useLocation();
-    const navigate = useNavigate();
 
     let form = formulario;
     const referer = `${url_referer}/acciones`;
 
-    const loadCsv = () => {
-        itemsHandle({type:ITEMS_ACTIONS.LOAD});
-    }
-
+    const loadCsv = () => itemsHandle({type:ITEMS_ACTIONS.LOAD});
+    
 //    const processCsv = () => {
 //        if (file) {
 //            const reader = new FileReader();
@@ -109,7 +108,6 @@ const Acciones = () => {
 
         if (state != 'undefined' && state.backUrl.length > 0)
             navigate(state.backUrl+state.ancestorId);
-
     }
 
     const handleDelete = () => {
@@ -327,7 +325,6 @@ const Acciones = () => {
             const totalPages = response.totalPages;
             docentesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:pts, totalPages: totalPages});
         });
-
     }
 
     const loadForm = () => {
@@ -396,6 +393,8 @@ const Acciones = () => {
         const {data} = await fetchAPIRow('/silefe.empresa/get',{id:id},referer);
         return {...data};
     }
+
+    const loadHistory = () => fetchAPIData('/silefe.accionhistory/get-history', { accionId: items.item.accionId }, referer).then(response => itemsHandle({type: ITEMS_ACTIONS.HISTORY, data: response.data}));
     
     useEffect( () => {
         if (ejecucionT.item.lugarId != 'undefined'  && ejecucionT.item.lugarId > 0)
@@ -490,6 +489,7 @@ const Acciones = () => {
                     participantesHandler={participantesHandler}
                     ejecucion={[ejecucionT,ejecucionP,ejecucionG]}
                     ejecucionHandler={[ejecucionHandlerT,ejecucionHandlerP,ejecucionHandlerG]}
+                    loadHistory={loadHistory}
                 />
             }
             {
@@ -505,6 +505,17 @@ const Acciones = () => {
                     />
                 </>
             }
+            {
+                (items.status === 'history') &&
+                <>
+                    <History
+                        data={items.history}
+                        itemsHandle={itemsHandle}
+                        prevState={'edit'} 
+                    />
+                </>
+            }
+
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
             {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
         </>

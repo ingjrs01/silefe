@@ -12,7 +12,7 @@ import ParticipantesTable from '../../includes/interface/ParticipantesTable';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import { Formacion } from './Formacion';
 
-const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler }) => {
+const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler, loadHistory }) => {
   const locales = [
     {
       label: "es-ES",
@@ -484,7 +484,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                           displayType="secondary"
                           size="md"
                           className='ml-1'
-                          onClick={()=> console.log("abriendo history")}
+                          onClick={()=> loadHistory()}
                       />
                     </div>
 

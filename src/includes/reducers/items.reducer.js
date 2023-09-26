@@ -27,7 +27,8 @@ export const ITEMS_ACTIONS = {
     SET_PAGESIZE: 24,
     SET_SEARCHFIELD: 25,
     SET_FIELDS: 27,
-  }
+    HISTORY: 28,
+}
 
 export const initialState = {
     arr: [],
@@ -41,7 +42,7 @@ export const initialState = {
     },
     errors: [],
     checkall: false,
-    fields: { 
+    fields: {
         empty: true,
         table: {},
     },
@@ -50,19 +51,20 @@ export const initialState = {
     searchField: "",
     load: 0,
     order: [],
+    history: [{id:1, comment: "Estado pendiente" , user: 'juan', date: '16/08/2023'},{id:2, comment: "Estado pendiente" ,user:'jose', date: '16/08/2023'}],
 }
 
 const resetErrors = (fields) => {
     let errores = {};
     let tmp_item = {};
     Object.keys(fields.fields).forEach( j => {
-        errores[j]=[];    
+        errores[j]=[];
         if (fields.fields[j].type === "multilang") {
             let tt = {}
             fields.languages.forEach(el => {tt[el]=""});
             tmp_item[j] = tt;
         }
-        else 
+        else
             tmp_item[j] = [];
     });
 
@@ -79,7 +81,7 @@ const createItem = form => {
                 form.languages.forEach(el => {tt[el]=""});
                 tmp_item[j] = tt;
                 break;
-            case "multitext": 
+            case "multitext":
                 let tt2 = []
                 tmp_item[j] = tt2;
                 break;
@@ -96,9 +98,8 @@ let index = 0;
 let tmp = []
 
 export const red_items = (state, action ) => {
-    //debugger;
     switch (action.type) {
-        case ITEMS_ACTIONS.SET_FIELDS: 
+        case ITEMS_ACTIONS.SET_FIELDS:
             return {
                 ...state,
                 fields: action.form,
@@ -107,7 +108,7 @@ export const red_items = (state, action ) => {
                 item: createItem(action.form),
                 load: 1,
             }
-        case ITEMS_ACTIONS.START: 
+        case ITEMS_ACTIONS.START:
             let tmp_item = {};
             if (state.load == 0) {
                 Object.keys(action.fields.fields).forEach(j => {
@@ -117,7 +118,7 @@ export const red_items = (state, action ) => {
                             action.fields.languages.forEach(el => {tt[el]=""});
                             tmp_item[j] = tt;
                             break;
-                        case "multitext": 
+                        case "multitext":
                             let tt2 = []
                             //action.fields.languages.forEach(el => {tt2[el]=""});
                             tt2.push({key:8,value:"correo",default:false});
@@ -131,7 +132,7 @@ export const red_items = (state, action ) => {
                 });
                 //tmp_item = createItem(action.fields.fields);
             }
-            else 
+            else
                 tmp_item = state.fields;
 
             return {
@@ -160,7 +161,7 @@ export const red_items = (state, action ) => {
                 arr: state.arr.map(i => {return {...i,checked:!state.checkall}}),
                 checkall: !state.checkall
             }
-        case ITEMS_ACTIONS.UNSELECT: 
+        case ITEMS_ACTIONS.UNSELECT:
             return  {
                 ...state,
                 arr: state.arr.map(i => {return {...i,checked:false}}),
@@ -201,7 +202,7 @@ export const red_items = (state, action ) => {
                         state.fields.languages.forEach(el => {tt[el]=action.item.data[j][el]});
                         tmp_item[j] = tt;
                         break;
-                    case "multitext": 
+                    case "multitext":
                         let tt2 = []
                         action.item.data[j].forEach(ite => { tt2.push({key:ite.key,value:ite.value,default:false})})
                         tmp_item[j] = tt2;
@@ -232,7 +233,7 @@ export const red_items = (state, action ) => {
                         state.fields.languages.forEach(el => {tt[el]=""});
                         tmp_item[fila] = tt;
                         break;
-                    case 'multitext': 
+                    case 'multitext':
                         tt = [];
                         tt.push({key: 1,value:"",default:false})
                         tmp_item[fila] = tt;
@@ -296,7 +297,7 @@ export const red_items = (state, action ) => {
                     ...state,
                     pagination: {...state.pagination,page: action.page},
                     load: (state.load + 1) % 17
-                }                
+                }
             }
             return {
                 ...state,
@@ -357,15 +358,15 @@ export const red_items = (state, action ) => {
         case ITEMS_ACTIONS.SET_ACTIVETAB:
             return {
                 ...state,
-                fields: {...state.fields,tabActive:action.active} 
+                fields: {...state.fields,tabActive:action.active}
             }
-        case ITEMS_ACTIONS.SET_ORDER: 
+        case ITEMS_ACTIONS.SET_ORDER:
             tmp = [...state.order];
             index = state.order.findIndex(x => x.name == action.fieldname);
             if (index >= 0) {
                 tmp[index].direction = (tmp[index].direction == 'asc')?'desc':'asc';
             }
-            else 
+            else
                 tmp.push({name: action.fieldname,direction:'asc'})
 
             return {
@@ -383,7 +384,7 @@ export const red_items = (state, action ) => {
                 ...state,
                 order: tmp
             }
-        case ITEMS_ACTIONS.SET_PAGESIZE: 
+        case ITEMS_ACTIONS.SET_PAGESIZE:
             return {
                 ...state,
                 pagination: {...state.pagination, pageSize: action.pageSize },
@@ -394,8 +395,15 @@ export const red_items = (state, action ) => {
                 ...state,
                 searchField: action.value,
             }
+        case ITEMS_ACTIONS.HISTORY:
+            return {
+                ...state,
+                history: action.data,
+                status: "history",
+                //load: (state.load + 1) % 17,
+            }
         
-        default: 
+        default:
             throw new Error ("Accion invalida");
     }
 }
