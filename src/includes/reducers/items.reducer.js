@@ -28,6 +28,7 @@ export const ITEMS_ACTIONS = {
     SET_SEARCHFIELD: 25,
     SET_FIELDS: 27,
     HISTORY: 28,
+    SET_ACTIVETAB: 29,
 }
 
 export const initialState = {
@@ -45,6 +46,7 @@ export const initialState = {
     fields: {
         empty: true,
         table: {},
+        tabActive: 0,
     },
     status: "list", /* values: new, edit, list, load, history */
     search: "",
@@ -102,7 +104,7 @@ export const red_items = (state, action ) => {
         case ITEMS_ACTIONS.SET_FIELDS:
             return {
                 ...state,
-                fields: action.form,
+                fields: {...state.fields, ...action.form},
                 errors: resetErrors(action.form),
                 status: 'list',
                 item: createItem(action.form),
@@ -139,7 +141,7 @@ export const red_items = (state, action ) => {
                 ...state,
                 arr: action.items,
                 pagination: {...state.pagination,totalPages: action.totalPages, total: action.total,},
-                fields: action.fields,
+                fields: {...state.fields, ...action.fields},
                 item: tmp_item,
                 errors: resetErrors(action.fields),
                 checkall:false,
@@ -400,9 +402,7 @@ export const red_items = (state, action ) => {
                 ...state,
                 history: action.data,
                 status: "history",
-                //load: (state.load + 1) % 17,
             }
-        
         default:
             throw new Error ("Accion invalida");
     }

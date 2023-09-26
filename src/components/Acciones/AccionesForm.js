@@ -13,7 +13,6 @@ import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import { Formacion } from './Formacion';
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler, loadHistory }) => {
-  const [tab, setTab] = useState(0);
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
   return (
@@ -31,43 +30,43 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 key={"tab-item1"}
                 innerProps={{ "aria-controls": "tabpanel-1" }}
               >
-                <a onClick={a => { setTab(0) }}>  {"PRINCIPAL"}  </a>
+                <a onClick={() => itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 0}) }> { Liferay.Language.get("PRINCIPAL") } </a>
               </ClayTabs.Item>
               <ClayTabs.Item
                 key={"tab-item2"}
                 innerProps={{ "aria-controls": "tabpanel-2" }}
               >
-                <a onClick={a => { setTab(1) }}>  { Liferay.Language.get("Ejecución")}  </a>
+                <a onClick={() =>  itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 1}) }>  { Liferay.Language.get("Ejecución")}  </a>
               </ClayTabs.Item>
 
               <ClayTabs.Item
                 key={"tab-item3"}
                 innerProps={{ "aria-controls": "tabpanel-3" }}
               >
-                <a onClick={a => {  setTab(2); }}>  { Liferay.Language.get("Docentes")}  </a>
+                <a onClick={() => itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 2})}>  { Liferay.Language.get("Docentes")}  </a>
               </ClayTabs.Item>
               <ClayTabs.Item
                 key={"tab-item4"}
                 innerProps={{ "aria-controls": "tabpanel-4" }}
               >
-                <a onClick={a => {  setTab(3); }}>  { Liferay.Language.get("Participantes")}  </a>
+                <a onClick={() => itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 3})}>  { Liferay.Language.get("Participantes")}  </a>
               </ClayTabs.Item>
               <ClayTabs.Item
                 key={"tab-item5"}
                 innerProps={{ "aria-controls": "tabpanel-5" }}
               >
-                <a onClick={a => {  setTab(4); }}>  { Liferay.Language.get("Elearning")}  </a>
+                <a onClick={() => itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 4})}>  { Liferay.Language.get("Elearning")}  </a>
               </ClayTabs.Item>
               <ClayTabs.Item
                 key={"tab-item6"}
                 innerProps={{ "aria-controls": "tabpanel-5" }}
               >
-                <a onClick={a => {  setTab(5); }}>  { Liferay.Language.get("Estado")}  </a>
+                <a onClick={() => itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 5})}>  { Liferay.Language.get("Estado")}  </a>
               </ClayTabs.Item>
 
             </ClayTabs>
 
-            <ClayTabs.Content activeIndex={tab} fade>
+            <ClayTabs.Content activeIndex={items.fields.tabActive} fade>
               <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-1"}>
                   <div className="row"> 
                     <ClayForm.Group className={'has-success col'} key={"Group-1"} >
