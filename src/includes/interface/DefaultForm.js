@@ -13,7 +13,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
       //debugger;
       if ((items.fields.fields[campo].validate === undefined) || (items.fields.fields[campo].validate != false)) {
         switch (items.fields.fields[campo].type) {
-          case "text": 
+          case "text":
             if (!validate(campo, items.item[campo]))
               //console.log("no pasa texto");
               return false;
@@ -52,7 +52,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
           return false;
         }
       }
-    }    
+    }
     itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
 //    console.log("validated");
     return true;
@@ -77,9 +77,9 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
 
         <ClayCard.Description truncate={false} displayType="text">
           <ClayForm>
-            <RenderFields 
+            <RenderFields
                 rows={items.fields.rows}
-                itemsHandle={itemsHandle} 
+                itemsHandle={itemsHandle}
                 items={items}
             />
 
@@ -90,9 +90,9 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
             <ClayButton onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
           </div>
           <div className="btn-group-item">
-            <ClayButton onClick={e => { 
-              validateAll() && save() 
-            }} 
+            <ClayButton onClick={e => {
+              validateAll() && save()
+            }}
               displayType="primary">{Liferay.Language.get('Guardar')}
             </ClayButton>
           </div>
