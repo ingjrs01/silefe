@@ -1,4 +1,3 @@
-import { ContactosForm } from "../../components/Empresas/ContactosForm";
 
 export const CONTACTOS_ACTIONS = {
   START: 0,
@@ -32,20 +31,18 @@ export const reducerContactos = (state = initialState, action) => {
         ...state,
         status: "list"
       }
-    case CONTACTOS_ACTIONS.LOAD: 
+    case CONTACTOS_ACTIONS.LOAD:
       return {
         ...state,
         items: action.items,
       }
     case CONTACTOS_ACTIONS.SELECT_ITEM:
-      console.log("seleccionando");
       return {
         ...state,
         item: state.items[action.index],
         status: "edit",
       }
-    case CONTACTOS_ACTIONS.NEW_ITEM: 
-        console.log("Agregando un dato");
+    case CONTACTOS_ACTIONS.NEW_ITEM:
         return {
           ...state,
           item: {
@@ -55,14 +52,13 @@ export const reducerContactos = (state = initialState, action) => {
             apellido2: "",
             cargo: "",
             email: [],
-            telefono: [], 
+            telefono: [],
             origen: 0,
-            origenId: 1,
+            origenId: 1, // TODO: Tenemos que poner el id del elemento que lo está vinculando
           },
           status: "edit",
         }
     case CONTACTOS_ACTIONS.SETFIELD:
-      console.log("SETFIELD");
       return {
         ...state,
         item: {
@@ -125,7 +121,7 @@ export const reducerContactos = (state = initialState, action) => {
         ...state,
         status: "list",
       }
-    case CONTACTOS_ACTIONS.DELETE: 
+    case CONTACTOS_ACTIONS.DELETE:
       console.log(action.index);
       newItem = state.items[action.index];
       tmp = [...state.items];

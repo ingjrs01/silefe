@@ -1,108 +1,108 @@
 export const form = {
     title: Liferay.Language.get('Empresas'),
-    languages: ["es-ES","en-US","gl-ES"],
+    languages: ["es-ES", "en-US", "gl-ES"],
     fields: {
         id: {
-            key:1,
+            key: 1,
             type: "text",
-            label: "ID", 
-            name: "id", 
-            value:"lalala", 
-            placeholder:"Identifier", 
+            label: "ID",
+            name: "id",
+            value: "lalala",
+            placeholder: "Identifier",
             conditions: ["number"]
         },
         tipoDoc: {
-            key:11,
+            key: 11,
             type: "select",
-            label: Liferay.Language.get('TipoDocumento'), 
-            name: "tipoDoc", 
-            enabled:true,
+            label: Liferay.Language.get('TipoDocumento'),
+            name: "tipoDoc",
+            enabled: true,
             conditions: [],
-            change: () => {console.log("cambiando el tipo de documento")}
+            change: () => { console.log("cambiando el tipo de documento") }
         },
         documento: {
-            key:12,
+            key: 12,
             type: "text",
-            label: Liferay.Language.get('Documento'), 
-            name: "documento", 
-            value:"documento", 
-            placeholder: Liferay.Language.get('Documento'), 
+            label: Liferay.Language.get('Documento'),
+            name: "documento",
+            value: "documento",
+            placeholder: Liferay.Language.get('Documento'),
             conditions: []
         },
         razonSocial: {
-            key:3,
+            key: 3,
             type: "text",
-            label: Liferay.Language.get('RazonSocial'), 
-            name: "razonSocial", 
-            value:"nombre", 
-            placeholder: Liferay.Language.get('RazonSocial'), 
+            label: Liferay.Language.get('RazonSocial'),
+            name: "razonSocial",
+            value: "nombre",
+            placeholder: Liferay.Language.get('RazonSocial'),
             conditions: ["text"]
         },
         email: {
             key: 22,
             type: "multitext",
-            label: Liferay.Language.get('Email'), 
-            name: "email", 
-            values: [{key:1,value:"hola@micorreo.es",default:false}, {key:2,value:"adios@micorreo.es",default:true}], 
-            placeholder: Liferay.Language.get('Email'), 
+            label: Liferay.Language.get('Email'),
+            name: "email",
+            values: [{ key: 1, value: "hola@micorreo.es", default: false }, { key: 2, value: "adios@micorreo.es", default: true }],
+            placeholder: Liferay.Language.get('Email'),
             conditions: ["text"]
         },
         telefono: {
             key: 23,
             type: "multitext",
-            label: Liferay.Language.get('Telefono'), 
-            name: "telefono", 
-            values: [{key:1,value:"666666666",default:false}, {key:2,value:"777777777",default:true}], 
-            placeholder: Liferay.Language.get('Telefono'), 
+            label: Liferay.Language.get('Telefono'),
+            name: "telefono",
+            values: [{ key: 1, value: "666666666", default: false }, { key: 2, value: "777777777", default: true }],
+            placeholder: Liferay.Language.get('Telefono'),
             conditions: ["text"]
         },
         pnl: {
             key: 26,
             type: "toggle",
-            label: Liferay.Language.get('PNL'), 
-            name: "pnl", 
-            value:"", 
+            label: Liferay.Language.get('PNL'),
+            name: "pnl",
+            value: "",
             conditions: []
         },
         ofertas: {
             key: 27,
             type: "toggle",
-            label: Liferay.Language.get('Ofertas'), 
-            name: "ofertas", 
-            value:"", 
+            label: Liferay.Language.get('Ofertas'),
+            name: "ofertas",
+            value: "",
             conditions: []
         },
         formacionCompromiso: {
             key: 28,
             type: "toggle",
-            label: Liferay.Language.get('FormacionCompromiso'), 
-            name: "formacionCompromiso", 
-            value:"", 
+            label: Liferay.Language.get('FormacionCompromiso'),
+            name: "formacionCompromiso",
+            value: "",
             conditions: []
         },
         ayuda: {
             key: 29,
             type: "toggle",
-            label: Liferay.Language.get('Ayuda'), 
-            name: "ayuda", 
-            value:"", 
+            label: Liferay.Language.get('Ayuda'),
+            name: "ayuda",
+            value: "",
             conditions: []
         },
         formacion: {
             key: 30,
             type: "toggle",
-            label: Liferay.Language.get('Formacion'), 
-            name: "formacion", 
-            value:"", 
+            label: Liferay.Language.get('Formacion'),
+            name: "formacion",
+            value: "",
             conditions: []
         },
         interes: {
             key: 31,
             type: "text",
-            label: Liferay.Language.get('Interes'), 
-            name: "interes", 
-            value:"Interes", 
-            placeholder: Liferay.Language.get('Interes'), 
+            label: Liferay.Language.get('Interes'),
+            name: "interes",
+            value: "Interes",
+            placeholder: Liferay.Language.get('Interes'),
             conditions: []
         },
         centros: {
@@ -118,36 +118,36 @@ export const form = {
             name: "contactos",
         },
     },
-    tabActive:0,
-    tabs : [
+    tabActive: 0,
+    tabs: [
         {
             caption: "Datos",
             key: 1,
             ariacontrols: "tabpanel-1",
             rows: [
                 {
-                    key:41,
-                    cols: ['id','tipoDoc','documento']
+                    key: 41,
+                    cols: ['id', 'tipoDoc', 'documento']
                 },
                 {
-                    key:42,
+                    key: 42,
                     cols: ['razonSocial']
-                },        
+                },
                 {
-                    key:43,
-                    cols: ['email','telefono']
-                },               
+                    key: 43,
+                    cols: ['email', 'telefono']
+                },
             ]
         },
         {
             caption: "Centros",
-            key:2,
+            key: 2,
             ariacontrols: "tabpanel-2",
             rows: [
                 {
-                    key:53,
+                    key: 53,
                     cols: ['centros']
-                },               
+                },
             ]
         },
         {
@@ -164,18 +164,18 @@ export const form = {
             key: 4,
             ariacontrols: "tabpanel-4",
             rows: [
-              {
-                key: 71,
-                cols: ['pnl','ofertas','formacionCompromiso'],
-              },
-              {
-                key: 72,
-                cols: ['ayuda','formacion'],
-              },
-              {
-                key: 73,
-                cols: ['interes']
-              },
+                {
+                    key: 71,
+                    cols: ['pnl', 'ofertas', 'formacionCompromiso'],
+                },
+                {
+                    key: 72,
+                    cols: ['ayuda', 'formacion'],
+                },
+                {
+                    key: 73,
+                    cols: ['interes']
+                },
             ]
         }
     ],

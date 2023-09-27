@@ -114,8 +114,9 @@ const Empresas = () => {
                 }
 
                 // vamos a sincronizar los contactos, sólo si se han modificado
+                // ponemos el origenId aquí,porque es donde lo sabemos cuando la empresa es nueva
                 if (redContactos.modified.length > 0 ) {
-                    const contacts = redContactos.items.filter( i => redContactos.modified.includes( i.id )  );
+                    const contacts = redContactos.items.filter( i => redContactos.modified.includes( i.id )  ).map( (item) => ({...item,origenId: data.empresaId}));
                     saveAPI('/silefe.contacto/save-by-empresa',{id: data.empresaId, contactos: contacts ,userId:getUserId() },referer).then( response => {
                         console.log("a la vuelta de guardar los contactos");
                         console.debug(response.data);
@@ -163,8 +164,6 @@ const Empresas = () => {
         });
 
         fetchAPIData('/silefe.contacto/filter-by-empresa', { empresaId: empresaId }, referer).then(response2 => {
-            console.log("Consultados los contactos");
-            console.debug(response2);
             let contacts = response2.data.map( j => {
                 return {
                     ...j,

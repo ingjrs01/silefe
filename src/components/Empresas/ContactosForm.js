@@ -20,7 +20,7 @@ export const ContactosForm = ({ redContactos, contactosHandle }) => {
                 <ClayForm.Group className="col">
                   <label htmlFor="basicInput">{Liferay.Language.get("Nombre")}</label>
                   <ClayInput
-                    placeholder={"placeholder"}
+                    placeholder={Liferay.Language.get("Nombre")}
                     type="text"
                     name={"nombre"}
                     key={"nombre"}
@@ -31,7 +31,7 @@ export const ContactosForm = ({ redContactos, contactosHandle }) => {
                 <ClayForm.Group className="col">
                   <label htmlFor="apellido1">{Liferay.Language.get("Apellido1")}</label>
                   <ClayInput
-                    placeholder={"Apellido1"}
+                    placeholder={Liferay.Language.get("Apellido")}
                     type="text"
                     name={"Apellido1"}
                     key={"Apellido1"}
@@ -45,7 +45,7 @@ export const ContactosForm = ({ redContactos, contactosHandle }) => {
                 <ClayForm.Group className="col">
                   <label htmlFor="apellido2">{Liferay.Language.get("Apellido2")}</label>
                   <ClayInput
-                    placeholder={"Apellido2"}
+                    placeholder={ Liferay.Language.get("Apellido")}
                     type="text"
                     name={"Apellido2"}
                     key={"Apellido2"}
@@ -58,7 +58,7 @@ export const ContactosForm = ({ redContactos, contactosHandle }) => {
               </div>
               <div className="row">
                 <ClayForm.Group className="col">
-                  <label htmlFor="basicInput">{Liferay.Language.get("Telefono")}</label>
+                  <label htmlFor="basicInput">{Liferay.Language.get("Teléfono")}</label>
                   {
                     redContactos.item.telefono.map((v, k) => {
                       return (
@@ -130,7 +130,7 @@ export const ContactosForm = ({ redContactos, contactosHandle }) => {
                 <ClayForm.Group className="col">
                   <label htmlFor="cargo">{Liferay.Language.get("Cargo")}</label>
                   <ClayInput
-                    placeholder={"Cargo"}
+                    placeholder={ Liferay.Language.get("Cargo")}
                     type="text"
                     name={"cargo"}
                     key={"cargo"}
@@ -149,7 +149,7 @@ export const ContactosForm = ({ redContactos, contactosHandle }) => {
             <div className="btn-group-item">
               <ClayButton onClick={() => {
                 console.log("Guardnado");
-                contactosHandle({ type: CONTACTOS_ACTIONS.SAVE });                
+                contactosHandle({ type: CONTACTOS_ACTIONS.SAVE });
               }}
                 displayType="primary">{Liferay.Language.get('Guardar')}
               </ClayButton>
