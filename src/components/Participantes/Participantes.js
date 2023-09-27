@@ -241,10 +241,6 @@ const Participantes = () => {
         });
     }
 
-    const change2 = () => {
-        console.log("change propio");
-    }
-
     const beforeEdit = () => {
         //queryTitulaciones();
         let sel = items.arr.filter(i => i.checked);   //[0]['provinciaId'];
