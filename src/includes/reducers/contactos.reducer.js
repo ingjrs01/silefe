@@ -54,7 +54,7 @@ export const reducerContactos = (state = initialState, action) => {
             email: [],
             telefono: [],
             origen: 0,
-            origenId: 1, // TODO: Tenemos que poner el id del elemento que lo está vinculando
+            origenId: 1, 
           },
           status: "edit",
         }
