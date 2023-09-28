@@ -1,10 +1,9 @@
 import { useModal } from '@clayui/modal';
-import Papa from "papaparse";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Errors } from '../../includes/Errors';
-import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
-import { batchAPI, deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import { getAuthToken, getLanguageId, getUserId, url_api, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
@@ -16,6 +15,7 @@ import { TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni } from
 import Menu from '../Menu';
 import { form as formulario } from "./Form";
 import TabsForm from './TabsForm';
+
 
 const Participantes = () => {
     const [items,itemsHandle]                    = useReducer(red_items,initialState );
@@ -86,30 +86,88 @@ const Participantes = () => {
 
     const processCsv = () => {
         if (file) {
-            const reader = new FileReader();
+            console.log("hay file");
+            console.debug(file);
 
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                const parsedData = csv?.data;
-                let end = '/silefe.participante/add-multiple';
-                let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+            //const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            console.debug(formData);
 
-                batchAPI(end,ttmp,referer).then(res2 => {
-                    if (res2.ok) {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
-                        fetchData();
-                    }
-                    else {
-                        setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-                    }
-                });
-            };
-            reader.readAsText(file);
-        }
-        else {
-            console.log("fichero no cargado")
+            //kasdflkasjdfñlkasdjf
+            const auth = getAuthToken();
+            const endpoint = url_api + '/silefe.participante/save-file';
+            fetch('http://lfdevapps01.depo.es:8080/api/jsonws/silefe.participante/save-file/', {
+                "credentials": "include",
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                    "Accept": "*/*",
+                    "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                    "Content-Type": "multipart/form-data",
+                    "x-csrf-token": auth,
+                    "Sec-Fetch-Dest": "empty",
+                    "Sec-Fetch-Mode": "cors",
+                    "Sec-Fetch-Site": "same-origin"
+                },
+                "referrer": `\"${referer}\"`,
+                body: formData,
+                method: "POST",
+                mode: "cors"
+            }).then( (response) => {
+                console.log("recibida la respusta");
+                console.debug(response);
+            });
+
+            //ksdjfñlaskdjfñlaskjdflasdf
+
+            //fetch('/silefe.participante/save-file', {
+            //    method: 'POST',
+            //    headers: {
+            //        'X-RapidAPI-Key': 'your-rapid-key',
+            //        'X-RapidAPI-Host': 'file-upload8.p.rapidapi.com'
+            //    },
+            //    body: formData
+            //})
+            //    .then(response => response.json())
+            //    .then(data => {
+            //    console.log(data);
+            //    alert('File uploaded successfully!');
+            //})
+            //.catch(error => {
+            //    console.error(error);
+            //    alert('Error uploading file');
+            //});
+        } else {
+            console.log("no hay file");
         }
     }
+
+    //const processCsv = () => {
+    //    if (file) {
+    //        const reader = new FileReader();
+//
+    //        reader.onload = async ({ target }) => {
+    //            const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+    //            const parsedData = csv?.data;
+    //            let end = '/silefe.participante/add-multiple';
+    //            let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+//
+    //            batchAPI(end,ttmp,referer).then(res2 => {
+    //                if (res2.ok) {
+    //                    setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
+    //                    fetchData();
+    //                }
+    //                else {
+    //                    setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+    //                }
+    //            });
+    //        };
+    //        reader.readAsText(file);
+    //    }
+    //    else {
+    //        console.log("fichero no cargado")
+    //    }
+    //}
 
     const handleSave = async () => {
         let endpoint = '/silefe.participante/save-participante';
