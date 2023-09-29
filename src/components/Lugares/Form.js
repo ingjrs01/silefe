@@ -18,7 +18,8 @@ export const form = {
             name: "nombre",
             value:"nombre",
             placeholder: Liferay.Language.get('Nombre'),
-            conditions: ["text"]
+            conditions: ["text"],
+            className: 'col-6'
         },
         paisId: {
             key:3,
@@ -28,12 +29,13 @@ export const form = {
             enabled:true,
             conditions: [],
             options: [],
-            change: () => {console.log("cambiando el pais")}
+            change: () => {console.log("cambiando el pais")},
+            className: 'col-3',
         },
         cp: {
             key:4,
             type: "text",
-            label: Liferay.Language.get('cp'),
+            label: Liferay.Language.get('C.P.'),
             name: "cp",
             value:"cp",
             placeholder: Liferay.Language.get('codigo'),
@@ -47,7 +49,8 @@ export const form = {
             enabled:true,
             conditions: [],
             options: [],
-            change: () => {console.log("cambiando la provincia")}
+            change: () => {console.log("cambiando la provincia")},
+            className: 'col-3',
         },
         municipioId: {
             key: 6,
@@ -83,7 +86,8 @@ export const form = {
             enabled:true,
             conditions: [],
             options: [],
-            change: () => {console.log("cambiando el tipo de via")}
+            change: () => {console.log("cambiando el tipo de via")},
+            className: 'col-3'
         },
         nombreVia: {
             key: 9,
@@ -91,7 +95,8 @@ export const form = {
             label: Liferay.Language.get('nombreVia'),
             name: "nombreVia",
             placeholder: Liferay.Language.get('NombreVia'),
-            conditions: ["text"]
+            conditions: ["text"],
+            className: 'col-5'
         },
         numero: {
             key: 10,
@@ -99,7 +104,8 @@ export const form = {
             label: Liferay.Language.get('Número'),
             name: "numero",
             placeholder: Liferay.Language.get('Número'),
-            conditions: []
+            conditions: [],
+            className: 'col-2'
         },
         piso: {
             key: 11,
@@ -107,25 +113,26 @@ export const form = {
             label: Liferay.Language.get('Piso'),
             name: "piso",
             placeholder: Liferay.Language.get('Piso'),
-            conditions: []
+            conditions: [],
+            className: 'col-2'
         },
     },
     rows: [
         {
             key:41,
-            cols: ['id','nombre', 'paisId']
+            cols: ['nombre', 'paisId', , 'cp']
         },
         {
             key:42,
-            cols: ['provinciaId', 'municipioId', 'cp']
+            cols: [ 'provinciaId', 'municipioId', 'localidad']
         },
-        {
-            key:43,
-            cols: ['localidad','tipoViaId']
-        },
+        //{
+        //    key:43,
+        //    cols: [,]
+        //},
         {
             key:44,
-            cols: ['nombreVia','numero','piso' ]
+            cols: ['tipoViaId', 'nombreVia','numero','piso' ]
         },
     ],
     table: {

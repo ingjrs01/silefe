@@ -40,9 +40,9 @@ export const MgtToolbar = ({items, itemsHandle}) => {
                     }
                     {/*
 
-                    <li class="tbar-item">
-                        <div class="tbar-section">
-                            <a class=" component-link tbar-link" href="#clear">clear</a>
+                    <li className="tbar-item">
+                        <div className="tbar-section">
+                            <a className=" component-link tbar-link" href="#clear">clear</a>
                         </div>
                     </li>
                     */}

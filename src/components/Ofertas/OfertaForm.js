@@ -18,7 +18,8 @@ export const form = {
             name: "titulo",
             value:"titulo",
             placeholder:Liferay.Language.get('Titulo'),
-            conditions:["text"]
+            conditions:["text"],
+            className: 'col-6',
         },
         empresaId: {
             key: 3,
@@ -45,7 +46,8 @@ export const form = {
             name: "puestoId",
             enabled:true,
             options: [],
-            change: ()=>{console.log("cambia el select");}
+            change: ()=>{console.log("cambia el select");},
+            className: 'col-3',
         },
         puesto: {
             key: 33,
@@ -62,7 +64,8 @@ export const form = {
             name: "proyectoId",
             enabled:true,
             options: [],
-            change: ()=>{console.log("cambia el select");}
+            change: ()=>{console.log("cambia el select");},
+            className: 'col-3',
         },
         cnaeId: {
             key: 7,
@@ -71,7 +74,8 @@ export const form = {
             name: "cnaeId",
             enabled:true,
             options: [],
-            change: ()=>{console.log("cambia el select");}
+            change: ()=>{console.log("cambia el select");},
+            className: 'col-3',
         },
         vacantes: {
             key:8,
@@ -80,7 +84,8 @@ export const form = {
             value: "0",
             name: "vacantes",
             placeholder: "0",
-            conditions:["number"]
+            conditions:["number"],
+            className: 'col-2',
         },
         fechaIncorporacion: {
             key:9,
@@ -88,11 +93,11 @@ export const form = {
             label: Liferay.Language.get('Incorporacion'),
             name: "fechaIncorporacion",
             value:"yyyy-mm-dd",
-            //value: null,
             yearmin: 5,
             yearmax: 5,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
-            conditions:[]
+            conditions:[],
+            className: 'col-3',
         },
         tipoContratoId: {
             key: 10,
@@ -101,7 +106,8 @@ export const form = {
             name: "tipoContratoId",
             enabled:true,
             options: [],
-            change: ()=>{console.log("cambia el select");}
+            change: ()=>{console.log("cambia el select");},
+            className: 'col-3'
         },
         duracionMeses: {
             key:11,
@@ -109,7 +115,8 @@ export const form = {
             label: Liferay.Language.get('Duracion'),
             name: "duracionMeses",
             placeholder: "0",
-            conditions:["number"]
+            conditions:["number"],
+            className: 'col-2',
         },
         jornadaId: {
             key: 12,
@@ -118,7 +125,8 @@ export const form = {
             name: "jornadaId",
             enabled:true,
             options: [],
-            change: ()=>{console.log("cambia el select");}
+            change: ()=>{console.log("cambia el select");},
+            className: 'col-3'
         },
         infoJornada: {
             key: 13,
@@ -317,20 +325,20 @@ export const form = {
             rows: [
                 {
                     key:41,
-                    cols: ['id','titulo']
+                    cols: ['titulo', 'proyectoId', 'jornadaId']
                 },
                 {
                     key:42,
-                    cols: ['duracionMeses', 'vacantes', 'empresaId','centroId']
+                    cols: [  'empresaId','centroId','duracionMeses', 'vacantes']
                 },
                 {
                     key:43,
-                    cols: ['proyectoId','puestoId','cnaeId']
+                    cols: ['puestoId','cnaeId', 'tipoContratoId','fechaIncorporacion']
                 },
-                {
-                    key:44,
-                    cols: ['tipoContratoId','fechaIncorporacion','duracionMeses', 'jornadaId']
-                },
+                //{
+                //    key:44,
+                //    cols: [ ]
+                //},
                 {
                     key:45,
                     cols: ['tareas']

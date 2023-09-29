@@ -17,10 +17,10 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
 
     return (
         <>
-            <div class="container">
+            <div className="container">
 
                 <h3>{"Tipo de Formacion"}</h3>
-                <div class="row">
+                <div className="row">
                     <ClayForm.Group className={"col-3"} key={"Group-101"} >
                         <label htmlFor="basicInput">{"Fecha Inicio"}</label>
                         <ClayDatePicker
@@ -56,8 +56,8 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
 
                     </ClayForm.Group>
 
-                    <div class="col-6">
-                        <div class="row">
+                    <div className="col-6">
+                        <div className="row">
                             <ClayForm.Group className={"col-1"} key={"Group-103"} >
                                 <label htmlFor="basicInput">{"L"}</label>
                                 <ClayCheckbox
@@ -116,7 +116,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div className="row">
 
                     <ClayForm.Group className={"col-2"} key={"Group-110"} >
                         <label htmlFor="basicInput">{"Hora Inicio M."}</label>
@@ -170,7 +170,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                     </ClayForm.Group>
                 </div>
 
-                <div class="row">
+                <div className="row">
                     <ClayForm.Group className={"col-6"} key={"Group-114"} >
                         <label htmlFor="basicInput">{"Empresa Impartidora"}</label>
                         <ClaySelect aria-label="Select Label"

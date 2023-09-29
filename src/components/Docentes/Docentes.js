@@ -216,6 +216,7 @@ const Docentes = () => {
                 loadCsv={loadCsv}
                 items={items}
                 formulario={formulario}
+                beforeEdit={() => {}}
             />
             { (items.status === 'load') &&
             <LoadFiles

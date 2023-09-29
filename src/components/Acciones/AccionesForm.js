@@ -25,7 +25,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
 
         <ClayCard.Description truncate={false} displayType="text">
           <ClayForm>
-            <ClayTabs active={0} modern onActiveChange={e => { console.log("cambiado") }}>
+            <ClayTabs active={0} modern>
               <ClayTabs.Item
                 key={"tab-item1"}
                 innerProps={{ "aria-controls": "tabpanel-1" }}
@@ -221,7 +221,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 {
                   (items.item.accionTipoId != 1) &&
                   <>
-                  <div class="row">
+                  <div className="row">
 
                     <ClayForm.Group className={"col-6"} key={"Group-91"} >
                             <label htmlFor="basicInput">{"Fecha Inicio"}</label>

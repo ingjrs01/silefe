@@ -1,5 +1,4 @@
 import ClayButton from '@clayui/button';
-import ClayCard from "@clayui/card";
 import ClayForm from '@clayui/form';
 import React from "react";
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
@@ -8,7 +7,7 @@ import RenderFields from "./RenderFields";
 const DefaultForm = ({ itemsHandle, save, items, notify }) => {
 
   const validateAll = () => {
-    Object.keys(items.fields.fields).forEach( campo => {
+    Object.keys(items.fields.fields).forEach(campo => {
       //console.log(campo);
       //debugger;
       if ((items.fields.fields[campo].validate === undefined) || (items.fields.fields[campo].validate != false)) {
@@ -54,7 +53,7 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
       }
     }
     itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
-//    console.log("validated");
+    //    console.log("validated");
     return true;
   }
 
@@ -69,36 +68,26 @@ const DefaultForm = ({ itemsHandle, save, items, notify }) => {
   }
 
   return (
-    <ClayCard>
-      <ClayCard.Body>
-        <ClayCard.Description displayType="title">
-          {items.fields.title}
-        </ClayCard.Description>
+    <ClayForm className="sheet">
+      <RenderFields
+        rows={items.fields.rows}
+        itemsHandle={itemsHandle}
+        items={items}
+      />
 
-        <ClayCard.Description truncate={false} displayType="text">
-          <ClayForm>
-            <RenderFields
-                rows={items.fields.rows}
-                itemsHandle={itemsHandle}
-                items={items}
-            />
-
-          </ClayForm>
-        </ClayCard.Description>
-        <div className="btn-group">
-          <div className="btn-group-item">
-            <ClayButton onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
-          </div>
-          <div className="btn-group-item">
-            <ClayButton onClick={e => {
-              validateAll() && save()
-            }}
-              displayType="primary">{Liferay.Language.get('Guardar')}
-            </ClayButton>
-          </div>
+      <div className="btn-group">
+        <div className="btn-group-item">
+          <ClayButton onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
         </div>
-      </ClayCard.Body>
-    </ClayCard>
+        <div className="btn-group-item">
+          <ClayButton onClick={e => {
+            validateAll() && save()
+          }}
+            displayType="primary">{Liferay.Language.get('Guardar')}
+          </ClayButton>
+        </div>
+      </div>
+    </ClayForm>
   );
 }
 

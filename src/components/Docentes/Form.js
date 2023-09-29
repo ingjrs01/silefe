@@ -18,7 +18,7 @@ export const form = {
             name: "nombre",
             value:"lalala",
             placeholder:"Nombre",
-            conditions: ["text"]
+            conditions: ["text"],
         },
         apellido1: {
             key:3,
@@ -171,10 +171,10 @@ export const form = {
         },
     },
     rows: [
-        {
-            key:40,
-            cols: ['id']
-        },
+        //{
+        //    key:40,
+        //    cols: ['id']
+        //},
         {
             key:43,
             cols: ['nombre','apellido1','apellido2']

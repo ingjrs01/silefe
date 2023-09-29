@@ -5,27 +5,27 @@ export const form = {
         id: {
             key:1,
             type: "text",
-            label: "ID", 
-            name: "id", 
-            value:"lalala", 
-            placeholder:"Identifier", 
+            label: "ID",
+            name: "id",
+            value:"lalala",
+            placeholder:"Identifier",
             conditions: ["number"]
         },
         nombre: {
             key:3,
             type: "multilang",
-            label: Liferay.Language.get('Nombre'), 
-            name: "nombre", 
-            value:"lelele", 
-            placeholder: Liferay.Language.get('Nombre'), 
+            label: Liferay.Language.get('Nombre'),
+            name: "nombre",
+            value:"lelele",
+            placeholder: Liferay.Language.get('Nombre'),
             conditions: ["text"]
         }
     },
     rows: [
-        {
-            key:9,
-            cols: ['id']
-        },
+        //{
+        //    key:9,
+        //    cols: ['id']
+        //},
         {
             key:7,
             cols: ['nombre']

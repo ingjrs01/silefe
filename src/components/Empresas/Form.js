@@ -18,7 +18,8 @@ export const form = {
             name: "tipoDoc",
             enabled: true,
             conditions: [],
-            change: () => { console.log("cambiando el tipo de documento") }
+            change: () => { console.log("cambiando el tipo de documento") },
+            className: "col-2",
         },
         documento: {
             key: 12,
@@ -27,6 +28,7 @@ export const form = {
             name: "documento",
             value: "documento",
             placeholder: Liferay.Language.get('Documento'),
+            className: "col-3",
             conditions: []
         },
         razonSocial: {
@@ -127,15 +129,27 @@ export const form = {
             rows: [
                 {
                     key: 41,
-                    cols: ['id', 'tipoDoc', 'documento']
+                    cols: ['tipoDoc', 'documento', 'razonSocial'],
                 },
-                {
-                    key: 42,
-                    cols: ['razonSocial']
-                },
+                //{
+                //    key: 42,
+                //    cols: ['razonSocial']
+                //},
                 {
                     key: 43,
-                    cols: ['email', 'telefono']
+                    cols: ['email', 'telefono'],
+                },
+                {
+                    key: 71,
+                    cols: ['pnl', 'ofertas', 'formacionCompromiso'],
+                },
+                {
+                    key: 72,
+                    cols: ['ayuda', 'formacion'],
+                },
+                {
+                    key: 73,
+                    cols: ['interes']
                 },
             ]
         },
@@ -159,25 +173,25 @@ export const form = {
                 cols: ['contactos'],
             }]
         },
-        {
-            caption: "Intereses",
-            key: 4,
-            ariacontrols: "tabpanel-4",
-            rows: [
-                {
-                    key: 71,
-                    cols: ['pnl', 'ofertas', 'formacionCompromiso'],
-                },
-                {
-                    key: 72,
-                    cols: ['ayuda', 'formacion'],
-                },
-                {
-                    key: 73,
-                    cols: ['interes']
-                },
-            ]
-        }
+        //{
+        //    caption: "Intereses",
+        //    key: 4,
+        //    ariacontrols: "tabpanel-4",
+        //    rows: [
+        //        {
+        //            key: 71,
+        //            cols: ['pnl', 'ofertas', 'formacionCompromiso'],
+        //        },
+        //        {
+        //            key: 72,
+        //            cols: ['ayuda', 'formacion'],
+        //        },
+        //        {
+        //            key: 73,
+        //            cols: ['interes']
+        //        },
+        //    ]
+        //}
     ],
     table: {
         id: {

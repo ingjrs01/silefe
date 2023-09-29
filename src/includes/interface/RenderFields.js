@@ -2,7 +2,6 @@ import ClayAutocomplete from '@clayui/autocomplete';
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
-import ClayIcon from '@clayui/icon';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
 import { getLanguageId, locales, spritemap } from '../LiferayFunctions';
@@ -75,13 +74,16 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                 <div className="row">
                   { row.cols.map(it => {
                     console.log("iterando");
-                    console.debug(items.fields.fields[it]);
+                    //console.debug(items.fields.fields[it]);
+                    console.log(items.fields.fields[it].hasOwnProperty('className'));
                     return (
                       <>
-                        <ClayForm.Group className={`${items.errors[it] != 'undefined' && items.errors[it].length > 0 ? 'has-error' : 'has-success'} col`} key={ "Group-" + items.fields.fields[it].key} >
+                        <ClayForm.Group 
+                          className={`${items.errors[it] != 'undefined' && items.errors[it].length > 0 ? 'has-error' : 'has-success'} ${(items.fields.fields[it].hasOwnProperty('className') )?items.fields.fields[it].className : 'col'} `} 
+                          key={ "Group-" + items.fields.fields[it].key} >
                           {(items.fields.fields[it].type === 'text') &&
                             <>
-                              <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
+                              <label htmlFor="basicInput" key={"label"+it}>{items.fields.fields[it].label}</label>
                               <ClayInput
                                 placeholder={items.fields.fields[it].placeholder}
                                 type="text"
@@ -93,15 +95,16 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
                                 }}>
                               </ClayInput>
-                            </>}
+                            </>
+                          }
 
                             {(items.fields.fields[it].type === 'multitext') &&
                             <>
-                              <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
+                              <label htmlFor="basicInput" key={"label"+it}>{items.fields.fields[it].label}</label>
                               {
                                 items.item[it].map( (v,k) => {return (
                                   <>
-                                  <ClayInput.Group spaced={"any"}>
+                                  <ClayInput.Group spaced={"any"} className='mt-1' key={"cig" + v.key}>
                                   <ClayInput
                                     //className="col-6"
                                     key={it + v.key}
@@ -115,6 +118,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                   />
                                   <ClayCheckbox
                                     aria-label="I'm checked indefinitely"
+                                    key={"ckv" + v.key}
                                     checked={ v.default}
                                     containerProps={{ id: "test"}}
                                     onChange={() => itemsHandle({ type: ITEMS_ACTIONS.SET_MULTIFIELDCHECK, fieldname: it,pos: k})}
@@ -123,21 +127,26 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                     //className="col-1" 
                                     aria-label="Close" displayType="secondary" spritemap={spritemap} symbol="times" title="Close"
                                     onClick={e => itemsHandle({ type: ITEMS_ACTIONS.REMOVE_MULTIFIELD, fieldname: it, pos:k })}
+                                    key={"cbtt" + v.key}
                                   />
                                   </ClayInput.Group>
                                 </>
                                 )})
                               }
-                              <ClayButton size={"xs"} displayType={"secondary"} onClick={evt => {
-                                itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: it });
-                                
-                              }}>{"Añadir"}</ClayButton>
-                            </>}
+                              <ClayButton 
+                                size={"xs"} 
+                                displayType={"secondary"} 
+                                key={"add"+it}
+                                onClick={evt => itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: it })} >
+                                    {Liferay.Language.get("Añadir")}
+                              </ClayButton>
+                            </>
+                            }
 
                             {items.fields.fields[it].type == 'multilang' &&
                             <ClayLocalizedInput
                               id={it}
-                              key={it}
+                              key={it+items.fields.fields[it].key}
                               label={items.fields.fields[it].label}
                               locales={locales}
                               spritemap={spritemap}
@@ -153,40 +162,27 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                           }
                           {items.fields.fields[it].type == 'select' &&
                             <>
-                              <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
+                              <label htmlFor="basicInput" key={"label"+it}>{items.fields.fields[it].label}</label>
                               <ClaySelect aria-label="Select Label"
                                 id={it}
                                 name={it}
                                 key={it}
                                 disabled={ !items.fields.fields[it].enabled }
-                                onChange={evt => {
-                                  //if (items.fields.fields[it].hasOwnProperty('change')) {
-                                  //  console.log("tiene change");
-                                  //  items.fields.fields[it].change(evt.target.value);
-                                  //}
-                                  //else
-                                  //  console.log("no tiene change");
-                                  
-                                  itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
-                                }}
+                                onChange={evt => itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value }) }
                                 value={items.item[it]} >
                                 { items.fields.fields[it].options !== 'undefined' && items.fields.fields[it].options.map(item => (
                                   <ClaySelect.Option
-                                    key={it + "option-" + item.value}
+                                    key={it + "o" + item.value}
                                     label={item.label}
                                     value={item.value}
                                   />
                                 ))}
-
-                                <span className="inline-item inline-item-before">
-                                  <ClayIcon spritemap={spritemap} symbol="times" />
-                                </span>
                               </ClaySelect>
                             </>
                           }
                           {items.fields.fields[it].type == 'autocomplete' &&
                           <>
-                            <label htmlFor={it} id={it+"label"}> {items.fields.fields[it].label} </label>
+                            <label htmlFor={it} id={it+"label"} key={"label"+it}> {items.fields.fields[it].label} </label>
                             <ClayAutocomplete
                               aria-labelledby={it+"label"}
                               id={it}
@@ -197,7 +193,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             >
                             {items.fields.fields[it].options.map(item => {
                               return(
-                                <ClayAutocomplete.Item key={it + "option-" + item.value}>{item.label}</ClayAutocomplete.Item>
+                                <ClayAutocomplete.Item key={it + "a-" + item.value}>{item.label}</ClayAutocomplete.Item>
                               )})}
                             </ClayAutocomplete>
                           </>
@@ -212,12 +208,13 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });
                                 }}
                                 toggled={items.item[it]}
+                                key={"toggle"+ it}
                               />
                             </>
                           }
                           {(items.fields.fields[it].type === 'date') &&
                             <>
-                              <label htmlFor="basicInput">{items.fields.fields[it].label}</label>
+                              <label htmlFor="basicInput" key={"label"+it}>{items.fields.fields[it].label}</label>
                               <ClayDatePicker
                                 onChange={val => { itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
                                 placeholder={items.fields.fields[it].placeholder}
@@ -227,6 +224,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                                 timezone="GMT+01:00"
                                 value={items.item[it]}
                                 weekdaysShort={getDays(getLanguageId())}
+                                key={"dtpkr" + it}
                                 years={{
                                   end:  (((new Date().getFullYear()) +  items.fields.fields[it].yearmax) ),
                                   start: (( new Date().getFullYear() - items.fields.fields[it].yearmin))
@@ -236,8 +234,10 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
 
                             {items.fields.fields[it].type == 'radio' &&
                             <>
+                              <label htmlFor="basicInput" key={"label"+it}>{items.fields.fields[it].label}</label>
                               <ClayRadioGroup
                                 active={act2}
+                                key={"rg"+it}
                                 //defaultValue="M"
                                 value={items.item[it]}
                                 //onActiveChange={setAct2}
@@ -264,6 +264,7 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                               <ClaySelectBox
                                 items={items.fields.fields[it].options}
                                 label={items.fields.fields[it].label}
+                                key={"sb"+ it}
                                 multiple
                                 //onItemsChange={console.log("Cambiando los items dentro de ClaySelecBox")}
                                 onSelectChange={val => {itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val });}}
@@ -273,12 +274,13 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             </>}
                             {(items.fields.fields[it].type === 'textarea') &&
                             <>
-                              <label htmlFor="basicInputText">{items.fields.fields[it].label}</label>
+                              <label htmlFor="basicInputText" key={"label"+it}>{items.fields.fields[it].label}</label>
                               <ClayInput
                                 component="textarea"
                                 id={items.fields.fields[it].name + items.fields.fields[it].key}
                                 placeholder={items.fields.fields[it].placeholder}
                                 type="text"
+                                key={"tarea"+it}
                                 value={items.item[it]}
                                 onChange={e => {
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value });
@@ -287,9 +289,9 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                             </>}
                             {
                               (items.fields.fields[it].type === 'file') &&
-                              <div class="form-group">
-	                              <label class="sr-only" for="inputFile">FILE UPLOAD</label>
-	                              <input id="inputFile" type="file" onChange={(e) => {
+                              <div className="form-group" key={"gf"+it} >
+                              <label className="sr-only" for="inputFile" key={"fi"+it}>FILE UPLOAD</label>
+                              <input id="inputFile" key={"inf"+it} type="file" onChange={(e) => {
                                   itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.files[0] });
                                   // setFile(e.target.files[0]);
                                 }} />
@@ -302,10 +304,11 @@ const RenderFields =  ({ rows,  itemsHandle, items, plugin }) => {
                               }
                             </>}
                           {
-                            items.errors[it] != 'undefined' && items.errors[it].length > 0 && //  -> items.fields.rows[it].name
-                            <ClayForm.FeedbackGroup>
-                              <ClayForm.FeedbackItem>
+                            items.errors[it] != 'undefined' && items.errors[it].length > 0 &&
+                            <ClayForm.FeedbackGroup key={"error"+it}>
+                              <ClayForm.FeedbackItem key={"err"+it}>
                                 <ClayForm.FeedbackIndicator
+                                  key={"erfi"+it}
                                   spritemap={spritemap}
                                   symbol="check-circle-full"
                                 />

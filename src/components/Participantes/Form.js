@@ -19,6 +19,7 @@ export const form = {
             enabled:true,
             conditions: [],
             options: [],
+            className: 'col-2',
             change: () => {console.log("cambiando el tipo de documento")}
         },
         documento: {
@@ -27,6 +28,7 @@ export const form = {
             label: Liferay.Language.get('Documento'),
             name: "documento",
             value:"documento",
+            className: 'col-3',
             placeholder: Liferay.Language.get('Documento'),
             conditions: []
         },
@@ -36,6 +38,7 @@ export const form = {
             label: Liferay.Language.get('Sexo'),
             name: "sexo",
             change: ()=>{console.log("cambia sexo");},
+            className: 'col-3'
             //conditions: []
         },
         nombre: {
@@ -74,6 +77,7 @@ export const form = {
             yearmin: 110,
             yearmax: 0,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
+            className: 'col-3',
             conditions:[]
         },
         provinciaId: {
@@ -84,16 +88,18 @@ export const form = {
             value:"",
             enabled:true,
             options: [],
+            className: 'col-3',
             conditions: []
         },
         municipioId: {
             key:16,
-            type: "select",//"autocomplete",
+            type: "select",
             label: Liferay.Language.get('Municipio'),
             name: "municipioId",
             value:"",
             enabled:true,
             options: [],
+            className: 'col-3',
             conditions: []
         },
         localidad: {
@@ -103,6 +109,7 @@ export const form = {
             name: "Localidad",
             value:"localidad",
             placeholder: Liferay.Language.get('Localidad'),
+            className: 'col-6',
             conditions: ["text"]
         },
         tipoviaId: {
@@ -114,6 +121,7 @@ export const form = {
             change: () => {console.log("tipoViaId")},
             enabled:true,
             options: [],
+            className: 'col-2',
             conditions: []
         },
         nombreVia: {
@@ -122,6 +130,7 @@ export const form = {
             label: Liferay.Language.get('NombreVia'),
             name: "nombreVia",
             value:"",
+            className: 'col-6',
             placeholder: Liferay.Language.get('NombreVia'),
             conditions: []
         },
@@ -132,6 +141,7 @@ export const form = {
             name: "numero",
             value:"",
             placeholder: Liferay.Language.get('Numero'),
+            className: 'col-2', 
             conditions: ["number"]
         },
         piso: {
@@ -141,6 +151,7 @@ export const form = {
             name: "piso",
             value:"",
             placeholder: Liferay.Language.get('Piso'),
+            className: 'col-2',
             conditions: []
         },
         email: {
@@ -245,19 +256,19 @@ export const form = {
             rows: [
                 {
                     key:41,
-                    cols: ['id','tipoDoc','documento']
+                    cols: ['tipoDoc','documento', 'fechaNacimiento', 'sexo']
                 },
                 {
                     key:43,
                     cols: ['nombre','apellido1','apellido2']
                 },
-                {
-                    key:42,
-                    cols: ['fechaNacimiento', 'sexo']
-                },
+                //{
+                //    key:42,
+                //    cols: ['fechaNacimiento', 'sexo']
+                //},
                 {
                     key:44,
-                    cols: ['provinciaId', 'municipioId']//,'localidad']
+                    cols: ['provinciaId', 'municipioId', 'localidad']//,'localidad']
                 },
                 {
                     key:45,

@@ -27,7 +27,7 @@ const CentrosRender = ({reducer,centrosHandle}) =>  {
             <ClayTable.Body>
                 { reducer.items.map( (item,index) => { return(
                 <>
-                <ClayTable.Row>
+                <ClayTable.Row key={item.id} >
                 <ClayTable.Cell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} />
                 </ClayTable.Cell>
                 <ClayTable.Cell>{item.nombre}</ClayTable.Cell>

@@ -1,5 +1,4 @@
 import ClayButton from '@clayui/button';
-import ClayCard from "@clayui/card";
 import ClayForm from '@clayui/form';
 import ClayTabs from '@clayui/tabs';
 import React from "react";
@@ -9,11 +8,11 @@ import RenderFields from "./RenderFields";
 const TabsForm = ({ itemsHandle, save, items, plugin }) => {
 
   const validateAll = () => {
-    Object.keys(items.fields.fields).forEach( campo => {
+    Object.keys(items.fields.fields).forEach(campo => {
       //debugger;
       //console.log(campo);
       switch (items.fields.fields[campo].type) {
-        case "text": 
+        case "text":
           if (!validate(campo, items.item[campo]))
             return false;
           break;
@@ -62,17 +61,10 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
   }
 
   return (
-    <ClayCard>
-      <ClayCard.Body>
-        <ClayCard.Description displayType="title">
-          {items.fields.title}
-        </ClayCard.Description>
-
-        <ClayCard.Description truncate={false} displayType="text">
-        <ClayForm>
-
+    <>
+      <ClayForm className='sheet'>
         <ClayTabs active={items.fields.tabActive} modern >
-          { items.fields.tabs.map((tab,index) => {
+          {items.fields.tabs.map((tab, index) => {
             return (
               <ClayTabs.Item
                 key={"tab-item" + tab.key}
@@ -80,31 +72,26 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
                   "aria-controls": "tabpanel-2"
                 }}
               >
-                <a onClick={a => { itemsHandle({ type:ITEMS_ACTIONS.SET_ACTIVETAB,active: index})}}>  {tab.caption }  </a>
+                <a onClick={a => { itemsHandle({ type: ITEMS_ACTIONS.SET_ACTIVETAB, active: index }) }}>  {tab.caption}  </a>
               </ClayTabs.Item>
             );
           })}
-
-      </ClayTabs>
-      <ClayTabs.Content activeIndex={items.fields.tabActive} fade>
-          { items.fields.tabs.map( tab => {
+        </ClayTabs>
+        <ClayTabs.Content activeIndex={items.fields.tabActive} fade>
+          {items.fields.tabs.map(tab => {
             return (
               <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-" + tab.key}>
                 <RenderFields
-                rows={tab.rows}
-                itemsHandle={itemsHandle}
-                items={items}
-                plugin={plugin}
+                  rows={tab.rows}
+                  itemsHandle={itemsHandle}
+                  items={items}
+                  plugin={plugin}
                 />
               </ClayTabs.TabPane>
-
             );
           })}
+        </ClayTabs.Content>
 
-      </ClayTabs.Content>
-          </ClayForm>
-
-        </ClayCard.Description>
         <div className="btn-group">
           <div className="btn-group-item">
             <ClayButton aria-label="Cancel" onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
@@ -116,8 +103,9 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
             </ClayButton>
           </div>
         </div>
-      </ClayCard.Body>
-    </ClayCard>
+
+      </ClayForm>
+    </>
   );
 }
 export default TabsForm;

@@ -3,9 +3,9 @@ import ClayCard from "@clayui/card";
 import ClayForm from '@clayui/form';
 import ClayTabs from '@clayui/tabs';
 import React from "react";
+import RenderFields from '../../includes/interface/RenderFields'; //"./RenderFields";
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import ExperienciaRender from "./ExperienciaRender";
-import RenderFields from "./RenderFields";
 import TitulacionesRender from "./TitulacionesRender";
 
 const TabsForm = ({ itemsHandle, save, items, experiencias, experienciasHandler,  redTitulaciones, titulacionHandler }) => {
