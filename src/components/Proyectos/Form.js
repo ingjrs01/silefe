@@ -57,9 +57,9 @@ export const form = {
             conditions:[],
             className: 'col-3',
         },
-        nparticipantes: {
+        participantes: {
             key:6,
-            type: "text",
+            type: "number",
             label: Liferay.Language.get('Participantes'),
             name: "participantes",
             placeholder: "0",
@@ -106,23 +106,22 @@ export const form = {
             type: "text",
             label: Liferay.Language.get('Ambito'),
             name: "ambito_geo",
-            value:"lelele",
+            value:"",
             enabled:true,
             conditions: []
         },
         presupuesto: {
             key: 12,
-            type: "text",
+            type: "money",
             label: Liferay.Language.get("Presupuesto"),
             name: "presupuesto",
-            placeholder: "presupuesto",
             enabled: true,
             conditions:["number"],
             className: 'col-2',
         },
         porcentaje_total: {
             key: 13,
-            type: "text",
+            type: "percent",
             label: Liferay.Language.get("Porcentaje"),
             name: "porcentaje_total",
             placeholder: "",
@@ -132,7 +131,7 @@ export const form = {
         },
         porcentaje_cofinanciacion: {
             key: 14,
-            type: "text",
+            type: "percent",
             label: Liferay.Language.get("Cofinanciacion"),
             name: "porcentaje_cofinanciacion",
             placeholder: "",
@@ -148,20 +147,12 @@ export const form = {
             placeholder: 'lalala',
             enabled: true
         },
-        //tecnicos: {
-        //    key: 16,
-        //    type: "multilist",
-        //    label: Liferay.Language.get("Tecnicos"),
-        //    name: 'tecnicos',
-        //    //placeholder: 'lalala',
-        //    enabled: true
-        //},
         objetivos: {
             key:17,
-            type: "text",// "textarea",
+            type: "textarea",
             label: Liferay.Language.get('Objetivos'),
             name: "objetivos",
-            value:"lelele",
+            value:"",
             placeholder:Liferay.Language.get('Objetivos'),
             conditions:["text"]
         },
@@ -185,11 +176,11 @@ export const form = {
             componentName: "Ofertas",
             name: "Ofertas",
         },
-        participantes: {
+        oparticipantes: {
             key: 21,
             type: "other",
-            componentName: "Participantes",
-            name: "Participantes",
+            componentName: "OParticipantes",
+            name: "OParticipantes",
         },
         empresas: {
             key: 22,
@@ -208,7 +199,7 @@ export const form = {
             rows: [
                 {
                     key: 5,
-                    cols: ['descripcion', 'codigo', 'convocatoriaId', 'nparticipantes']
+                    cols: ['descripcion', 'codigo', 'convocatoriaId', 'participantes']
                 },
                 {
                     key: 6,
@@ -222,18 +213,10 @@ export const form = {
                     key: 8,
                     cols: ['fondos_propios', 'cofinanciacion', 'entidadId']
                 },
-                //{
-                //    key: 10,
-                //    cols: ['presupuesto','porcentaje_total','porcentaje_cofinanciacion']
-                //},
                 {
                     key: 11,
                     cols: ['colectivos']
                 },
-                //{
-                //    key: 12,
-                //    cols: ['tecnicos']
-                //},
                 {
                     key: 13,
                     cols: ['objetivos']
@@ -269,7 +252,7 @@ export const form = {
             rows: [
                 {
                     key: 15,
-                    cols: ['participantes']
+                    cols: ['oparticipantes']
                 },
             ]
         },

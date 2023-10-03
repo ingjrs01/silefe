@@ -8,24 +8,26 @@ import RenderFields from "./RenderFields";
 const TabsForm = ({ itemsHandle, save, items, plugin }) => {
 
   const validateAll = () => {
+    //console.log("TabsForm validateAll");
     Object.keys(items.fields.fields).forEach(campo => {
       //debugger;
-      //console.log(campo);
-      switch (items.fields.fields[campo].type) {
-        case "text":
-          if (!validate(campo, items.item[campo]))
-            return false;
-          break;
-        case "multilang":
-          if (!validateLocalized(campo, items.item[campo]))
-            return false;
-          break;
-        case "toggle":
-          break;
+      if (items.fields.fields[campo].validate) {
+        //console.log(campo);
+        switch (items.fields.fields[campo].type) {
+          case "text":
+            if (!validate(campo, items.item[campo]))
+              return false;
+            break;
+          case "multilang":
+            if (!validateLocalized(campo, items.item[campo]))
+              return false;
+            break;
+          case "toggle":
+            break;
+        }
       }
-
     });
-    console.log("todo ok");
+    //console.log("todo ok");
     return true;
   }
 

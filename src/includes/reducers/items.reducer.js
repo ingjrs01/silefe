@@ -29,6 +29,7 @@ export const ITEMS_ACTIONS = {
     SET_FIELDS: 27,
     HISTORY: 28,
     SET_ACTIVETAB: 29,
+    SETUNCOLATERAL: 30,
 }
 
 export const initialState = {
@@ -177,7 +178,13 @@ export const red_items = (state, action ) => {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
             }
-        
+            
+        case ITEMS_ACTIONS.SETUNCOLATERAL:
+            return {
+                ...state,
+                item: {...state.item,[action.fieldname]:action.value}
+            }
+            
         case ITEMS_ACTIONS.SELECT_ITEM:
             let sel = state.arr.filter(i => i.checked);
             if (sel.length > 0) {
@@ -192,12 +199,8 @@ export const red_items = (state, action ) => {
             return state;
 
         case ITEMS_ACTIONS.EDIT_ITEM:
-            //console.debug(action.item);
-            //debugger;
             tmp_item = {};
             Object.keys(state.fields.fields).forEach(j => {
-                //console.log(j);
-                //console.debug(action.item.data);
                 switch (state.fields.fields[j].type) {
                     case "multilang":
                         let tt = {}

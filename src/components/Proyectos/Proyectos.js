@@ -141,7 +141,7 @@ const Proyectos = () => {
         const data = {
             id: items.item.id,
             obj: {
-              ...items.item,
+                ...items.item,
             },
             userId :getUserId(),
         }
@@ -193,15 +193,6 @@ const Proyectos = () => {
         }
     }
 
-    const miEvento = () => {
-        console.log("Soy una cuchara");
-    }
-    const cofinanciacionChange = (value) => {
-        if (value == false) {
-            // cambiamos el estado
-        }
-    }
-
     const fetchData = () => {
         if (form.fields.entidadId.options == undefined) {
             initForm();
@@ -219,7 +210,7 @@ const Proyectos = () => {
             const tmp = data.map(i => ({
                 ...i,
                 id            : i.proyectoId,
-                nparticipantes: i.participantes,
+                //nparticipantes: i.participantes,
                 inicio        : (i.inicio != null)?new Date(i.inicio).toISOString().substring(0, 10):"",
                 fin           : (i.fin != null)?new Date(i.fin).toISOString().substring(0, 10):"",
                 checked       : false})
@@ -302,7 +293,7 @@ const Proyectos = () => {
 
     const initForm = () => {
         fetchAPIData('/silefe.cofinanciadas/all', {lang: getLanguageId() },referer).then(response => {
-            form.fields.entidadId.change = miEvento;
+            form.fields.entidadId.change = () => {};
             form.fields.entidadId.options = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}}); 
         });
         fetchAPIData('/silefe.colectivo/all', {lang: getLanguageId()},referer).then(response => {
@@ -316,7 +307,9 @@ const Proyectos = () => {
         //fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
         //    form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 
         //});
-        form.fields.cofinanciacion.change = cofinanciacionChange;
+        
+        form.fields.porcentaje_total.change = (val) =>  itemsHandle({type: ITEMS_ACTIONS.SETUNCOLATERAL, fieldname: 'porcentaje_cofinanciacion',  value: 100-val});
+        form.fields.porcentaje_cofinanciacion.change = (val) => itemsHandle({type: ITEMS_ACTIONS.SETUNCOLATERAL, fieldname: 'porcentaje_total',  value: 100-val});
     }
 
     const notify = () => {
@@ -340,7 +333,7 @@ const Proyectos = () => {
                     backUrl={"/proyecto/"}
                     ancestorId={items.item.id}
                 />,
-            Participantes:
+            OParticipantes:
                 <AccionesTable
                     data={participantes}
                     handler={participantesHandle}

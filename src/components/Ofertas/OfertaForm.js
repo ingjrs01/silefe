@@ -7,7 +7,7 @@ export const form = {
             type: "text",
             label: "ID",
             name: "id",
-            value:"lalala",
+            value:"",
             placeholder:"Identifier",
             conditions: ["number"]
         },
@@ -146,7 +146,7 @@ export const form = {
         },
         tareas: {
             key: 15,
-            type: "text",
+            type: "textarea",
             label: Liferay.Language.get('Tareas'),
             name: "tareas",
             placeholder: "",
@@ -203,7 +203,7 @@ export const form = {
             type: "toggle",
             label: Liferay.Language.get('Vehiculo'),
             name: "vehiculo",
-            value:"lelele",
+            value:"",
             options: [],
             change: ()=>{console.log("cambia fondos propios");}
         },
@@ -212,7 +212,7 @@ export const form = {
             type: "toggle",
             label: Liferay.Language.get('NecesitaVehiculo'),
             name: "necesitaVehiculo",
-            value:"lelele",
+            value:"",
             options: [],
             change: ()=>{console.log("cambia fondos propios");}
         },
@@ -221,7 +221,7 @@ export const form = {
             type: "select",
             label: Liferay.Language.get('Genero'),
             name: "generoId",
-            value:"lelele",
+            value:"",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -231,7 +231,7 @@ export const form = {
             type: "select",
             label: Liferay.Language.get('Edad'),
             name: "edadId",
-            value:"lelele",
+            value:"",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -241,7 +241,7 @@ export const form = {
             type: "text",
             label: Liferay.Language.get('Habilidades'),
             name: "habilidades",
-            value:"lelele",
+            value:"",
             enabled:true,
             conditions: []
         },
@@ -250,7 +250,7 @@ export const form = {
             type: "select",
             label: Liferay.Language.get('Estado'),
             name: "estadoId",
-            value:"lelele",
+            value:"",
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");}
@@ -260,7 +260,7 @@ export const form = {
             type: "text",
             label: Liferay.Language.get('Estado'),
             name: "estado",
-            value:"lelele",
+            value:"",
             enabled:true,
             conditions: []
         },
@@ -269,7 +269,7 @@ export const form = {
             type: "text",
             label: Liferay.Language.get('Observaciones'),
             name: "observaciones",
-            value:"lelele",
+            value:"",
             enabled:true,
             conditions: []
         },

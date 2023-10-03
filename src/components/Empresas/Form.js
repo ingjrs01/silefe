@@ -100,7 +100,7 @@ export const form = {
         },
         interes: {
             key: 31,
-            type: "text",
+            type: "textarea",
             label: Liferay.Language.get('Interes'),
             name: "interes",
             value: "Interes",
