@@ -64,7 +64,7 @@ export const form = {
         },
         horas: {
             key:8,
-            type: "text",
+            type: "number",
             label: "Horas",
             name: "horas",
             placeholder:"Horas",
