@@ -27,7 +27,8 @@ export const form = {
             name: "apellido1",
             value:"lalala",
             placeholder:"",
-            conditions: ["text"]
+            conditions: ["text"],
+            className: "col-3",
         },
         apellido2: {
             key:4,
@@ -36,16 +37,18 @@ export const form = {
             name: "apellido2",
             value:"lalala",
             placeholder:"",
-            conditions: ["text"]
+            conditions: ["text"],
+            className: "col-3"
         },
         documento: {
             key:5,
-            type: "text",
+            type: "dni",
             label: "Documento",
             name: "documento",
             value:"",
             placeholder:"",
-            conditions: ["text"]
+            conditions: ["text"],
+            className: "col-2",
         },
         cpostal: {
             key:6,
@@ -63,7 +66,8 @@ export const form = {
             name: "nombreVia",
             value:"",
             placeholder:"",
-            conditions: ["text"]
+            conditions: ["text"],
+            className: "col-4",
         },
         numero: {
             key:8,
@@ -72,7 +76,8 @@ export const form = {
             name: "numero",
             value:"",
             placeholder:"",
-            conditions: ["text"]
+            conditions: ["text"],
+            className: "col-2"
         },
         piso: {
             key:9,
@@ -81,7 +86,8 @@ export const form = {
             name: "piso",
             value:"",
             placeholder:"",
-            conditions: ["text"]
+            conditions: ["text"],
+            className: "col-2",
         },
         tipoDoc: {
             key:10,
@@ -90,7 +96,8 @@ export const form = {
             name: "tipoDoc",
             enabled:true,
             conditions: [],
-            change: () => {console.log("cambiando el tipo de documento")}
+            change: () => {console.log("cambiando el tipo de documento")},
+            className: 'col-2',
         },
         sexo: {
             key:11,
@@ -98,6 +105,7 @@ export const form = {
             label: Liferay.Language.get('Sexo'),
             name: "sexo",
             change: ()=>{console.log("cambia sexo");},
+            className: 'col-3'
             //conditions: []
         },
         fechaNacimiento: {
@@ -109,7 +117,8 @@ export const form = {
             yearmin: 110,
             yearmax: 0,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
-            conditions:[]
+            conditions:[],
+            className: 'col-3'
         },
         provinciaId: {
             key:13,
@@ -119,7 +128,8 @@ export const form = {
             value:"",
             enabled:true,
             options: [],
-            conditions: []
+            conditions: [],
+            className: "col-3",
         },
         municipioId: {
             key:14,
@@ -171,26 +181,22 @@ export const form = {
         },
     },
     rows: [
-        //{
-        //    key:40,
-        //    cols: ['id']
-        //},
         {
-            key:43,
-            cols: ['nombre','apellido1','apellido2']
+            key:41,
+            cols: ['tipoDoc', 'documento','nombre','apellido1'],
         },
         {
-            key:42,
-            cols: ['fechaNacimiento', 'sexo']
+            key:43,
+            cols: ['apellido2','fechaNacimiento', 'sexo','provinciaId'],
         },
         {
             key:44,
-            cols: ['provinciaId', 'municipioId']//,'localidad']
+            cols: [  'municipioId','tipoviaId','nombreVia','numero','piso']//,'localidad']
         },
-        {
-            key:45,
-            cols: ['tipoviaId','nombreVia','numero','piso']
-        },
+        //{
+        //    key:45,
+        //    cols: []
+        //},
         {
             key:46,
             cols: ['email','telefono']

@@ -5,82 +5,46 @@ import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelec
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
 import { getLanguageId, locales, spritemap } from '../LiferayFunctions';
+import { validate, validateDni, validateLocalized } from '../Validators';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import { getDays, getMonths } from './DatesLang';
 
 const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
   const [act2, setAct2] = useState(0);
-//  const [moneys, setMoneys] = useState([])
+  const dnipattern = "--.---.--- X";
 
-  const validateAll = () => {
-    console.log("validando todo");
-    Object.keys(items.fields.fields).forEach(campo => {
-      console.log(campo);
-      //debugger;
-      switch (items.fields.fields[campo].type) {
-        case "text":
-          if (!validate(campo, items.item[campo]))
-            return false;
-          break;
-        case "multilang":
-          if (!validateLocalized(campo, items.item[campo]))
-            return false;
-          break;
-        case "toggle":
-          break;
-      }
+  const [documents, setDocuments] = useState({pos:0,value: items.item.documento??dnipattern})
 
-    });
-    console.log("todo ok");
-    return true;
-  }
-
-
-  const validate = (name, value) => {
-    let condicion = "";
-
-    for (condicion of items.fields.fields[name]["conditions"]) {
-      if (condicion == "number") {
-        if (isNaN(value)) {
-          itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
-          return false;
-        }
-      }
-
-      if (condicion == "text") {
-        if (!isNaN(value)) {
-          itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-texto') });
-          return false;
-        }
-      }
-    }
-    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
-    return true;
-  }
-
-  const validateLocalized = (fieldname, values) => {
-    const languages = Object.keys(values);
-    let l = "";
-    for (l in languages) {
-      if (!validate(fieldname, values[languages[l]]))
-        return false;
-    }
-    return true;
-  }
-  const formatMoney = (value) => {
+    const formatMoney = (value) => {
     var temp = "";
 
-
     temp = (typeof(value) === 'number')?value.toString():value;
-    //if (typeof(value) === 'number')
-    //  temp = value.toString();
-    //else
-    //  temp = value;
     
     var input = temp.replace(/[\D\s\._\-]+/g, "");
     input = input ? parseInt(input, 10) : 0;
     return (input.toLocaleString("es-ES"));
+  }
+
+  const initDni = (target) => {
+    setDocuments({pos: 0, value: items.item.documento??dnipattern });
+    target.setSelectionRange(0, 1);
+  }
+
+  const writeDni = (target, name, value) => {
+    if (value.includes("-")) {
+      const newpos = ([1,5,9].includes(documents.pos))?documents.pos+2:documents.pos+1;
+      setDocuments({pos: newpos, value:value.substr(0,documents.pos+1).toUpperCase() + dnipattern.substring(documents.pos+1, 12) })
+      target.setSelectionRange(newpos, newpos+1);
+  
+      if (documents.pos > 10) {
+        document.getElementById('nombre').focus();
+      }
+    }
+    else {
+      setDocuments({pos:-1,value:value});
+    }
+
   }
 
   //useEffect(() => {
@@ -112,10 +76,11 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                           placeholder={items.fields.fields[it].placeholder}
                           type="text"
                           name={it}
+                          id={it}
                           key={it}
                           value={items.item[it]}
                           onChange={e => {
-                            validate(e.target.name, e.target.value);
+                            validate(e.target.name, e.target.value,items,itemsHandle);
                             itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
                           }}>
                         </ClayInput>
@@ -131,7 +96,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                           key={it}
                           value={items.item[it]}
                           onChange={e => {
-                            validate(e.target.name, e.target.value);
+                            validate(e.target.name, e.target.value,items,itemsHandle);
                             itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
                           }}>
                         </ClayInput>
@@ -187,6 +152,27 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
 
                       </>
                     }
+                    {(items.fields.fields[it].type === 'dni') &&
+                      <>
+                        <label htmlFor="basicInput" key={"label" + it}>{items.fields.fields[it].label} DNI</label>
+                        <ClayInput
+                          type="text"
+                          name={it}
+                          key={it}
+                          placeholder='00.000.000-A'
+                          value={documents.value}
+                          onFocus={e => initDni(e.target)}
+                          onBlur={() => {}  }
+                          onChange={e => {
+                            writeDni(e.target, e.target.name, e.target.value);
+                            validateDni(e.target.name, e.target.value,itemsHandle);
+                            itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
+                          }}>
+                        </ClayInput>
+
+                      </>
+                    }
+
 
                     {(items.fields.fields[it].type === 'multitext') &&
                       <>
@@ -244,7 +230,9 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                         spritemap={spritemap}
                         onSelectedLocaleChange={setSelectedLocale}
                         onTranslationsChange={evt => {
-                          validateLocalized(it, evt);
+                          console.log("changiando");
+                          console.debug(items);
+                          validateLocalized(it, evt, items, itemsHandle);
                           itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: evt });
                         }
                         }
@@ -310,6 +298,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                         <label htmlFor="basicInput" key={"label" + it}>{items.fields.fields[it].label}</label>
                         <ClayDatePicker
                           onChange={val => { itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: val }); }}
+                          id={it}
                           placeholder={items.fields.fields[it].placeholder}
                           firstDayOfWeek={1}
                           months={getMonths(getLanguageId())}

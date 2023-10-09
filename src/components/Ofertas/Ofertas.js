@@ -201,10 +201,6 @@ const Ofertas = () => {
         }
     }
 
-    const notify = () => {
-        console.log("Accediendo a notify");
-    }
-
     const searchCandidatos = (filters) => {
         const filters2 = [];
         Object.keys(filters).forEach(it => {
@@ -404,7 +400,6 @@ const Ofertas = () => {
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                    notify={notify}
                     plugin={plugin}
                 />
             }

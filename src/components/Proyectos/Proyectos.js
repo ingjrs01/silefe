@@ -312,10 +312,6 @@ const Proyectos = () => {
         form.fields.porcentaje_cofinanciacion.change = (val) => itemsHandle({type: ITEMS_ACTIONS.SETUNCOLATERAL, fieldname: 'porcentaje_total',  value: 100-val});
     }
 
-    const notify = () => {
-        console.log("notify");
-    }
-
     const plugin = () => {
         return {
             Ofertas: <AccionesTable
@@ -378,7 +374,6 @@ const Proyectos = () => {
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                    notify={notify}
                     plugin={plugin}
                 />
             }

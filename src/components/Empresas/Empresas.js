@@ -180,10 +180,6 @@ const Empresas = () => {
         console.log("loadCsv");
     }
 
-    const notify = () => {
-        console.log("notify");
-    }
-
     const plugin2 = () => {
         return {
             Centros:
@@ -262,7 +258,6 @@ const Empresas = () => {
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                    notify={notify}
                     plugin={plugin2}
                 />
             }

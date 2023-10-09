@@ -97,10 +97,6 @@ const Lugares = () => {
         console.log("loadCsv");
     }
 
-    const notify = () => {
-        console.log("notify");
-    }
-
     const loadItem = (id) => {
         fetchAPIRow('/silefe.lugar/get',{id:id},referer).then (r => itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:r})) ;
     }
@@ -159,7 +155,6 @@ const Lugares = () => {
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                    notify={notify}
                 />
             }
             {(items.status === 'list') &&
