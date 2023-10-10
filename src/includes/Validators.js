@@ -2,32 +2,57 @@ import { ITEMS_ACTIONS } from "./reducers/items.reducer";
 
 const dniletter = ["T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"];
 
-export const validateDni = (name, value, itemsHandle) => {
-    console.log("validateDNI desde includes ");
-    //var DNI_REGEX = /^(\d{8})([A-Z])$/;
-    //[0-9-]{2}.[0-9-]{3}.[0-9-]{3} ([A-Za-z])
-    var DNI_REGEX = /^[0-9-]{2}.[0-9-]{3}.[0-9-]{3} ([A-Za-z])$/;
+export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
+    var DNI_REGEX = /^[0-9-]{8}([A-Za-z])$/;
     var CIF_REGEX = /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/;
-    var NIE_REGEX = /^[XYZ]\d{7,8}[A-Z]$/;
+    const NIE_REGEX = /^[XYZ][0-9-]{7}[A-Za-z]$/;
+    const PASS_REGEX = /^[a-z]{3}[0-9]{6}[a-z]?$/i;
 
-    if (value.match(DNI_REGEX)) {
-        const numerodni = parseInt(value.replace(/[.a-zA-Z-]+/g, ""));
+    console.log("validateDni " + value + "  tipoDoc: " + tipoDoc);
+    switch (tipoDoc) {
+        case '1': // SI EL TIPO ES 1, SE TRATA DE UN DNI
+            if (value.match(DNI_REGEX)) {
+                const numerodni = parseInt(value.replace(/[.a-zA-Z-]+/g, ""));
+                console.log(dniletter[numerodni % 23] + "  === " + value.substring(8, 9).toLocaleUpperCase());
+                if (value.length >= 8 && value.substring(8, 9).toLocaleUpperCase() != dniletter[numerodni % 23]) {
+                    itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-dni') });
+                    return false;
+                }
+                itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+                return true
+            }
+            else {
+                itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-dni') });
+                return false;
+            }
+        case '2':
+            if (value.match(NIE_REGEX)) {
+                const inicio = value.substring(0,1);
+                var p1 = (inicio.charCodeAt(0) - 88) * 10000000;
+                
+                const numerodni = p1 + parseInt(value.replace(/[.a-zA-Z-]+/g, ""));
+                console.log(value.substring(8, 11).toLocaleUpperCase() + "  ===  " + dniletter[numerodni % 23]);
 
-        if (value.length >= 11 && value.substring(11, 13).toLocaleUpperCase() != dniletter[numerodni % 23]) {
-            itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-dni') });
-            return false;
-        }
-        itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
-        return true
-    }
-    else {
-        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-dni') });
-        return false;
+                if (value.length >= 7 && value.substring(8, 11).toLocaleUpperCase() != dniletter[numerodni % 23]) {
+                    itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-nie') });
+                    return false;
+                }
+                itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+                return true
+            }
+            else
+                itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-nie') });
+
+            break;
+        case '3':
+            console.log("Esto es un pasaporte");
+            break;
     }
     return false;
 }
 
 export const validateAll = (items, itemsHandle) => {
+    console.log("Validando todos los campos");
     Object.keys(items.fields.fields).forEach(campo => {
         if ( items.fields.fields[campo].validate !== 'undefined' &&  items.fields.fields[campo].validate == false) 
             console.log("Este campo no se valida: " + campo);
@@ -45,7 +70,7 @@ export const validateAll = (items, itemsHandle) => {
                     break;
                 case "dni":
                     console.log("dni");
-                    if (!validateDni(campo, items.item[campo], itemsHandle))
+                    if (!validateDni(items.item.tipoDoc,campo, items.item[campo], itemsHandle))
                         return false;
                 case "toggle":
                     console.log("toggle");

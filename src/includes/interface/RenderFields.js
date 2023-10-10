@@ -27,34 +27,78 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
   }
 
   const initDni = (target) => {
-    setDocuments({pos: 0, value: items.item.documento??dnipattern });
+    //setDocuments({pos: 0, value: items.item.documento??dnipattern });
+    setDocuments({pos: 0, value: "" });
     target.setSelectionRange(0, 1);
   }
 
-  const writeDni = (target, name, value) => {
-    if (value.includes("-")) {
-      const newpos = ([1,5,9].includes(documents.pos))?documents.pos+2:documents.pos+1;
-      setDocuments({pos: newpos, value:value.substr(0,documents.pos+1).toUpperCase() + dnipattern.substring(documents.pos+1, 12) })
-      target.setSelectionRange(newpos, newpos+1);
-  
-      if (documents.pos > 10) {
-        document.getElementById('nombre').focus();
-      }
-    }
-    else {
-      setDocuments({pos:-1,value:value});
-    }
+  //const writeDni = (target, name, value) => {
+  //  if (value.includes("-")) {
+  //    const newpos = ([1,5,9].includes(documents.pos))?documents.pos+2:documents.pos+1;
+  //    setDocuments({pos: newpos, value:value.substr(0,documents.pos+1).toUpperCase() + dnipattern.substring(documents.pos+1, 12) })
+  //    target.setSelectionRange(newpos, newpos+1);
+  //
+  //    if (documents.pos > 10) {
+  //      document.getElementById('nombre').focus();
+  //    }
+  //  }
+  //  else {
+  //    setDocuments({pos:-1,value:value});
+  //  }
+  //}
 
+  const writeDni = (target, name, value) => {
+    const dni_limpio = value.split(".").join("").replace("-","").toLocaleUpperCase();
+    validateDni(items.item.tipoDoc, name, dni_limpio,itemsHandle);
+    var dni_mostrado = "";
+    itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
+    dni_mostrado = dni_limpio.substr(0,2);
+    if (dni_limpio.length > 2)
+      dni_mostrado = dni_limpio.substr(0,2) + "." + dni_limpio.substr(2,3);
+
+    if (dni_limpio.length > 5)
+      dni_mostrado = dni_limpio.substr(0,2) + "." + dni_limpio.substr(2,3) + "." + dni_limpio.substr(5,3);
+
+    if (dni_limpio.length > 8)
+      dni_mostrado = dni_limpio.substr(0,2) + "." + dni_limpio.substr(2,3) + "." + dni_limpio.substr(5,3) + "-" + dni_limpio.substr(8,1);
+
+      setDocuments({pos: 1, value:dni_mostrado })
   }
 
-  //useEffect(() => {
-  //  console.log("useEffect");
-  //  const fields = Object.values(items.fields.fields);
-  //  //console.debug(fields.filter(item => item.type === "money")); //.fields.fields.filter(i => i.type == 'money'));
-  //  const ll = fields.filter(item => item.type === "money");
+  const writeNif = (target, name, value) => {
+    //const lalala = value.split(" ").join("");
+    const dni_limpio = value.split(" ").join("").split(".").join("").replace("-","").toLocaleUpperCase();
+    //debugger;
+    validateDni(items.item.tipoDoc, name, dni_limpio,itemsHandle);
+    var dni_mostrado = "";
+    itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
+    dni_mostrado = dni_limpio.substr(0,1);
 
-  //  setMoneys([...moneys, ll.map(i => ({ name: i.name, value: formatMoney(items.item[i.name]) }))]);
-  //}, [])
+    if (dni_limpio.length > 1)
+      dni_mostrado = dni_limpio.substr(0,1) + " " + dni_limpio.substr(1,1);
+
+    if (dni_limpio.length > 2) 
+      dni_mostrado =  dni_limpio.substr(0,1) + " " + dni_limpio.substr(1,1) + "." + dni_limpio.substr(2,3);
+
+    if (dni_limpio.length > 5)
+      dni_mostrado =  dni_limpio.substr(0,1) + " " + dni_limpio.substr(1,1) + "." + dni_limpio.substr(2,3) + "." + dni_limpio.substr(5,3);
+
+    if (dni_limpio.length > 8)
+      dni_mostrado =  dni_limpio.substr(0,1) + " " + dni_limpio.substr(1,1) + "." + dni_limpio.substr(2,3) + "." + dni_limpio.substr(5,3) + "-" + dni_limpio.substr(8,1);
+
+      setDocuments({pos: 1, value:dni_mostrado })
+  }
+
+  const writeDocument = (target, name, value) => {
+    switch (items.item.tipoDoc) {
+      case '1':
+        writeDni(target, name, value);
+        break;
+      case '2':
+        writeNif(target,name,value);
+        break;
+    }
+  }
 
   return (
     <>
@@ -161,12 +205,13 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                           key={it}
                           placeholder='00.000.000-A'
                           value={documents.value}
-                          onFocus={e => initDni(e.target)}
+                          //onFocus={e => initDni(e.target)}
                           onBlur={() => {}  }
                           onChange={e => {
-                            writeDni(e.target, e.target.name, e.target.value);
-                            validateDni(e.target.name, e.target.value,itemsHandle);
-                            itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
+                            writeDocument(e.target, e.target.name, e.target.value);
+                            //writeDni(e.target, e.target.name, e.target.value);
+                            //validateDni(items.item.tipoDoc, e.target.name, e.target.value,itemsHandle);
+                            //itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
                           }}>
                         </ClayInput>
 
