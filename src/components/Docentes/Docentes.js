@@ -181,7 +181,7 @@ const Docentes = () => {
     },[items.load]);
 
     useEffect( ()=>{
-        if (items.item.id != 'undefined' && items.item.id > 0) 
+        if (items.item.id != 'undefined' && items.item.id > 0)
             changeProvince(items.item.provinciaId);
         
     },[items.item.provinciaId]);

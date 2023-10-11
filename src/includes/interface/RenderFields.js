@@ -12,90 +12,80 @@ import { getDays, getMonths } from './DatesLang';
 const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
   const [act2, setAct2] = useState(0);
-  const dnipattern = "--.---.--- X";
 
-  const [documents, setDocuments] = useState({pos:0,value: items.item.documento??dnipattern})
+  const writeDni = (name, value) => {
+    const dni_limpio = value.split(".").join("").replace("-", "").toLocaleUpperCase();
+    validateDni(items.item.tipoDoc, name, dni_limpio,itemsHandle);
+    itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
+  }
 
-    const formatMoney = (value) => {
+  const formatDocument = (tipoDoc, value) => {
+    if (tipoDoc == 1)
+      return formatDni(value);
+    if (tipoDoc == 2)
+      return formatNif(value);
+  }
+
+  const formatDni = (dni_limpio) => {
+    if (dni_limpio == undefined || dni_limpio.length == 0)
+      return "";
+
+    var dni_mostrado = dni_limpio.substr(0, 2);
+    if (dni_limpio.length > 2)
+      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3);
+    if (dni_limpio.length > 5)
+      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3);
+    if (dni_limpio.length > 8)
+      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3) + "-" + dni_limpio.substr(8, 1);
+
+    return dni_mostrado;
+  }
+
+  const formatMoney = (value) => {
     var temp = "";
 
-    temp = (typeof(value) === 'number')?value.toString():value;
-    
+    temp = (typeof (value) === 'number') ? value.toString() : value;
+
     var input = temp.replace(/[\D\s\._\-]+/g, "");
     input = input ? parseInt(input, 10) : 0;
     return (input.toLocaleString("es-ES"));
   }
 
-  const initDni = (target) => {
-    //setDocuments({pos: 0, value: items.item.documento??dnipattern });
-    setDocuments({pos: 0, value: "" });
-    target.setSelectionRange(0, 1);
+
+  const writeNif = (name, value) => {
+    const dni_limpio = value.split(" ").join("").split(".").join("").replace("-", "").toLocaleUpperCase();
+    validateDni(items.item.tipoDoc, name, dni_limpio,itemsHandle);
+    itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
   }
 
-  //const writeDni = (target, name, value) => {
-  //  if (value.includes("-")) {
-  //    const newpos = ([1,5,9].includes(documents.pos))?documents.pos+2:documents.pos+1;
-  //    setDocuments({pos: newpos, value:value.substr(0,documents.pos+1).toUpperCase() + dnipattern.substring(documents.pos+1, 12) })
-  //    target.setSelectionRange(newpos, newpos+1);
-  //
-  //    if (documents.pos > 10) {
-  //      document.getElementById('nombre').focus();
-  //    }
-  //  }
-  //  else {
-  //    setDocuments({pos:-1,value:value});
-  //  }
-  //}
-
-  const writeDni = (target, name, value) => {
-    const dni_limpio = value.split(".").join("").replace("-","").toLocaleUpperCase();
-    validateDni(items.item.tipoDoc, name, dni_limpio,itemsHandle);
-    var dni_mostrado = "";
-    itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
-    dni_mostrado = dni_limpio.substr(0,2);
-    if (dni_limpio.length > 2)
-      dni_mostrado = dni_limpio.substr(0,2) + "." + dni_limpio.substr(2,3);
-
-    if (dni_limpio.length > 5)
-      dni_mostrado = dni_limpio.substr(0,2) + "." + dni_limpio.substr(2,3) + "." + dni_limpio.substr(5,3);
-
-    if (dni_limpio.length > 8)
-      dni_mostrado = dni_limpio.substr(0,2) + "." + dni_limpio.substr(2,3) + "." + dni_limpio.substr(5,3) + "-" + dni_limpio.substr(8,1);
-
-      setDocuments({pos: 1, value:dni_mostrado })
-  }
-
-  const writeNif = (target, name, value) => {
-    //const lalala = value.split(" ").join("");
-    const dni_limpio = value.split(" ").join("").split(".").join("").replace("-","").toLocaleUpperCase();
-    //debugger;
-    validateDni(items.item.tipoDoc, name, dni_limpio,itemsHandle);
-    var dni_mostrado = "";
-    itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
-    dni_mostrado = dni_limpio.substr(0,1);
+  const formatNif = (dni_limpio) => {
+    if (dni_limpio == undefined || dni_limpio.length == 0)
+      return "";
+    
+    var dni_mostrado = dni_limpio.substr(0, 1);
 
     if (dni_limpio.length > 1)
-      dni_mostrado = dni_limpio.substr(0,1) + " " + dni_limpio.substr(1,1);
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1);
 
-    if (dni_limpio.length > 2) 
-      dni_mostrado =  dni_limpio.substr(0,1) + " " + dni_limpio.substr(1,1) + "." + dni_limpio.substr(2,3);
+    if (dni_limpio.length > 2)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3);
 
     if (dni_limpio.length > 5)
-      dni_mostrado =  dni_limpio.substr(0,1) + " " + dni_limpio.substr(1,1) + "." + dni_limpio.substr(2,3) + "." + dni_limpio.substr(5,3);
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3);
 
     if (dni_limpio.length > 8)
-      dni_mostrado =  dni_limpio.substr(0,1) + " " + dni_limpio.substr(1,1) + "." + dni_limpio.substr(2,3) + "." + dni_limpio.substr(5,3) + "-" + dni_limpio.substr(8,1);
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3) + "-" + dni_limpio.substr(8, 1);
 
-      setDocuments({pos: 1, value:dni_mostrado })
+    return dni_mostrado
   }
 
   const writeDocument = (target, name, value) => {
     switch (items.item.tipoDoc) {
       case '1':
-        writeDni(target, name, value);
+        writeDni(name, value);
         break;
       case '2':
-        writeNif(target,name,value);
+        writeNif(name, value);
         break;
     }
   }
@@ -124,7 +114,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                           key={it}
                           value={items.item[it]}
                           onChange={e => {
-                            validate(e.target.name, e.target.value,items,itemsHandle);
+                            validate(e.target.name, e.target.value, items, itemsHandle);
                             itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
                           }}>
                         </ClayInput>
@@ -140,7 +130,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                           key={it}
                           value={items.item[it]}
                           onChange={e => {
-                            validate(e.target.name, e.target.value,items,itemsHandle);
+                            validate(e.target.name, e.target.value, items, itemsHandle);
                             itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
                           }}>
                         </ClayInput>
@@ -204,20 +194,14 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                           name={it}
                           key={it}
                           placeholder='00.000.000-A'
-                          value={documents.value}
+                          value={ formatDocument(items.item.tipoDoc, items.item[it]) }
                           //onFocus={e => initDni(e.target)}
-                          onBlur={() => {}  }
-                          onChange={e => {
-                            writeDocument(e.target, e.target.name, e.target.value);
-                            //writeDni(e.target, e.target.name, e.target.value);
-                            //validateDni(items.item.tipoDoc, e.target.name, e.target.value,itemsHandle);
-                            //itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
-                          }}>
+                          onBlur={() => { }}
+                          onChange={e => writeDocument(e.target, e.target.name, e.target.value)}>
                         </ClayInput>
 
                       </>
                     }
-
 
                     {(items.fields.fields[it].type === 'multitext') &&
                       <>
