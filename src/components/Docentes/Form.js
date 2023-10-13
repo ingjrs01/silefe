@@ -9,7 +9,18 @@ export const form = {
             name: "id",
             value:"lalala",
             placeholder:"Identifier",
-            conditions: ["number"]
+            conditions: ["number"],
+            validate: false,
+        },
+        documento: {
+            key:5,
+            type: "dni",
+            label: "Documento",
+            name: "documento",
+            value:"",
+            placeholder:"",
+            conditions: ["text"],
+            className: "col-2",
         },
         nombre: {
             key:2,
@@ -40,15 +51,17 @@ export const form = {
             conditions: ["text"],
             className: "col-3"
         },
-        documento: {
-            key:5,
-            type: "dni",
-            label: "Documento",
-            name: "documento",
+        fechaNacimiento: {
+            key:12,
+            type: "date",
+            label: Liferay.Language.get('FechaNacimiento'),
+            name: "fechaNacimiento",
             value:"",
-            placeholder:"",
-            conditions: ["text"],
-            className: "col-2",
+            yearmin: 110,
+            yearmax: 15,
+            placeholder:Liferay.Language.get('YYYY-MM-DD'),
+            conditions:['required'],
+            className: 'col-3'
         },
         cpostal: {
             key:6,
@@ -57,7 +70,8 @@ export const form = {
             name: "cpostal",
             value:"",
             placeholder:"",
-            conditions: ["text"]
+            conditions: ["text"],
+            validate: false,
         },
         nombreVia: {
             key:7,
@@ -76,7 +90,7 @@ export const form = {
             name: "numero",
             value:"",
             placeholder:"",
-            conditions: ["text"],
+            conditions: [],
             className: "col-2"
         },
         piso: {
@@ -86,7 +100,7 @@ export const form = {
             name: "piso",
             value:"",
             placeholder:"",
-            conditions: ["text"],
+            conditions: [],
             className: "col-2",
         },
         tipoDoc: {
@@ -107,18 +121,6 @@ export const form = {
             change: ()=>{console.log("cambia sexo");},
             className: 'col-3'
             //conditions: []
-        },
-        fechaNacimiento: {
-            key:12,
-            type: "date",
-            label: Liferay.Language.get('FechaNacimiento'),
-            name: "fechaNacimiento",
-            value:"",
-            yearmin: 110,
-            yearmax: 0,
-            placeholder:Liferay.Language.get('YYYY-MM-DD'),
-            conditions:[],
-            className: 'col-3'
         },
         provinciaId: {
             key:13,

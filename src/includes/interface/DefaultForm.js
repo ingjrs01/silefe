@@ -19,8 +19,13 @@ const DefaultForm = ({ itemsHandle, save, items }) => {
           <ClayButton onClick={e => itemsHandle({ type: ITEMS_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
         </div>
         <div className="btn-group-item">
-          <ClayButton onClick={e => {
-            validateAll(items, itemsHandle) && save()
+          <ClayButton onClick={() => {
+            if (validateAll(items, itemsHandle)) {
+              console.log("todo validadod");
+              save();
+            }
+            else
+              console.log("no se pasan los controles");
           }}
             displayType="primary">{Liferay.Language.get('Guardar')}
           </ClayButton>
