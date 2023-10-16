@@ -63,26 +63,6 @@ export const form = {
             conditions:['required'],
             className: 'col-3'
         },
-        cpostal: {
-            key:6,
-            type: "text",
-            label: "Código Postal",
-            name: "cpostal",
-            value:"",
-            placeholder:"",
-            conditions: ["text"],
-            validate: false,
-        },
-        nombreVia: {
-            key:7,
-            type: "text",
-            label: "Via",
-            name: "nombreVia",
-            value:"",
-            placeholder:"",
-            conditions: ["text"],
-            className: "col-4",
-        },
         numero: {
             key:8,
             type: "text",
@@ -150,7 +130,8 @@ export const form = {
             name: "Localidad",
             value:"localidad",
             placeholder: Liferay.Language.get('Localidad'),
-            conditions: ["text"]
+            conditions: ["text"],
+            validate: false,
         },
         tipoviaId: {
             key:16,
@@ -162,6 +143,26 @@ export const form = {
             enabled:true,
             options: [],
             conditions: []
+        },
+        cpostal: {
+            key:6,
+            type: "text",
+            label: "Código Postal",
+            name: "cpostal",
+            value:"",
+            placeholder:"",
+            conditions: ["text"],
+            validate: false,
+        },
+        nombreVia: {
+            key:7,
+            type: "text",
+            label: "Via",
+            name: "nombreVia",
+            value:"",
+            placeholder:"",
+            conditions: ["text"],
+            className: "col-4",
         },
         email: {
             key: 17,

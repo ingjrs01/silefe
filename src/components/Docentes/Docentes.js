@@ -31,29 +31,29 @@ const Docentes = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
     }
 
-//    const processCsv = () => {
-//        if (file) {
-//            const reader = new FileReader();
-//            reader.onload = async ({ target }) => {
-//                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-//                const parsedData = csv?.data;
-//                let end = '/silefe.cnae/add-multiple';
-//                let ttmp = { cnaes:parsedData,userId:getUserId()};
-//                batchAPI(end,ttmp,referer).then( res2 => {
-//                    if (res2.ok) {
-//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
-//                        fetchData();
-//                    }
-//                    else
-//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-//                });
-//            };
-//            reader.readAsText(file);
-//        }
-//        else {
-//            console.log("fichero no cargado")
-//        }
-//    }
+    const processCsv = () => {
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async ({ target }) => {
+                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+                const parsedData = csv?.data;
+                let end = '/silefe.cnae/add-multiple';
+                let ttmp = { cnaes:parsedData,userId:getUserId()};
+                batchAPI(end,ttmp,referer).then( res2 => {
+                    if (res2.ok) {
+                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
+                        fetchData();
+                    }
+                    else
+                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+                });
+            };
+            reader.readAsText(file);
+        }
+        else {
+            console.log("fichero no cargado")
+        }
+    }
 
     const handleSave = async () => {
         const data = {
@@ -181,8 +181,9 @@ const Docentes = () => {
     },[items.load]);
 
     useEffect( ()=>{
-        if (items.item.id != 'undefined' && items.item.id > 0)
+        if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0) {
             changeProvince(items.item.provinciaId);
+        }
         
     },[items.item.provinciaId]);
 

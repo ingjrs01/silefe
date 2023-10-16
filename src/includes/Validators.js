@@ -129,6 +129,17 @@ export const validateDate = (name, value, items, itemsHandle) => {
     return true;
 }
 
+export const validaRadio = (campo,items,itemsHandle) => {
+    if (items.item[campo] == null) {
+        console.log("Error en el radio button");
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: campo, value: Liferay.Language.get('debe-elegir-una-opcion') });
+        return false;
+    }
+
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: campo });
+    return true;
+}
+
 export const validateAll = (items, itemsHandle) => {
     var result = true;
     for (var campo in items.fields.fields) {
@@ -140,7 +151,7 @@ export const validateAll = (items, itemsHandle) => {
                     console.log("text");
                     result = validate(campo, items.item[campo],items,itemsHandle)
                     if (result == false) {
-                        console.log("el campo no valida");
+                        console.log("El campo " + campo + " no valida");
                         return false;
                     }
                     break;
@@ -160,6 +171,10 @@ export const validateAll = (items, itemsHandle) => {
                     result = validateDate(campo, items.item[campo],items,itemsHandle);
                     if (!result) return false;
                     break;
+                case "radio": 
+                    console.log("esto es un radio button");
+                    result = validaRadio(campo,items,itemsHandle);
+                    if (!result) return false;
                 case "toggle":
                     console.log("toggle");
                     break;
