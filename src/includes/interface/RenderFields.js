@@ -42,7 +42,10 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
   }
 
   const formatMoney = (value) => {
+    if (value == null)
+      return "";
     var temp = "";
+    //debugger;
 
     temp = (typeof (value) === 'number') ? value.toString() : value;
 
