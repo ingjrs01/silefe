@@ -79,7 +79,7 @@ export const form = {
         },
         vacantes: {
             key:8,
-            type: "text",
+            type: "number",
             label: Liferay.Language.get('Vacantes'),
             value: "0",
             name: "vacantes",
@@ -93,8 +93,8 @@ export const form = {
             label: Liferay.Language.get('Incorporacion'),
             name: "fechaIncorporacion",
             value:"yyyy-mm-dd",
-            yearmin: 5,
-            yearmax: 5,
+            //yearmin: 5,
+            //yearmax: 5,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             conditions:[],
             className: 'col-3',
@@ -111,7 +111,7 @@ export const form = {
         },
         duracionMeses: {
             key:11,
-            type: "text",
+            type: "number",
             label: Liferay.Language.get('Duracion'),
             name: "duracionMeses",
             placeholder: "0",
@@ -128,21 +128,22 @@ export const form = {
             change: ()=>{console.log("cambia el select");},
             className: 'col-3'
         },
-        infoJornada: {
-            key: 13,
-            type: "text",
-            label: Liferay.Language.get('InfoJornada'),
-            name: "infoJornada",
-            placeholder: "",
-            conditions:["text"]
-        },
+        //infoJornada: {
+        //    key: 13,
+        //    type: "text",
+        //    label: Liferay.Language.get('InfoJornada'),
+        //    name: "infoJornada",
+        //    placeholder: "",
+        //    conditions:["text"]
+        //},
         infoColectivos: {
             key: 14,
             type: "text",
             label: Liferay.Language.get('InfoColectivos'),
-            name: "infoJornada",
+            name: "infoColectivos",
             placeholder: "",
-            conditions:["text"]
+            conditions:["text"],
+            validate: false,
         },
         tareas: {
             key: 15,

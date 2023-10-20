@@ -262,8 +262,6 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                         spritemap={spritemap}
                         onSelectedLocaleChange={setSelectedLocale}
                         onTranslationsChange={evt => {
-                          console.log("changiando");
-                          console.debug(items);
                           validateLocalized(it, evt, items, itemsHandle);
                           itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: evt });
                         }
