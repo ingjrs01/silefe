@@ -1,18 +1,18 @@
-import React, {useState,useEffect,useReducer, useRef} from 'react';
-import DefaultForm from '../../includes/interface/DefaultForm';
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
-import {useModal} from '@clayui/modal';
-import {getUserId, url_referer} from '../../includes/LiferayFunctions';
-import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
-import {ITEMS_ACTIONS,red_items, initialState} from '../../includes/reducers/items.reducer';
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
-import { Errors } from '../../includes/Errors';
-import {form as formulario} from './Form';
+import { useModal } from '@clayui/modal';
 import Papa from "papaparse";
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { Errors } from '../../includes/Errors';
+import { getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
+import DefaultForm from '../../includes/interface/DefaultForm';
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import { form as formulario } from './Form';
 
 const Colectivos = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState); 
@@ -64,7 +64,8 @@ const Colectivos = () => {
     const handleSave = async () => {
         const postdata = {
             colectivoId: items.item.id,
-            descripcion: items.item.descripcion,
+            //descripcion: items.item.descripcion,
+            obj: items.item,
             userId:      getUserId(),
         }
 
