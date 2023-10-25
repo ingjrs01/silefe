@@ -1,18 +1,18 @@
-import React,{useEffect,useReducer,useRef,useState} from "react";
-import DefaultForm from '../../includes/interface/DefaultForm';
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
-import {useModal} from '@clayui/modal';
-import { getUserId, url_referer} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
+import { useModal } from '@clayui/modal';
 import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Errors } from '../../includes/Errors';
-import { form as formulario } from "./Form";
+import { getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import DefaultForm from '../../includes/interface/DefaultForm';
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import { form as formulario } from "./Form";
 
 const Convocatorias = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -69,7 +69,7 @@ const Convocatorias = () => {
     const handleSave = async () => {
         const data = {
             convocatoriaId:       items.item.id,
-            descripcion: items.item.descripcion,
+            obj: items.item,
             userId:      getUserId(),
         }
         let endpoint = '/silefe.convocatoria/save-convocatoria';
