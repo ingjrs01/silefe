@@ -132,6 +132,8 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                           name={it}
                           key={it}
                           value={items.item[it]}
+                          min={ items.fields.fields[it].min != 'undefined' ? items.fields.fields[it].min : null}
+                          max={ items.fields.fields[it].max != 'undefined' ? items.fields.fields[it].max : null}
                           onChange={e => {
                             validate(e.target.name, e.target.value, items, itemsHandle);
                             itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });

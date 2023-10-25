@@ -4,6 +4,7 @@ import ClayForm, { ClaySelect } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
 import { locales, spritemap } from '../../includes/LiferayFunctions';
+import { validateAll } from '../../includes/Validators';
 import { ITEMS_ACTIONS } from "../../includes/reducers/items.reducer";
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 
@@ -15,7 +16,7 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,
             <ClayCard>
                 <ClayCard.Body>
                     <ClayCard.Description displayType="title">
-                        {"Añadiendo titulación"}
+                        {Liferay.Language.get("Añadiendo titulación")}
                     </ClayCard.Description>
                     <ClayCard.Description truncate={false} displayType="text">
                     <ClayForm >
@@ -30,9 +31,7 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { 
-                                  titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value:evt.target.value});
-                                 }}
+                                onChange={evt => titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value:evt.target.value}) }
                                 value={redTitulaciones.titulacion.titulacionTipoId} >
                                   {
                                     redTitulaciones.tipoOptions.map( option => { return (
@@ -52,13 +51,7 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { 
-                                  //titulacionHandler({
-                                  //  type:TITULACIONES_ACTIONS.SET_TITULACION,
-                                  //  titulacion: {...redTitulaciones.titulacion,titulacionNivelId: evt.target.value}
-                                  //});
-                                  titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value:evt.target.value})
-                                }}
+                                onChange={evt => titulacionHandler({type: TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value:evt.target.value}) }
                                 value={redTitulaciones.titulacion.titulacionNivelId} >
                                   {
                                     redTitulaciones.nivelOptions.map( option => { return (
@@ -78,10 +71,7 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,
                                 name={"it"}
                                 key={"it"}
                                 disabled={ false }
-                                onChange={evt => { 
-                                  titulacionHandler({ type:TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA,value: evt.target.value}) 
-                                }}
-                                  
+                                onChange={evt => titulacionHandler({ type:TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA,value: evt.target.value}) }                                  
                                 value={redTitulaciones.titulacion.titulacionFamiliaId} >
                                 {
                                   redTitulaciones.familiaOptions.map( option => { return (
@@ -129,7 +119,7 @@ export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,
                             </ClayButton>
                         </div>
                         <div className="btn-group-item">
-                            <ClayButton onClick={e =>  save() } 
+                            <ClayButton onClick={ () => {validateAll && save() }} 
                               displayType="primary">{Liferay.Language.get('Guardar')}
                             </ClayButton>
                         </div>

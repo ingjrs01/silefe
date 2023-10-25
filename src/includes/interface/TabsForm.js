@@ -2,7 +2,7 @@ import ClayButton from '@clayui/button';
 import ClayForm from '@clayui/form';
 import ClayTabs from '@clayui/tabs';
 import React from "react";
-import { validateAll } from '../Validators';
+//import { validateAll } from '../Validators';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
@@ -46,7 +46,7 @@ const TabsForm = ({ itemsHandle, save, items, plugin }) => {
           </div>
           <div className="btn-group-item">
             <ClayButton aria-label="Save"
-              onClick={e => { validateAll(items,itemsHandle) && save() }}
+              onClick={e => { /*validateAll(items,itemsHandle) && */save() }}
               displayType="primary">{Liferay.Language.get('Guardar')}
             </ClayButton>
           </div>

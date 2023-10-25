@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useReducer, useRef } from 'react';
-import Table from '../../includes/interface/Table';
-import { TitulacionForm } from './TitulacionForm';
-import Menu from '../Menu';
 import { useModal } from '@clayui/modal';
-import { getUserId, getLanguageId, url_referer } from '../../includes/LiferayFunctions';
-import { ITEMS_ACTIONS, red_items, initialState } from '../../includes/reducers/items.reducer';
-import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
-import { Errors } from '../../includes/Errors';
-import {form as f2} from './Form';
 import Papa from "papaparse";
-import {reducerTitulacion, TITULACIONES_ACTIONS} from '../../includes/reducers/titulaciones.reducer';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { Errors } from '../../includes/Errors';
+import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { TITULACIONES_ACTIONS, reducerTitulacion } from '../../includes/reducers/titulaciones.reducer';
+import Menu from '../Menu';
+import { form as f2 } from './Form';
+import { TitulacionForm } from './TitulacionForm';
 
 const Titulaciones = () => {
     const [items, itemsHandle]             = useReducer(red_items, initialState);
@@ -128,7 +128,7 @@ const Titulaciones = () => {
         console.log("Cargando los dados de reducer desde titulaciones");
         titulacionHandler({type:TITULACIONES_ACTIONS.START});
         const lang = getLanguageId();
-        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: lang }, "http://localhost:8080/titulaciones").then(response => {
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: lang }, referer).then(response => {
             console.log("cargando los tipos");
             titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
         });
@@ -190,19 +190,19 @@ const Titulaciones = () => {
     }
 
     const handleSave = async () => {
-        const postdata = {
-            titulacionId: items.item.id,
-            codigo: items.item.codigo,
-            descripcion: items.item.descripcion,
-            titulacionFamiliaId: redTitulaciones.titulacion.titulacionFamiliaId,
-            userId: getUserId()
-        }
-
+        let obj = { 
+            titulacionId: items.item.titulacionId, 
+            obj: {
+                ...items.item,
+                titulacionFamiliaId: redTitulaciones.titulacion.titulacionFamiliaId
+            }, 
+            userId: getUserId() 
+        };
         let endpoint = "/silefe.titulacion/save-titulacion";
         if (items.status === 'new')
             endpoint = "/silefe.titulacion/add-titulacion";
-        
-        let {status,error} = await saveAPI(endpoint,postdata,referer);
+
+        let {status,error} = await saveAPI(endpoint,obj,referer);
         if (status) {
             await fetchData();
             await setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
@@ -235,7 +235,6 @@ const Titulaciones = () => {
                 loadCsv={loadCsv}
                 items={items}
                 beforeEdit={beforeEdit}
-                items={items}
                 formulario={form}
             />
             { (items.status === 'load') && 
