@@ -31,10 +31,10 @@ export const form = {
         }
     },
     rows: [
-        {
-            key:9,
-            cols: ['id']
-        },
+        //{
+        //    key:9,
+        //    cols: ['id']
+        //},
         {
             key:8,
             cols: ['codigo']
