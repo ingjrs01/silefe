@@ -1,5 +1,5 @@
 export const form = {
-    title: Liferay.Language.get('Titulaciones_nivel'),
+    title: Liferay.Language.get('Titulaciones_Familia'),
     languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
@@ -34,7 +34,8 @@ export const form = {
             type: "text",
             label: Liferay.Language.get("Nivel"), 
             name: "nivel", 
-            value:"lalala", 
+            value:"lalala",
+            validate: false, 
         },
         tipo: {
             key:5,
@@ -42,6 +43,7 @@ export const form = {
             label: Liferay.Language.get("Tipo"), 
             name: "tipo", 
             value:"lalala", 
+            validate: false,
         },
 },
     rows: [

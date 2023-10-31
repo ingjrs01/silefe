@@ -44,10 +44,6 @@ export const form = {
     },
     rows: [
         {
-            key:9,
-            cols: ['id']
-        },
-        {
             key:7,
             cols: ['provinciaId','nombre']
         },

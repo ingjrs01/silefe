@@ -1,4 +1,4 @@
-import { url_api, getAuthToken } from "./LiferayFunctions";
+import { getAuthToken, url_api } from "./LiferayFunctions";
 
 export const fetchAPIData = async (endpoint, postdata, referer) => {
 
@@ -142,7 +142,6 @@ export const saveAPI = async (endpoint,postdata,referer) => {
 }
 
 export const  saveFileAPI = async (endpoint, file, referer) => {
-    debugger;
     console.log("saveFileAPI");
     //fetch(endpoint, {
     //  method: 'POST',

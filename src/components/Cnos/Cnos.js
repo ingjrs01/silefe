@@ -1,18 +1,17 @@
-import React,{useEffect,useReducer,useRef,useState} from "react";
-import DefaultForm from '../../includes/interface/DefaultForm';
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
-import {useModal} from '@clayui/modal';
-import { getUserId, url_referer} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import Papa from "papaparse";
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
+import { useModal } from '@clayui/modal';
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Errors } from '../../includes/Errors';
-import { form as formulario} from './Form';
+import { getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import DefaultForm from '../../includes/interface/DefaultForm';
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import { form as formulario } from './Form';
 
 const Cnos = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -40,37 +39,36 @@ const Cnos = () => {
     }
 
     const processCsv = () => {
-        if (file) {
-            const reader = new FileReader();
-         
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                const parsedData = csv?.data;                                
-                let end = '/silefe.cno/add-multiple';
-                let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+        //if (file) {
+        //    const reader = new FileReader();
+        // 
+        //    reader.onload = async ({ target }) => {
+        //        const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+        //        const parsedData = csv?.data;                                
+        //        let end = '/silefe.cno/add-multiple';
+        //        let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
 
-                batchAPI(end,ttmp,referer).then(res2 => {
-                    if (res2.ok) {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);                        
-                        fetchData();
-                    }
-                    else {
-                        setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-                    }                    
-                });
-            };
-            reader.readAsText(file);
-        }
-        else {
-            console.log("fichero no cargado")
-        }
+        //        batchAPI(end,ttmp,referer).then(res2 => {
+        //            if (res2.ok) {
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);                        
+        //                fetchData();
+        //            }
+        //            else {
+        //                setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+        //            }                    
+        //        });
+        //    };
+        //    reader.readAsText(file);
+        //}
+        //else {
+        //    console.log("fichero no cargado")
+        //}
     }
 
     const handleSave = async () => {
         const data = {
             cnoId:       items.item.id,
-            descripcion: items.item.descripcion,
-            userId:      getUserId(),
+            obj: {...items.item, userId: getUserId()},
         }
         let endpoint = '/silefe.cno/save-cno';
         if (items.status === 'new')

@@ -1,18 +1,17 @@
-import React, {useState,useEffect,useReducer, useRef} from 'react';
-import DefaultForm from '../../includes/interface/DefaultForm';
-import Menu from '../Menu';
-import Table from '../../includes/interface/Table';
-import {useModal} from '@clayui/modal';
-import {getUserId, getLanguageId, url_referer} from '../../includes/LiferayFunctions';
-import {batchAPI, deleteAPI, fetchAPIData, saveAPI} from '../../includes/apifunctions.js';
-import {ITEMS_ACTIONS,red_items, initialState} from '../../includes/reducers/items.reducer';
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
+import { useModal } from '@clayui/modal';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { Errors } from '../../includes/Errors';
-import { form as formulario} from './Form';
-import Papa from "papaparse";
+import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
+import DefaultForm from '../../includes/interface/DefaultForm';
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import { form as formulario } from './Form';
 
 const TitulacionesNivel = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState); 
@@ -30,38 +29,42 @@ const TitulacionesNivel = () => {
     }
 
     const processCsv = () => {
-        if (file) {
-            const reader = new FileReader();
-         
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                const parsedData = csv?.data;                                
-                let end = '/silefe.titulacionnivel/add-multiple';
-                let ttmp = {titulacionestipo:parsedData,userId:getUserId()};
-
-                batchAPI(end,ttmp,referer).then(res => {
-                    if (res2.ok) {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
-                        fetchData();
-                    }
-                    else {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-                    }                    
-                });
-            };
-            reader.readAsText(file);
-        }
-        else {
-            console.log("fichero no cargado")
-        }
+        console.log("procesCsv");
+        //if (file) {
+        //    const reader = new FileReader();
+        // 
+        //    reader.onload = async ({ target }) => {
+        //        const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+        //        const parsedData = csv?.data;                                
+        //        let end = '/silefe.titulacionnivel/add-multiple';
+        //        let ttmp = {titulacionestipo:parsedData,userId:getUserId()};
+//
+        //        batchAPI(end,ttmp,referer).then(res => {
+        //            if (res2.ok) {
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
+        //                fetchData();
+        //            }
+        //            else {
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+        //            }                    
+        //        });
+        //    };
+        //    reader.readAsText(file);
+        //}
+        //else {
+        //    console.log("fichero no cargado")
+        //}
     }
 
     const handleSave = async () => {
         const postdata = {
             id:               items.item.id,
-            descripcion:      items.item.descripcion,
-            titulacionTipoId: items.item.titulacionTipoId,
-            userId:           getUserId(),
+            obj: {
+                ...items.item,
+                userId:           getUserId(),
+            },
+            //descripcion:      items.item.descripcion,
+            //titulacionTipoId: items.item.titulacionTipoId,
         }
 
         let endpoint = '/silefe.titulacionnivel/save-titulacion-nivel';

@@ -23,10 +23,6 @@ export const form = {
     },
     rows: [
         {
-            key:9,
-            cols: ['id']
-        },
-        {
             key:7,
             cols: ['descripcion']
         },
@@ -42,5 +38,6 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
-    }    
+    },
+    searchFields: ['descripcion'],
 };

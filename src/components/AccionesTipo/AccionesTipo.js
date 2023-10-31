@@ -55,8 +55,10 @@ const AccionesTipo = () => {
     const handleSave = async () => {
         const data = {
             id:  items.item.id,
-            obj: items.item,
-            userId:      getUserId()
+            obj: {
+                ...items.item,
+                userId: getUserId(),
+            },
         }
         let endpoint = '/silefe.acciontipo/save-accion-tipo';
         if (items.status === 'new')

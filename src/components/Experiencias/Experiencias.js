@@ -1,17 +1,17 @@
-import React, {useState,useEffect, useReducer, useRef} from 'react';
-import DefaultForm from '../../includes/interface/DefaultForm';
-import Table from '../../includes/interface/Table';
-import Menu from '../Menu';
-import {useModal} from '@clayui/modal';
-import {getUserId, url_referer} from '../../includes/LiferayFunctions';
-import {red_items,ITEMS_ACTIONS, initialState} from '../../includes/reducers/items.reducer';
-import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
+import { useModal } from '@clayui/modal';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { Errors } from '../../includes/Errors';
-import { form as formulario } from './Form';
+import { getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions';
+import DefaultForm from '../../includes/interface/DefaultForm';
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import { form as formulario } from './Form';
 
 const Experiencias = () => {
     const [items, itemsHandle]           = useReducer(red_items, initialState);
@@ -30,8 +30,10 @@ const Experiencias = () => {
     const handleSave = async () => {
         const postdata = {
             id:          items.item.id,
-            descripcion: items.item.descripcion,
-            userId:      getUserId()
+            obj: {
+                ...items.item,
+                userId: getUserId(),
+            },
         }
 
         let endpoint =  "/silefe.experiencia/save-experiencia";

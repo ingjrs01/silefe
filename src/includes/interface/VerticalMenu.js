@@ -16,30 +16,121 @@ export const VerticalMenu = () => {
               label: "Home"
             },
             {
-              href: "#2",
-              label: "About"
+              initialExpanded: false,
+              items: [
+                {
+                  active: false,
+                  label: "Tipo",                  
+                  onClick: () => navigate('/accionestipo')
+                },
+                {
+                  active: false,
+                  label: "Formación",                  
+                  onClick: () => navigate('/accionestipoformacion')
+                },
+              ],
+              label: "Acciones"
             },
             {
-              href: "#3",
-              label: "Contact"
+              initialExpanded: false,
+              items: [
+                {
+                  active: false,
+                  label: "Provincias",                  
+                  onClick: () => navigate('/provincias')
+                },
+                {
+                  active: false,
+                  label: "Municipios",                  
+                  onClick: () => navigate('/localidades')
+                },
+                {
+                  active: false,
+                  label: "Tipos Vía",                  
+                  onClick: () => navigate('/tiposvia')
+                },                
+                {
+                  active: false,
+                  label: "Cofinanciadas",
+                  onClick: () => navigate('/cofinanciadas')
+                },                
+              ],
+              label: "Sitios"
+            },
+            {
+              initialExpanded: false,
+              items: [
+                {
+                  active: false,
+                  label: "Cnae's",
+                  onClick: () => navigate('/cnaes')
+                },
+                {
+                  active: false,
+                  label: "Cno's",                  
+                  onClick: () => navigate('/cnos')
+                },
+                {
+                  active: false,
+                  label: "Rangos Salariales",                  
+                  onClick: () => navigate('/salarios')
+                },
+                {
+                  active: false,
+                  label: "Motivos de Baja",                  
+                  onClick: () => navigate('/mbaja')
+                },
+                {
+                  active: false,
+                  label: "Horarios",                  
+                  onClick: () => navigate('/horarios')
+                },                
+                {
+                  active: false,
+                  label: "Carnets",                  
+                  onClick: () => navigate('/carnets')
+                },
+                {
+                  active: false,
+                  label: "Tipos Contrato",                  
+                  onClick: () => navigate('/tipocontrato')
+                },
+                {
+                  active: false,
+                  label: "Experiencias",
+                  onClick: () => navigate('/experiencias')
+                },
+                {
+                  active: false,
+                  label: "Prestaciones",
+                  onClick: () => navigate('/prestaciones')
+                },
+
+              ],
+              label: "Personal"
             },
             {
               initialExpanded: true,
               items: [
                 {
-                  active: true,
-                  //href: "#5",
-                  label: "Cinco 3",
-                  route: "/proyectos",
-                  onClick: () => {console.log("soy click"),navigate('/proyectos')}
+                  active: false,
+                  label: "Tipo",                  
+                  onClick: () => navigate('/tittipo')
                 },
                 {
-                  href: "#6",
-                  label: "Six"
-                }
+                  active: false,
+                  label: "Nivel",                  
+                  onClick: () => navigate('/titnivel')
+                },
+                {
+                  active: false,
+                  label: "Familias",                  
+                  onClick: () => navigate('/titulacionesf')
+                },                
               ],
-              label: "Projects"
+              label: "Titulaciones"
             },
+
           ]}
           large={false}
           spritemap={spritemap}

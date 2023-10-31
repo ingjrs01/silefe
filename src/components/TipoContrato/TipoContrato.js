@@ -22,7 +22,6 @@ const TipoContrato = () => {
 
     const referer = `${url_referer}/tipocontrato`;
     const form = formulario;
-    debugger;
 
     useEffect(()=>{
 		if (!isInitialized.current) {

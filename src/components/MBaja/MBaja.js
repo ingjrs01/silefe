@@ -1,18 +1,17 @@
-import React, {useState,useEffect, useReducer, useRef} from "react";
-import DefaultForm from '../../includes/interface/DefaultForm';
-import Table from '../../includes/interface/Table';
-import Menu from '../Menu';
-import {useModal} from '@clayui/modal';
-import {getUserId, url_referer} from '../../includes/LiferayFunctions';
-import {initialState, ITEMS_ACTIONS,red_items} from '../../includes/reducers/items.reducer';
-import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
-import {LoadFiles} from '../../includes/interface/LoadFiles'
-import {FAvisos} from '../../includes/interface/FAvisos'
-import { FModal } from '../../includes/interface/FModal';
+import { useModal } from '@clayui/modal';
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Errors } from '../../includes/Errors';
-import { form as formulario } from "./Form";
+import { getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import DefaultForm from '../../includes/interface/DefaultForm';
+import { FAvisos } from '../../includes/interface/FAvisos';
+import { FModal } from '../../includes/interface/FModal';
+import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
-import Papa from "papaparse";
+import Table from '../../includes/interface/Table';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import Menu from '../Menu';
+import { form as formulario } from "./Form";
 
 const MBaja = () => {
     const [items, itemsHandle]           = useReducer(red_items, initialState);
@@ -30,27 +29,27 @@ const MBaja = () => {
     }
 
     const processCsv = () => {
-        if (file) {
-            const reader = new FileReader();         
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                const parsedData = csv?.data;                                
-                let end = '/silefe.mbaja/add-multiple';
-                let ttmp = {motivos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
-                fetchAPIData(end,ttmp,referer).then(res => {
-                    if (res2.ok) {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);                        
-                        fetchData();
-                    }
-                    else 
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-                });
-            };
-            reader.readAsText(file);
-        }
-        else {
-            console.log("fichero no cargado")
-        }
+        //if (file) {
+        //    const reader = new FileReader();         
+        //    reader.onload = async ({ target }) => {
+        //        const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+        //        const parsedData = csv?.data;                                
+        //        let end = '/silefe.mbaja/add-multiple';
+        //        let ttmp = {motivos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
+        //        fetchAPIData(end,ttmp,referer).then(res => {
+        //            if (res2.ok) {
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);                        
+        //                fetchData();
+        //            }
+        //            else 
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+        //        });
+        //    };
+        //    reader.readAsText(file);
+        //}
+        //else {
+        //    console.log("fichero no cargado")
+        //}
     }
 
     const fetchData = async () => {
@@ -83,9 +82,12 @@ const MBaja = () => {
     const handleSave = async () => {
         const postdata = {
             mbajaId:     items.item.id,
-            descripcion: items.item.descripcion,
-            userId:      getUserId(),
+            obj: {
+                ...items.item,
+                userId: getUserId(),
+            }
         }
+        
         let endpoint = '/silefe.mbaja/save-m-baja';
         if (items.status === 'new')
             endpoint = '/silefe.mbaja/add-m-baja';        

@@ -1,5 +1,5 @@
 export const form = {
-    title: Liferay.Language.get('Cnos'),
+    title: Liferay.Language.get('Motivos Baja'),
     languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
@@ -22,10 +22,6 @@ export const form = {
         }
     },
     rows: [
-        {
-            key:9,
-            cols: ['id']
-        },
         {
             key:7,
             cols: ['descripcion']

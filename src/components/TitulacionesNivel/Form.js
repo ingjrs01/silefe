@@ -38,13 +38,10 @@ export const form = {
             name: "tipo", 
             value:"lalala", 
             placeholder:"Identifier", 
+            validate: false,
         },
     },
     rows: [
-        {
-            key:9,
-            cols: ['id']
-        },
         {
             key:8,
             cols: ['titulacionTipoId']
