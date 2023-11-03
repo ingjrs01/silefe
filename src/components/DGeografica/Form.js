@@ -22,21 +22,21 @@ export const form = {
         }
     },
     rows: [
-        {
-            key:9,
-            cols: ['id']
-        },
+        //{
+        //    key:9,
+        //    cols: ['id']
+        //},
         {
             key:7,
             cols: ['descripcion']
         },
     ],
     table: {
-        //id: {
-        //    columnTitle: "Id",
-        //    columnType: "checkbox",
-        //    key: "c1",
-        //},
+        id: {
+            columnTitle: "Id",
+            columnType: "checkbox",
+            key: "c1",
+        },
         descripcion: {
             columnTitle: Liferay.Language.get('Descripcion'),
             columnType: "multilang",

@@ -36,6 +36,11 @@ export const VerticalMenu = () => {
               items: [
                 {
                   active: false,
+                  label: "Dispersion Geogr.",
+                  onClick: () => navigate('/dgeografica')
+                },
+                {
+                  active: false,
                   label: "Provincias",                  
                   onClick: () => navigate('/provincias')
                 },
@@ -54,6 +59,16 @@ export const VerticalMenu = () => {
                   label: "Cofinanciadas",
                   onClick: () => navigate('/cofinanciadas')
                 },                
+                {
+                  active: false,
+                  label: "Lugares",
+                  onClick: () => navigate('/lugares')
+                }, 
+                {
+                  active: false,
+                  label: "Ámbitos",
+                  onClick: () => navigate('/ambitos')
+                }, 
               ],
               label: "Sitios"
             },
@@ -186,6 +201,27 @@ export const VerticalMenu = () => {
 
               ],
               label: "Contratos"
+            },
+            {
+              initialExpanded: false,
+              items: [
+                {
+                  active: false,
+                  label: "Plataformas",
+                  onClick: () => navigate('/plataformas')
+                },
+                {
+                  active: false,
+                  label: "Estados",
+                  onClick: () => navigate('/estados')
+                },
+                {
+                  active: false,
+                  label: "Técnicos",
+                  onClick: () => navigate('/tecnicos')
+                },
+              ],
+              label: "Otros"
             },
 
           ]}
