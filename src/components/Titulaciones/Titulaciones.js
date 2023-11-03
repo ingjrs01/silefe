@@ -1,9 +1,8 @@
 import { useModal } from '@clayui/modal';
-import Papa from "papaparse";
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
+import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
@@ -33,21 +32,22 @@ const Titulaciones = () => {
     }
 
     const processCsv = () => {
-        if (file) {
-            const reader = new FileReader();
-         
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                const parsedData = csv?.data;                                
-                let end = '/silefe.titulacion/add-multiple';
-                let ttmp = {titulaciones:parsedData,userId:getUserId()};
-                let res = await batchAPI(end,ttmp,reader);
-            };
-            reader.readAsText(file);
-        }
-        else {
-            console.log("fichero no cargado")
-        }
+        console.log("processCsv");
+        //if (file) {
+        //    const reader = new FileReader();
+        // 
+        //    reader.onload = async ({ target }) => {
+        //        const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+        //        const parsedData = csv?.data;                                
+        //        let end = '/silefe.titulacion/add-multiple';
+        //        let ttmp = {titulaciones:parsedData,userId:getUserId()};
+        //        let res = await batchAPI(end,ttmp,reader);
+        //    };
+        //    reader.readAsText(file);
+        //}
+        //else {
+        //    console.log("fichero no cargado")
+        //}
     }
 
     const confirmDelete = async () => {

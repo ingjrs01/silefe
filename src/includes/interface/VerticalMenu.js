@@ -124,11 +124,68 @@ export const VerticalMenu = () => {
                 },
                 {
                   active: false,
-                  label: "Familias",                  
+                  label: "Familias", 
                   onClick: () => navigate('/titulacionesf')
-                },                
+                },
+                {
+                  active: false,
+                  label: "Titulaciones", 
+                  onClick: () => navigate('/titulaciones')
+                },
               ],
               label: "Titulaciones"
+            },
+            {
+              initialExpanded: false,
+              items: [
+                {
+                  active: false,
+                  label: "Cnae's",
+                  onClick: () => navigate('/cnaes')
+                },
+                {
+                  active: false,
+                  label: "Cno's",                  
+                  onClick: () => navigate('/cnos')
+                },
+                {
+                  active: false,
+                  label: "Rangos Salariales",                  
+                  onClick: () => navigate('/salarios')
+                },
+                {
+                  active: false,
+                  label: "Motivos de Baja",                  
+                  onClick: () => navigate('/mbaja')
+                },
+                {
+                  active: false,
+                  label: "Horarios",                  
+                  onClick: () => navigate('/horarios')
+                },                
+                {
+                  active: false,
+                  label: "Tipos Contrato",                  
+                  onClick: () => navigate('/tipocontrato')
+                },
+                {
+                  active: false,
+                  label: "Experiencias",
+                  onClick: () => navigate('/experiencias')
+                },
+                {
+                  active: false,
+                  label: "Prestaciones",
+                  onClick: () => navigate('/prestaciones')
+                },
+                {
+                  active: false,
+                  label: "Colectivos",
+                  onClick: () => navigate('/colectivos')
+                },
+
+              ],
+              label: "Contratos"
             },
 
           ]}

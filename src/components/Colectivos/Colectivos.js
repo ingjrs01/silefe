@@ -1,9 +1,8 @@
 import { useModal } from '@clayui/modal';
-import Papa from "papaparse";
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { Errors } from '../../includes/Errors';
 import { getUserId, url_referer } from '../../includes/LiferayFunctions';
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
+import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
 import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
@@ -35,30 +34,31 @@ const Colectivos = () => {
     }
 
     const processCsv = () => {
-        if (file) {
-            const reader = new FileReader();
-         
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-                const parsedData = csv?.data;                                
-                let end = '/silefe.colectivo/add-multiple';
-                let ttmp = {colectivos:parsedData,userId:getUserId()};
-
-                batchAPI(end,ttmp,referer).then(res => {
-                    if (res2.ok) {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
-                        fetchData();
-                    }
-                    else {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-                    }                    
-                });
-            };
-            reader.readAsText(file);
-        }
-        else {
-            console.log("fichero no cargado")
-        }
+        console.log("processCsv");
+        //if (file) {
+        //    const reader = new FileReader();
+        // 
+        //    reader.onload = async ({ target }) => {
+        //        const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+        //        const parsedData = csv?.data;                                
+        //        let end = '/silefe.colectivo/add-multiple';
+        //        let ttmp = {colectivos:parsedData,userId:getUserId()};
+//
+        //        batchAPI(end,ttmp,referer).then(res => {
+        //            if (res2.ok) {
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
+        //                fetchData();
+        //            }
+        //            else {
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+        //            }                    
+        //        });
+        //    };
+        //    reader.readAsText(file);
+        //}
+        //else {
+        //    console.log("fichero no cargado")
+        //}
     }
 
     const handleSave = async () => {
