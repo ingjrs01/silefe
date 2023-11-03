@@ -95,7 +95,13 @@ const Empresas = () => {
         if (items.status === 'new')
             endpoint = '/silefe.empresa/add-empresa';
 
-        let obj = { obj: items.item, id: items.item.empresaId };
+        let obj = { 
+            id: items.item.empresaId,
+            obj: {
+                ...items.item,
+                userId: getUserId(),
+            }, 
+        };
         saveAPI(endpoint, obj, referer).then(response => {
             let { data, status, error } = response;
             if (status) {

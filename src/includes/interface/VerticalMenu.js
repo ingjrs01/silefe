@@ -110,7 +110,7 @@ export const VerticalMenu = () => {
               label: "Personal"
             },
             {
-              initialExpanded: true,
+              initialExpanded: false,
               items: [
                 {
                   active: false,
