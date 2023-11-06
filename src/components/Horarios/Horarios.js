@@ -83,14 +83,6 @@ const Horarios = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
     }
 
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0) {
-            let s = items.arr.filter(item => item.checked).map( i => {return i.id});
-            console.log(s);
-            onOpenChange(true);        
-        }
-    }
-
     const confirmDelete = async () => {
         const endpoint = '/silefe.horario/remove-horarios';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
@@ -127,12 +119,12 @@ const Horarios = () => {
         <>
             <Menu 
                 handleSave={handleSave} 
-                handleDelete={handleDelete} 
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}    
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 
             <LoadFiles 
@@ -154,6 +146,7 @@ const Horarios = () => {
                 <Table 
                     items={items} 
                     itemsHandle={itemsHandle} 
+                    onOpenChange={onOpenChange}
                 />
                 <Paginator 
                     items={items} 

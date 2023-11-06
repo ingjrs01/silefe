@@ -1,11 +1,13 @@
+import { ClayButtonWithIcon } from '@clayui/button';
 import { ClayCheckbox } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayTable from '@clayui/table';
 import React from 'react';
 import { getLanguageId, spritemap } from '../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { handleDelete } from '../utils';
 
-const Table = ({ items, itemsHandle}) => {
+const Table = ({ items, itemsHandle, onOpenChange}) => {
   let lang = getLanguageId().replace("_","-");
   
   return (
@@ -45,6 +47,7 @@ const Table = ({ items, itemsHandle}) => {
                   return (<ClayTable.Cell key={items.fields.table[tableCol].key} headingCell><ClayCheckbox checked={items.fields.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
               })
             }
+            <ClayTable.Cell key={"a"}>Acciones</ClayTable.Cell>
         </ClayTable.Row>
       </ClayTable.Head>
       <ClayTable.Body>
@@ -78,6 +81,26 @@ const Table = ({ items, itemsHandle}) => {
                       }
                   })
                 }
+                <ClayTable.Cell>
+                    <ClayButtonWithIcon 
+                        onClick={ () => itemsHandle({type: ITEMS_ACTIONS.SELECT_ITEM, index: index}) }
+                        displayType="secondary"
+                        spritemap={spritemap}
+                        aria-label="Edit"
+                        symbol="pencil"
+                        title="Edit"
+                    />
+                    <ClayButtonWithIcon
+                        className="ml-1"
+                        onClick={ () => handleDelete(index, items, itemsHandle,onOpenChange)}
+                        displayType="danger"
+                        spritemap={spritemap}
+                        aria-label="Delete"
+                        symbol="trash"
+                        title="Delete"
+                    />
+                </ClayTable.Cell>
+
               </ClayTable.Row>
             )
             })

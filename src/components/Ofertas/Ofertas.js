@@ -107,8 +107,8 @@ const Ofertas = () => {
             id: items.item.id,
             obj: {
                 ...items.item,
+                userId: getUserId(),
             },
-            userId: getUserId(),
         }
 
         let endpoint = '/silefe.oferta/save-oferta';
@@ -141,11 +141,6 @@ const Ofertas = () => {
             if (state != 'undefined' && state != null && state.backUrl.length > 0)
                 navigate(state.backUrl);
         });
-    }
-
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);
     }
 
     const confirmDelete = async () => {
@@ -381,13 +376,13 @@ const Ofertas = () => {
         <>
             <Menu
                 handleSave={handleSave}
-                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&
                 <LoadFiles
@@ -409,6 +404,7 @@ const Ofertas = () => {
                     <Table
                         items={items}
                         itemsHandle={itemsHandle}
+                        onOpenChange={onOpenChange}
                     />
                     <Paginator
                         items={items}

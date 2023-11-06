@@ -62,12 +62,7 @@ const Titulaciones = () => {
             await setToastItems([...toastItems, { title: Liferay.Language.get("Borrar"), type: "danger", text: Liferay.Language.get("Borrado_no") }]);
         }
     }
-
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);
-    }
-
+   
     const fetchData = async () => {
         if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0) 
             queryTitulaciones();
@@ -229,13 +224,13 @@ const Titulaciones = () => {
         <>
             <Menu
                 handleSave={handleSave}
-                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
                 beforeEdit={beforeEdit}
                 formulario={form}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 
             <LoadFiles 
@@ -259,6 +254,7 @@ const Titulaciones = () => {
                     <Table
                         items={items} 
                         itemsHandle={itemsHandle} 
+                        onOpenChange={onOpenChange}
                     />
                     <Paginator 
                         itemsHandle={itemsHandle}

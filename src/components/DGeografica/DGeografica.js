@@ -81,11 +81,6 @@ const DGeografica = () => {
         }
     }
 
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
-    }
-
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map( i => {return i.dGeograficaId});
         const endpoint = "/silefe.dgeografica/remove-geograficas";
@@ -133,12 +128,12 @@ const DGeografica = () => {
         <>
             <Menu 
                 handleSave={handleSave} 
-                handleDelete={handleDelete} 
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 
             <LoadFiles 
@@ -160,6 +155,7 @@ const DGeografica = () => {
                     <Table 
                         items={items} 
                         itemsHandle={itemsHandle} 
+                        onOpenChange={onOpenChange}
                     />
                     <Paginator 
                         items={items} 

@@ -110,13 +110,8 @@ const Acciones = () => {
             navigate(state.backUrl+state.ancestorId);
     }
 
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);
-    }
-
     const confirmDelete = async () => {
-        const endpoint = '/silefe.accion/delete-accioneso';
+        const endpoint = '/silefe.accion/delete-acciones';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
@@ -464,13 +459,13 @@ const Acciones = () => {
         <>
             <Menu
                 handleSave={handleSave}
-                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
                 beforeEdit={beforeEdit}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') &&
             <LoadFiles
@@ -498,6 +493,7 @@ const Acciones = () => {
                     <Table
                         items={items}
                         itemsHandle={itemsHandle}
+                        onOpenChange={onOpenChange}
                     />
                     <Paginator
                         items={items}

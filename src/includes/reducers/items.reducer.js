@@ -186,17 +186,25 @@ export const red_items = (state, action ) => {
             }
             
         case ITEMS_ACTIONS.SELECT_ITEM:
-            let sel = state.arr.filter(i => i.checked);
-            if (sel.length > 0) {
-                let e2 = resetErrors(state.fields);
-                return {
-                    ...state,
-                    item: sel[0],
-                    errors: e2,
-                    status: 'edit',
-                }
+            let sel = [];
+            let seleccionado = {};
+            if (action.hasOwnProperty('index')) {
+                seleccionado = state.arr[action.index];
             }
-            return state;
+            else {
+                sel = state.arr.filter(i => i.checked);
+                if (sel.length > 0) 
+                    seleccionado = sel[0];                
+                else
+                    return state;
+            }
+            let e2 = resetErrors(state.fields);
+            return {
+                ...state,
+                item: seleccionado,
+                errors: e2,
+                status: 'edit',
+            }
 
         case ITEMS_ACTIONS.EDIT_ITEM:
             tmp_item = {};

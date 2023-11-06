@@ -69,11 +69,6 @@ const Plataformas = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);            
     }
 
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
-    }
-
     const confirmDelete = async () => {
         const endpoint = '/silefe.plataforma/remove-plafaformas';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
@@ -123,12 +118,12 @@ const Plataformas = () => {
         <>
             <Menu 
                 handleSave={handleSave} 
-                handleDelete={handleDelete} 
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 
             <LoadFiles 
@@ -149,6 +144,7 @@ const Plataformas = () => {
                     <Table 
                         items={items} 
                         itemsHandle={itemsHandle} 
+                        onOpenChange={onOpenChange}
                     />
                     <Paginator 
                         items={items} 

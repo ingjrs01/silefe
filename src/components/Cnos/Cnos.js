@@ -83,11 +83,6 @@ const Cnos = () => {
         }
     }
 
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
-    }
-
     const confirmDelete = async () => {
         const endpoint = '/silefe.cno/remove-cnos';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
@@ -127,12 +122,12 @@ const Cnos = () => {
         <>
             <Menu 
                 handleSave={handleSave} 
-                handleDelete={handleDelete} 
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 
             <LoadFiles 
@@ -153,6 +148,7 @@ const Cnos = () => {
                     <Table 
                         items={items} 
                         itemsHandle={itemsHandle} 
+                        onOpenChange={onOpenChange}
                     />
                     <Paginator 
                         items={items} 

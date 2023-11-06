@@ -88,11 +88,6 @@ const Localidades = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get('Guardar'), type: "danger", text: Errors[error] }]);
     }
 
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
-    }
-
     const confirmDelete = async () => {
         const endpoint = '/silefe.municipio/remove-municipios';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
@@ -146,12 +141,12 @@ const Localidades = () => {
         <>
             <Menu
                 handleSave={handleSave}
-                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 
             <LoadFiles 
@@ -173,6 +168,7 @@ const Localidades = () => {
                     <Table 
                         items={items} 
                         itemsHandle={itemsHandle} 
+                        onOpenChange={onOpenChange}
                     />
                     <Paginator 
                         items={items} 

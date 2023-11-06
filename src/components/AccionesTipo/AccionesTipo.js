@@ -72,11 +72,6 @@ const AccionesTipo = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);            
     }
 
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);        
-    }
-
     const confirmDelete = async () => {
         const endpoint = '/silefe.acciontipo/remove-acciones-tipo';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
@@ -126,13 +121,13 @@ const AccionesTipo = () => {
     return (
         <>
             <Menu 
-                handleSave={handleSave} 
-                handleDelete={handleDelete} 
+                handleSave={handleSave}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 
             <LoadFiles 
@@ -152,7 +147,8 @@ const AccionesTipo = () => {
                 <>
                     <Table 
                         items={items} 
-                        itemsHandle={itemsHandle} 
+                        itemsHandle={itemsHandle}
+                        onOpenChange={onOpenChange}
                     />
                     <Paginator 
                         items={items} 

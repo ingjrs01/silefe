@@ -147,10 +147,6 @@ const Empresas = () => {
         });
     }
 
-    const handleDelete = () => {
-        console.log("delete");
-    }
-
     const beforeEdit = (id) => {
         let empresaId = 0;
         if (id === undefined) {
@@ -245,13 +241,13 @@ const Empresas = () => {
         <>
             <Menu
                 handleSave={handleSave}
-                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&
                 <LoadFiles
@@ -273,6 +269,7 @@ const Empresas = () => {
                     <Table
                         items={items}
                         itemsHandle={itemsHandle}
+                        onOpenChange={onOpenChange}
                     />
                     
                     <Paginator

@@ -64,10 +64,6 @@ const Lugares = () => {
         });
     }
 
-    const handleDelete = () => {
-        console.log("delete");
-    }
-
     const loadMunicipiosProvincia = (pId) => {
         const provinciaId = pId ?? 1;
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: provinciaId },referer).then(response => {
@@ -136,13 +132,13 @@ const Lugares = () => {
         <>
             <Menu
                 handleSave={handleSave}
-                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 beforeEdit={() => console.log("editando")}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&
                 <LoadFiles
@@ -162,6 +158,7 @@ const Lugares = () => {
                     <Table
                         items={items}
                         itemsHandle={itemsHandle}
+                        onOpenChange={onOpenChange}
                     />
                     
                     <Paginator

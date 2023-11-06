@@ -6,8 +6,9 @@ import React from 'react';
 import { spritemap } from '../includes/LiferayFunctions';
 import { MgtToolbar } from '../includes/interface/MgtToolbar';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
+import { handleDelete } from '../includes/utils';
 
-const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formulario}) => {
+const Menu = ({handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formulario, onOpenChange}) => {
 
   return (
     <>
@@ -62,7 +63,6 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
           </ClayToolbar.Item>
         }
 
-
         <ClayToolbar.Item>
           <ClayToolbar.Section>
           <ClayButton.Group>
@@ -70,11 +70,10 @@ const Menu = ({handleDelete, handleSave, itemsHandle, status,loadCsv,items, befo
                   displayType="danger"
                   aria-label="Delete"
                   className="nav-btn nav-btn-monospaced"
-                  onClick={() => handleDelete() }
+                  onClick={ () => handleDelete(-1, items, itemsHandle,onOpenChange) }
                   spritemap={spritemap}
                   symbol="trash"
                 />
-
             {
               (status === 'list') &&
               <ClayButtonWithIcon

@@ -289,11 +289,11 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
-        ambito_geo: {
-            columnTitle: Liferay.Language.get('Amb. Geográfico'),
-            columnType: "string",
-            key: "c7",
-        },
+        //ambito_geo: {
+        //    columnTitle: Liferay.Language.get('Amb. Geográfico'),
+        //    columnType: "string",
+        //    key: "c7",
+        //},
         presupuesto: {
             columnTitle: Liferay.Language.get('Presupuesto'),
             columnType: "string",

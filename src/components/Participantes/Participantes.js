@@ -210,11 +210,6 @@ const Participantes = () => {
             navigate(state.backUrl+state.ancestorId);
     }
 
-    const handleDelete = () => {
-        if (items.arr.filter(item => item.checked).length > 0)
-            onOpenChange(true);
-    }
-
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map( i => {return i.participanteId});
 
@@ -377,13 +372,13 @@ const Participantes = () => {
         <>
             <Menu
                 handleSave={handleSave}
-                handleDelete={handleDelete}
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
                 beforeEdit={beforeEdit}
                 items={items}
                 formulario={formulario}
+                onOpenChange={onOpenChange}
             />
             { (items.status === 'load') &&
             <LoadFiles
@@ -408,6 +403,7 @@ const Participantes = () => {
                 <Table
                     items={items}
                     itemsHandle={itemsHandle}
+                    onOpenChange={onOpenChange}
                 />
                 <Paginator
                     itemsHandle={itemsHandle}
