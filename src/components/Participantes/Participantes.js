@@ -54,7 +54,9 @@ const Participantes = () => {
     },[items.load]);
 
     useEffect( () => {
-        if (items.item.id != 'undefined' && items.item.id > 0)
+        //console.log("userEffect");
+        //debugger;
+        if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0)
             changeProvince(items.item.provinciaId);
     }, [items.item.provinciaId]);
 
@@ -141,33 +143,6 @@ const Participantes = () => {
             console.log("no hay file");
         }
     }
-
-    //const processCsv = () => {
-    //    if (file) {
-    //        const reader = new FileReader();
-//
-    //        reader.onload = async ({ target }) => {
-    //            const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-    //            const parsedData = csv?.data;
-    //            let end = '/silefe.participante/add-multiple';
-    //            let ttmp = {cnos:parsedData,userId:Liferay.ThemeDisplay.getUserId()};
-//
-    //            batchAPI(end,ttmp,referer).then(res2 => {
-    //                if (res2.ok) {
-    //                    setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
-    //                    fetchData();
-    //                }
-    //                else {
-    //                    setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-    //                }
-    //            });
-    //        };
-    //        reader.readAsText(file);
-    //    }
-    //    else {
-    //        console.log("fichero no cargado")
-    //    }
-    //}
 
     const handleSave = async () => {
         let endpoint = '/silefe.participante/save-participante';

@@ -24,7 +24,7 @@ export const form = {
         },
         documento: {
             key:12,
-            type: "text",
+            type: "dni",
             label: Liferay.Language.get('Documento'),
             name: "documento",
             value:"documento",
