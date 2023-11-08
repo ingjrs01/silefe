@@ -77,7 +77,7 @@ const Estados = () => {
 
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_ok') }]);
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();        
             }
             else {

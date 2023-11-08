@@ -147,6 +147,20 @@ const Empresas = () => {
         });
     }
 
+    const confirmDelete = async () => {
+        const endpoint = "/silefe.empresa/delete-empresas";
+        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
+        deleteAPI(endpoint,s,referer).then(res => {
+            if (res) {
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+                fetchData();        
+            }
+            else 
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
+        });
+    }
+
+
     const beforeEdit = (id) => {
         let empresaId = 0;
         if (id === undefined) {

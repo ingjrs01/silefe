@@ -79,11 +79,10 @@ const Docentes = () => {
     const confirmDelete = async () => {
         const endpoint = '/silefe.docente/delete-docentes';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
-        debugger;
 
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_ok') }]);
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();
             }
             else {

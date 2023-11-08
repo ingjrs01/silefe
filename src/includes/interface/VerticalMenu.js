@@ -102,6 +102,11 @@ export const VerticalMenu = () => {
                 },                
                 {
                   active: false,
+                  label: "Rangos Edad",
+                  onClick: () => navigate('/edades')
+                },                
+                {
+                  active: false,
                   label: "Carnets",                  
                   onClick: () => navigate('/carnets')
                 },

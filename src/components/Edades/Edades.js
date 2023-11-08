@@ -13,6 +13,7 @@ import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/
 import Menu from '../Menu';
 import { form as formulario } from './Form';
 
+
 const Edades = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
     const [toastItems,setToastItems]     = useState([]);    
@@ -74,18 +75,14 @@ const Edades = () => {
     const confirmDelete = async () => {
         const endpoint = "/silefe.edad/delete-edades";
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
-
-
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_ok') }]);
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();        
             }
-            else {
+            else 
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
-            }
-        })
-
+        });
     }
 
     const fetchData = async () => {
@@ -158,7 +155,14 @@ const Edades = () => {
                 </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
-            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
+            {
+                open && 
+                <FModal  
+                    onOpenChange={onOpenChange} 
+                    confirmDelete={confirmDelete} 
+                    observer={observer} 
+                /> 
+            }
         </>
     )
 }

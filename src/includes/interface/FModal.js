@@ -23,7 +23,7 @@ export const FModal = ({onOpenChange,confirmDelete, observer }) => {
                     </ClayButton.Group>
                 }
                 last={
-                    <ClayButton onClick={() => { onOpenChange(false); confirmDelete() }}>
+                    <ClayButton onClick={() => { onOpenChange(false); confirmDelete(); }}>
                         {Liferay.Language.get('Borrar')}
                     </ClayButton>
                 }
