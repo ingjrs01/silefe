@@ -18,9 +18,7 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
               Object.keys(items.fields.table).map(tableCol => {
                 if (items.fields.table[tableCol].columnType == "string" || items.fields.table[tableCol].columnType == "multilang")
                   return (
-                    <ClayTable.Cell
-                      key={items.fields.table[tableCol].key}
-                    >
+                    <ClayTable.Cell key={items.fields.table[tableCol].key}  >
                       <strong>{ items.fields.table[tableCol].columnTitle }</strong>
                       <span className="navbar-breakpoint-d-none">  </span>
                       <ClayIcon
@@ -47,7 +45,7 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
                   return (<ClayTable.Cell key={items.fields.table[tableCol].key} headingCell><ClayCheckbox checked={items.fields.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
               })
             }
-            <ClayTable.Cell key={"a"}>Acciones</ClayTable.Cell>
+            <ClayTable.Cell className={"table-cell-minw-100"} key={"a"}>Acciones</ClayTable.Cell>
         </ClayTable.Row>
       </ClayTable.Head>
       <ClayTable.Body>
