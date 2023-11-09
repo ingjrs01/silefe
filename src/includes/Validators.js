@@ -13,7 +13,6 @@ export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
         return false;
     }
 
-    console.log("validateDni " + value + "  tipoDoc: " + tipoDoc);
     switch (tipoDoc) {
         case '1': // SI EL TIPO ES 1, SE TRATA DE UN DNI
             if (value.match(DNI_REGEX)) {

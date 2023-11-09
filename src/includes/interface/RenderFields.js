@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { getLanguageId, locales, spritemap } from '../LiferayFunctions';
 import { validate, validateDni, validateLocalized } from '../Validators';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { formatDocument } from '../utils';
 import { getDays, getMonths } from './DatesLang';
 
 const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
@@ -19,34 +20,10 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
     itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
   }
 
-  const formatDocument = (tipoDoc, value) => {
-    if (tipoDoc == 1)
-      return formatDni(value);
-    if (tipoDoc == 2)
-      return formatNif(value);
-  }
-
-  const formatDni = (dni_limpio) => {
-    if (dni_limpio == undefined || dni_limpio.length == 0)
-      return "";
-
-    var dni_mostrado = dni_limpio.substr(0, 2);
-    if (dni_limpio.length > 2)
-      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3);
-    if (dni_limpio.length > 5)
-      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3);
-    if (dni_limpio.length > 8)
-      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3) + "-" + dni_limpio.substr(8, 1);
-
-    return dni_mostrado;
-  }
-
   const formatMoney = (value) => {
     if (value == null)
       return "";
     var temp = "";
-    //debugger;
-
     temp = (typeof (value) === 'number') ? value.toString() : value;
 
     var input = temp.replace(/[\D\s\._\-]+/g, "");
@@ -54,41 +31,29 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
     return (input.toLocaleString("es-ES"));
   }
 
-
   const writeNif = (name, value) => {
     const dni_limpio = value.split(" ").join("").split(".").join("").replace("-", "").toLocaleUpperCase();
     validateDni(items.item.tipoDoc, name, dni_limpio,itemsHandle);
     itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
   }
 
-  const formatNif = (dni_limpio) => {
-    if (dni_limpio == undefined || dni_limpio.length == 0)
-      return "";
-    
-    var dni_mostrado = dni_limpio.substr(0, 1);
-
-    if (dni_limpio.length > 1)
-      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1);
-
-    if (dni_limpio.length > 2)
-      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3);
-
-    if (dni_limpio.length > 5)
-      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3);
-
-    if (dni_limpio.length > 8)
-      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3) + "-" + dni_limpio.substr(8, 1);
-
-    return dni_mostrado
+  const writeCif = (name, value) => {
+    const dni_limpio = value.split(" ").join("").split(".").join("").replace("-", "").toLocaleUpperCase();
+    //validateDni(items.item.tipoDoc, name, dni_limpio,itemsHandle);
+    itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: name, value: dni_limpio });
   }
 
   const writeDocument = (target, name, value) => {
+    //debugger;
     switch (items.item.tipoDoc) {
       case '1':
         writeDni(name, value);
         break;
       case '2':
         writeNif(name, value);
+        break;
+      case '3': 
+        writeCif(name,value);
         break;
     }
   }

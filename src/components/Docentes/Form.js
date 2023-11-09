@@ -194,12 +194,8 @@ export const form = {
         },
         {
             key:44,
-            cols: [  'municipioId','tipoviaId','nombreVia','numero','piso']//,'localidad']
+            cols: [  'municipioId','tipoviaId','nombreVia','numero','piso']
         },
-        //{
-        //    key:45,
-        //    cols: []
-        //},
         {
             key:46,
             cols: ['email','telefono']
@@ -210,6 +206,11 @@ export const form = {
             columnTitle: "Id",
             columnType: "checkbox",
             key: "c1",
+        },
+        documento: {
+            columnTitle: Liferay.Language.get('Documento'),
+            columnType: "dni",
+            key: "c2",
         },
         nombre: {
             columnTitle: Liferay.Language.get('Nombre'),

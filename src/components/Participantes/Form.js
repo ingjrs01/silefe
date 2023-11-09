@@ -320,7 +320,7 @@ export const form = {
         },
         documento: {
             columnTitle: Liferay.Language.get('Documento'),
-            columnType: "string",
+            columnType: "dni",
             key: "tc2",
         },
         nombre: {

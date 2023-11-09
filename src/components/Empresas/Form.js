@@ -138,10 +138,6 @@ export const form = {
                     key: 41,
                     cols: ['tipoDoc', 'documento', 'razonSocial'],
                 },
-                //{
-                //    key: 42,
-                //    cols: ['razonSocial']
-                //},
                 {
                     key: 43,
                     cols: ['email', 'telefono'],
@@ -212,7 +208,7 @@ export const form = {
         },
         documento: {
             columnTitle: Liferay.Language.get('CIF'),
-            columnType: "string",
+            columnType: "dni",
             key: "c2",
         },
         razonSocial: {

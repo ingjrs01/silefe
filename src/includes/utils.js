@@ -18,3 +18,61 @@ export const handleDelete = (index, items, itemsHandle,onOpenChange) => {
     if ( (index != 'undefined') || (items.arr.filter(item => item.checked).length > 0))
         onOpenChange(true);
 }
+
+
+export const formatDocument = (tipoDoc, value) => {
+    if (tipoDoc == 1)
+      return formatDni(value);
+    if (tipoDoc == 2)
+      return formatNif(value);
+    if (tipoDoc == 3)
+        return formatCif(value);
+  }
+
+  export const formatDni = (dni_limpio) => {
+    if (dni_limpio == undefined || dni_limpio.length == 0)
+      return "";
+
+    var dni_mostrado = dni_limpio.substr(0, 2);
+    if (dni_limpio.length > 2)
+      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3);
+    if (dni_limpio.length > 5)
+      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3);
+    if (dni_limpio.length > 8)
+      dni_mostrado = dni_limpio.substr(0, 2) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3) + "-" + dni_limpio.substr(8, 1);
+
+    return dni_mostrado;
+  }
+
+  export const formatNif = (dni_limpio) => {
+    if (dni_limpio == undefined || dni_limpio.length == 0)
+      return "";
+    
+    var dni_mostrado = dni_limpio.substr(0, 1);
+    if (dni_limpio.length > 1)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1);
+    if (dni_limpio.length > 2)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3);
+    if (dni_limpio.length > 5)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3);
+    if (dni_limpio.length > 8)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 1) + "." + dni_limpio.substr(2, 3) + "." + dni_limpio.substr(5, 3) + "-" + dni_limpio.substr(8, 1);
+    return dni_mostrado
+  }
+
+  export const formatCif = (dni_limpio) => {
+    if (dni_limpio == undefined || dni_limpio.length == 0)
+      return "";
+    
+    var dni_mostrado = dni_limpio.substr(0, 1);
+    if (dni_limpio.length > 1)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 2);
+    if (dni_limpio.length > 2)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 2) + "." + dni_limpio.substr(3, 3);
+    if (dni_limpio.length > 5)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 2) + "." + dni_limpio.substr(3, 3) + "." + dni_limpio.substr(6, 3);
+    if (dni_limpio.length > 8)
+      dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 2) + "." + dni_limpio.substr(3, 3) + "." + dni_limpio.substr(6, 3) + "-" + dni_limpio.substr(9, 1);
+    return dni_mostrado
+  }
+  
