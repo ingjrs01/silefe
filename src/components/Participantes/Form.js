@@ -235,6 +235,14 @@ export const form = {
             conditions: [],
             change: ()=>{console.log("disponibilidad");},
         },
+        admiteEnvios: {
+            key:24,
+            type: "toggle",
+            label: Liferay.Language.get('Envios'),
+            name: "admiteEnvios",
+            enabled: true,
+            change: ()=>{console.log("admiteEnvios");},
+        }
         //formacion: {
         //    key:24,
         //    type: "table",
@@ -277,6 +285,10 @@ export const form = {
                 {
                     key:46,
                     cols: ['email','telefono']
+                },
+                {
+                    key: 48,
+                    cols: ['admiteEnvios']
                 },
             ]
         },
@@ -332,5 +344,5 @@ export const form = {
             key: "tc6",
         },
     },
-    searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId'],
+    searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId','admiteEnvios'],
 };

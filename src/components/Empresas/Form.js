@@ -98,6 +98,13 @@ export const form = {
             value: "",
             conditions: []
         },
+        admiteEnvios :{
+            key: 32,
+            type: "toggle",
+            label: Liferay.Language.get("Envios"),
+            name: "admiteEnvios",
+            value: false,            
+        },
         interes: {
             key: 31,
             type: "textarea",
@@ -149,6 +156,10 @@ export const form = {
                 },
                 {
                     key: 73,
+                    cols: ['admiteEnvios'],
+                },
+                {
+                    key: 74,
                     cols: ['interes']
                 },
             ]
@@ -220,5 +231,5 @@ export const form = {
             key: "c5",
         },
     },
-    searchFields: ['documento', 'razonSocial'],
+    searchFields: ['documento', 'razonSocial', 'admiteEnvios'],
 };
