@@ -128,6 +128,29 @@ export const validateDate = (name, value, items, itemsHandle) => {
     return true;
 }
 
+export const validateEmail = (name,value,itemsHandle) => {
+    var EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+    if (!value.match(EMAIL_REGEX)) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('email-no-válido') });
+        return false;
+    }
+
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+    return true;
+}
+
+export const validatePhoneNumber = (name,value,itemsHandle) => {
+    var PHONE_REGEZ = /^(\+34|0034|34)?[ -]*(6|7|8|9)[ -]*([0-9][ -]*){8}$/;
+    if (!value.match(PHONE_REGEZ)) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('teléfono-no-válido') });
+        return false;
+    }
+
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+    return true;
+}
+
 export const validaRadio = (campo,items,itemsHandle) => {
     if (items.item[campo] == null) {
         console.log("Error en el radio button");
@@ -147,7 +170,6 @@ export const validateAll = (items, itemsHandle) => {
         else
             switch (items.fields.fields[campo].type) {
                 case "text":
-                    console.log("text");
                     result = validate(campo, items.item[campo],items,itemsHandle)
                     if (result == false) {
                         console.log("El campo " + campo + " no valida");
@@ -155,25 +177,30 @@ export const validateAll = (items, itemsHandle) => {
                     }
                     break;
                 case "multilang":
-                    console.log("multilang");
                     if (!validateLocalized(campo, items.item[campo], items,itemsHandle))
                         return false;
                     break;
                 case "dni":
-                    console.log("dni");
                     result = validateDni(items.item.tipoDoc,campo, items.item[campo], itemsHandle);
                     if (result == false)
                         return false;
                     break;
                 case "date":
-                    console.log("esto es una fecha");
                     result = validateDate(campo, items.item[campo],items,itemsHandle);
                     if (!result) return false;
                     break;
                 case "radio": 
-                    console.log("esto es un radio button");
                     result = validaRadio(campo,items,itemsHandle);
                     if (!result) return false;
+                    break;
+                case "email":
+                    result = validateEmail(campo,items.item[campo], itemsHandle);
+                    if (!result) return false;
+                    break;
+                case "phone":
+                    result = validatePhoneNumber(campo,items,item[campo],itemsHandle);
+                    if (!result) return false;
+                    break;
                 case "toggle":
                     console.log("toggle");
                     break;

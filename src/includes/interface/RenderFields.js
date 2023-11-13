@@ -1,7 +1,6 @@
 import ClayAutocomplete from '@clayui/autocomplete';
-import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import ClayDatePicker from '@clayui/date-picker';
-import ClayForm, { ClayCheckbox, ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
+import ClayForm, { ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
 import { getLanguageId, locales, spritemap } from '../LiferayFunctions';
@@ -9,6 +8,8 @@ import { validate, validateDni, validateLocalized } from '../Validators';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import { formatDocument } from '../utils';
 import { getDays, getMonths } from './DatesLang';
+import { Email } from './fields/Email';
+import { Phone } from './fields/Phone';
 
 const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
@@ -173,52 +174,9 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                       </>
                     }
 
-                    {(items.fields.fields[it].type === 'multitext') &&
-                      <>
-                        <label htmlFor="basicInput" key={"label" + it}>{items.fields.fields[it].label}</label>
-                        {
-                          items.item[it].map((v, k) => {
-                            return (
-                              <>
-                                <ClayInput.Group spaced={"any"} className='mt-1' key={"cig" + v.key}>
-                                  <ClayInput
-                                    //className="col-6"
-                                    key={it + v.key}
-                                    type="text"
-                                    name={it}
-                                    value={v.value}
-                                    onChange={e => {
-                                      //validate(e.target.name, e.target.value);
-                                      itemsHandle({ type: ITEMS_ACTIONS.SET_MULTIFIELD, fieldname: e.target.name, pos: k, value: e.target.value });
-                                    }}
-                                  />
-                                  <ClayCheckbox
-                                    aria-label="I'm checked indefinitely"
-                                    key={"ckv" + v.key}
-                                    checked={v.default}
-                                    containerProps={{ id: "test" }}
-                                    onChange={() => itemsHandle({ type: ITEMS_ACTIONS.SET_MULTIFIELDCHECK, fieldname: it, pos: k })}
-                                  />
-                                  <ClayButtonWithIcon
-                                    //className="col-1" 
-                                    aria-label="Close" displayType="secondary" spritemap={spritemap} symbol="times" title="Close"
-                                    onClick={e => itemsHandle({ type: ITEMS_ACTIONS.REMOVE_MULTIFIELD, fieldname: it, pos: k })}
-                                    key={"cbtt" + v.key}
-                                  />
-                                </ClayInput.Group>
-                              </>
-                            )
-                          })
-                        }
-                        <ClayButton
-                          size={"xs"}
-                          displayType={"secondary"}
-                          key={"add" + it}
-                          onClick={evt => itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: it })} >
-                          {Liferay.Language.get("Añadir")}
-                        </ClayButton>
-                      </>
-                    }
+                    {(items.fields.fields[it].type === 'multitext') && <Phone itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'phone') && <Phone itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'email') && <Email itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
 
                     {items.fields.fields[it].type == 'multilang' &&
                       <ClayLocalizedInput
