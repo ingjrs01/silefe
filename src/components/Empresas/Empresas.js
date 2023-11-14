@@ -33,8 +33,6 @@ const Empresas = () => {
     const referer = `${url_referer}/empresas`;
     const form = formulario;
 
-    console.log("Estoy en empresas");
-
     const fetchData = async () => {
         contactosHandle({type:CONTACTOS_ACTIONS.START});
         const postdata = {
@@ -74,6 +72,11 @@ const Empresas = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "CIF" }];
 
+        fetchAPIData('/silefe.cnae/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            form.fields.cnaeId.options = opts;
+        });
+
         fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             centrosHandle({ type: CENTROS_ACTIONS.PROVINCIAS, provincias: opts })
@@ -88,6 +91,8 @@ const Empresas = () => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             centrosHandle({ type: CENTROS_ACTIONS.TIPOS_VIA, tipos: opts })
         });
+
+
     }
 
     const handleSave = () => {
@@ -141,7 +146,7 @@ const Empresas = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
             }
             
-            if (state != 'undefined' && state.backUrl.length > 0) {
+            if (state != null && state.backUrl.length > 0) {
                 navigate(state.backUrl + state.ancestorId);
             }
         });

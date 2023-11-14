@@ -6,6 +6,10 @@ import { validateEmail } from '../../Validators';
 import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
 export const Email = ({ itemsHandle, field, item }) => {
+    console.log("Email");
+    console.debug(item);
+    if (item == null)
+        return (<>Cargando</>)
 
     return (
         <>
@@ -47,7 +51,7 @@ export const Email = ({ itemsHandle, field, item }) => {
                 displayType={"secondary"}
                 key={"add" + field.name}
                 onClick={evt => itemsHandle({ type: ITEMS_ACTIONS.ADD_MULTIFIELD, fieldname: field.name })} >
-                {Liferay.Language.get("Añadirr")}
+                {Liferay.Language.get("Añadir")}
             </ClayButton>
         </>
     )

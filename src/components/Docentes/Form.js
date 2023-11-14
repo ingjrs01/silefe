@@ -100,7 +100,6 @@ export const form = {
             name: "sexo",
             change: ()=>{console.log("cambia sexo");},
             className: 'col-3'
-            //conditions: []
         },
         provinciaId: {
             key:13,
@@ -166,19 +165,19 @@ export const form = {
         },
         email: {
             key: 17,
-            type: "multitext",
+            type: "email",
             label: Liferay.Language.get('Email'),
             name: "email",
-            values: [{key:1,value:"hola@micorreo.es",default:false}, {key:2,value:"adios@micorreo.es",default:true}],
+            values: [],   //{key:1,value:"hola@micorreo.es",default:false}, {key:2,value:"adios@micorreo.es",default:true}],
             placeholder: Liferay.Language.get('Email'),
             conditions: ["text"]
         },
         telefono: {
             key: 18,
-            type: "multitext",
+            type: "phone",
             label: Liferay.Language.get('Telefono'),
             name: "telefono",
-            values: [{key:1,value:"666666666",default:false}, {key:2,value:"777777777",default:true}],
+            values: [ ], //{key:1,value:"666666666",default:false}, {key:2,value:"777777777",default:true}],
             placeholder: Liferay.Language.get('Telefono'),
             conditions: ["text"]
         },

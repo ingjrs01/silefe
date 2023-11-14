@@ -6,6 +6,10 @@ import { validatePhoneNumber } from '../../Validators';
 import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
 export const Phone = ({ itemsHandle, field, item }) => {
+    console.log("Phone");
+    console.debug(item);
+    if (item == null)
+        return (<>Cargando</>)
 
     return (
         <>

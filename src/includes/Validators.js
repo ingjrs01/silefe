@@ -52,6 +52,7 @@ export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
             break;
         case '3':
             console.log("Esto es un pasaporte");
+            return true;
             break;
     }
     return false;
@@ -128,6 +129,42 @@ export const validateDate = (name, value, items, itemsHandle) => {
     return true;
 }
 
+export const validateEmails = (campo,emails, itemsHandle) => {
+    for (var email of emails) 
+        if (!validateEmail(campo,email.value,itemsHandle)) 
+            return false;
+    
+    const seleccionados = emails.filter( item => item.default);
+    if (seleccionados.length == 0) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: campo, value: Liferay.Language.get('debe-seleccionar-un-email-por-defecto') });
+        return false;
+    }
+    if (seleccionados.length > 1) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: campo, value: Liferay.Language.get('debe-seleccionar-solo-email-por-defecto') });
+        return false;
+    }
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: campo });
+    return true;
+}
+
+export const validatePhoneNumbers = (name, phones, itemsHandle) => {
+    for (var phone of phones) 
+        if (!validatePhoneNumber(name,phone.value,itemsHandle)) 
+            return false;
+    
+    const seleccionados = phones.filter( item => item.default);
+    if (seleccionados.length == 0) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('debe-seleccionar-un-telefono-por-defecto') });
+        return false;
+    }
+    if (seleccionados.length > 1) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('debe-seleccionar-solo-telefono-por-defecto') });
+        return false;
+    }
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });            
+    return true;
+}
+
 export const validateEmail = (name,value,itemsHandle) => {
     var EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -153,7 +190,6 @@ export const validatePhoneNumber = (name,value,itemsHandle) => {
 
 export const validaRadio = (campo,items,itemsHandle) => {
     if (items.item[campo] == null) {
-        console.log("Error en el radio button");
         itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: campo, value: Liferay.Language.get('debe-elegir-una-opcion') });
         return false;
     }
@@ -194,11 +230,11 @@ export const validateAll = (items, itemsHandle) => {
                     if (!result) return false;
                     break;
                 case "email":
-                    result = validateEmail(campo,items.item[campo], itemsHandle);
+                    result = validateEmails(campo,items.item[campo], itemsHandle);
                     if (!result) return false;
                     break;
                 case "phone":
-                    result = validatePhoneNumber(campo,items,item[campo],itemsHandle);
+                    result = validatePhoneNumbers(campo,items.item[campo],itemsHandle);
                     if (!result) return false;
                     break;
                 case "toggle":

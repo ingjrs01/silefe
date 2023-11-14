@@ -78,6 +78,7 @@ const createItem = form => {
     let tmp_item = {};
 
     Object.keys(form.fields).forEach(j => {
+        let tt2 = [];
         switch (form.fields[j].type) {
             case "multilang":
                 let tt = {}
@@ -85,7 +86,14 @@ const createItem = form => {
                 tmp_item[j] = tt;
                 break;
             case "multitext":
-                let tt2 = []
+                tmp_item[j] = tt2;
+                break;
+            case "phone":
+                //let tt2 = []
+                tmp_item[j] = tt2;
+                break;
+            case "email":
+                //let tt2 = []
                 tmp_item[j] = tt2;
                 break;
             default:
@@ -123,8 +131,6 @@ export const red_items = (state, action ) => {
                             break;
                         case "multitext":
                             let tt2 = []
-                            //action.fields.languages.forEach(el => {tt2[el]=""});
-                            tt2.push({key:8,value:"correo",default:false});
                             tt2.push({key:9,value:"correo@correo.es",default:false});
                             tmp_item[j] = tt2;
                             break;
@@ -246,16 +252,16 @@ export const red_items = (state, action ) => {
                         state.fields.languages.forEach(el => {tt[el]=""});
                         tmp_item[fila] = tt;
                         break;
-                    case 'multitext':
+                    case 'multitext': case 'phone': case 'email':
                         tt = [];
-                        tt.push({key: 1,value:"",default:false})
+                        tt.push({key: 1,value:"",default:true})
                         tmp_item[fila] = tt;
                         break;
                     case 'toggle':
                         tmp_item[fila] = false;
                         break;
                     case 'select':
-                        tmp_item[fila] = "0"; // por defecto
+                        tmp_item[fila] = "0";
                         break;
                     default:
                         tmp_item[fila] = null;
@@ -356,12 +362,14 @@ export const red_items = (state, action ) => {
                 item:newField
             }
         case ITEMS_ACTIONS.SET_MULTIFIELDCHECK:
-            newField = state.item;
-            newField[action.fieldname][action.pos].default = !newField[action.fieldname][action.pos].default;
-            
+            var temp = state.item[action.fieldname].map( item => ({...item,default:false}))            
+            temp[action.pos].default = true;            
             return {
                 ...state,
-                item:newField
+                item: {
+                    ...state.item,
+                    [action.fieldname]: temp
+                }
             }
         case ITEMS_ACTIONS.SET_STATUS:
             return {

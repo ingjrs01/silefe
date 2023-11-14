@@ -40,21 +40,30 @@ export const form = {
             placeholder: Liferay.Language.get('RazonSocial'),
             conditions: ["text"]
         },
+        cnaeId: {
+            key: 33,
+            type: 'select',
+            label: Liferay.Language.get("Cnae"),
+            name: "cnaeId",
+            enabled:true,
+            values: "",
+            options: [],
+        },
         email: {
             key: 22,
-            type: "multitext",
+            type: "email",
             label: Liferay.Language.get('Email'),
             name: "email",
-            values: [{ key: 1, value: "hola@micorreo.es", default: false }, { key: 2, value: "adios@micorreo.es", default: true }],
+            values: [ ],
             placeholder: Liferay.Language.get('Email'),
             conditions: ["text"]
         },
         telefono: {
             key: 23,
-            type: "multitext",
+            type: "phone",
             label: Liferay.Language.get('Telefono'),
             name: "telefono",
-            values: [{ key: 1, value: "666666666", default: false }, { key: 2, value: "777777777", default: true }],
+            values: [ ],
             placeholder: Liferay.Language.get('Telefono'),
             conditions: ["text"]
         },
@@ -137,6 +146,10 @@ export const form = {
                 {
                     key: 41,
                     cols: ['tipoDoc', 'documento', 'razonSocial'],
+                },
+                {
+                    key: 42,
+                    cols: ['cnaeId'],
                 },
                 {
                     key: 43,
