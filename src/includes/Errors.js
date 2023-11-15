@@ -2,6 +2,7 @@
 export const Errors = {
     1:Liferay.Language.get("Error_guardando"),
     2: Liferay.Language.get("Usuario no especificado"),
+    4: Liferay.Language.get("Numero_trabajadores_incorrecto"),
     404: Liferay.Language.get("Elemento_no_encontrado"),
     405:"Los datos están mal",
     501: Liferay.Language.get("Campo requirido"),

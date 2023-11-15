@@ -49,6 +49,49 @@ export const form = {
             values: "",
             options: [],
         },
+        trabajadores: {
+            key: 34,
+            type: 'number',
+            min: 0,
+            label: Liferay.Language.get("Trabajadores"),
+            name: "trabajadores",
+            enabled:true,
+            values: "",
+            className: "col-2",
+            conditions: ['number'],
+        },
+        grupo: {
+            key: 35,
+            type: "toggle",
+            label: Liferay.Language.get('Grupo_empresarial'),
+            name: "grupo",
+            enable: true,
+            className: "col-2",
+        },
+        depFormacion: {
+            key: 36,
+            type: "toggle",
+            label: Liferay.Language.get('Dept_formacion'),
+            name: "depFormacion",
+            enable: true,
+            className: "col-2",
+        },
+        planFormacion: {
+            key: 37,
+            type: "toggle",
+            label: Liferay.Language.get('Pan_formacion'),
+            name: "panFormacion",
+            enable: true,
+            className: "col-2",
+        },
+        colectivosVulnerables: {
+            key: 38,
+            type: "toggle",
+            label: Liferay.Language.get('Vulnerables'),
+            name: "colectivosVulnerables",
+            enable: true,
+            className: "col-2",
+        },
         email: {
             key: 22,
             type: "email",
@@ -145,11 +188,11 @@ export const form = {
             rows: [
                 {
                     key: 41,
-                    cols: ['tipoDoc', 'documento', 'razonSocial'],
+                    cols: ['tipoDoc', 'documento', 'razonSocial','grupo'],
                 },
                 {
                     key: 42,
-                    cols: ['cnaeId'],
+                    cols: ['cnaeId','trabajadores','depFormacion', 'planFormacion', 'colectivosVulnerables'],
                 },
                 {
                     key: 43,
@@ -161,12 +204,12 @@ export const form = {
                 },
                 {
                     key: 72,
-                    cols: ['ayuda', 'formacion'],
+                    cols: ['ayuda', 'formacion', 'admiteEnvios'],
                 },
-                {
-                    key: 73,
-                    cols: ['admiteEnvios'],
-                },
+                //{
+                //    key: 73,
+                //    cols: ['admiteEnvios'],
+                //},
                 {
                     key: 74,
                     cols: ['interes']
