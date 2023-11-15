@@ -333,15 +333,25 @@ export const form = {
             columnType: "string",
             key: "tc4",
         },
-        provincia: {
-            columnTitle: Liferay.Language.get('Provincia'),
-            columnType: "multilang",
-            key: "tc5",
-        },
+        //provincia: {
+        //    columnTitle: Liferay.Language.get('Provincia'),
+        //    columnType: "multilang",
+        //    key: "tc5",
+        //},
         localidad: {
             columnTitle: Liferay.Language.get('Localidad'),
             columnType: "multilang",
             key: "tc6",
+        },
+        telefono: {
+            columnTitle: Liferay.Language.get('Teléfono'),
+            columnType: "phone",
+            key: "tc7",
+        },
+        email: {
+            columnTitle: Liferay.Language.get('Email'),
+            columnType: "email",
+            key: "tc8",
         },
     },
     searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId','admiteEnvios'],

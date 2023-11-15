@@ -75,4 +75,24 @@ export const formatDocument = (tipoDoc, value) => {
       dni_mostrado = dni_limpio.substr(0, 1) + " " + dni_limpio.substr(1, 2) + "." + dni_limpio.substr(3, 3) + "." + dni_limpio.substr(6, 3) + "-" + dni_limpio.substr(9, 1);
     return dni_mostrado
   }
+
+  export const formatDefaultPhone = (phones) => {
+    if (phones == null || phones.length == 0)
+      return "";
+    const seleccionado = phones.filter(i => i.default);
+    if (seleccionado > 0)
+      return seleccionado[0].value;
+
+    return phones[0].value;    
+  }
+
+  export const formatDefaultEmail = (emails) => {
+    if (emails == 'undefined' || emails.length == 0)
+      return "";
+    const seleccionado = emails.filter(i => i.default);
+    if (seleccionado.length > 0)    
+      return seleccionado[0].value;
+
+    return emails[0].value;
+  }
   

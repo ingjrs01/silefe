@@ -221,9 +221,14 @@ export const form = {
             columnType: "string",
             key: "c4",
         },
-        fechaNacimiento: {
-            columnTitle: Liferay.Language.get("FechaNacimiento"),
-            columnType: "string",
+        //fechaNacimiento: {
+        //    columnTitle: Liferay.Language.get("FechaNacimiento"),
+        //    columnType: "string",
+        //    key: "c5",
+        //},
+        telefono: {
+            columnTitle: Liferay.Language.get("Telefono"),
+            columnType: "phone",
             key: "c5",
         },
         provincia: {

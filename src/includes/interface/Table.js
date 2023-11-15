@@ -5,7 +5,7 @@ import ClayTable from '@clayui/table';
 import React from 'react';
 import { getLanguageId, spritemap } from '../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
-import { formatDocument, handleDelete } from '../utils';
+import { formatDefaultEmail, formatDefaultPhone, formatDocument, handleDelete } from '../utils';
 
 const Table = ({ items, itemsHandle, onOpenChange}) => {
   let lang = getLanguageId().replace("_","-");
@@ -16,7 +16,8 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
         <ClayTable.Row>
             {
               Object.keys(items.fields.table).map(tableCol => {
-                if (items.fields.table[tableCol].columnType == "string" || items.fields.table[tableCol].columnType == "dni" || items.fields.table[tableCol].columnType == "multilang")
+                if (items.fields.table[tableCol].columnType == "string" || items.fields.table[tableCol].columnType == "dni" || 
+                  items.fields.table[tableCol].columnType == "multilang" || items.fields.table[tableCol].columnType == "phone" || items.fields.table[tableCol].columnType == "email")
                   return (
                     <ClayTable.Cell key={items.fields.table[tableCol].key}  >
                       <strong>{ items.fields.table[tableCol].columnTitle }</strong>
@@ -61,11 +62,13 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
                       case "string":
                         return (<ClayTable.Cell key={columName+row.id}>{ row[columName] }</ClayTable.Cell> )
                       case "dni":
-                        return (<ClayTable.Cell key={columName+row.id}>{ formatDocument(row["tipoDoc"],row[columName]) }</ClayTable.Cell> )  
+                        return (<ClayTable.Cell key={columName+row.id}>{ formatDocument(row["tipoDoc"],row[columName]) }</ClayTable.Cell> )                          
+                      case "phone":
+                        return (<ClayTable.Cell key={columName+row.id}>{ formatDefaultPhone(row[columName]) }</ClayTable.Cell> )    
+                      case "email":
+                        return (<ClayTable.Cell key={columName+row.id}>{ formatDefaultEmail(row[columName]) }</ClayTable.Cell> )    
                       case "boolean":
-                        return (<ClayTable.Cell key={columName+row.id}>
-                          {<ClayCheckbox checked={row[columName]}  disabled  />}
-                        </ClayTable.Cell>)
+                        return (<ClayTable.Cell key={columName+row.id}>{<ClayCheckbox checked={row[columName]}  disabled  />} </ClayTable.Cell>)
                       case "checkbox":
                         return (
                           <ClayTable.Cell key={items.fields.table[columName].key+row.id}><ClayCheckbox checked={row.checked} onChange={()=>{itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});}} value={row[columName]}  />
