@@ -59,9 +59,9 @@ const Empresas = () => {
                 ...i,
                 id: i.empresaId,
                 email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
-                emailDefault :  (i.email != null && i.email.length > 0) ? JSON.parse(i.email)[0].value : "",
+                //emailDefault :  (i.email != null && i.email.length > 0) ? JSON.parse(i.email)[0].value : "",
                 telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
-                telefonoDefault: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono)[0].value : "",
+                //telefonoDefault: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono)[0].value : "",
                 checked: false
             })
         });

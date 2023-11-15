@@ -193,25 +193,6 @@ export const form = {
                 cols: ['contactos'],
             }]
         },
-        //{
-        //    caption: "Intereses",
-        //    key: 4,
-        //    ariacontrols: "tabpanel-4",
-        //    rows: [
-        //        {
-        //            key: 71,
-        //            cols: ['pnl', 'ofertas', 'formacionCompromiso'],
-        //        },
-        //        {
-        //            key: 72,
-        //            cols: ['ayuda', 'formacion'],
-        //        },
-        //        {
-        //            key: 73,
-        //            cols: ['interes']
-        //        },
-        //    ]
-        //}
     ],
     table: {
         id: {
@@ -229,14 +210,14 @@ export const form = {
             columnType: "string",
             key: "c3",
         },
-        emailDefault: {
-            columnTitle: Liferay.Language.get('Email'),
-            columnType: "string",
+        email: {
+            columnTitle: Liferay.Language.get('Emailll'),
+            columnType: "email",
             key: "c4",
         },
-        telefonoDefault: {
-            columnTitle: Liferay.Language.get('Teléfono'),
-            columnType: "string",
+        telefono: {
+            columnTitle: Liferay.Language.get('Teléfonooo'),
+            columnType: "phone",
             key: "c5",
         },
     },

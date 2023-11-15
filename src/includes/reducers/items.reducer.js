@@ -339,7 +339,7 @@ export const red_items = (state, action ) => {
         case ITEMS_ACTIONS.ADD_MULTIFIELD:
             let newItem = state.item;
             let key = newItem[action.fieldname].length + 1;
-            newItem[action.fieldname].push({key: key,value:"",default:false});
+            newItem[action.fieldname].push({key: key,value:"",default:(newItem[action.fieldname].length==0)?true:false});
 
             return {
                 ...state,

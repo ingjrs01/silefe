@@ -80,7 +80,7 @@ export const formatDocument = (tipoDoc, value) => {
     if (phones == null || phones.length == 0)
       return "";
     const seleccionado = phones.filter(i => i.default);
-    if (seleccionado > 0)
+    if (seleccionado.length > 0)
       return seleccionado[0].value;
 
     return phones[0].value;    
