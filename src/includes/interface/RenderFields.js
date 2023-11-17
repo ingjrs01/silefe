@@ -1,4 +1,3 @@
-import ClayAutocomplete from '@clayui/autocomplete';
 import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, { ClayInput, ClayRadio, ClayRadioGroup, ClaySelect, ClaySelectBox, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
@@ -10,6 +9,7 @@ import { formatDocument } from '../utils';
 import { getDays, getMonths } from './DatesLang';
 import { Email } from './fields/Email';
 import { Phone } from './fields/Phone';
+import { Selectfilter } from './fields/Selectfilter';
 
 const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
@@ -174,9 +174,10 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                       </>
                     }
 
-                    {(items.fields.fields[it].type === 'multitext') && <Phone itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
-                    {(items.fields.fields[it].type === 'phone') && <Phone itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
-                    {(items.fields.fields[it].type === 'email') && <Email itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'multitext')   && <Phone         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'phone')       && <Phone         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'email')       && <Email         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'selectfilter')&& <Selectfilter  itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
 
                     {items.fields.fields[it].type == 'multilang' &&
                       <ClayLocalizedInput
@@ -213,25 +214,6 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                             />
                           ))}
                         </ClaySelect>
-                      </>
-                    }
-                    {items.fields.fields[it].type == 'autocomplete' &&
-                      <>
-                        <label htmlFor={it} id={it + "label"} key={"label" + it}> {items.fields.fields[it].label} </label>
-                        <ClayAutocomplete
-                          aria-labelledby={it + "label"}
-                          id={it}
-                          key={it}
-                          onChange={(evt) => { itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: evt }); }}
-                          value={items.item[it]}
-                          placeholder="Introduzca las primeras letras"
-                        >
-                          {items.fields.fields[it].options.map(item => {
-                            return (
-                              <ClayAutocomplete.Item key={it + "a-" + item.value}>{item.label}</ClayAutocomplete.Item>
-                            )
-                          })}
-                        </ClayAutocomplete>
                       </>
                     }
                     {items.fields.fields[it].type == 'toggle' &&

@@ -42,7 +42,7 @@ export const form = {
         },
         cnaeId: {
             key: 33,
-            type: 'select',
+            type: 'selectfilter',
             label: Liferay.Language.get("Cnae"),
             name: "cnaeId",
             enabled:true,

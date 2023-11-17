@@ -6,8 +6,6 @@ import { validateEmail } from '../../Validators';
 import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
 export const Email = ({ itemsHandle, field, item }) => {
-    console.log("Email");
-    console.debug(item);
     if (item == null)
         return (<>Cargando</>)
 

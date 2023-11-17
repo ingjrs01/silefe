@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+//import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Acciones from './components/Acciones/Acciones';
@@ -41,7 +41,7 @@ import VMenu from './components/VMenu';
 import { getRolesUser } from './includes/LiferayFunctions';
 import { ProtectRoute } from './includes/ProtectRoute';
 
-const queryClient = new QueryClient();
+//const queryClient = new QueryClient();
 
 const Application = () => {
 
@@ -59,8 +59,8 @@ const Application = () => {
     //});
 
     return (
-        <QueryClientProvider client={queryClient} >
-            <BrowserRouter>
+        <BrowserRouter>
+        {/*<QueryClientProvider client={queryClient} >*/}
                 <div className="container">
                     <div className="sheet">
                         <div className="row">
@@ -122,9 +122,8 @@ const Application = () => {
                         </div>
                     </div>
                 </div>
+        {/*</QueryClientProvider>*/}
             </BrowserRouter>
-        </QueryClientProvider>
-
     )
 }
 

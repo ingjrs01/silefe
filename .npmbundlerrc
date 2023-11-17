@@ -1,6 +1,7 @@
 {
 	"create-jar": {
 		"output-dir": "dist",
+		"verbose": true,
 		"features": {
 			"js-extender": true,
 			"web-context": "/my-project",
@@ -8,5 +9,6 @@
 			"configuration": "features/configuration.json"
 		}
 	},
+	"verbose": true,
 	"dump-report": true
 }
