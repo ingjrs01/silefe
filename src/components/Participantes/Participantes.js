@@ -9,12 +9,14 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
+import TabsForm from '../../includes/interface/TabsForm';
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
 import Menu from '../Menu';
+import { ExperienciasRender } from './ExperienciasRender';
 import { form as formulario } from "./Form";
-import TabsForm from './TabsForm';
+import { TitulacionesRender } from './TitulacionesRender';
 
 
 const Participantes = () => {
@@ -54,8 +56,6 @@ const Participantes = () => {
     },[items.load]);
 
     useEffect( () => {
-        //console.log("userEffect");
-        //debugger;
         if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0)
             changeProvince(items.item.provinciaId);
     }, [items.item.provinciaId]);
@@ -99,7 +99,7 @@ const Participantes = () => {
             //kasdflkasjdfñlkasdjf
             const auth = getAuthToken();
             const endpoint = url_api + '/silefe.participante/save-file';
-            fetch('http://lfdevapps01.depo.es:8080/api/jsonws/silefe.participante/save-file/', {
+            fetch(endpoint, {
                 "credentials": "include",
                 "headers": {
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
@@ -181,7 +181,7 @@ const Participantes = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error]}]);
         
         //console.debug(state.ancestorId);
-        if (state != 'undefined' && state.backUrl.length > 0)
+        if (state != 'undefined' && state != null && state.backUrl.length > 0)
             navigate(state.backUrl+state.ancestorId);
     }
 
@@ -314,8 +314,7 @@ const Participantes = () => {
     }
 
     const queryTitulaciones = () => {
-        //titulacionHandler({type:TITULACIONES_ACTIONS.START});
-        
+        titulacionHandler({type:TITULACIONES_ACTIONS.START});
         fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
         });
@@ -339,6 +338,22 @@ const Participantes = () => {
         fetchAPIData('/silefe.cno/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             experienciasHandler({type: EXPERIENCIA_ACTIONS.OCUPACIONES,ocupaciones: [...response.data]})
         });
+    }
+
+    const plugin = () => {
+        console.log("han llamado a plugin");
+        return {
+            Titulaciones: 
+                <TitulacionesRender 
+                    redTitulaciones={redTitulaciones}
+                    titulacionHandler={titulacionHandler}  
+                />,
+            Experiencias: 
+                <ExperienciasRender 
+                    experiencias={ redExperiencias }
+                    experienciasHandler={experienciasHandler}
+                />
+        }
     }
 
     if (!items)
@@ -367,10 +382,11 @@ const Participantes = () => {
                     save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                    experiencias={redExperiencias}
-                    redTitulaciones={redTitulaciones}
-                    titulacionHandler={titulacionHandler}
-                    experienciasHandler={experienciasHandler}
+                    plugin={plugin}
+                    //experiencias={redExperiencias}
+                    //redTitulaciones={redTitulaciones}
+                    //titulacionHandler={titulacionHandler}
+                    //experienciasHandler={experienciasHandler}
                 />
             }
             {

@@ -340,7 +340,7 @@ const Proyectos = () => {
                     backUrl={"/proyecto/"}
                     ancestorId={items.item.id}
                 />
-}
+        }
     }
 
     //if (!items || items.arr.length == 0)

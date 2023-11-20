@@ -170,7 +170,6 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                           onBlur={() => { }}
                           onChange={e => writeDocument(e.target, e.target.name, e.target.value)}>
                         </ClayInput>
-
                       </>
                     }
 
@@ -178,6 +177,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                     {(items.fields.fields[it].type === 'phone')       && <Phone         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'email')       && <Email         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'selectfilter')&& <Selectfilter  itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'other')       && <> { plugin()[items.fields.fields[it].componentName] } </> }
 
                     {items.fields.fields[it].type == 'multilang' &&
                       <ClayLocalizedInput
@@ -316,12 +316,6 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                         }} />
                       </div>
                     }
-                    {(items.fields.fields[it].type === 'other') &&
-                      <>
-                        {
-                          plugin()[items.fields.fields[it].componentName]
-                        }
-                      </>}
                     {
                       items.errors[it] != 'undefined' && items.errors[it].length > 0 &&
                       <ClayForm.FeedbackGroup key={"error" + it}>

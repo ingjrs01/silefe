@@ -6,8 +6,10 @@ import { spritemap } from '../../includes/LiferayFunctions';
 import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/experiencias.reducer";
 import { ExperienciaForm } from "./ExperienciaForm";
 
-const ExperienciaRender = ({experiencias,experienciasHandler,  edit}) =>  {
-
+export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
+    //console.log("ExperienciasRender");
+    //console.debug(experiencias);
+    //debugger;
     if (!experiencias.items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -86,4 +88,4 @@ const ExperienciaRender = ({experiencias,experienciasHandler,  edit}) =>  {
     );
 }
 
-export default ExperienciaRender;
+//export default ExperienciasRender;

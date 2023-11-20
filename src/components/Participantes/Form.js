@@ -242,18 +242,19 @@ export const form = {
             name: "admiteEnvios",
             enabled: true,
             change: ()=>{console.log("admiteEnvios");},
-        }
-        //formacion: {
-        //    key:24,
-        //    type: "table",
-        //    label: Liferay.Language.get('Formacion'),
-        //    name: "formacion",
-        //    enabled: true,
-        //    conditions: [],
-        //    //change: ()=>{console.log("disponibilidad");},
-        //}
-
-
+        },
+        titulaciones: {
+            key: 25,
+            type: "other",
+            componentName: "Titulaciones",
+            name: "Titulaciones",
+        },        
+        experiencias: {
+            key: 26,
+            type: "other",
+            componentName: "Experiencias",
+            name: "Experiencias",
+        },        
     },
     tabActive:0,
     tabs : [
@@ -270,13 +271,9 @@ export const form = {
                     key:43,
                     cols: ['nombre','apellido1','apellido2']
                 },
-                //{
-                //    key:42,
-                //    cols: ['fechaNacimiento', 'sexo']
-                //},
                 {
                     key:44,
-                    cols: ['provinciaId', 'municipioId', 'localidad']//,'localidad']
+                    cols: ['provinciaId', 'municipioId', 'localidad']
                 },
                 {
                     key:45,
@@ -308,6 +305,28 @@ export const form = {
                 {
                     key:103,
                     cols: ['disponibilidad']
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Titulaciones"),
+            key:3,
+            ariacontrols: "tabpanel-3",
+            rows: [
+                {
+                    key:201,
+                    cols: ['titulaciones'],
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Experiencias"),
+            key:4,
+            ariacontrols: "tabpanel-2",
+            rows: [
+                {
+                    key:301,
+                    cols: ['experiencias']
                 },
             ]
         },

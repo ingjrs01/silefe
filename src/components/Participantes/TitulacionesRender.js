@@ -6,11 +6,8 @@ import { spritemap } from '../../includes/LiferayFunctions';
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 import { TableForm } from "./TableForm";
 
-const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
+export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
 
-  console.log("redTitulaciones");
-  console.debug(redTitulaciones);
-  
   return (
     <>
       {redTitulaciones.status == "list" &&
@@ -87,5 +84,3 @@ const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
     </>
   )
 }
-
-export default TitulacionesRender;
