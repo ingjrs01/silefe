@@ -87,5 +87,3 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
       
     );
 }
-
-//export default ExperienciasRender;

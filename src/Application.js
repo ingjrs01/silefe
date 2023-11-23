@@ -6,6 +6,7 @@ import AccionesTipo from './components/AccionesTipo/AccionesTipo';
 import AccionesTipoFormacion from './components/AccionesTipoFormacion/AccionesTipoFormacion';
 import Ambitos from './components/Ambitos/Ambitos';
 import Carnets from './components/Carnets/Carnets';
+import Citas from './components/Citas/Citas';
 import Cnaes from './components/Cnaes/Cnaes';
 import Cnos from './components/Cnos/Cnos';
 import Cofinanciadas from './components/Cofinanciadas/Cofinanciadas';
@@ -111,11 +112,12 @@ const Application = () => {
                                         <Route path='/accionestipo'         element={<ProtectRoute isAllowed={true} redirectTo={url}><AccionesTipo /></ProtectRoute> } />
                                         <Route path='/accion/:id'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Acciones /></ProtectRoute> } />
                                         <Route path='/acciones'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Acciones /></ProtectRoute> } />
-                                        <Route path='/lugar/:id'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Lugares /></ProtectRoute> } />
+                                        <Route path='/lugar/:id'            element={<ProtectRoute isAllowed={true} redirectTo={url}><Lugares /></ProtectRoute> } />
                                         <Route path='/lugares'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Lugares /></ProtectRoute> } />
                                         <Route path='AccionesTipoFormacion' element={<ProtectRoute isAllowed={true} redirectTo={url}><AccionesTipoFormacion /></ProtectRoute> } />
                                         <Route path='/login'                element={<ProtectRoute isAllowed={true} redirectTo={url}><Login /></ProtectRoute> } />
                                         <Route path='/proyectos'            element={<ProtectRoute isAllowed={allow} redirectTo={url}><Proyectos /> </ProtectRoute> } />
+                                        <Route path='/citas'                element={<ProtectRoute isAllowed={allow} redirectTo={url}><Citas /> </ProtectRoute> } />
                                     </Routes>
                                 </div>
                             </div>

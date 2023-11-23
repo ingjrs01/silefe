@@ -8,7 +8,7 @@ import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import { formatDefaultEmail, formatDefaultPhone, formatDocument, handleDelete } from '../utils';
 
 const Table = ({ items, itemsHandle, onOpenChange}) => {
-  let lang = getLanguageId().replace("_","-");
+  const lang =  getLanguageId();
   
   return (
     <ClayTable>

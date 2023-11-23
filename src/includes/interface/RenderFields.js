@@ -8,6 +8,7 @@ import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import { formatDocument } from '../utils';
 import { getDays, getMonths } from './DatesLang';
 import { Email } from './fields/Email';
+import { Hour } from './fields/Hour';
 import { Phone } from './fields/Phone';
 import { Selectfilter } from './fields/Selectfilter';
 
@@ -174,6 +175,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                     }
 
                     {(items.fields.fields[it].type === 'multitext')   && <Phone         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'hour')        && <Hour          itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'phone')       && <Phone         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'email')       && <Email         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'selectfilter')&& <Selectfilter  itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }

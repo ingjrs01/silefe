@@ -8,6 +8,7 @@ export const Selectfilter = ({ itemsHandle, field, item }) => {
     var selectedLabel = "";
     var tmp = new Map();
     var sha1 = ""; 
+    
     for ( var opcion of field.options) {
         if (item == opcion.value) {
             selected = CryptoJS.MD5(opcion.label).toString();
@@ -24,8 +25,8 @@ export const Selectfilter = ({ itemsHandle, field, item }) => {
             itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: ttmp.value })
     }
 
-    if (item == null)
-        return (<>Cargando</>)
+    //if (item == null)
+    //    return (<>Cargando</>)
 
     const opciones = field.options.map( i => {return i.label})
     return (

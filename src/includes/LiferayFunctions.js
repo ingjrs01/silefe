@@ -25,15 +25,15 @@ export const getRolesUser = () => {
 
 export const locales = [
     {
-        label: "es-ES",
+        label: "es_ES",
         symbol: "es-es"
     },
     {
-        label: "en-US",
+        label: "en_US",
         symbol: "en-us"
     },
     {
-        label: "gl-ES",
+        label: "gl_ES",
         symbol: "gl-es"
     }
 ]

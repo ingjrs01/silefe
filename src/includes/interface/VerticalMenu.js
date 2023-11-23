@@ -225,6 +225,12 @@ export const VerticalMenu = () => {
                   label: "Técnicos",
                   onClick: () => navigate('/tecnicos')
                 },
+                {
+                  active: false,
+                  label: "Categoría Cita",
+                  onClick: () => navigate('/categoriacita')
+                },
+
               ],
               label: "Otros"
             },

@@ -16,14 +16,14 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
       <ClayCard>
         <ClayCard.Body>
           <ClayCard.Description displayType="title">
-            {"Añadiendo experiencia"}
+            {Liferay.Language.get("Añadiendo experiencia")}
           </ClayCard.Description>
           <ClayCard.Description truncate={false} displayType="text">
             <ClayForm >
               <div className="row">
                 {/* ---------------------------------------------------------------------------------------------------------------- */}
                 <ClayForm.Group className="col">
-                  <label htmlFor="basicInput">{"Fecha Inicio"}</label>
+                  <label htmlFor="basicInput">{Liferay.Language.get("Fecha Inicio")}</label>
                   <ClayDatePicker
                     onChange={val => experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'ini', value: val }) }
                     placeholder={""}

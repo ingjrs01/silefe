@@ -244,7 +244,7 @@ export const red_items = (state, action ) => {
                 //load: (state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.NEW_ITEM:
-            tmp_item = {};
+            tmp_item = {id: 0};
             Object.keys(state.fields.fields).forEach(fila => {
                 switch (state.fields.fields[fila].type) {
                     case 'multilang':

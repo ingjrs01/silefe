@@ -10,6 +10,7 @@ const MenuItems = [
     {key:23, url: '/empresas',     caption: 'Empresas',      icon: 'briefcase'},
     {key:24, url: '/ofertas',      caption: 'Ofertas',       icon: 'coin'},
     {key:16, url: '/convocatorias',caption: 'Convocatorias', icon: 'signature'},
+    {key:17, url: '/Citas',        caption: 'Citas',         icon: 'calendar'},
     //{key: 1, url: '/tittipo',      caption: 'Titulaciones Tipo'},
     //{key: 2, url: '/titnivel',     caption: 'Titulaciones Nivel'},
     //{key: 3, url: '/titulacionesf',caption: 'Titulaciones Familias'},
