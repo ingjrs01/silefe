@@ -73,6 +73,40 @@ const Citas = () => {
      //   itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
     }
 
+    const loadParticipantes = () => {
+        if (items.item.methodId == 'undefined' || items.item.methodId == 0 )
+            return false;
+
+        switch(items.item.originInId) {
+            case '1':
+                fetchAPIData('/silefe.participante/all', {lang: getLanguageId()},referer).then(response => {
+                    const opts = [ ...response.data.map(obj => {return {value:obj.participanteId,label:obj.nombre + " " + obj.apellido1 + " " + obj.apellido2}})];
+                    form.fields.participantInId.options = opts;
+                    //form.fields.participantOutId.options = opts;
+                });
+                break;
+            case '2': 
+                console.log("cargando datos de empresas");
+                fetchAPIData('/silefe.empresa/all', {lang: getLanguageId()},referer).then(response => {
+                    const opts = [ ...response.data.map(obj => {return {value:obj.empresaId,label:obj.razonSocial}})];
+                    form.fields.participantInId.options = opts;
+                    //form.fields.participantOutId.options = opts;
+                });
+                break;
+            case '3' : 
+                console.log("cargando datos de ofertas");
+                break;
+            default: 
+                break
+        }
+
+    }
+
+    useEffect( ()=> {
+        console.log("Cargando los participantes");
+        loadParticipantes()
+    },[items.item.originInId])
+
     const loadParticipante = (id) => {
         console.log("loadParcipipante");
     }
@@ -136,7 +170,6 @@ const Citas = () => {
             console.debug(i);
             return({
                 ...i,
-                //id:i.citaId,
                 appointmentDate: (i.appointmentDate != null)?new Date(i.appointmentDate).toISOString().substring(0, 10):"",
                 checked:false
             })});

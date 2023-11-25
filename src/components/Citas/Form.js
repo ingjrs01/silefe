@@ -180,11 +180,11 @@ export const form = {
             columnType: "multilang",
             key: "tc5",
         },
-        methodId: {
-            columnTitle: Liferay.Language.get('Método'),
-            columnType: "string",
-            key: "tc3",
-        },
+        //methodId: {
+        //    columnTitle: Liferay.Language.get('Método'),
+        //    columnType: "string",
+        //    key: "tc3",
+        //},
         participantInName: {
             columnTitle: Liferay.Language.get('Participante'),
             columnType: "string",
