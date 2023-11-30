@@ -89,7 +89,6 @@ const Docentes = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
             }
         })
-
     }
 
     const fetchData = async () => {
@@ -211,7 +210,6 @@ const Docentes = () => {
                 loadCsv={loadCsv}
                 items={items}
                 formulario={formulario}
-                beforeEdit={() => {}}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') &&

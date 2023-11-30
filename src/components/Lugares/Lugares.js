@@ -135,7 +135,6 @@ const Lugares = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
-                beforeEdit={() => console.log("editando")}
                 items={items}
                 formulario={formulario}
                 onOpenChange={onOpenChange}

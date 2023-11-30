@@ -28,7 +28,32 @@ const Ofertas = () => {
     const navigate = useNavigate();
 
     const referer = `${url_referer}/oferta`;
+
+    const beforeEdit = (item) => {
+        const s = (item == undefined || item == null)?items.arr.filter(item => item.checked).map(i => { return i.id })[0]:item.ofertaId; 
+
+        fetchAPIData('/silefe.oferta/participantes-oferta', { ofertaId: s }, referer).then(response => {
+            const pts = response.data.map( i => {
+                let email = "";
+                if (i.email != null && i.email.length > 0) {
+                    const tmpmail = JSON.parse(i.email);
+                    if  (tmpmail.length > 0)
+                        email = JSON.parse(i.email)[0].value;
+                }
+                return {
+                    ...i,
+                    apellidos: i.apellido1 + " " + i.apellido2,
+                    nuevo: true,
+                    email: email
+                }
+            });
+            participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:pts});
+        });
+    }
+
     const form = formulario;
+    form.beforeEdit = beforeEdit;
+
 
     useEffect(() => {
         if (!isInitialized.current) {
@@ -160,32 +185,6 @@ const Ofertas = () => {
         setToastItems([...toastItems, { title: error.title, type: (error.type === 'error') ? 'danger' : 'info', text: error.text }]);
     }
 
-    const beforeEdit = () => {
-        const s = items.arr.filter(item => item.checked).map(i => { return i.id })[0];
-
-        fetchAPIData('/silefe.oferta/participantes-oferta', { ofertaId: s }, referer).then(response => {
-
-            const pts = response.data.map( i => {
-                let email = "";
-                if (i.email != null && i.email.length > 0) {
-                    const tmpmail = JSON.parse(i.email);
-                    if  (tmpmail.length > 0)
-                        email = JSON.parse(i.email)[0].value;
-                }
-                return {
-                    ...i,
-                    apellidos: i.apellido1 + " " + i.apellido2,
-                    nuevo: true,
-                    email: email
-                }
-            });
-
-            console.log("estoy dentro de beforeEdit");
-            console.debug(response);
-            participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:pts});
-        });
-    }
-
     const plugin = () => {
         return {
             ParticipantesTable:
@@ -274,7 +273,7 @@ const Ofertas = () => {
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
-    const initForm = () => {
+    const initForm = () => {        
         // inicializo participantes: 
         participantesHandler({type: PARTICIPANTE_ACTIONS.START});
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
@@ -379,7 +378,6 @@ const Ofertas = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
-                beforeEdit={beforeEdit}
                 items={items}
                 formulario={formulario}
                 onOpenChange={onOpenChange}

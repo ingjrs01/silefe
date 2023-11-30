@@ -15,9 +15,12 @@ export const Selectfilter = ({ itemsHandle, field, item }) => {
         console.log("loadOptions");
         console.debug(field);
         console.debug(item);
+        let sitem = "";
         if (item == undefined || item == null)
-            return tmp;
-        const sitem = item.toString();
+            setVal("");
+        else
+            sitem = item.toString();
+
         for ( var opcion of field.options) {            
             if (sitem == opcion.value) {
                 selected = CryptoJS.MD5(opcion.label).toString();

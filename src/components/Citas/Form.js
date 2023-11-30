@@ -29,8 +29,6 @@ export const form = {
             label: Liferay.Language.get('FechaCita'),
             name: "appointmentDate",
             value:"",
-            //yearmin: 3,
-            //yearmax: 5,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             className: 'col-3',
             conditions:[]
@@ -41,8 +39,6 @@ export const form = {
             label: Liferay.Language.get('HoraCita'),
             name: "appointmentHour",
             value:"",
-            //yearmin: 3,
-            //yearmax: 5,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             className: 'col-2',
             conditions:[]
@@ -141,7 +137,14 @@ export const form = {
             value:"",
             placeholder:Liferay.Language.get('Comentarios'),
             conditions:["text"]
-        }
+        },
+		//origen: {
+        //    key:18,
+        //    type: "text",
+        //    label: Liferay.Language.get('Origen'),
+        //    name: "origen",
+        //    value:"",
+        //}
     },
     rows: [
         {
@@ -181,11 +184,11 @@ export const form = {
             columnType: "multilang",
             key: "tc5",
         },
-        //methodId: {
-        //    columnTitle: Liferay.Language.get('Método'),
-        //    columnType: "string",
-        //    key: "tc3",
-        //},
+        origen: {
+            columnTitle: Liferay.Language.get('Origen'),
+            columnType: "string",
+            key: "tc3",
+        },
         participantInName: {
             columnTitle: Liferay.Language.get('Participante'),
             columnType: "string",

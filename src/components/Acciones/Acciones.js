@@ -324,6 +324,7 @@ const Acciones = () => {
 
     const loadForm = () => {
         const langSel = Liferay.Language.get("Seleccionar");
+        form.beforeEdit=beforeEdit;
 
         fetchAPIData('/silefe.acciontipo/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
@@ -463,7 +464,6 @@ const Acciones = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
-                beforeEdit={beforeEdit}
                 formulario={formulario}
                 onOpenChange={onOpenChange}
             />

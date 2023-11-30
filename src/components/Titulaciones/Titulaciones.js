@@ -24,7 +24,21 @@ const Titulaciones = () => {
     let titulacionesFamiliaOptions = [];    
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{});
     
+    const beforeEdit = (val) => {
+        let seleccionado = (val == undefined)?items.arr.filter(item => item.checked)[0]:val;
+        //console.debug(items);        
+        //const opt_nivel = opciones_nivel.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
+        //const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
+        //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
+        //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: opt_fam});
+
+        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONTIPO,value: seleccionado.titulacionTipoId});
+        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value: seleccionado.titulacionNivelId});
+        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA, value: seleccionado.titulacionFamiliaId});
+    }
+
     let form = f2;
+    form.beforeEdit= beforeEdit;
     const referer = `${url_referer}/titulaciones`;
 
     const loadCsv = () => {
@@ -160,30 +174,6 @@ const Titulaciones = () => {
         console.log("no hago nada");
     }
 
-    const beforeEdit = (val) => {
-        //await console.log("loadSelects esperando");
-        //await console.log(opciones_nivel);
-        //await console.log(titulacionesFamiliaOptions);
-        //await console.log("todo cargado");
-        let seleccionado = items.arr.filter(item => item.checked)[0];
-        //console.debug(items);        
-        //const opt_nivel = opciones_nivel.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
-        //const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
-        //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
-        //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: opt_fam});
-
-        // TENGO QUE PONER LOS DATOS CORRECTOS EN EL REDUCER
-        console.log("Cargando un dato");
-        console.debug(seleccionado);
-        console.debug(items.arr);
-
-        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONTIPO,value: seleccionado.titulacionTipoId});
-        //debugger;
-        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value: seleccionado.titulacionNivelId});
-        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA, value: seleccionado.titulacionFamiliaId});
-
-    }
-
     const handleSave = async () => {
         let obj = { 
             titulacionId: items.item.titulacionId, 
@@ -228,7 +218,6 @@ const Titulaciones = () => {
                 status={items.status}
                 loadCsv={loadCsv}
                 items={items}
-                beforeEdit={beforeEdit}
                 formulario={form}
                 onOpenChange={onOpenChange}
             />

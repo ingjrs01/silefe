@@ -1,6 +1,7 @@
 export const form = {
     title: Liferay.Language.get('Titulaciones'),
     languages: ["es-ES","en-US","gl-ES"],
+    beforeEdit: ()=>console.log("beforeEdit"),
     fields: {
         id: {
             key:1,

@@ -1,6 +1,7 @@
 export const form = {
     title: Liferay.Language.get('Participantes'),
     languages: ["es-ES","en-US","gl-ES"],
+    beforeEdit: () => console.log("beforeEdit del Form"),
     fields: {
         id: {
             key:1,

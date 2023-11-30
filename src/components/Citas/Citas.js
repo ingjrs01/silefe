@@ -51,7 +51,6 @@ const Citas = () => {
     },[items.load]);
 
     const loadParticipantes = (value,field) => {
-        //const fieldname = 'participantInId';
         let fieldname = 'participantInId';
         if (field == 'originOutId')
             fieldname = 'participantOutId';

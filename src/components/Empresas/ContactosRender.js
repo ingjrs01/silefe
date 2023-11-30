@@ -15,7 +15,6 @@ const ContactosRender = ({redContactos,contactosHandle}) =>  {
         { ( redContactos.status === "list" ) &&
         <>
             <ClayTable>
-            <caption>{Liferay.Language.get("Contactos")}</caption>
             <ClayTable.Head>
                 <ClayTable.Row> <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} /> </ClayTable.Cell>
                 <ClayTable.Cell headingCell>{"Nombre"}</ClayTable.Cell>

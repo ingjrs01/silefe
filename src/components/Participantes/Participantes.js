@@ -32,7 +32,20 @@ const Participantes = () => {
     const navigate                               = useNavigate();
 
     const referer = `${url_referer}/participantes`;
+
+    const beforeEdit = (item) => {
+        //queryTitulaciones();
+        let sel = (item == undefined)?items.arr.filter(i => i.checked):item;
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel[0]['provinciaId']},referer).then(response => {
+            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
+        });
+        beforeFormacion(sel[0].id);
+        beforeExperiencia(sel[0].id);
+    }
+
     const form = formulario;
+    form.beforeEdit=beforeEdit;
 
     useEffect(()=>{
 		if (!isInitialized.current) {
@@ -270,17 +283,6 @@ const Participantes = () => {
         });
     }
 
-    const beforeEdit = () => {
-        //queryTitulaciones();
-        let sel = items.arr.filter(i => i.checked);   //[0]['provinciaId'];
-        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel[0]['provinciaId']},referer).then(response => {
-            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
-        });
-        beforeFormacion(sel[0].id);
-        beforeExperiencia(sel[0].id);
-    }
-
     const beforeFormacion = (participanteId) => {
         if (participanteId != undefined) {
             fetchAPIData('/silefe.formacionparticipante/filter-by-participante', {lang: getLanguageId(), participante: participanteId},referer).then(response => {
@@ -366,7 +368,6 @@ const Participantes = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
-                beforeEdit={beforeEdit}
                 items={items}
                 formulario={formulario}
                 onOpenChange={onOpenChange}

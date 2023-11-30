@@ -15,7 +15,6 @@ const CentrosRender = ({reducer,centrosHandle}) =>  {
         { ( reducer.status === "list" ) &&
         <>
             <ClayTable>
-            <caption>{Liferay.Language.get("Centros")}</caption>
             <ClayTable.Head>
                 <ClayTable.Row> <ClayTable.Cell headingCell><ClayCheckbox checked={false} onChange={() =>console.log("lalala")} /> </ClayTable.Cell>
                 <ClayTable.Cell headingCell>{"Nombre"}</ClayTable.Cell>

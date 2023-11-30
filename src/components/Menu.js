@@ -79,7 +79,7 @@ const Menu = ({handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formula
               <ClayButtonWithIcon
               aria-label="Edit"
               className="nav-btn nav-btn-monospaced"
-              onClick={() => {itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM});beforeEdit();} }
+              onClick={() => {itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM});/*beforeEdit();*/} }
               spritemap={spritemap}
               symbol="pencil"
             />

@@ -197,18 +197,22 @@ export const red_items = (state, action ) => {
         case ITEMS_ACTIONS.SELECT_ITEM:
             let sel = [];
             let seleccionado = {};
+            //console.debug(state.fields);
+            //debugger;
             if (action.hasOwnProperty('index')) {
                 seleccionado = state.arr[action.index];
-                if (state.fields.hasOwnProperty('beforeEdit'))
-                    state.fields.beforeEdit(seleccionado);
             }
             else {
                 sel = state.arr.filter(i => i.checked);
                 if (sel.length > 0) 
-                    seleccionado = sel[0];                
-                else
-                    return state;
+                seleccionado = sel[0];                
+            else
+            return state;
             }
+
+            if (state.fields.hasOwnProperty('beforeEdit'))
+                state.fields.beforeEdit(seleccionado);
+
             let e2 = resetErrors(state.fields);
             return {
                 ...state,

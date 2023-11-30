@@ -31,7 +31,45 @@ const Empresas = () => {
     const navigate                         = useNavigate();
 
     const referer = `${url_referer}/empresas`;
+
+    const beforeEdit = (id) => {
+        let empresaId = 0;
+        debugger;
+        if (id === undefined) {
+            empresaId = items.arr.filter(i => i.checked)[0].id;
+        }
+        else {
+            if (typeof(id) == 'int')
+                empresaId = id;
+            else
+                empresaId = id.id;
+        }
+
+        fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
+            let centros = response.data.map(i => {
+                return {
+                    ...i,
+                    id: i.empresaCentrosId
+                }
+            });
+            centrosHandle({ type: CENTROS_ACTIONS.LOAD, items: centros });
+        });
+
+        fetchAPIData('/silefe.contacto/filter-by-empresa', { empresaId: empresaId }, referer).then(response2 => {
+            let contacts = response2.data.map( j => {
+                return {
+                    ...j,
+                    id: j.contactoId,
+                    email: (j.email != null && j.email.length > 0) ? JSON.parse(j.email) : [],
+                    telefono: (j.telefono != null && j.telefono.length > 0) ? JSON.parse(j.telefono) : [],
+                }
+            });
+            contactosHandle({type:CONTACTOS_ACTIONS.LOAD,items: contacts });
+        });
+    }
+
     const form = formulario;
+    form.beforeEdit = beforeEdit;
 
     const fetchData = async () => {
         contactosHandle({type:CONTACTOS_ACTIONS.START});
@@ -59,9 +97,7 @@ const Empresas = () => {
                 ...i,
                 id: i.empresaId,
                 email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
-                //emailDefault :  (i.email != null && i.email.length > 0) ? JSON.parse(i.email)[0].value : "",
                 telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
-                //telefonoDefault: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono)[0].value : "",
                 checked: false
             })
         });
@@ -165,38 +201,6 @@ const Empresas = () => {
         });
     }
 
-
-    const beforeEdit = (id) => {
-        let empresaId = 0;
-        if (id === undefined) {
-            empresaId = items.arr.filter(i => i.checked)[0].id;
-        }
-        else
-            empresaId = id;
-
-        fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
-            let centros = response.data.map(i => {
-                return {
-                    ...i,
-                    id: i.empresaCentrosId
-                }
-            });
-            centrosHandle({ type: CENTROS_ACTIONS.LOAD, items: centros });
-        });
-
-        fetchAPIData('/silefe.contacto/filter-by-empresa', { empresaId: empresaId }, referer).then(response2 => {
-            let contacts = response2.data.map( j => {
-                return {
-                    ...j,
-                    id: j.contactoId,
-                    email: (j.email != null && j.email.length > 0) ? JSON.parse(j.email) : [],
-                    telefono: (j.telefono != null && j.telefono.length > 0) ? JSON.parse(j.telefono) : [],
-                }
-            });
-            contactosHandle({type:CONTACTOS_ACTIONS.LOAD,items: contacts });
-        });
-    }
-
     const loadCsv = () => {
         console.log("loadCsv");
     }
@@ -263,7 +267,6 @@ const Empresas = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
-                beforeEdit={beforeEdit}
                 items={items}
                 formulario={formulario}
                 onOpenChange={onOpenChange}
