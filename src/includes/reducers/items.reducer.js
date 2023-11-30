@@ -109,15 +109,18 @@ let index = 0;
 let tmp = []
 
 export const red_items = (state, action ) => {
+    //debugger;
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS:
+            console.log(action.form);
+            //debugger;
             return {
                 ...state,
                 fields: {...state.fields, ...action.form},
                 errors: resetErrors(action.form),
-                status: 'list',
-                item: createItem(action.form),
-                load: 1,
+                //status: 'list',
+                //item: createItem(action.form),
+              //  load: 1//(state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.START:
             let tmp_item = {};
@@ -178,7 +181,7 @@ export const red_items = (state, action ) => {
             }
         case ITEMS_ACTIONS.SET:
             if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
-                state.fields.fields[action.fieldname].change(action.value);
+                state.fields.fields[action.fieldname].change(action.value,action.fieldname);
             }
             return {
                 ...state,
@@ -196,6 +199,8 @@ export const red_items = (state, action ) => {
             let seleccionado = {};
             if (action.hasOwnProperty('index')) {
                 seleccionado = state.arr[action.index];
+                if (state.fields.hasOwnProperty('beforeEdit'))
+                    state.fields.beforeEdit(seleccionado);
             }
             else {
                 sel = state.arr.filter(i => i.checked);

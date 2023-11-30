@@ -1,6 +1,7 @@
 export const form = {
     title: Liferay.Language.get('Citas'),
     languages: ["es-ES","en-US","gl-ES"],
+    beforeEdit: () => {console.log("beforeEdit desde el Form")},
     fields: {
         id: {
             key:1,
@@ -103,7 +104,7 @@ export const form = {
         },
 		participantOutId: {
             key:10,
-            type: "select",
+            type: "selectfilter",
             label: Liferay.Language.get('Participante'),
             name: "participantOutId",
             enabled:true,

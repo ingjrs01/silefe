@@ -11,6 +11,7 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form as formulario } from "./Form";
 
@@ -30,6 +31,7 @@ const Citas = () => {
     useEffect(()=>{
 		if (!isInitialized.current) {
             initForm();
+            console.log("primera carga del form");
             itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form:form});
             if (id != 'undefined' && id > 0)
                 loadParticipante(id);
@@ -48,11 +50,49 @@ const Citas = () => {
 		}
     },[items.load]);
 
+    const loadParticipantes = (value,field) => {
+        //const fieldname = 'participantInId';
+        let fieldname = 'participantInId';
+        if (field == 'originOutId')
+            fieldname = 'participantOutId';
+
+        console.log("loadParticipantes con fieldname = " + fieldname);
+        switch(value) {
+            case '1':
+                fetchAPIData('/silefe.participante/all', {lang: getLanguageId()},referer).then(response => {
+                    const opts = [ ...response.data.map(obj => {return {value:obj.participanteId,label:obj.nombre + " " + obj.apellido1 + " " + obj.apellido2}})];
+                    itemsHandle({type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: fieldname, options: opts});
+                });
+                break;
+            case '2': 
+                fetchAPIData('/silefe.empresa/all', {lang: getLanguageId()},referer).then(response => {
+                    const opts = [ ...response.data.map(obj => {return {value:obj.empresaId,label:obj.razonSocial}})];
+                    itemsHandle({type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: fieldname, options: opts});
+                });
+                break;
+            case '3' : 
+                fetchAPIData('/silefe.oferta/all', {lang: getLanguageId()},referer).then(response => {                    
+                    const opts = [ ...response.data.map(obj => {
+                        const fecha = (obj.fechaIncorporacion != null) ? new Date(obj.fechaIncorporacion).toISOString().substring(0, 10) : "";
+                        return ({
+                            value:obj.ofertaId,
+                            label:obj.titulo.substring(0,12) + " " + obj.razonSocial + " " + fecha,
+                        })
+                    })];
+                    itemsHandle({type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: fieldname, options: opts});
+                });
+                break;
+            }
+    }
+
     const initForm = () => {
-        console.log("Estoy en initForm, y esto solo se carga la primera vez");
+        // ponemos el evento beforeEdit: 
+        form.beforeEdit = beforeEdit; 
         const seleccionarlabel = Liferay.Language.get("Seleccionar");
         form.fields.originInId.options = [{value:"0",label:seleccionarlabel}, {value:"1",label:"Participante"}, {value:"2",label:"Empresa"}, {value:"3",label:"Oferta"} ];
         form.fields.originOutId.options = [{value:"0",label:seleccionarlabel}, {value:"1",label:"Participante"}, {value:"2",label:"Empresa"}, {value:"3",label:"Oferta"} ];
+        form.fields.originInId.change  = loadParticipantes;
+        form.fields.originOutId.change = loadParticipantes;
     
         fetchAPIData('/silefe.acciontipo/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
@@ -64,51 +104,24 @@ const Citas = () => {
             form.fields.methodId.options = opts;
         });
 
+        console.log("estamos haciendo el initForm");
+        console.debug(items);
         fetchAPIData('/silefe.participante/all', {lang: getLanguageId()},referer).then(response => {
             const opts = [ ...response.data.map(obj => {return {value:obj.participanteId,label:obj.nombre + " " + obj.apellido1 + " " + obj.apellido2}})];
             form.fields.participantInId.options = opts;
             form.fields.participantOutId.options = opts;
-        });
-            
-     //   itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+        });           
     }
 
-    const loadParticipantes = () => {
-        if (items.item.methodId == 'undefined' || items.item.methodId == 0 )
-            return false;
-
-        switch(items.item.originInId) {
-            case '1':
-                fetchAPIData('/silefe.participante/all', {lang: getLanguageId()},referer).then(response => {
-                    const opts = [ ...response.data.map(obj => {return {value:obj.participanteId,label:obj.nombre + " " + obj.apellido1 + " " + obj.apellido2}})];
-                    form.fields.participantInId.options = opts;
-                    //form.fields.participantOutId.options = opts;
-                });
-                break;
-            case '2': 
-                console.log("cargando datos de empresas");
-                fetchAPIData('/silefe.empresa/all', {lang: getLanguageId()},referer).then(response => {
-                    const opts = [ ...response.data.map(obj => {return {value:obj.empresaId,label:obj.razonSocial}})];
-                    form.fields.participantInId.options = opts;
-                    //form.fields.participantOutId.options = opts;
-                });
-                break;
-            case '3' : 
-                console.log("cargando datos de ofertas");
-                break;
-            default: 
-                break
-        }
-
-    }
-
-    useEffect( ()=> {
-        console.log("Cargando los participantes");
-        loadParticipantes()
-    },[items.item.originInId])
+    //useEffect( ()=> {
+    //    console.log("Cargando los participantes de entrada");
+    //    console.debug(items);
+    //    if (items.fields.fields != undefined)
+    //        loadParticipantes()
+    //},[items.item.originInId])
 
     const loadParticipante = (id) => {
-        console.log("loadParcipipante");
+        console.log("loadParcipipante, esto es una fncion vacía");
     }
 
     const loadCsv = () => {
@@ -171,14 +184,20 @@ const Citas = () => {
             return({
                 ...i,
                 appointmentDate: (i.appointmentDate != null)?new Date(i.appointmentDate).toISOString().substring(0, 10):"",
+                appointmentHour :  toHours(i.appointmentHour),
                 checked:false
             })});
-        console.debug(tmp);
+        //console.debug(tmp);
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,total: totalItems, totalPages:totalPages,page:page});
     }
 
-    const beforeEdit = () => {
-        let sel = items.arr.filter(i => i.checked);
+    const beforeEdit = (itemSel) => {
+        //let sel = items.arr.filter(i => i.checked);
+        console.log("esto es un aforma")
+        console.debug(itemSel);
+        //sel[0]
+        loadParticipantes(itemSel.originInId, 'originInId');
+        loadParticipantes(itemSel.originOutId, 'originOutId');
     }
 
     if (!items)
