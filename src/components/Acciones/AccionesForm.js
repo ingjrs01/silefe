@@ -25,7 +25,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
 
         <ClayCard.Description truncate={false} displayType="text">
           <ClayForm>
-            <ClayTabs active={0} modern>
+            <ClayTabs active={items.fields.tabActive} modern>
               <ClayTabs.Item
                 key={"tab-item1"}
                 innerProps={{ "aria-controls": "tabpanel-1" }}
