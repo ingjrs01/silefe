@@ -42,7 +42,7 @@ export const form = {
         },
         puestoId: {
             key: 5,
-            type: "select",
+            type: "selectfilter",
             label: Liferay.Language.get('Puesto'),
             name: "puestoId",
             enabled:true,
@@ -70,7 +70,7 @@ export const form = {
         },
         cnaeId: {
             key: 7,
-            type: "select",
+            type: "selectfilter",
             label: Liferay.Language.get('Cnae'),
             name: "cnaeId",
             enabled:true,

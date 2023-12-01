@@ -8,7 +8,7 @@ import { MgtToolbar } from '../includes/interface/MgtToolbar';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
 import { handleDelete } from '../includes/utils';
 
-const Menu = ({handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formulario, onOpenChange}) => {
+const Menu = ({handleSave, itemsHandle, status,loadCsv,items, formulario, onOpenChange}) => {
 
   return (
     <>
@@ -79,7 +79,7 @@ const Menu = ({handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formula
               <ClayButtonWithIcon
               aria-label="Edit"
               className="nav-btn nav-btn-monospaced"
-              onClick={() => {itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM});/*beforeEdit();*/} }
+              onClick={() => itemsHandle({type:ITEMS_ACTIONS.SELECT_ITEM}) }
               spritemap={spritemap}
               symbol="pencil"
             />
@@ -126,7 +126,7 @@ const Menu = ({handleSave, itemsHandle, status,loadCsv,items, beforeEdit,formula
     </ClayToolbar>
     </ClayIconSpriteContext.Provider>
     {
-      (items.search.length > 0 || items.order.length > 0) &&
+      ( items.status == 'list' && (items.search.length > 0 || items.order.length > 0)) &&
       <MgtToolbar items={items} itemsHandle={itemsHandle} />
     }
     </>
