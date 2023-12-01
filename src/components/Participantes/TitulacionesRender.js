@@ -13,7 +13,6 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
       {redTitulaciones.status == "list" &&
         <>
           <ClayTable>
-            <caption>{Liferay.Language.get("Titulaciones")}</caption>
             <ClayTable.Head>
               <ClayTable.Row>
                 <ClayTable.Cell headingCell><ClayCheckbox checked={false} />

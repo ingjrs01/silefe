@@ -18,7 +18,6 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
         { ( experiencias.status === "list" ) &&
         <>
             <ClayTable>
-            <caption>Experiencias</caption>
             <ClayTable.Head>
                 <ClayTable.Row>
                 <ClayTable.Cell headingCell><ClayCheckbox checked={false} />

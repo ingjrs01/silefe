@@ -35,13 +35,15 @@ const Participantes = () => {
 
     const beforeEdit = (item) => {
         //queryTitulaciones();
-        let sel = (item == undefined)?items.arr.filter(i => i.checked):item;
-        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: sel[0]['provinciaId']},referer).then(response => {
+        //let sel = (item == undefined)?items.arr.filter(i => i.checked):item;
+
+
+        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: item.provinciaId},referer).then(response => {
             const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
         });
-        beforeFormacion(sel[0].id);
-        beforeExperiencia(sel[0].id);
+        beforeFormacion(item.id);
+        beforeExperiencia(item.id);
     }
 
     const form = formulario;
@@ -86,8 +88,6 @@ const Participantes = () => {
                     telefono: (r.data.telefono != null && r.data.telefono.length > 0)?JSON.parse(r.data.telefono):[],
                 }
             }
-            console.log("datos llegados");
-            console.debug(datatmp);
             itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:datatmp});
         }).catch(error => {
             console.log("error");
@@ -101,9 +101,6 @@ const Participantes = () => {
 
     const processCsv = () => {
         if (file) {
-            console.log("hay file");
-            console.debug(file);
-
             //const file = fileInput.files[0];
             const formData = new FormData();
             formData.append('file', file);
@@ -384,10 +381,6 @@ const Participantes = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     plugin={plugin}
-                    //experiencias={redExperiencias}
-                    //redTitulaciones={redTitulaciones}
-                    //titulacionHandler={titulacionHandler}
-                    //experienciasHandler={experienciasHandler}
                 />
             }
             {
