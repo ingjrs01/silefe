@@ -17,8 +17,6 @@ export const getUserId = () => Liferay.ThemeDisplay.getUserId();
 export const getRolesUser = () => {
     return Liferay.Service('/role/get-user-roles',{userId: getUserId()}, (response) => {
         const l = response.map(e => (e.name) );
-        console.log("esto es l");
-        console.log(l);
         return l;
     } );
 }

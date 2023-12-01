@@ -66,7 +66,7 @@ export const form = {
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");},
-            className: 'col-3',
+            className: 'col-4',
         },
         cnaeId: {
             key: 7,
@@ -131,14 +131,14 @@ export const form = {
             change: ()=>{console.log("cambia el select");},
             className: 'col-3'
         },
-        //infoJornada: {
-        //    key: 13,
-        //    type: "text",
-        //    label: Liferay.Language.get('InfoJornada'),
-        //    name: "infoJornada",
-        //    placeholder: "",
-        //    conditions:["text"]
-        //},
+        infoJornada: {
+            key: 13,
+            type: "textarea",
+            label: Liferay.Language.get('InfoJornada'),
+            name: "infoJornada",
+            className: 'col-9',
+            conditions:[]
+        },
         infoColectivos: {
             key: 14,
             type: "text",
@@ -328,8 +328,12 @@ export const form = {
             ariacontrols: "tabpanel-1",
             rows: [
                 {
+                    key:40,
+                    cols: ['titulo', 'proyectoId']
+                },
+                {
                     key:41,
-                    cols: ['titulo', 'proyectoId', 'jornadaId']
+                    cols: ['jornadaId','infoJornada']
                 },
                 {
                     key:42,
@@ -339,10 +343,6 @@ export const form = {
                     key:43,
                     cols: ['puestoId','cnaeId', 'tipoContratoId','fechaIncorporacion']
                 },
-                //{
-                //    key:44,
-                //    cols: [ ]
-                //},
                 {
                     key:45,
                     cols: ['tareas']
