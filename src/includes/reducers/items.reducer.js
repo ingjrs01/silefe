@@ -244,7 +244,6 @@ export const red_items = (state, action ) => {
             });
             //let err2 = resetErrors(state.fields);
             //console.debug(tmp_item);
-            //debugger;
             return {
                 ...state,
                 status: 'edit',

@@ -1,9 +1,8 @@
 import ClayAutocomplete from '@clayui/autocomplete';
 import React, { useEffect, useState } from 'react';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 CryptoJS = require('crypto-js');
 
-export const Selectfilter = ({ itemsHandle, field, item }) => {
+export const Selectfilter = ({ change, field, item }) => {
     const [options, setOptions] = useState(new Map());
     const [val, setVal ] = useState ("");
     var selected = "";
@@ -12,9 +11,9 @@ export const Selectfilter = ({ itemsHandle, field, item }) => {
     const loadOptions = () => {
         var tmp = new Map();       
         selected = "";
-        console.log("loadOptions");
-        console.debug(field);
-        console.debug(item);
+        //console.log("loadOptions");
+        //console.debug(field);
+        //console.debug(item);
         let sitem = "";
         if (item == undefined || item == null)
             setVal("");
@@ -40,8 +39,11 @@ export const Selectfilter = ({ itemsHandle, field, item }) => {
     const onChangeSelect = (value) => {
         var s = CryptoJS.MD5(value).toString();
         const ttmp = options.get(s);
-        if (ttmp != undefined)
-            itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: ttmp.value })
+        if (ttmp != undefined) {
+            debugger;
+            change(field.name,ttmp.value);            
+        }
+            //itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: ttmp.value })
         else   
             console.log("Todavía no hay un elemento válido");
         setVal(value);

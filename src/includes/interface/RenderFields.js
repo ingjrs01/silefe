@@ -59,6 +59,9 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
         break;
     }
   }
+  const change = (fieldname,value) => {
+    itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: fieldname, value: value });
+  }
 
   return (
     <>
@@ -178,7 +181,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
                     {(items.fields.fields[it].type === 'hour')        && <Hour          itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'phone')       && <Phone         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'email')       && <Email         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
-                    {(items.fields.fields[it].type === 'selectfilter')&& <Selectfilter  itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'selectfilter')&& <Selectfilter  change={change} field={items.fields.fields[it]} item={items.item[it]}  />          }
                     {(items.fields.fields[it].type === 'other')       && <> { plugin()[items.fields.fields[it].componentName] } </> }
 
                     {items.fields.fields[it].type == 'multilang' &&

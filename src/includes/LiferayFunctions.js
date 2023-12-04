@@ -2,6 +2,9 @@
 
 export const url_api = "http://lfdevapps01.depo.es:8080/api/jsonws/invoke";
 export const url_referer = "http://lfdevapps01.depo.es:8080";
+
+//export const url_api = "https://silefe-pre.depo.es/api/jsonws/invoke";
+//export const url_referer = "https://silefe-pre.depo.es";
 export const spritemap = `${url_referer}/o/my-project/icons.svg`;
 
 export function getAuthToken() {

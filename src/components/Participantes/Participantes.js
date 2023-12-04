@@ -35,9 +35,6 @@ const Participantes = () => {
 
     const beforeEdit = (item) => {
         //queryTitulaciones();
-        //let sel = (item == undefined)?items.arr.filter(i => i.checked):item;
-
-
         fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: item.provinciaId},referer).then(response => {
             const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});

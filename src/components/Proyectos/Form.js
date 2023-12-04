@@ -2,6 +2,7 @@
 export const form = {
     title: Liferay.Language.get('Proyectos'),
     languages: ["es-ES","en-US","gl-ES"],
+    beforeEdit: () => console.log("beforeEdit desde Form"),
     fields: {
         id: {
             key:1,

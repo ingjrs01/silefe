@@ -33,17 +33,11 @@ const Empresas = () => {
     const referer = `${url_referer}/empresas`;
 
     const beforeEdit = (id) => {
-        let empresaId = 0;
-        debugger;
-        if (id === undefined) {
-            empresaId = items.arr.filter(i => i.checked)[0].id;
-        }
-        else {
-            if (typeof(id) == 'int')
-                empresaId = id;
-            else
-                empresaId = id.id;
-        }
+        let empresaId = 0;        
+        if (typeof(id) == 'int')
+            empresaId = id;
+        else
+            empresaId = id.id;
 
         fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
             let centros = response.data.map(i => {

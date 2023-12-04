@@ -149,7 +149,7 @@ const Acciones = () => {
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: totalItems,page:page});
     }
 
-    const beforeEdit = () => {
+    const beforeEdit = (item) => {
         fetchAPIData('/silefe.docente/all', {lang: getLanguageId()}).then(response => {
             const tits = response.data.map( i => {
                 let tt = JSON.parse(i.email);
@@ -163,9 +163,8 @@ const Acciones = () => {
             docentesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:tits});
         })
 
-        let sel = items.arr.filter(i => i.checked);
-        if (sel.length > 0) {
-            const accionId = sel[0].accionId;
+        if ( item.accionId != undefined && item.accionId > 0) {
+            const accionId = item.accionId;
             ejecucionHandlerT({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
             ejecucionHandlerP({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
             ejecucionHandlerG({type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId',value:accionId});
@@ -193,10 +192,8 @@ const Acciones = () => {
                     if (i.email != null && i.email.length > 0) {
                         const tmp = JSON.parse(i.email);
                         if (tmp.length > 0)
-                            email = tmp[0].value;
-                        
+                            email = tmp[0].value;                        
                     }
-
                     return {
                         ...i,
                         apellidos: i.apellido1 + " " + i.apellido2,

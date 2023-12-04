@@ -186,15 +186,10 @@ const Citas = () => {
                 appointmentHour :  toHours(i.appointmentHour),
                 checked:false
             })});
-        //console.debug(tmp);
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,total: totalItems, totalPages:totalPages,page:page});
     }
 
     const beforeEdit = (itemSel) => {
-        //let sel = items.arr.filter(i => i.checked);
-        console.log("esto es un aforma")
-        console.debug(itemSel);
-        //sel[0]
         loadParticipantes(itemSel.originInId, 'originInId');
         loadParticipantes(itemSel.originOutId, 'originOutId');
     }

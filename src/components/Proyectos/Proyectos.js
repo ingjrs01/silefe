@@ -343,9 +343,6 @@ const Proyectos = () => {
         }
     }
 
-    //if (!items || items.arr.length == 0)
-    //return (<div>{Liferay.Language.get('Cargando')}</div>)
-
     return (
         <>
             <Menu
@@ -353,7 +350,6 @@ const Proyectos = () => {
                 itemsHandle={itemsHandle}
                 status={items.status}
                 loadCsv={loadCsv}
-                beforeEdit={beforeEdit}
                 items={items}
                 formulario={formulario}
                 onOpenChange={onOpenChange}

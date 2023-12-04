@@ -5,9 +5,8 @@ import ClayForm, { ClayInput, ClaySelect } from '@clayui/form';
 import React from "react";
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import { Selectfilter } from '../../includes/interface/fields/Selectfilter';
 import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/experiencias.reducer";
-
-//import RenderFields from "./RenderFields";
 
 export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
 
@@ -124,7 +123,15 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                 </ClayForm.Group>
               </div>
               <div className="row">
-
+              <ClayForm.Group className={"col-4"} key={"Group-111"} >
+                    <Selectfilter 
+                      change={(fieldname,value) => experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: fieldname, value: value })}
+                      field={{name: "ocupacion", options: experiencias.ocupacionesOptions, label: "Ocupacion", placeholder:"Ocupacion", className: 'col-4' }} 
+                      item={experiencias.item.ocupacion}
+                    />
+                    </ClayForm.Group>
+                    {
+                      /*
               <ClayForm.Group className="col">
                   <label htmlFor="basicInput">{Liferay.Language.get("Ocupacion")}</label>
                   <ClaySelect aria-label="Select Label"
@@ -147,7 +154,8 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                       })
                     }
                   </ClaySelect>
-                </ClayForm.Group>
+                </ClayForm.Group>*/
+                    }
 
                 <ClayForm.Group className="col">
                   <label htmlFor="basicInput">{Liferay.Language.get("Duracion")}</label>

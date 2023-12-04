@@ -5,6 +5,7 @@ import ClayForm, { ClayInput, ClaySelect } from '@clayui/form';
 import React from "react";
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import { Selectfilter } from '../../includes/interface/fields/Selectfilter';
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 
 export const TableForm = ({redTitulaciones, titulacionHandler}) => {
@@ -139,6 +140,15 @@ export const TableForm = ({redTitulaciones, titulacionHandler}) => {
                         {/* ---------------------------------------------------------------------------------------------------------------- */}
                         </div>
                         <div className="row">
+                          <ClayForm.Group className={"col-6"} key={"Group-111"} >
+                          <Selectfilter 
+                            change={(fieldname,value) => titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONID,value:value})}
+                            field={{name: "titulacion", options: redTitulaciones.titulacionOptions, label: "Titulación", placeholder:"Titulación", className: 'col-4' }} 
+                            item={redTitulaciones.titulacion.titulacionId}
+                          />
+                            </ClayForm.Group>                                                   
+                          {/*
+
                         <ClayForm.Group className="col">
                             <label htmlFor="basicInput">{ Liferay.Language.get("Titulacion") }</label>
                               <ClaySelect aria-label="Select Label"
@@ -160,6 +170,7 @@ export const TableForm = ({redTitulaciones, titulacionHandler}) => {
                                 }
                             </ClaySelect>
                         </ClayForm.Group>
+                              */}
                         </div>
                         <div className="row">
                         <ClayForm.Group className="col">

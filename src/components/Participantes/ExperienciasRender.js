@@ -7,9 +7,6 @@ import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/experiencias.reduce
 import { ExperienciaForm } from "./ExperienciaForm";
 
 export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
-    //console.log("ExperienciasRender");
-    //console.debug(experiencias);
-    //debugger;
     if (!experiencias.items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -64,7 +61,6 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
             </ClayTable.Body>
             </ClayTable>
             <ClayButton onClick={e => { 
-                //edit(-1);
                 experienciasHandler({type: EXPERIENCIA_ACTIONS.NEW_ITEM})
             }} 
             displayType="primary">{Liferay.Language.get('Nuevo')} 
@@ -78,8 +74,7 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
             <ExperienciaForm
                 experiencias={experiencias}
                 experienciasHandler={experienciasHandler}
-            />
-            
+            />           
         }
 
         </>
