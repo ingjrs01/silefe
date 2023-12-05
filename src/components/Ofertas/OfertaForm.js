@@ -1,7 +1,8 @@
+import { GenericForm } from "../../includes/GenericForm";
+
 export const form = {
+    ...GenericForm,
     title: Liferay.Language.get('Ofertas'),
-    languages: ["es-ES","en-US","gl-ES"],
-    beforeEdit: () => console.log("beforeEdit"),
     fields: {
         id: {
             key:1,

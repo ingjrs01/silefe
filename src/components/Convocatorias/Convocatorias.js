@@ -12,7 +12,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from "./Form";
+import { form } from "./Form";
 
 const Convocatorias = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -20,9 +20,7 @@ const Convocatorias = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
-
     const referer = `${url_referer}/cnos`;
-    const form = formulario;
 
     useEffect(()=>{
 		if (!isInitialized.current) {
@@ -98,6 +96,14 @@ const Convocatorias = () => {
         })
     }
 
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+
     const fetchData = async () => {
         const postdata = {
             pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
@@ -119,12 +125,8 @@ const Convocatorias = () => {
     return (
         <>
             <Menu 
-                handleSave={handleSave} 
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 

@@ -1,6 +1,8 @@
+import { GenericForm } from '../../includes/GenericForm';
+
 export const form = {
+    ...GenericForm,
     title: Liferay.Language.get('AccionesTipo'),
-    languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
             key:1,
@@ -31,10 +33,6 @@ export const form = {
         }
     },
     rows: [
-        //{
-        //    key:9,
-        //    cols: ['id']
-        //},
         {
             key:8,
             cols: ['codigo']

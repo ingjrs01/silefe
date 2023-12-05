@@ -1,6 +1,7 @@
+import { GenericForm } from "../../includes/GenericForm";
 export const form = {
+    ...GenericForm,
     title: Liferay.Language.get('Cnaes'),
-    languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
             key:1,
@@ -27,9 +28,6 @@ export const form = {
             data: null,
             name: "fichero", 
             value:"lelele", 
-            //placeholder: Liferay.Language.get('Descripcion'), 
-            //conditions: ["text"]
-
         }
     },
     rows: [

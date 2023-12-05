@@ -11,7 +11,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
+import { form } from './Form';
 
 const Cnaes = () => {
     const [items,itemsHandle]            = useReducer(red_items, initialState);
@@ -20,7 +20,6 @@ const Cnaes = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-    const form = formulario;
     const referer = `${url_referer}/cnaes`;
 
     const loadCsv = () => {
@@ -60,7 +59,6 @@ const Cnaes = () => {
                 userId: getUserId()
             },
         }
-        
         await saveFileAPI('/silefe.cnae/save-file',{messageId: "1",file: items.item.fichero},referer);
         let endpoint = '/silefe.cnae/save-cnae';
         if (items.status === 'new')
@@ -78,7 +76,6 @@ const Cnaes = () => {
         const endpoint = "/silefe.cnae/remove-cnaes";
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
 
-
         deleteAPI(endpoint,s,referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
@@ -88,8 +85,15 @@ const Cnaes = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
             }
         })
-
     }
+
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
 
     const fetchData = async () => {
         const postdata = {
@@ -124,12 +128,8 @@ const Cnaes = () => {
     return (
         <>
             <Menu 
-                handleSave={handleSave} 
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 

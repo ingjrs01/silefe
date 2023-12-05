@@ -1,6 +1,8 @@
+import { GenericForm } from '../../includes/GenericForm';
+
 export const form = {
-    title: Liferay.Language.get('Carnets'),
-    languages: ["es-ES","en-US","gl-ES"],
+    ...GenericForm,
+    title: Liferay.Language.get('Carnets'),    
     fields: {
         id: {
             key:1,

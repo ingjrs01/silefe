@@ -8,7 +8,7 @@ import { MgtToolbar } from '../includes/interface/MgtToolbar';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
 import { handleDelete } from '../includes/utils';
 
-const Menu = ({handleSave, itemsHandle, status,loadCsv,items, formulario, onOpenChange}) => {
+const Menu = ({ itemsHandle, items, onOpenChange}) => {
 
   return (
     <>
@@ -17,12 +17,12 @@ const Menu = ({handleSave, itemsHandle, status,loadCsv,items, formulario, onOpen
       <ClayToolbar.Nav>
         <ClayToolbar.Item className="text-left" expand>
           <ClayToolbar.Section>
-            <h2 className='h1'>{ formulario.title }</h2>
+            <h2 className='h1'>{ items.fields.title }</h2>
           </ClayToolbar.Section>
         </ClayToolbar.Item>
 
         {
-        items.status == "list" && formulario.searchFields.length > 1 &&
+        items.status == "list" && items.fields.searchFields != undefined && items.fields.searchFields.length > 1 &&
         <ClayToolbar.Item>
               <ClaySelect aria-label="Select Label"
                 id={"fieldMenu"}
@@ -37,11 +37,11 @@ const Menu = ({handleSave, itemsHandle, status,loadCsv,items, formulario, onOpen
                     label={ Liferay.Language.get("Seleccionar")}
                     value={ -1 }
                   />
-                { formulario.searchFields.map( field => (
+                { items.fields.searchFields.map( field => (
                   <ClaySelect.Option
-                    key={"Aon-" + formulario.fields[field].key }
-                    label={formulario.fields[field].label}
-                    value={formulario.fields[field].name}
+                    key={"Aon-" + items.fields.fields[field].key }
+                    label={items.fields.fields[field].label}
+                    value={items.fields.fields[field].name}
                   />
                 )) }
               </ClaySelect>
@@ -75,7 +75,7 @@ const Menu = ({handleSave, itemsHandle, status,loadCsv,items, formulario, onOpen
                   symbol="trash"
                 />
             {
-              (status === 'list') &&
+              (items.status === 'list') &&
               <ClayButtonWithIcon
               aria-label="Edit"
               className="nav-btn nav-btn-monospaced"
@@ -87,18 +87,18 @@ const Menu = ({handleSave, itemsHandle, status,loadCsv,items, formulario, onOpen
             }
 
             {
-              (status === 'new' || status === 'edit') &&
+              (items.status === 'new' || items.status === 'edit') &&
               <ClayButtonWithIcon
                 aria-label="Save"
                 className="nav-btn nav-btn-monospaced"
-                onClick={() => { handleSave() }}
+                onClick={() => items.fields.handleSave() }
                 spritemap={spritemap}
                 symbol="disk"
               />
             }
 
             {
-              (status === 'list') &&
+              (items.status === 'list') &&
               <ClayButtonWithIcon
                 aria-label="Add"
                 className="nav-btn nav-btn-monospaced"
@@ -108,14 +108,24 @@ const Menu = ({handleSave, itemsHandle, status,loadCsv,items, formulario, onOpen
               />
             }
             {
-              (status === 'list') &&
+              (items.status === 'list') &&
+              <>
               <ClayButtonWithIcon
                 aria-label="Load"
                 className="nav-btn nav-btn-monospaced"
-                onClick={() => loadCsv()}
+                onClick={() => items.fields.loadCsv()}
                 spritemap={spritemap}
                 symbol="import-list"
               />
+              <ClayButtonWithIcon
+              aria-label="Download"
+              className="nav-btn nav-btn-monospaced"
+              onClick={() => items.fields.downloadFunc()}
+              spritemap={spritemap}
+              symbol="document-table"
+            />
+              </>
+
             }
           </ClayButton.Group>
           </ClayToolbar.Section>

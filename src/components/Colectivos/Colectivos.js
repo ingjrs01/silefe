@@ -11,7 +11,7 @@ import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
+import { form } from './Form';
 
 const Colectivos = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState); 
@@ -20,13 +20,7 @@ const Colectivos = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-    const form = formulario;
     const referer = `${url_referer}/colectivos`;
-
-    //if (!isInitialized.current) {
-    //    console.log("una forma de inicializar el formulario");
-    //    itemsHandle({type: ITEMS_ACTIONS.RESET});
-    //}
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -98,6 +92,15 @@ const Colectivos = () => {
         })
     }
 
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+
+
     const fetchData = async () => {
         const postdata = {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
@@ -131,12 +134,8 @@ const Colectivos = () => {
     return (
         <>
             <Menu 
-                handleSave={handleSave} 
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 

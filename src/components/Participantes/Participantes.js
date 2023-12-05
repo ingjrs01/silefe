@@ -15,7 +15,7 @@ import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/
 import { TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
 import Menu from '../Menu';
 import { ExperienciasRender } from './ExperienciasRender';
-import { form as formulario } from "./Form";
+import { form } from "./Form";
 import { TitulacionesRender } from './TitulacionesRender';
 
 
@@ -43,8 +43,6 @@ const Participantes = () => {
         beforeExperiencia(item.id);
     }
 
-    const form = formulario;
-    form.beforeEdit=beforeEdit;
 
     useEffect(()=>{
 		if (!isInitialized.current) {
@@ -191,6 +189,10 @@ const Participantes = () => {
         if (state != 'undefined' && state != null && state.backUrl.length > 0)
             navigate(state.backUrl+state.ancestorId);
     }
+
+    form.beforeEdit=beforeEdit;
+    form.handleSave=handleSave;
+    form.loadCsv=loadCsv;
 
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map( i => {return i.participanteId});
@@ -358,12 +360,8 @@ const Participantes = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') &&

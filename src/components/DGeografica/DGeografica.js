@@ -11,7 +11,7 @@ import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
+import { form } from './Form';
 
 const DGeografica = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState); 
@@ -19,11 +19,7 @@ const DGeografica = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
-
-    const form = formulario;
     const referer = `${url_referer}/dgeografica`;
-
-    console.log("eooo");
 
     const loadCsv = () => {
         console.log("Cargando un csv");
@@ -94,6 +90,13 @@ const DGeografica = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') + ": " + Errors[error] }]);                            
     }
 
+    const downloadFile = () => {
+        console.log("descargando fichero");
+    }
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+
     const fetchData = async () => {
         const postdata = {
             pagination:  {page: items.pagination.page, pageSize: items.pagination.pageSize},
@@ -127,12 +130,8 @@ const DGeografica = () => {
     return (
         <>
             <Menu 
-                handleSave={handleSave} 
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 

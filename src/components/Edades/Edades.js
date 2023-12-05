@@ -11,8 +11,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
-
+import { form } from './Form';
 
 const Edades = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -20,8 +19,6 @@ const Edades = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
-
-    const form = formulario;
     const referer = `${url_referer}/edad`;
 
     const loadCsv = () => {
@@ -84,6 +81,13 @@ const Edades = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
         });
     }
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+    
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
 
     const fetchData = async () => {
         const postdata = {
@@ -97,8 +101,6 @@ const Edades = () => {
         }
         
         let {data,totalPages, totalItems,page} = await fetchAPIData('/silefe.edad/filter',postdata,referer);
-        await console.debug(data);
-
         const tmp = await data.map(i => {return({...i,checked:false})});
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: totalItems,page:page});
     }
@@ -119,12 +121,8 @@ const Edades = () => {
     return (
         <>
             <Menu 
-                handleSave={handleSave} 
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 

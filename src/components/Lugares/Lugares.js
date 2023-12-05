@@ -12,7 +12,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from "./Form";
+import { form } from "./Form";
 
 const Lugares = () => {
     const [items, itemsHandle]             = useReducer(red_items,initialState);
@@ -23,24 +23,7 @@ const Lugares = () => {
     const { id }                           = useParams();
     const { state }                        = useLocation();
     const navigate                         = useNavigate();
-
     const referer = `${url_referer}/lugares`;
-    const form = formulario;
-
-    const fetchData = async () => {
-        const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            options: {
-                filters: [
-                    {name: items.searchField, value : (items.search && typeof items.search !== 'undefined')?items.search:""},
-                ],
-                order: items.order
-            },
-        }
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.lugar/filter', postdata, referer);
-        const tmp = await data.map(i => ({...i,checked: false}));
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
-    }
 
     const handleSave = () => {
         let endpoint = '/silefe.lugar/save-lugar';
@@ -96,6 +79,13 @@ const Lugares = () => {
     const loadItem = (id) => {
         fetchAPIRow('/silefe.lugar/get',{id:id},referer).then (r => itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:r})) ;
     }
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
 
     useEffect (()=> {
         if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0)
@@ -125,18 +115,29 @@ const Lugares = () => {
         }
     }, [items.load]);
 
+    const fetchData = async () => {
+        const postdata = {
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
+            options: {
+                filters: [
+                    {name: items.searchField, value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                ],
+                order: items.order
+            },
+        }
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.lugar/filter', postdata, referer);
+        const tmp = await data.map(i => ({...i,checked: false}));
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
+    }
+
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&

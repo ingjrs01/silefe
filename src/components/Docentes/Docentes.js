@@ -12,7 +12,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
+import { form } from './Form';
 
 const Docentes = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -23,8 +23,6 @@ const Docentes = () => {
     const {id}                           = useParams();
     const {state}                        = useLocation();
     const navigate                       = useNavigate();
-
-    const form = formulario;
     const referer = `${url_referer}/docentes`;
 
     const loadCsv = () => {
@@ -90,6 +88,13 @@ const Docentes = () => {
             }
         })
     }
+    const downloadFile = () => {
+        cosole.log("downloadFile");
+    }
+
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
 
     const fetchData = async () => {
         if (form.fields.provinciaId.options == undefined)  {
@@ -115,8 +120,6 @@ const Docentes = () => {
                 telefono: (i.telefono != null && i.telefono.length > 0)?JSON.parse(i.telefono):[],
                 checked:false
             })});
-        await console.log("datos recibidos");
-        await console.debug(tmp);
 
         await itemsHandle({type:ITEMS_ACTIONS.START,items:tmp, fields: form,totalPages:totalPages, total: totalItems,page:page});
     }
@@ -204,12 +207,8 @@ const Docentes = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') &&

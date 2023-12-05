@@ -13,7 +13,7 @@ import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { toHours } from '../../includes/utils';
 import Menu from '../Menu';
-import { form as formulario } from "./Form";
+import { form } from "./Form";
 
 const Citas = () => {
     const [items,itemsHandle]                    = useReducer(red_items,initialState );
@@ -26,7 +26,6 @@ const Citas = () => {
     const navigate                               = useNavigate();
 
     const referer = `${url_referer}/citas`;
-    const form = formulario;
 
     useEffect(()=>{
 		if (!isInitialized.current) {
@@ -162,6 +161,15 @@ const Citas = () => {
         })
     }
 
+    const downloadFile = () => {
+        console.log("download");
+    }
+
+    form.downloadFunc = downloadFile;
+    form.beforeEdit = beforeEdit;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+
     const fetchData = async () => {
         if (form.fields.tipoCitaId.options == 'undefined') {
             initForm();
@@ -177,9 +185,7 @@ const Citas = () => {
             },
         }
         let {data,totalPages,page,totalItems} = await fetchAPIData('/silefe.cita/filter',postdata,referer);
-        console.log("fetchData");
         const tmp = await data.map(i => {
-            console.debug(i);
             return({
                 ...i,
                 appointmentDate: (i.appointmentDate != null)?new Date(i.appointmentDate).toISOString().substring(0, 10):"",
@@ -200,13 +206,8 @@ const Citas = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
-                beforeEdit={beforeEdit}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') &&

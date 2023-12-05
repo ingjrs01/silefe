@@ -16,7 +16,7 @@ import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/
 import Menu from '../Menu';
 import CentrosRender from "./CentrosRender";
 import ContactosRender from "./ContactosRender";
-import { form as formulario } from "./Form";
+import { form } from "./Form";
 
 const Empresas = () => {
     const [items, itemsHandle]             = useReducer(red_items,initialState);
@@ -29,8 +29,12 @@ const Empresas = () => {
     const { id }                           = useParams();
     const { state }                        = useLocation();
     const navigate                         = useNavigate();
-
     const referer = `${url_referer}/empresas`;
+
+    const loadCsv = () => {
+        console.log("loadCsv");
+    }
+
 
     const beforeEdit = (id) => {
         let empresaId = 0;        
@@ -60,69 +64,6 @@ const Empresas = () => {
             });
             contactosHandle({type:CONTACTOS_ACTIONS.LOAD,items: contacts });
         });
-    }
-
-    const form = formulario;
-    form.beforeEdit = beforeEdit;
-
-    const fetchData = async () => {
-        contactosHandle({type:CONTACTOS_ACTIONS.START});
-        const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-            options: {
-                filters: [
-                    {name: items.searchField, value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""},
-                ],
-                order: items.order
-            },
-        }
-
-        if (redCentros == undefined || redCentros.provincias.length == 0)
-            initCentrosForm();
-
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
-
-        const tmp = await data.map(i => {
-            if (i.email != null && i.email.length > 0) {
-                console.log("el email");
-                //console.log(JSON.parse(i.email)[0].value);
-            }
-            return ({
-                ...i,
-                id: i.empresaId,
-                email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
-                telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
-                checked: false
-            })
-        });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
-    }
-
-    const initCentrosForm = () => {
-        const seleccionarlabel = Liferay.Language.get('Seleccionar');
-        form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "CIF" }];
-
-        fetchAPIData('/silefe.cnae/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            form.fields.cnaeId.options = opts;
-        });
-
-        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
-            centrosHandle({ type: CENTROS_ACTIONS.PROVINCIAS, provincias: opts })
-        });
-
-        fetchAPIData('/silefe.municipio/all', { lang: getLanguageId() }, referer).then(response => {
-            if (response.data.length > 0)
-                centrosHandle({ type: CENTROS_ACTIONS.MUNICIPIOS, municipios: [...response.data] })
-        });
-
-        fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
-            centrosHandle({ type: CENTROS_ACTIONS.TIPOS_VIA, tipos: opts })
-        });
-
-
     }
 
     const handleSave = () => {
@@ -182,6 +123,74 @@ const Empresas = () => {
         });
     }
 
+    const downloadfile = () => {
+        console.log("descargando");
+    }
+
+    form.beforeEdit = beforeEdit;
+    form.downloadFunc = downloadfile;
+    form.loadCsv = loadCsv;
+    form.handleSave = handleSave;
+
+    const fetchData = async () => {
+        contactosHandle({type:CONTACTOS_ACTIONS.START});
+        const postdata = {
+            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
+            options: {
+                filters: [
+                    {name: items.searchField, value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""},
+                ],
+                order: items.order
+            },
+        }
+
+        if (redCentros == undefined || redCentros.provincias.length == 0)
+            initCentrosForm();
+
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
+
+        const tmp = await data.map(i => {
+            if (i.email != null && i.email.length > 0) {
+                console.log("el email");
+            }
+            return ({
+                ...i,
+                id: i.empresaId,
+                email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
+                telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
+                checked: false
+            })
+        });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
+    }
+
+    const initCentrosForm = () => {
+        const seleccionarlabel = Liferay.Language.get('Seleccionar');
+        form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "CIF" }];
+
+        fetchAPIData('/silefe.cnae/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            form.fields.cnaeId.options = opts;
+        });
+
+        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+            centrosHandle({ type: CENTROS_ACTIONS.PROVINCIAS, provincias: opts })
+        });
+
+        fetchAPIData('/silefe.municipio/all', { lang: getLanguageId() }, referer).then(response => {
+            if (response.data.length > 0)
+                centrosHandle({ type: CENTROS_ACTIONS.MUNICIPIOS, municipios: [...response.data] })
+        });
+
+        fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+            centrosHandle({ type: CENTROS_ACTIONS.TIPOS_VIA, tipos: opts })
+        });
+
+
+    }
+
     const confirmDelete = async () => {
         const endpoint = "/silefe.empresa/delete-empresas";
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
@@ -193,10 +202,6 @@ const Empresas = () => {
             else 
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
         });
-    }
-
-    const loadCsv = () => {
-        console.log("loadCsv");
     }
 
     const plugin2 = () => {
@@ -257,12 +262,8 @@ const Empresas = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&

@@ -11,7 +11,7 @@ import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
+import { form } from './Form';
 
 const Localidades = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -19,9 +19,7 @@ const Localidades = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
-
     const referer = `${url_referer}/localidades`;
-    const form = formulario;
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
@@ -102,6 +100,13 @@ const Localidades = () => {
             }
         });
     }
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+    form.downloadFunc = downloadFile;
 
     const fetchData = async () => {
         const postdata = {
@@ -140,12 +145,8 @@ const Localidades = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 

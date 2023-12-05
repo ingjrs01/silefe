@@ -17,7 +17,7 @@ import Menu from '../Menu';
 import AccionesForm from "./AccionesForm";
 import { EJECUCION_ACTIONS, iniState as iniEjecucion, reducerEjecucion } from './Ejecucion.reducer';
 import { form as eform } from './EjecucionForm';
-import { form as formulario } from './Form';
+import { form } from './Form';
 //import Papa from "papaparse";
 
 const Acciones = () => {
@@ -34,35 +34,11 @@ const Acciones = () => {
     const {state}                              = useLocation();
     const navigate                             = useNavigate();
     const isInitialized                        = useRef(null);
-
-    let form = formulario;
     const referer = `${url_referer}/acciones`;
 
-    const loadCsv = () => itemsHandle({type:ITEMS_ACTIONS.LOAD});
-    
-//    const processCsv = () => {
-//        if (file) {
-//            const reader = new FileReader();
-//            reader.onload = async ({ target }) => {
-//                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
-//                const parsedData = csv?.data;
-//                let end = '/silefe.cnae/add-multiple';
-//                let ttmp = { cnaes:parsedData,userId:getUserId()};
-//                batchAPI(end,ttmp,referer).then( res2 => {
-//                    if (res2.ok) {
-//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
-//                        fetchData();
-//                    }
-//                    else
-//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-//                });
-//            };
-//            reader.readAsText(file);
-//        }
-//        else {
-//            console.log("fichero no cargado")
-//        }
-//    }
+    const downloadFile = () => {
+        console.log("esto es download file");
+    }
 
     const handleSave = async () => {
         const pdata = {
@@ -106,9 +82,41 @@ const Acciones = () => {
         else
         setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
 
-        if (state != 'undefined' && state.backUrl.length > 0)
+        if (state != undefined && state.backUrl.length > 0)
             navigate(state.backUrl+state.ancestorId);
     }
+    const loadCsv = () => itemsHandle({type:ITEMS_ACTIONS.LOAD});
+
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+
+    
+    const processCsv = () => {
+        console.log("processCsv");
+//        if (file) {
+//            const reader = new FileReader();
+//            reader.onload = async ({ target }) => {
+//                const csv = Papa.parse(target.result, { header: true,delimiter:";",delimitersToGuess:[";"] });
+//                const parsedData = csv?.data;
+//                let end = '/silefe.cnae/add-multiple';
+//                let ttmp = { cnaes:parsedData,userId:getUserId()};
+//                batchAPI(end,ttmp,referer).then( res2 => {
+//                    if (res2.ok) {
+//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
+//                        fetchData();
+//                    }
+//                    else
+//                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+//                });
+//            };
+//            reader.readAsText(file);
+//        }
+//        else {
+//            console.log("fichero no cargado")
+//        }
+    }
+
 
     const confirmDelete = async () => {
         const endpoint = '/silefe.accion/delete-acciones';
@@ -456,12 +464,8 @@ const Acciones = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') &&

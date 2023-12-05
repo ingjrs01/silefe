@@ -11,7 +11,7 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
+import { form } from './Form';
 
 //import {PROVINCIA_ACTIONS, rProvincias} from './provincias.reducer';
 import { Paginator } from '../../includes/interface/Paginator';
@@ -37,7 +37,6 @@ const Provincias = () => {
     // },[data,isFetching, jload]);
 
     const referer = `${url_referer}/provincias`;
-    const form = formulario;
 
     const loadCsv = () => {
         itemsHandle({type:ITEMS_ACTIONS.LOAD});
@@ -106,6 +105,13 @@ const Provincias = () => {
         });
     }
 
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+    form.downloadFunc = downloadFile;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+
     const fetchData = async () => {
         const postdata = {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize},
@@ -137,12 +143,8 @@ const Provincias = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 

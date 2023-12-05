@@ -11,7 +11,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from "./Form";
+import { form } from "./Form";
 
 const MBaja = () => {
     const [items, itemsHandle]           = useReducer(red_items, initialState);
@@ -19,8 +19,6 @@ const MBaja = () => {
     const {observer, onOpenChange, open} = useModal();
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
-
-    const form = formulario;
     const referer = `${url_referer}/mbaja`;
 
     const loadCsv = () => {
@@ -51,6 +49,33 @@ const MBaja = () => {
         //    console.log("fichero no cargado")
         //}
     }
+    const handleSave = async () => {
+        const postdata = {
+            mbajaId:     items.item.id,
+            obj: {
+                ...items.item,
+                userId: getUserId(),
+            }
+        }
+        
+        let endpoint = '/silefe.mbaja/save-m-baja';
+        if (items.status === 'new')
+            endpoint = '/silefe.mbaja/add-m-baja';        
+            let {status,error} = await saveAPI(endpoint,postdata,referer);
+            if (status) {
+                fetchData();
+                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
+            }
+            else
+                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
+    }
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+
+    form.handleSave = handleSave; 
+    form.loadCsv = loadCsv;
+    form.downloadFunc = downloadFile;
 
     const fetchData = async () => {
         const postdata = {
@@ -79,27 +104,6 @@ const MBaja = () => {
     },[items.load]);
 
 
-    const handleSave = async () => {
-        const postdata = {
-            mbajaId:     items.item.id,
-            obj: {
-                ...items.item,
-                userId: getUserId(),
-            }
-        }
-        
-        let endpoint = '/silefe.mbaja/save-m-baja';
-        if (items.status === 'new')
-            endpoint = '/silefe.mbaja/add-m-baja';        
-            let {status,error} = await saveAPI(endpoint,postdata,referer);
-            if (status) {
-                fetchData();
-                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
-            }
-            else
-                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-    }
-
     const confirmDelete = async () => {
         const endpoint = '/silefe.mbaja/remove-m-bajas';
         let s = items.arr.filter(item => item.checked).map( i => {return i.id});
@@ -117,12 +121,8 @@ const MBaja = () => {
     return (
         <>
             <Menu 
-                handleSave={handleSave} 
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />           
            { (items.status === 'load') && 

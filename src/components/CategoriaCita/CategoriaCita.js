@@ -11,7 +11,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
+import { form } from './Form';
 
 const CategoriaCita = () => {
     const [items,itemsHandle]            = useReducer(red_items,initialState);
@@ -20,7 +20,6 @@ const CategoriaCita = () => {
     const [file,setFile]                 = useState();
     const isInitialized                  = useRef(null);
 
-    const form = formulario;
     const referer = `${url_referer}/categoriacita`;    
 
     const loadCsv = () => {
@@ -88,8 +87,15 @@ const CategoriaCita = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
             }
         })
-
     }
+
+    const downloadFile = () => {
+        console.log("descangando fichero");
+    }
+    
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+    form.downloadFunc = downloadFile;
 
     const fetchData = async () => {
         const postdata = {
@@ -122,12 +128,8 @@ const CategoriaCita = () => {
     return (
         <>
             <Menu 
-                handleSave={handleSave} 
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             { (items.status === 'load') && 

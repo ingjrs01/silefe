@@ -14,7 +14,7 @@ import TabsForm from '../../includes/interface/TabsForm';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { PARTICIPANTE_ACTIONS, initialParticipantes, reducerParticipantes } from '../../includes/reducers/participantes.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './OfertaForm';
+import { form } from './OfertaForm';
 
 const Ofertas = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -26,7 +26,6 @@ const Ofertas = () => {
     const { id } = useParams();
     const { state } = useLocation();
     const navigate = useNavigate();
-
     const referer = `${url_referer}/oferta`;
 
     const beforeEdit = (item) => {
@@ -51,9 +50,59 @@ const Ofertas = () => {
         });
     }
 
-    const form = formulario;
-    form.beforeEdit = beforeEdit;
+    const processCsv = () => {
+        console.log("processCsv");
+    }
 
+    const handleSave = () => {
+        const data = {
+            id: items.item.id,
+            obj: {
+                ...items.item,
+                userId: getUserId(),
+            },
+        }
+
+        let endpoint = '/silefe.oferta/save-oferta';
+        if (items.status === 'new')
+            endpoint = '/silefe.oferta/add-oferta';
+
+        saveAPI(endpoint, data, referer).then(response => {
+            let { status, data, error } = response;
+
+            if (status) {
+                const participantes = redParticipantes.items.map(i => { return i.participanteId });
+                    saveAPI('/silefe.oferta/save-participantes-oferta', { ofertaId: data.ofertaId, identifiers: participantes }, referer).then(res => {
+                });
+
+                if (redParticipantes.deleted.length > 0) {
+                    const s = redParticipantes.deleted.map(i => { return i.participanteId });
+                    deleteAPIParams('/silefe.oferta/delete-participantes-oferta', { ofertaId: data.ofertaId, identifiers: s }, referer).then(res => {
+                        console.log("borrado");
+                    });
+                }
+
+                fetchData();
+                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
+            }
+            else
+                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
+
+            console.log("justo hasta aquí estaba bien");
+            console.log(state);
+            if (state != 'undefined' && state != null && state.backUrl.length > 0)
+                navigate(state.backUrl);
+        });
+    }
+
+    const downloadFile = () => {
+        console.log("downloadFile");
+    }
+
+    form.handleSave = handleSave;
+    form.beforeEdit = beforeEdit;
+    form.loadCsv = loadCsv;
+    form.downloadFunc = downloadFile;
 
     useEffect(() => {
         if (!isInitialized.current) {
@@ -123,50 +172,6 @@ const Ofertas = () => {
         itemsHandle({ type: ITEMS_ACTIONS.LOAD })
     }
 
-    const processCsv = () => {
-        console.log("processCsv");
-    }
-
-    const handleSave = () => {
-        const data = {
-            id: items.item.id,
-            obj: {
-                ...items.item,
-                userId: getUserId(),
-            },
-        }
-
-        let endpoint = '/silefe.oferta/save-oferta';
-        if (items.status === 'new')
-            endpoint = '/silefe.oferta/add-oferta';
-
-        saveAPI(endpoint, data, referer).then(response => {
-            let { status, data, error } = response;
-
-            if (status) {
-                const participantes = redParticipantes.items.map(i => { return i.participanteId });
-                    saveAPI('/silefe.oferta/save-participantes-oferta', { ofertaId: data.ofertaId, identifiers: participantes }, referer).then(res => {
-                });
-
-                if (redParticipantes.deleted.length > 0) {
-                    const s = redParticipantes.deleted.map(i => { return i.participanteId });
-                    deleteAPIParams('/silefe.oferta/delete-participantes-oferta', { ofertaId: data.ofertaId, identifiers: s }, referer).then(res => {
-                        console.log("borrado");
-                    });
-                }
-
-                fetchData();
-                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
-            }
-            else
-                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-
-            console.log("justo hasta aquí estaba bien");
-            console.log(state);
-            if (state != 'undefined' && state != null && state.backUrl.length > 0)
-                navigate(state.backUrl);
-        });
-    }
 
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map(i => { return i.id });
@@ -212,20 +217,10 @@ const Ofertas = () => {
 
     const loadOferta = (id) => {
         fetchAPIRow('/silefe.oferta/get', { id: id }, referer).then((r) => {
-            //console.log("recupramos los datos de la oferta");
-            //console.debug(r);
-            //console.debug(redParticipantes);
-            //debugger;
             const datatmp = {
                 ...r,
                 data: {
                     ...r.data,
-                    //centro       : "undefined",
-                    //colectivos   : "undefined",
-                    //empresa      : "undefined",
-                    //estado       : "undefined",
-                    //objetivos    : "undefined",
-                    //participantes: "undefined",
                     puesto: "lalala",
                     fechaIncorporacion: (r.data.fechaIncorporacion != null) ? new Date(r.data.fechaIncorporacion).toISOString().substring(0, 10) : "",
                     fechaUltimoEstado: (r.data.fechaUltimoEstado != null) ? new Date(r.data.fechaUltimoEstado).toISOString().substring(0, 10) : "",
@@ -374,12 +369,8 @@ const Ofertas = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
                 onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&

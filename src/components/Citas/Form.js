@@ -1,7 +1,8 @@
+import { GenericForm } from "../../includes/GenericForm";
+
 export const form = {
+    ...GenericForm,
     title: Liferay.Language.get('Citas'),
-    languages: ["es-ES","en-US","gl-ES"],
-    beforeEdit: () => {console.log("beforeEdit desde el Form")},
     fields: {
         id: {
             key:1,
@@ -138,13 +139,6 @@ export const form = {
             placeholder:Liferay.Language.get('Comentarios'),
             conditions:["text"]
         },
-		//origen: {
-        //    key:18,
-        //    type: "text",
-        //    label: Liferay.Language.get('Origen'),
-        //    name: "origen",
-        //    value:"",
-        //}
     },
     rows: [
         {
