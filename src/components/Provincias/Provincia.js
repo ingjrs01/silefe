@@ -17,11 +17,11 @@ import { form } from './Form';
 import { Paginator } from '../../includes/interface/Paginator';
 
 const Provincias = () => {
-    const [items,itemsHandle]            = useReducer(red_items,initialState);
-    const [toastItems,setToastItems]     = useState([]);    
-    const {observer, onOpenChange, open} = useModal();
-    const [file,setFile]                 = useState();
-    const isInitialized                  = useRef(null);
+    const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [toastItems, setToastItems] = useState([]);
+    const { observer, onOpenChange, open } = useModal();
+    const [file, setFile] = useState();
+    const isInitialized = useRef(null);
 
     // const [provincias, provinciasHandle] = useReducer(rProvincias,{});
     // const [jload, setJload] = useState(0);
@@ -39,7 +39,7 @@ const Provincias = () => {
     const referer = `${url_referer}/provincias`;
 
     const loadCsv = () => {
-        itemsHandle({type:ITEMS_ACTIONS.LOAD});
+        itemsHandle({ type: ITEMS_ACTIONS.LOAD });
     }
 
     const processCsv = () => {
@@ -78,23 +78,23 @@ const Provincias = () => {
             }
         }
         let endpoint = '/silefe.provincia/save-provincia'
-        if (items.status === 'new') 
+        if (items.status === 'new')
             endpoint = '/silefe.provincia/add-provincia';
 
-        let {status, error } = await saveAPI(endpoint,postdata,referer);
+        let { status, error } = await saveAPI(endpoint, postdata, referer);
         if (status) {
             setToastItems([...toastItems, { title: Liferay.Language.get('Guardar'), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
             fetchData();
         }
-        else 
+        else
             setToastItems([...toastItems, { title: Liferay.Language.get('Guardar'), type: "danger", text: Errors[error] }]);
     }
 
     const confirmDelete = async () => {
         const endpoint = '/silefe.provincia/remove-provincias';
-        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
+        let s = items.arr.filter(item => item.checked).map(i => { return i.id });
 
-        deleteAPI(endpoint,s,referer).then(res =>{
+        deleteAPI(endpoint, s, referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();
@@ -108,36 +108,36 @@ const Provincias = () => {
     const downloadFile = () => {
         console.log("downloadFile");
     }
-    form.downloadFunc = downloadFile;
-    form.handleSave = handleSave;
+    //form.downloadFunc = downloadFile;
+    //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
         const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize},
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
-                filters: [                    
-                    { name: "nombre", value: (items.search && typeof items.search !== 'undefined')?items.search:"" },
+                filters: [
+                    { name: "nombre", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
                 ],
                 order: items.order,
             },
         };
-        let {data,totalPages, totalItems, page}  = await fetchAPIData('/silefe.provincia/filter',postdata,referer);
-        const tmp = await data.map(i => {return({...i,id:i.provinciaId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages, total: totalItems,page:page});
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.provincia/filter', postdata, referer);
+        const tmp = await data.map(i => { return ({ ...i, id: i.provinciaId, checked: false }) });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
-    useEffect( ()=> {
-		if (!isInitialized.current) {
+    useEffect(() => {
+        if (!isInitialized.current) {
             fetchData();
-			isInitialized.current = true;
-		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
-		}
-    },[items.load]);
+            isInitialized.current = true;
+        } else {
+            const timeoutId = setTimeout(fetchData, 350);
+            return () => clearTimeout(timeoutId);
+        }
+    }, [items.load]);
 
-    if (!items) 
+    if (!items)
         return (<div>Liferay.Language.get("Cargando")</div>)
 
     return (
@@ -145,18 +145,20 @@ const Provincias = () => {
             <Menu
                 itemsHandle={itemsHandle}
                 items={items}
+                handleSave={handleSave}
+                download={downloadFile}
                 onOpenChange={onOpenChange}
             />
-            { (items.status === 'load') && 
-            <LoadFiles 
-                setFile={setFile}
-                processCsv={processCsv}
-                itemsHandle={itemsHandle}
-            />}
-            {   
+            {(items.status === 'load') &&
+                <LoadFiles
+                    setFile={setFile}
+                    processCsv={processCsv}
+                    itemsHandle={itemsHandle}
+                />}
+            {
                 (items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
-                    save={handleSave}
+                    handleSave={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
                 />
@@ -164,19 +166,19 @@ const Provincias = () => {
             {
                 (items.status === 'list') &&
                 <>
-                    <Table 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Table
+                        items={items}
+                        itemsHandle={itemsHandle}
                         onOpenChange={onOpenChange}
                     />
-                    <Paginator 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Paginator
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
                 </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
-            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
+            {open && <FModal onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} />}
         </>
     )
 }

@@ -19,16 +19,16 @@ import ContactosRender from "./ContactosRender";
 import { form } from "./Form";
 
 const Empresas = () => {
-    const [items, itemsHandle]             = useReducer(red_items,initialState);
-    const [redCentros, centrosHandle]      = useReducer(reducerCentros, iniCentros);
-    const [redContactos, contactosHandle]  = useReducer(reducerContactos, iniContactos);
-    const [toastItems, setToastItems]      = useState([]);
+    const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [redCentros, centrosHandle] = useReducer(reducerCentros, iniCentros);
+    const [redContactos, contactosHandle] = useReducer(reducerContactos, iniContactos);
+    const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const [file, setFile]                  = useState();
-    const isInitialized                    = useRef(null);
-    const { id }                           = useParams();
-    const { state }                        = useLocation();
-    const navigate                         = useNavigate();
+    const [file, setFile] = useState();
+    const isInitialized = useRef(null);
+    const { id } = useParams();
+    const { state } = useLocation();
+    const navigate = useNavigate();
     const referer = `${url_referer}/empresas`;
 
     const loadCsv = () => {
@@ -37,8 +37,8 @@ const Empresas = () => {
 
 
     const beforeEdit = (id) => {
-        let empresaId = 0;        
-        if (typeof(id) == 'int')
+        let empresaId = 0;
+        if (typeof (id) == 'int')
             empresaId = id;
         else
             empresaId = id.id;
@@ -54,7 +54,7 @@ const Empresas = () => {
         });
 
         fetchAPIData('/silefe.contacto/filter-by-empresa', { empresaId: empresaId }, referer).then(response2 => {
-            let contacts = response2.data.map( j => {
+            let contacts = response2.data.map(j => {
                 return {
                     ...j,
                     id: j.contactoId,
@@ -62,7 +62,7 @@ const Empresas = () => {
                     telefono: (j.telefono != null && j.telefono.length > 0) ? JSON.parse(j.telefono) : [],
                 }
             });
-            contactosHandle({type:CONTACTOS_ACTIONS.LOAD,items: contacts });
+            contactosHandle({ type: CONTACTOS_ACTIONS.LOAD, items: contacts });
         });
     }
 
@@ -71,19 +71,19 @@ const Empresas = () => {
         if (items.status === 'new')
             endpoint = '/silefe.empresa/add-empresa';
 
-        let obj = { 
+        let obj = {
             id: items.item.empresaId,
             obj: {
                 ...items.item,
                 userId: getUserId(),
-            }, 
+            },
         };
         saveAPI(endpoint, obj, referer).then(response => {
             let { data, status, error } = response;
             if (status) {
                 if (redCentros.modified.length > 0) {
-                    const oo = redCentros.items.filter( i => redCentros.modified.includes( i.id )  );
-                    saveAPI('/silefe.empresacentros/save-centros-by-empresa', {id: data.empresaId, centros: oo,userId: getUserId()} , referer).then(respon => {
+                    const oo = redCentros.items.filter(i => redCentros.modified.includes(i.id));
+                    saveAPI('/silefe.empresacentros/save-centros-by-empresa', { id: data.empresaId, centros: oo, userId: getUserId() }, referer).then(respon => {
                         console.log("lalala")
                     });
                 }
@@ -97,12 +97,12 @@ const Empresas = () => {
 
                 // vamos a sincronizar los contactos, sólo si se han modificado
                 // ponemos el origenId aquí,porque es donde lo sabemos cuando la empresa es nueva
-                if (redContactos.modified.length > 0 ) {
-                    const contacts = redContactos.items.filter(i=>redContactos.modified.includes(i.id)).map((item)=>({...item,origenId: data.empresaId, userId: getUserId()}));
-                    saveAPI('/silefe.contacto/save-by-empresa',{id: data.empresaId, contactos: contacts  },referer).then( response => {
+                if (redContactos.modified.length > 0) {
+                    const contacts = redContactos.items.filter(i => redContactos.modified.includes(i.id)).map((item) => ({ ...item, origenId: data.empresaId, userId: getUserId() }));
+                    saveAPI('/silefe.contacto/save-by-empresa', { id: data.empresaId, contactos: contacts }, referer).then(response => {
                         console.log("a la vuelta de guardar los contactos");
                         console.debug(response.data);
-                });
+                    });
                 }
 
                 if (redContactos.deleted.length > 0) {
@@ -116,7 +116,7 @@ const Empresas = () => {
             } else {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
             }
-            
+
             if (state != null && state.backUrl.length > 0) {
                 navigate(state.backUrl + state.ancestorId);
             }
@@ -128,17 +128,17 @@ const Empresas = () => {
     }
 
     form.beforeEdit = beforeEdit;
-    form.downloadFunc = downloadfile;
     form.loadCsv = loadCsv;
-    form.handleSave = handleSave;
+    //form.downloadFunc = downloadfile;
+    //form.handleSave = handleSave;
 
     const fetchData = async () => {
-        contactosHandle({type:CONTACTOS_ACTIONS.START});
+        contactosHandle({ type: CONTACTOS_ACTIONS.START });
         const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
                 filters: [
-                    {name: items.searchField, value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : ""},
+                    { name: items.searchField, value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : "" },
                 ],
                 order: items.order
             },
@@ -193,13 +193,13 @@ const Empresas = () => {
 
     const confirmDelete = async () => {
         const endpoint = "/silefe.empresa/delete-empresas";
-        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
-        deleteAPI(endpoint,s,referer).then(res => {
+        let s = items.arr.filter(item => item.checked).map(i => { return i.id });
+        deleteAPI(endpoint, s, referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
-                fetchData();        
+                fetchData();
             }
-            else 
+            else
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
         });
     }
@@ -221,23 +221,23 @@ const Empresas = () => {
 
     const loadItem = (id) => {
         beforeEdit(id);
-        fetchAPIRow('/silefe.empresa/get',{id:id},referer).then (r => {
+        fetchAPIRow('/silefe.empresa/get', { id: id }, referer).then(r => {
             const tmp = {
                 ...r,
                 data: {
                     ...r.data,
-                    email: (r.data.email != null && r.data.email.length > 0)?JSON.parse(r.data.email):[],
-                    telefono: (r.data.telefono != null && r.data.telefono.length > 0)?JSON.parse(r.data.telefono):[],
+                    email: (r.data.email != null && r.data.email.length > 0) ? JSON.parse(r.data.email) : [],
+                    telefono: (r.data.telefono != null && r.data.telefono.length > 0) ? JSON.parse(r.data.telefono) : [],
                 }
             }
-            itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:tmp});
-        }) ;
+            itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: tmp });
+        });
     }
 
     useEffect(() => {
         initCentrosForm();
         if (!isInitialized.current) {
-            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             if (id != 'undefined' && id > 0) {
                 loadItem(id);
             }
@@ -264,6 +264,8 @@ const Empresas = () => {
             <Menu
                 itemsHandle={itemsHandle}
                 items={items}
+                handleSave={handleSave}
+                download={downloadfile}
                 onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&
@@ -288,7 +290,6 @@ const Empresas = () => {
                         itemsHandle={itemsHandle}
                         onOpenChange={onOpenChange}
                     />
-                    
                     <Paginator
                         items={items}
                         itemsHandle={itemsHandle}

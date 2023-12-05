@@ -1,33 +1,35 @@
+import { GenericForm } from "../../includes/GenericForm";
+
 export const form = {
+    ...GenericForm,
     title: Liferay.Language.get('Titulaciones_tipo'),
-    languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
-            key:1,
+            key: 1,
             type: "text",
-            label: "ID", 
-            name: "id", 
-            value:"lalala", 
-            placeholder:"Identifier", 
+            label: "ID",
+            name: "id",
+            value: "lalala",
+            placeholder: "Identifier",
             conditions: ["number"]
         },
         descripcion: {
-            key:3,
+            key: 3,
             type: "multilang",
-            label: Liferay.Language.get('Descripcion'), 
-            name: "descripcion", 
-            value:"lelele", 
-            placeholder: Liferay.Language.get('Descripcion'), 
+            label: Liferay.Language.get('Descripcion'),
+            name: "descripcion",
+            value: "lelele",
+            placeholder: Liferay.Language.get('Descripcion'),
             conditions: ["text"]
         }
     },
     rows: [
         {
-            key:9,
+            key: 9,
             cols: ['id']
         },
         {
-            key:7,
+            key: 7,
             cols: ['descripcion']
         },
     ],

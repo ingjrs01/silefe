@@ -11,22 +11,20 @@ import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
-import { form as formulario } from './Form';
+import { form } from './Form';
 
 
 const Tecnicos = () => {
-    const [items,itemsHandle]            = useReducer(red_items,initialState);
-    const [toastItems,setToastItems]     = useState([]);    
-    const {observer, onOpenChange, open} = useModal();
-    const [file,setFile]                 = useState();
-    const isInitialized                  = useRef(null);
-
-    const form = formulario;
+    const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [toastItems, setToastItems] = useState([]);
+    const { observer, onOpenChange, open } = useModal();
+    const [file, setFile] = useState();
+    const isInitialized = useRef(null);
     const referer = `${url_referer}/tecnicos`;
 
     const loadCsv = () => {
         console.log("Cargando un csv");
-        itemsHandle({type:ITEMS_ACTIONS.LOAD});
+        itemsHandle({ type: ITEMS_ACTIONS.LOAD });
     }
 
     const processCsv = () => {
@@ -38,7 +36,7 @@ const Tecnicos = () => {
         //        const parsedData = csv?.data;                                
         //        let end = '/silefe.colectivo/add-multiple';
         //        let ttmp = {colectivos:parsedData,userId:getUserId()};
-//
+        //
         //        batchAPI(end,ttmp,referer).then(res => {
         //            if (res2.ok) {
         //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga Masiva"), type: "danger", text: Liferay.Language.get('Elementos_cargados') }]);
@@ -60,37 +58,46 @@ const Tecnicos = () => {
         const postdata = {
             colectivoId: items.item.id,
             descripcion: items.item.descripcion,
-            userId:      getUserId(),
+            userId: getUserId(),
         }
 
         let endpoint = '/silefe.colectivo/save-colectivo';
-        if (items.status === 'new' )
+        if (items.status === 'new')
             endpoint = '/silefe.colectivo/add-colectivo';
 
-        let {status,error} = await saveAPI(endpoint,postdata,referer);    
+        let { status, error } = await saveAPI(endpoint, postdata, referer);
         if (status) {
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);  
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
             fetchData();
         }
         else {
-            setToastItems([...toastItems, { title: Liferay.Language.get("Error"), type: "danger", text:  Errors[error]}]);
+            setToastItems([...toastItems, { title: Liferay.Language.get("Error"), type: "danger", text: Errors[error] }]);
         }
     }
 
     const confirmDelete = async () => {
-        let s = items.arr.filter(item => item.checked).map( i => {return i.colectivoId});
+        let s = items.arr.filter(item => item.checked).map(i => { return i.colectivoId });
         const endpoint = "/silefe.colectivo/remove-colectivos";
 
-        deleteAPI(endpoint,s,referer).then(res => {
+        deleteAPI(endpoint, s, referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();
             }
             else {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);                            
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
             }
         })
     }
+
+    const downloadFile = () => {
+        console.log("descargando");
+    }
+
+    //form.downloadFunc = downloadFile;
+    //form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+
 
     const fetchData = async () => {
         console.log("Entrada de tecnicos");
@@ -99,10 +106,10 @@ const Tecnicos = () => {
         const endpoint = '/silefe.tecnico/filter';
 
         const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
                 filters: [
-                    {name:"descripcion",value: ''},
+                    { name: "descripcion", value: '' },
                 ],
                 order: items.order
             },
@@ -126,7 +133,7 @@ const Tecnicos = () => {
             "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
             "method": "POST",
             "mode": "cors"
-        }).then( response => {
+        }).then(response => {
             console.log("peticion a tenicos");
             console.log(response);
         });
@@ -139,53 +146,51 @@ const Tecnicos = () => {
         //console.log(response);
         //let data = await response.json();
         //console.debug(data);
-    
+
         //let { data, totalPages, page, error } = await JSON.parse(await response.json());
         //let totalPages = 1;
         //let page = 0;
         //return {data, error,totalPages, page}
-        const tmp = await data.map(i => {return({id:i.userId,firstName:i.firstName,lastName:i.lastName,emailAddress:i.emailAddress,checked:false})});
+        const tmp = await data.map(i => { return ({ id: i.userId, firstName: i.firstName, lastName: i.lastName, emailAddress: i.emailAddress, checked: false }) });
         await console.log("los datos procesados");
         await console.log(tmp);
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp,fields: form, totalPages:totalPages, total: 99,page:page });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: 99, page: page });
 
     }
 
 
     useEffect(() => {
-		if (!isInitialized.current) {
+        if (!isInitialized.current) {
             fetchData();
-			isInitialized.current = true;
-		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
-		}
+            isInitialized.current = true;
+        } else {
+            const timeoutId = setTimeout(fetchData, 350);
+            return () => clearTimeout(timeoutId);
+        }
     }, [items.load]);
 
-    if (!items) 
+    if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
-    
+
     return (
         <>
-            <Menu 
-                handleSave={handleSave} 
+            <Menu
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={formulario}
+                handleSave={handleSave}
+                download={downloadFile}
                 onOpenChange={onOpenChange}
             />
-            { (items.status === 'load') && 
-            <LoadFiles 
-                setFile={setFile}
-                processCsv={processCsv}
-                itemsHandle={itemsHandle}
-            />}
+            {(items.status === 'load') &&
+                <LoadFiles
+                    setFile={setFile}
+                    processCsv={processCsv}
+                    itemsHandle={itemsHandle}
+                />}
             {
                 (items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
-                    save={handleSave}
+                    handleSave={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
                 />
@@ -193,19 +198,19 @@ const Tecnicos = () => {
             {
                 (items.status === 'list') &&
                 <>
-                    <Table 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Table
+                        items={items}
+                        itemsHandle={itemsHandle}
                         onOpenChange={onOpenChange}
                     />
-                    <Paginator 
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                    <Paginator
+                        items={items}
+                        itemsHandle={itemsHandle}
                     />
                 </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
-            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
+            {open && <FModal onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} />}
         </>
     );
 }

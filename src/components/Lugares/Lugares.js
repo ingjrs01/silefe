@@ -15,14 +15,14 @@ import Menu from '../Menu';
 import { form } from "./Form";
 
 const Lugares = () => {
-    const [items, itemsHandle]             = useReducer(red_items,initialState);
-    const [toastItems, setToastItems]      = useState([]);
+    const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const [file, setFile]                  = useState();
-    const isInitialized                    = useRef(null);
-    const { id }                           = useParams();
-    const { state }                        = useLocation();
-    const navigate                         = useNavigate();
+    const [file, setFile] = useState();
+    const isInitialized = useRef(null);
+    const { id } = useParams();
+    const { state } = useLocation();
+    const navigate = useNavigate();
     const referer = `${url_referer}/lugares`;
 
     const handleSave = () => {
@@ -30,8 +30,8 @@ const Lugares = () => {
         if (items.status === 'new')
             endpoint = '/silefe.lugar/add-lugar';
 
-        let obj = {id: items.item.id, obj: items.item };
-        
+        let obj = { id: items.item.id, obj: items.item };
+
         saveAPI(endpoint, obj, referer).then(response => {
             let { data, status, error } = response;
             if (status) {
@@ -40,7 +40,7 @@ const Lugares = () => {
             } else {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
             }
-            
+
             if (state != 'undefined' && state.backUrl.length > 0) {
                 navigate(state.backUrl + state.ancestorId);
             }
@@ -49,27 +49,27 @@ const Lugares = () => {
 
     const loadMunicipiosProvincia = (pId) => {
         const provinciaId = pId ?? 1;
-        fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: provinciaId },referer).then(response => {
-            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'municipioId', options: opts});
-        }).catch (error => console.error(error));
+        fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: provinciaId }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
+        }).catch(error => console.error(error));
     }
-        
+
     const initForm = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
-        form.fields.paisId.options = [{value:"1", label: "España"}];
-        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId()},referer).then(response => {
-            form.fields.provinciaId.options = [{value:"0", label: seleccionarlabel}, ...response.data.map(item => ({label: item.nombre, value: item.provinciaId})) ];
+        form.fields.paisId.options = [{ value: "1", label: "España" }];
+        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
+            form.fields.provinciaId.options = [{ value: "0", label: seleccionarlabel }, ...response.data.map(item => ({ label: item.nombre, value: item.provinciaId }))];
         }
         ).catch(error => {
             console.log("error");
             console.error(error);
         });
 
-        fetchAPIData('/silefe.tiposvia/all', {lang: getLanguageId()},referer).then(response => {
-            const opts = [{value:"0",label:Liferay.Language.get('Seleccionar')}, ...response.data.map(obj => {return {value:obj.tiposViaId,label:obj.nombre}})];
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'tipoViaId', options: opts});
-        }).catch (error => reject([]));
+        fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.tiposViaId, label: obj.nombre } })];
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'tipoViaId', options: opts });
+        }).catch(error => reject([]));
     }
 
     const loadCsv = () => {
@@ -77,26 +77,26 @@ const Lugares = () => {
     }
 
     const loadItem = (id) => {
-        fetchAPIRow('/silefe.lugar/get',{id:id},referer).then (r => itemsHandle({type:ITEMS_ACTIONS.EDIT_ITEM,item:r})) ;
+        fetchAPIRow('/silefe.lugar/get', { id: id }, referer).then(r => itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: r }));
     }
     const downloadFile = () => {
         console.log("downloadFile");
     }
 
-    form.downloadFunc = downloadFile;
-    form.handleSave = handleSave;
+    //form.downloadFunc = downloadFile;
+    //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
 
-    useEffect (()=> {
+    useEffect(() => {
         if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0)
             loadMunicipiosProvincia(items.item.provinciaId);
-    },[items.item.provinciaId]);
+    }, [items.item.provinciaId]);
 
     useEffect(() => {
         //initCentrosForm();
         initForm();
         if (!isInitialized.current) {
-            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             if (id != 'undefined' && id > 0) {
                 loadItem(id);
             }
@@ -117,16 +117,16 @@ const Lugares = () => {
 
     const fetchData = async () => {
         const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
                 filters: [
-                    {name: items.searchField, value : (items.search && typeof items.search !== 'undefined')?items.search:""},
+                    { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
                 ],
                 order: items.order
             },
         }
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.lugar/filter', postdata, referer);
-        const tmp = await data.map(i => ({...i,checked: false}));
+        const tmp = await data.map(i => ({ ...i, checked: false }));
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
     }
 
@@ -138,6 +138,8 @@ const Lugares = () => {
             <Menu
                 itemsHandle={itemsHandle}
                 items={items}
+                handleSave={handleSave}
+                download={downloadFile}
                 onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&
@@ -148,7 +150,7 @@ const Lugares = () => {
                 />}
             {(items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
-                    save={handleSave}
+                    handleSave={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
                 />
@@ -160,7 +162,7 @@ const Lugares = () => {
                         itemsHandle={itemsHandle}
                         onOpenChange={onOpenChange}
                     />
-                    
+
                     <Paginator
                         items={items}
                         itemsHandle={itemsHandle}

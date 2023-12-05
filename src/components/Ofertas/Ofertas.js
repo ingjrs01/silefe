@@ -29,14 +29,14 @@ const Ofertas = () => {
     const referer = `${url_referer}/oferta`;
 
     const beforeEdit = (item) => {
-        const s = (item == undefined || item == null)?items.arr.filter(item => item.checked).map(i => { return i.id })[0]:item.ofertaId; 
+        const s = (item == undefined || item == null) ? items.arr.filter(item => item.checked).map(i => { return i.id })[0] : item.ofertaId;
 
         fetchAPIData('/silefe.oferta/participantes-oferta', { ofertaId: s }, referer).then(response => {
-            const pts = response.data.map( i => {
+            const pts = response.data.map(i => {
                 let email = "";
                 if (i.email != null && i.email.length > 0) {
                     const tmpmail = JSON.parse(i.email);
-                    if  (tmpmail.length > 0)
+                    if (tmpmail.length > 0)
                         email = JSON.parse(i.email)[0].value;
                 }
                 return {
@@ -46,7 +46,7 @@ const Ofertas = () => {
                     email: email
                 }
             });
-            participantesHandler({type: PARTICIPANTE_ACTIONS.SETITEMS,items:pts});
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SETITEMS, items: pts });
         });
     }
 
@@ -72,7 +72,7 @@ const Ofertas = () => {
 
             if (status) {
                 const participantes = redParticipantes.items.map(i => { return i.participanteId });
-                    saveAPI('/silefe.oferta/save-participantes-oferta', { ofertaId: data.ofertaId, identifiers: participantes }, referer).then(res => {
+                saveAPI('/silefe.oferta/save-participantes-oferta', { ofertaId: data.ofertaId, identifiers: participantes }, referer).then(res => {
                 });
 
                 if (redParticipantes.deleted.length > 0) {
@@ -99,10 +99,10 @@ const Ofertas = () => {
         console.log("downloadFile");
     }
 
-    form.handleSave = handleSave;
+    //form.handleSave = handleSave;
+    //form.downloadFunc = downloadFile;
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
-    form.downloadFunc = downloadFile;
 
     useEffect(() => {
         if (!isInitialized.current) {
@@ -133,26 +133,26 @@ const Ofertas = () => {
     const loadParticipantes = () => {
         let filters = [];
         if (redParticipantes.search.length > 0)
-            filters = [{name: redParticipantes.searchField, value: redParticipantes.search}];
+            filters = [{ name: redParticipantes.searchField, value: redParticipantes.search }];
 
         const postdata = {
             pagination: {
                 page: redParticipantes.pagination.page,
                 pageSize: 4
             },
-            options : {
+            options: {
                 filters: filters,
-                order: [{ name: 'apellido1', direction: 'asc'}],
-                excludes: (redParticipantes.items.length > 0)?redParticipantes.items.map(i => (i.participanteId)):[],
+                order: [{ name: 'apellido1', direction: 'asc' }],
+                excludes: (redParticipantes.items.length > 0) ? redParticipantes.items.map(i => (i.participanteId)) : [],
             },
         }
 
-        fetchAPIData('/silefe.participante/filter',postdata,referer).then(response => {
-            const pts = response.data.map( i => {
+        fetchAPIData('/silefe.participante/filter', postdata, referer).then(response => {
+            const pts = response.data.map(i => {
                 let email = "";
                 if (i.email != null && i.email.length > 0) {
                     const tmpmail = JSON.parse(i.email);
-                    if  (tmpmail.length > 0)
+                    if (tmpmail.length > 0)
                         email = JSON.parse(i.email)[0].value;
                 }
                 return {
@@ -163,7 +163,7 @@ const Ofertas = () => {
                 }
             });
             const totalPages = response.totalPages;
-            participantesHandler({type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS,items:pts, totalPages: totalPages});
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS, items: pts, totalPages: totalPages });
         });
     }
 
@@ -268,9 +268,9 @@ const Ofertas = () => {
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
-    const initForm = () => {        
+    const initForm = () => {
         // inicializo participantes: 
-        participantesHandler({type: PARTICIPANTE_ACTIONS.START});
+        participantesHandler({ type: PARTICIPANTE_ACTIONS.START });
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         const opciones_requerido = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Recomendable" }, { value: "2", label: "Obligatorio" }];
         fetchAPIData('/silefe.edad/all', { lang: getLanguageId() }, referer).then(response => {
@@ -371,6 +371,8 @@ const Ofertas = () => {
             <Menu
                 itemsHandle={itemsHandle}
                 items={items}
+                handleSave={handleSave}
+                download={downloadFile}
                 onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&

@@ -1,114 +1,114 @@
+import { GenericForm } from '../../includes/GenericForm';
 
 export const form = {
+    ...GenericForm,
     title: Liferay.Language.get('Proyectos'),
-    languages: ["es-ES","en-US","gl-ES"],
-    beforeEdit: () => console.log("beforeEdit desde Form"),
     fields: {
         id: {
-            key:1,
+            key: 1,
             type: "text",
             label: "ID",
             name: "id",
-            value:"lalala",
-            placeholder:"Identifier",
+            value: "lalala",
+            placeholder: "Identifier",
             conditions: ["number"]
         },
         codigo: {
-            key:2,
+            key: 2,
             type: "text",
             label: Liferay.Language.get('Codigo'),
             name: "codigo",
-            value:"lalala",
-            placeholder:"Identifier",
+            value: "lalala",
+            placeholder: "Identifier",
             conditions: ["text"],
             className: "col-2",
         },
         descripcion: {
-            key:3,
+            key: 3,
             type: "multilang",
             label: Liferay.Language.get('Nombre'),
             name: "descripcion",
-            value:"lelele",
-            placeholder:Liferay.Language.get('Nombre'),
+            value: "lelele",
+            placeholder: Liferay.Language.get('Nombre'),
             className: 'col-6',
-            conditions:["text"]
+            conditions: ["text"]
         },
         inicio: {
-            key:4,
+            key: 4,
             type: "date",
             label: Liferay.Language.get('Inicio'),
             name: "inicio",
-            value:"lelele",
+            value: "lelele",
             yearmin: 5,
             yearmax: 0,
-            placeholder:Liferay.Language.get('YYYY-MM-DD'),
-            conditions:[],
+            placeholder: Liferay.Language.get('YYYY-MM-DD'),
+            conditions: [],
             className: 'col-3',
         },
         fin: {
-            key:5,
+            key: 5,
             type: "date",
             label: Liferay.Language.get('Fin'),
             name: "fin",
             yearmin: 5,
             yearmax: 0,
-            value:"lelele",
-            placeholder:Liferay.Language.get('Fin'),
-            placeholder:Liferay.Language.get('YYYY-MM-DD'),
-            conditions:[],
+            value: "lelele",
+            placeholder: Liferay.Language.get('Fin'),
+            placeholder: Liferay.Language.get('YYYY-MM-DD'),
+            conditions: [],
             className: 'col-3',
         },
         participantes: {
-            key:6,
+            key: 6,
             type: "number",
             label: Liferay.Language.get('Participantes'),
             name: "participantes",
             placeholder: "0",
-            conditions:["number"],
+            conditions: ["number"],
             className: 'col-2'
         },
         fondos_propios: {
-            key:7,
+            key: 7,
             type: "toggle",
             label: Liferay.Language.get('FondosPropios'),
             name: "fondos_propios",
-            value:"lelele",
-            change: ()=>{console.log("cambia fondos propios");}
+            value: "lelele",
+            change: () => { console.log("cambia fondos propios"); }
         },
         cofinanciacion: {
-            key:8,
+            key: 8,
             type: "toggle",
             label: Liferay.Language.get('Cofinanciacion'),
             name: "cofinanciacion",
-            value:"lelele",
-            placeholder:Liferay.Language.get('Cofinanciacion'),
-            change: ()=>{console.log("cambia cofinanciacion");}
+            value: "lelele",
+            placeholder: Liferay.Language.get('Cofinanciacion'),
+            change: () => { console.log("cambia cofinanciacion"); }
         },
         convocatoriaId: {
-            key:9,
+            key: 9,
             type: "select",
             label: Liferay.Language.get('Convocatoria'),
             name: "convocatoriaId",
-            enabled:true,
+            enabled: true,
             className: 'col-2',
-            change: ()=>{console.log("cambia el select");}
+            change: () => { console.log("cambia el select"); }
         },
         entidadId: {
-            key:10,
+            key: 10,
             type: "select",
             label: Liferay.Language.get('Entidad'),
             name: "entidadId",
-            value:"lelele",
-            enabled:true,
-            change: ()=>{console.log("cambia el select");}
+            value: "lelele",
+            enabled: true,
+            change: () => { console.log("cambia el select"); }
         },
         ambito_geo: {
-            key:11,
+            key: 11,
             type: "text",
             label: Liferay.Language.get('Ambito'),
             name: "ambito_geo",
-            value:"",
-            enabled:true,
+            value: "",
+            enabled: true,
             conditions: []
         },
         presupuesto: {
@@ -117,7 +117,7 @@ export const form = {
             label: Liferay.Language.get("Presupuesto"),
             name: "presupuesto",
             enabled: true,
-            conditions:["number"],
+            conditions: ["number"],
             className: 'col-2',
         },
         porcentaje_total: {
@@ -127,7 +127,7 @@ export const form = {
             name: "porcentaje_total",
             placeholder: "",
             enabled: true,
-            conditions:["number"],
+            conditions: ["number"],
             className: 'col-2',
         },
         porcentaje_cofinanciacion: {
@@ -137,7 +137,7 @@ export const form = {
             name: "porcentaje_cofinanciacion",
             placeholder: "",
             enabled: true,
-            conditions:["number"],
+            conditions: ["number"],
             className: 'col-2',
         },
         colectivos: {
@@ -149,13 +149,13 @@ export const form = {
             enabled: true
         },
         objetivos: {
-            key:17,
+            key: 17,
             type: "textarea",
             label: Liferay.Language.get('Objetivos'),
             name: "objetivos",
-            value:"",
-            placeholder:Liferay.Language.get('Objetivos'),
-            conditions:["text"]
+            value: "",
+            placeholder: Liferay.Language.get('Objetivos'),
+            conditions: ["text"]
         },
         convocatoria: {
             key: 18,
@@ -204,11 +204,11 @@ export const form = {
                 },
                 {
                     key: 6,
-                    cols: [ 'ambito_geo' ]
+                    cols: ['ambito_geo']
                 },
                 {
                     key: 7,
-                    cols: [ 'inicio','fin','presupuesto','porcentaje_total','porcentaje_cofinanciacion' ]
+                    cols: ['inicio', 'fin', 'presupuesto', 'porcentaje_total', 'porcentaje_cofinanciacion']
                 },
                 {
                     key: 8,
@@ -290,11 +290,6 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
-        //ambito_geo: {
-        //    columnTitle: Liferay.Language.get('Amb. Geográfico'),
-        //    columnType: "string",
-        //    key: "c7",
-        //},
         presupuesto: {
             columnTitle: Liferay.Language.get('Presupuesto'),
             columnType: "string",
@@ -316,5 +311,5 @@ export const form = {
             key: "c8",
         },
     },
-    searchFields: ['codigo', 'descripcion','convocatoria'],
+    searchFields: ['codigo', 'descripcion', 'convocatoria'],
 };

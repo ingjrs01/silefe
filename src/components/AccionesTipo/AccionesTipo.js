@@ -74,8 +74,8 @@ const AccionesTipo = () => {
         else
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
     }
-    form.downloadFunc = downloadFile;
-    form.handleSave = handleSave;
+    //form.downloadFunc = downloadFile;
+    //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
 
     const confirmDelete = async () => {
@@ -129,6 +129,8 @@ const AccionesTipo = () => {
             <Menu
                 itemsHandle={itemsHandle}
                 items={items}
+                handleSave={handleSave}
+                download={downloadFile}
                 onOpenChange={onOpenChange}
             />
             {(items.status === 'load') &&
@@ -139,7 +141,7 @@ const AccionesTipo = () => {
                 />}
             {(items.status === 'edit' || items.status === 'new') &&
                 <DefaultForm
-                    save={handleSave}
+                    handleSave={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
                 />

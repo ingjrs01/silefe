@@ -5,7 +5,7 @@ import { validateAll } from '../Validators';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
-const DefaultForm = ({ itemsHandle, save, items }) => {
+const DefaultForm = ({ itemsHandle, items, handleSave }) => {
   return (
     <ClayForm className="sheet">
       <RenderFields
@@ -21,8 +21,7 @@ const DefaultForm = ({ itemsHandle, save, items }) => {
         <div className="btn-group-item">
           <ClayButton onClick={() => {
             if (validateAll(items, itemsHandle)) {
-              console.log("todo validadod");
-              save();
+              handleSave();
             }
             else
               console.log("no se pasan los controles");

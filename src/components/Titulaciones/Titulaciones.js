@@ -11,38 +11,36 @@ import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { TITULACIONES_ACTIONS, reducerTitulacion } from '../../includes/reducers/titulaciones.reducer';
 import Menu from '../Menu';
-import { form as f2 } from './Form';
+import { form } from './Form';
 import { TitulacionForm } from './TitulacionForm';
 
 const Titulaciones = () => {
-    const [items, itemsHandle]             = useReducer(red_items, initialState);
-    const [file,setFile]                   = useState();
-    const [toastItems, setToastItems]      = useState([]);
+    const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [file, setFile] = useState();
+    const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const isInitialized = useRef(null);    
+    const isInitialized = useRef(null);
     let opciones_nivel = [];
-    let titulacionesFamiliaOptions = [];    
-    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion,{});
-    
+    let titulacionesFamiliaOptions = [];
+    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, {});
+
     const beforeEdit = (val) => {
-        let seleccionado = (val == undefined)?items.arr.filter(item => item.checked)[0]:val;
+        let seleccionado = (val == undefined) ? items.arr.filter(item => item.checked)[0] : val;
         //console.debug(items);        
         //const opt_nivel = opciones_nivel.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
         //const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
         //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
         //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: opt_fam});
 
-        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONTIPO,value: seleccionado.titulacionTipoId});
-        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value: seleccionado.titulacionNivelId});
-        titulacionHandler({type:TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA, value: seleccionado.titulacionFamiliaId});
+        titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value: seleccionado.titulacionTipoId });
+        titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value: seleccionado.titulacionNivelId });
+        titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA, value: seleccionado.titulacionFamiliaId });
     }
 
-    let form = f2;
-    form.beforeEdit= beforeEdit;
     const referer = `${url_referer}/titulaciones`;
 
     const loadCsv = () => {
-        itemsHandle({type:ITEMS_ACTIONS.LOAD})
+        itemsHandle({ type: ITEMS_ACTIONS.LOAD })
     }
 
     const processCsv = () => {
@@ -67,7 +65,7 @@ const Titulaciones = () => {
     const confirmDelete = async () => {
         const endpoint = "/silefe.titulacion/remove-titulaciones";
         let s = items.arr.filter(item => item.checked).map(i => { return i.id });
-        let res = await deleteAPI(endpoint,s,referer);
+        let res = await deleteAPI(endpoint, s, referer);
         if (res) {
             await setToastItems([...toastItems, { title: Liferay.Language.get("Borrar"), type: "info", text: Liferay.Language.get("Borrado_ok") }]);
             await fetchData();
@@ -76,36 +74,67 @@ const Titulaciones = () => {
             await setToastItems([...toastItems, { title: Liferay.Language.get("Borrar"), type: "danger", text: Liferay.Language.get("Borrado_no") }]);
         }
     }
-   
+    const handleSave = async () => {
+        let obj = {
+            titulacionId: items.item.titulacionId,
+            obj: {
+                ...items.item,
+                titulacionFamiliaId: redTitulaciones.titulacion.titulacionFamiliaId
+            },
+            userId: getUserId()
+        };
+        let endpoint = "/silefe.titulacion/save-titulacion";
+        if (items.status === 'new')
+            endpoint = "/silefe.titulacion/add-titulacion";
+
+        let { status, error } = await saveAPI(endpoint, obj, referer);
+        if (status) {
+            await fetchData();
+            await setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
+        }
+        else {
+            await setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
+        }
+    }
+    const downloadFile = () => {
+        console.log("descargando");
+    }
+
+    form.beforeEdit = beforeEdit;
+    form.handleSave = handleSave;
+    form.loadCsv = loadCsv
+    form.beforeEdit = downloadFile;
+
     const fetchData = async () => {
-        if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0) 
+        if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0)
             queryTitulaciones();
 
         if (form.fields.titulacionTipoId.options == undefined || form.fields.titulacionTipoId.options.length == 0)
             initForm();
 
         const postdata = {
-            pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
-                filters: [                    
-                    { name: items.searchField, value:( items.search && typeof items.search !== "undefined")?items.search:""},
+                filters: [
+                    { name: items.searchField, value: (items.search && typeof items.search !== "undefined") ? items.search : "" },
                 ],
                 order: items.order
             },
         };
 
-        let {data, error,totalPages, totalItems, page} = await fetchAPIData('/silefe.titulacion/filter', postdata,referer);
-        
+        let { data, error, totalPages, totalItems, page } = await fetchAPIData('/silefe.titulacion/filter', postdata, referer);
+
         if (error == 1) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
         }
         const tmp = await data.map(i => (
-            { ...i, 
+            {
+                ...i,
                 id: i.titulacionId,
-                checked: false 
+                checked: false
             })
         );
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp,fields: form, totalPages: totalPages, total:totalItems,page:page });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
     const initForm = () => {
@@ -113,19 +142,19 @@ const Titulaciones = () => {
             descripcion: "",
             lang: getLanguageId()
         };
-    
-        fetchAPIData('/silefe.titulaciontipo/all', postdata,referer).then(response => {
-            const l = response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})
-            form.fields.titulacionTipoId.options = l;    
-            form.fields.titulacionTipoId.change = cambiaTitulacionTipo;    
+
+        fetchAPIData('/silefe.titulaciontipo/all', postdata, referer).then(response => {
+            const l = response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })
+            form.fields.titulacionTipoId.options = l;
+            form.fields.titulacionTipoId.change = cambiaTitulacionTipo;
         });
 
-        fetchAPIData('/silefe.titulacionnivel/all', postdata,referer).then( response => {
+        fetchAPIData('/silefe.titulacionnivel/all', postdata, referer).then(response => {
             opciones_nivel = [...response.data];
             form.fields.titulacionNivelId.change = cambiaTitulacionNivel;
         });
 
-        fetchAPIData('/silefe.titulacionfam/all', postdata,referer).then(response => {
+        fetchAPIData('/silefe.titulacionfam/all', postdata, referer).then(response => {
             titulacionesFamiliaOptions = response.data;
             form.fields.titulacionFamiliaId.change = cambiaTitulacionFamilia;
         });
@@ -135,7 +164,7 @@ const Titulaciones = () => {
 
     const queryTitulaciones = () => {
         console.log("Cargando los dados de reducer desde titulaciones");
-        titulacionHandler({type:TITULACIONES_ACTIONS.START});
+        titulacionHandler({ type: TITULACIONES_ACTIONS.START });
         const lang = getLanguageId();
         fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: lang }, referer).then(response => {
             console.log("cargando los tipos");
@@ -157,54 +186,31 @@ const Titulaciones = () => {
         console.log("opciones nivel");
         console.log(opciones_nivel);
         let llll = opciones_nivel.filter(i => i.titulacionTipoId == value);
-        const opt_nivel = llll.map(l => {return {value:l.titulacionNivelId,label:l.descripcion}})
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
-        
+        const opt_nivel = llll.map(l => { return { value: l.titulacionNivelId, label: l.descripcion } })
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'titulacionNivelId', options: opt_nivel });
+
         const titnval = llll[0].titulacionNivelId;
-        let lll2 = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == titnval).map(l => {return {value:l.titulacionFamId,label:l.descripcion}})
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: lll2});
+        let lll2 = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == titnval).map(l => { return { value: l.titulacionFamId, label: l.descripcion } })
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'titulacionFamiliaId', options: lll2 });
     }
 
     const cambiaTitulacionNivel = (value) => {
-        let tt = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == value).map(l => {return {value:l.titulacionFamId,label:l.descripcion}})
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: tt});
+        let tt = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == value).map(l => { return { value: l.titulacionFamId, label: l.descripcion } })
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'titulacionFamiliaId', options: tt });
     }
 
     const cambiaTitulacionFamilia = (value) => {
         console.log("no hago nada");
     }
 
-    const handleSave = async () => {
-        let obj = { 
-            titulacionId: items.item.titulacionId, 
-            obj: {
-                ...items.item,
-                titulacionFamiliaId: redTitulaciones.titulacion.titulacionFamiliaId
-            }, 
-            userId: getUserId() 
-        };
-        let endpoint = "/silefe.titulacion/save-titulacion";
-        if (items.status === 'new')
-            endpoint = "/silefe.titulacion/add-titulacion";
-
-        let {status,error} = await saveAPI(endpoint,obj,referer);
-        if (status) {
-            await fetchData();
-            await setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
-        }
-        else {
-            await setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-        }
-    }
-
     useEffect(() => {
-		if (!isInitialized.current) {
+        if (!isInitialized.current) {
             fetchData();
-			isInitialized.current = true;
-		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
-		}
+            isInitialized.current = true;
+        } else {
+            const timeoutId = setTimeout(fetchData, 350);
+            return () => clearTimeout(timeoutId);
+        }
     }, [items.load]);
 
     if (!items)
@@ -213,48 +219,46 @@ const Titulaciones = () => {
     return (
         <>
             <Menu
-                handleSave={handleSave}
                 itemsHandle={itemsHandle}
-                status={items.status}
-                loadCsv={loadCsv}
                 items={items}
-                formulario={form}
+                handleSave={handleSave}
+                download={downloadFile}
                 onOpenChange={onOpenChange}
             />
-            { (items.status === 'load') && 
-            <LoadFiles 
-                setFile={setFile}
-                processCsv={processCsv}
-                itemsHandle={itemsHandle}
-            />}
+            {(items.status === 'load') &&
+                <LoadFiles
+                    setFile={setFile}
+                    processCsv={processCsv}
+                    itemsHandle={itemsHandle}
+                />}
             {
                 (items.status === 'edit' || items.status === 'new') &&
-                <TitulacionForm 
+                <TitulacionForm
                     redTitulaciones={redTitulaciones}
                     titulacionHandler={titulacionHandler}
                     itemsHandle={itemsHandle}
                     items={items}
                     save={handleSave}
-                />                
+                />
             }
             {
                 (items.status === 'list') &&
                 <>
                     <Table
-                        items={items} 
-                        itemsHandle={itemsHandle} 
+                        items={items}
+                        itemsHandle={itemsHandle}
                         onOpenChange={onOpenChange}
                     />
-                    <Paginator 
+                    <Paginator
                         itemsHandle={itemsHandle}
                         items={items}
                     />
                 </>
 
-            }            
+            }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
 
-            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
+            {open && <FModal onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} />}
         </>
     )
 }

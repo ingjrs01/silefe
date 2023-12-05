@@ -14,24 +14,24 @@ import Menu from '../Menu';
 import { form } from './Form';
 
 const Horarios = () => {
-    const [items,itemsHandle]            = useReducer(red_items,initialState); 
-    const [toastItems,setToastItems]     = useState([]);    
-    const {observer, onOpenChange, open} = useModal();
-    const isInitialized                  = useRef(null);
+    const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [toastItems, setToastItems] = useState([]);
+    const { observer, onOpenChange, open } = useModal();
+    const isInitialized = useRef(null);
     const referrer = `${url_referer}/horarios`;
-    
-    useEffect(()=>{
-		if (!isInitialized.current) {
+
+    useEffect(() => {
+        if (!isInitialized.current) {
             fetchData();
-			isInitialized.current = true;
-		} else {
-			const timeoutId = setTimeout(fetchData, 350);
-			return () => clearTimeout(timeoutId);
-		}
-    },[items.load]);
+            isInitialized.current = true;
+        } else {
+            const timeoutId = setTimeout(fetchData, 350);
+            return () => clearTimeout(timeoutId);
+        }
+    }, [items.load]);
 
     const loadCsv = () => {
-        itemsHandle({type:ITEMS_ACTIONS.LOAD})
+        itemsHandle({ type: ITEMS_ACTIONS.LOAD })
     }
 
     const processCsv = () => {
@@ -61,7 +61,7 @@ const Horarios = () => {
 
     const handleSave = async () => {
         const postdata = {
-            horarioId:   items.item.id,
+            horarioId: items.item.id,
             obj: {
                 ...items.item,
                 userId: getUserId(),
@@ -72,21 +72,21 @@ const Horarios = () => {
         if (items.status === 'new')
             endpoint = '/silefe.horario/add-horario';
 
-        let {status,error} = await saveAPI(endpoint,postdata,referrer);
+        let { status, error } = await saveAPI(endpoint, postdata, referrer);
         if (status) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
             fetchData();
         }
-        else 
+        else
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
     }
 
     const confirmDelete = async () => {
         const endpoint = '/silefe.horario/remove-horarios';
-        let s = items.arr.filter(item => item.checked).map( i => {return i.id});
+        let s = items.arr.filter(item => item.checked).map(i => { return i.id });
 
-        deleteAPI(endpoint,s,referrer).then(res => {
-            if (res ) {
+        deleteAPI(endpoint, s, referrer).then(res => {
+            if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Borrar"), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();
             }
@@ -99,65 +99,67 @@ const Horarios = () => {
         console.log("lalala");
     }
 
-    form.downloadFunc = downloadFile;
-    form.handleSave = handleSave;
+    //form.downloadFunc = downloadFile;
+    //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
         const postdata = {
-            pagination:   {page: items.pagination.page, pageSize: items.pagination.pageSize},
+            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
                 filters: [
-                    {name: "descripcion" , value: (items.search && typeof items.search !== 'undefined')?items.search:""},
+                    { name: "descripcion", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
                 ],
                 order: items.order,
             }
         }
-        let {data, totalPages, totalItems,page} = await fetchAPIData('/silefe.horario/filter',postdata,referrer);
-        let tmp = await data.map(i => {return({...i,id:i.horarioId,checked:false})});
-        await itemsHandle({type: ITEMS_ACTIONS.START,items: tmp, fields:form,totalPages:totalPages, total: totalItems,page:page});
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.horario/filter', postdata, referrer);
+        let tmp = await data.map(i => { return ({ ...i, id: i.horarioId, checked: false }) });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
-    if (!items) 
+    if (!items)
         return (<div>{Liferay.Language.get("Cargando")}</div>)
 
     return (
         <>
-            <Menu 
+            <Menu
                 itemsHandle={itemsHandle}
                 items={items}
+                handleSave={handleSave}
+                download={downloadFile}
                 onOpenChange={onOpenChange}
             />
-            { (items.status === 'load') && 
-            <LoadFiles 
-                setFile={setFile}
-                processCsv={processCsv}
-                itemsHandle={itemsHandle}
-            />}
+            {(items.status === 'load') &&
+                <LoadFiles
+                    setFile={setFile}
+                    processCsv={processCsv}
+                    itemsHandle={itemsHandle}
+                />}
             {
-                (items.status === 'edit' || items.status === 'new') && 
-                <DefaultForm 
-                    save={ handleSave} 
+                (items.status === 'edit' || items.status === 'new') &&
+                <DefaultForm
+                    handleSave={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
                 />
-            }            
-            {                
-             items.status === 'list' &&
-             <>
-                <Table 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                    onOpenChange={onOpenChange}
-                />
-                <Paginator 
-                    items={items} 
-                    itemsHandle={itemsHandle} 
-                />
-             </>
+            }
+            {
+                items.status === 'list' &&
+                <>
+                    <Table
+                        items={items}
+                        itemsHandle={itemsHandle}
+                        onOpenChange={onOpenChange}
+                    />
+                    <Paginator
+                        items={items}
+                        itemsHandle={itemsHandle}
+                    />
+                </>
             }
             <FAvisos toastItems={toastItems} setToastItems={setToastItems} />
-            {open && <FModal  onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} /> }
+            {open && <FModal onOpenChange={onOpenChange} confirmDelete={confirmDelete} observer={observer} />}
         </>
     )
 }
