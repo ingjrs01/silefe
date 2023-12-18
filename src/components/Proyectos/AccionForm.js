@@ -1,3 +1,5 @@
+import { Liferay } from '../../common/services/liferay/liferay';
+
 export const form = {
     title: Liferay.Language.get('Acciones'),
     languages: ["es-ES","en-US","gl-ES"],
@@ -159,12 +161,6 @@ export const form = {
         },
     ],
     table: [
-        //{
-        //    columnName: "id";
-        //    columnTitle: "Id",
-        //    columnType: "checkbox",
-        //    key: "c1",
-        //},
         {
             columnName: "tipo",
             columnTitle: Liferay.Language.get('Tipo'),
@@ -183,6 +179,7 @@ export const form = {
             columnType: "multilang",
             key: "c9",
         },
+        /*
         {
             columnName: "teorica", 
             columnTitle: Liferay.Language.get('Teórica'),
@@ -200,7 +197,7 @@ export const form = {
             columnTitle: Liferay.Language.get('Grupal'),
             columnType: "boolean",
             key: "c7",
-        },
+        },*/
         {
             columnName: "horas", 
             columnTitle: Liferay.Language.get('Horas'),

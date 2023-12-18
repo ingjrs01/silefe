@@ -1,4 +1,5 @@
 //import React from "react";
+import { Liferay } from '../common/services/liferay/liferay';
 
 export const url_api = "http://lfdevapps01.depo.es:8080/api/jsonws/invoke";
 export const url_referer = "http://lfdevapps01.depo.es:8080";

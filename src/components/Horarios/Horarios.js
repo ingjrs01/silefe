@@ -1,5 +1,6 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -17,6 +18,7 @@ const Horarios = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
+    const [file, setFile] = useState();
     const isInitialized = useRef(null);
     const referrer = `${url_referer}/horarios`;
 

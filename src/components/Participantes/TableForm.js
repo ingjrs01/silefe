@@ -3,6 +3,7 @@ import ClayCard from "@clayui/card";
 import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, { ClayInput, ClaySelect } from '@clayui/form';
 import React from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import { Selectfilter } from '../../includes/interface/fields/Selectfilter';

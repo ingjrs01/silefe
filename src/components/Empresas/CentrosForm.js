@@ -2,6 +2,7 @@ import ClayButton from '@clayui/button';
 import ClayCard from "@clayui/card";
 import ClayForm, { ClayInput, ClaySelect } from '@clayui/form';
 import React from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
 
 export const CentrosForm = ({ reducer, centrosHandle }) => {

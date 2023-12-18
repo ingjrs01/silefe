@@ -1,3 +1,4 @@
+import { Liferay } from '../../common/services/liferay/liferay';
 import { GenericForm } from '../../includes/GenericForm';
 
 export const form = {
@@ -21,12 +22,23 @@ export const form = {
             value:"lelele", 
             placeholder: Liferay.Language.get('Descripcion'), 
             conditions: ["text"]
-        }
+        },
+        adjuntos: {
+            key:4,
+            type: "file",
+            label: Liferay.Language.get('Adjuntos'), 
+            name: "adjuntos", 
+
+        },
     },
     rows: [
         {
             key:7,
             cols: ['descripcion']
+        },
+        {
+            key:8,
+            cols: ['adjuntos']
         },
     ],
     table: {

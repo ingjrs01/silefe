@@ -1,3 +1,4 @@
+import { Liferay } from '../common/services/liferay/liferay';
 import { ITEMS_ACTIONS } from "./reducers/items.reducer";
 
 const dniletter = ["T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"];
@@ -245,10 +246,13 @@ export const validateAll = (items, itemsHandle) => {
     return true;
 }
 
-export const validate = (name, value,items,itemsHandle) => {
+export const validate = (name, value,field,itemsHandle) => {
     let condicion = "";
 
-    for (condicion of items.fields.fields[name]["conditions"]) {
+    if (!field.hasOwnProperty('conditions'))
+        return true;
+    
+    for (condicion of field.conditions) {
         if (condicion == "number") {
             if (isNaN(value)) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
@@ -267,11 +271,11 @@ export const validate = (name, value,items,itemsHandle) => {
     return true;
 }
 
-export const validateLocalized = (fieldname, values, items, itemsHandle) => {
+export const validateLocalized = (fieldname, values, field, itemsHandle) => {
     const languages = Object.keys(values);
     let l = "";
     for (l in languages) {
-        if (!validate(fieldname, values[languages[l]],items,itemsHandle))
+        if (!validate(fieldname, values[languages[l]],field,itemsHandle))
             return false;
     }
     return true;

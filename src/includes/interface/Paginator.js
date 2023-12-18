@@ -3,6 +3,7 @@ import ClayIcon from '@clayui/icon';
 import { ClayPaginationWithBasicItems } from '@clayui/pagination';
 import ClayPaginationBar from '@clayui/pagination-bar';
 import React, { useState } from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from "../LiferayFunctions";
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 

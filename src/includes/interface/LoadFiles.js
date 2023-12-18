@@ -1,7 +1,8 @@
-import React from 'react';
-import ClayForm, { ClayInput } from '@clayui/form';
-import ClayCard from "@clayui/card";
 import ClayButton from '@clayui/button';
+import ClayCard from "@clayui/card";
+import ClayForm, { ClayInput } from '@clayui/form';
+import React from 'react';
+import { Liferay } from '../../common/services/liferay/liferay';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 
 export const LoadFiles = ({setFile, processCsv,itemsHandle}) => {

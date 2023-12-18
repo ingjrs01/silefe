@@ -1,6 +1,7 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, deleteAPIParams, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
@@ -211,7 +212,7 @@ const Ofertas = () => {
             }
         });
         fetchAPIData('/silefe.participante/filter-candidatos', { filters: filters2 }, referer).then(response => {
-            participantesHandler({ type: PARTICIPANTES_OPTIONS.SET_CANDIDATOS, candidatos: response.data });
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_CANDIDATOS, candidatos: response.data });
         });
     }
 
@@ -234,7 +235,6 @@ const Ofertas = () => {
     }
 
     const fetchData = async () => {
-        //participantesHandle({type:PARTICIPANTES_OPTIONS.START,search:searchCandidatos,showError: showError });
         const postdata = {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
@@ -328,25 +328,25 @@ const Ofertas = () => {
         // Cargamos algunos datos para las ofertas:
         fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            participantesHandler({ type: PARTICIPANTES_OPTIONS.SET_RANGOS, rangos: opts });
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_RANGOS, rangos: opts });
         });
 
         // Cargamos algunos datos para las provincias:
         fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
-            participantesHandler({ type: PARTICIPANTES_OPTIONS.SET_PROVINCIAS, provincias: opts });
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_PROVINCIAS, provincias: opts });
         });
 
         // Cargamos algunos datos para las municipios:
         fetchAPIData('/silefe.municipio/all', { lang: getLanguageId() }, referer).then(response => {
             //const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            participantesHandler({ type: PARTICIPANTES_OPTIONS.SET_MUNICIPIOS, municipios: response.data });
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_MUNICIPIOS, municipios: response.data });
         });
 
         // Cargamos algunos datos para las ocupaciones:
         fetchAPIData('/silefe.cno/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            participantesHandler({ type: PARTICIPANTES_OPTIONS.SET_OCUPACIONES, ocupaciones: opts });
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_OCUPACIONES, ocupaciones: opts });
         });
 
         // Cargamos algunos datos para los colectivos
@@ -354,12 +354,12 @@ const Ofertas = () => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             console.log("estos son los colectivos");
             console.debug(opts);
-            participantesHandler({ type: PARTICIPANTES_OPTIONS.SET_COLECTIVOS, colectivos: opts });
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_COLECTIVOS, colectivos: opts });
         });
 
         fetchAPIData('/silefe.horario/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            participantesHandler({ type: PARTICIPANTES_OPTIONS.SET_JORNADAS, jornadas: opts });
+            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_JORNADAS, jornadas: opts });
         });
     }
 

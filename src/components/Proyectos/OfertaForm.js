@@ -1,3 +1,5 @@
+import { Liferay } from '../../common/services/liferay/liferay';
+
 export const form = {
     title: Liferay.Language.get('Ofertas'),
     languages: ["es-ES","en-US","gl-ES"],

@@ -209,7 +209,7 @@ export const red_items = (state, action ) => {
             else
             return state;
             }
-
+            console.log("Estoy en select_item: " + seleccionado);
             if (state.fields.hasOwnProperty('beforeEdit'))
                 state.fields.beforeEdit(seleccionado);
 
@@ -341,7 +341,7 @@ export const red_items = (state, action ) => {
         case ITEMS_ACTIONS.SET_FIELDENABLE:
             return {
                 ...state,
-                fields: {...state.fields,rows: narray}
+                fields: {...state.fields,rows: null}
             }
     
         case ITEMS_ACTIONS.ADD_MULTIFIELD:

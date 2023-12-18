@@ -1,6 +1,7 @@
 import ClayButton from '@clayui/button';
 import ClayForm from '@clayui/form';
 import React from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { validateAll } from '../Validators';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";

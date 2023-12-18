@@ -1,6 +1,7 @@
 import { useModal } from '@clayui/modal';
 import Papa from "papaparse";
 import React, { useEffect, useReducer, useRef, useState } from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -100,10 +101,48 @@ const Convocatorias = () => {
         })
     }
 
-    const downloadFile = () => {
+    const downloadFile = async() => {
         console.log("downloadFile");
-        console.log(items);
-        debugger;
+        //console.log(items);
+        // const data = {
+        //     convocatoriaId: items.item.id,
+        //     obj: items.item,
+        //     userId: getUserId(),
+        // }
+        // console.log("probando la carga de archivos");
+        // console.debug(file);
+        // let endpoint = '/silefe.convocatoria/add-file';
+        // let { status, error } = await saveFileAPI(endpoint, data, referer);
+        // console.log("ya han llegado ");
+        // console.debug(status);
+
+        const reader = new FileReader();
+        reader.onload = async ({ target }) => {
+            const Liferay = window.Liferay;
+    
+            Liferay.Service(
+                '/dlapp/add-file-entry',
+                {
+                //    externalReferenceCode: "AAAA",
+                    repositoryId: 20119,
+                    folderId: 37279,
+                    sourceFileName: file.name,
+                    mimeType: file.type,
+                    title: file.name,
+                    description: '',
+                    changeLog: '',
+                    file: target.result,
+                    expirationDate : null,
+                    reviewDate: null,
+                },
+                function(obj) {
+                    console.log("algo se hace");
+                    console.log(obj);
+                }
+                );        
+        }
+        reader.readAsText(file);
+       
     }
 
     form.downloadFunc = downloadFile;

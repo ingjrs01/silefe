@@ -1,5 +1,6 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
+//import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
@@ -12,6 +13,13 @@ import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import Menu from '../Menu';
 import { form } from './Form';
+
+const Liferay = () => {
+    const Language = () => {
+        console.log("alala");
+    }
+}
+
 
 const TitulacionesTipo = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);

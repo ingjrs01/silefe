@@ -1,5 +1,6 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getAuthToken, getUserId, url_api, url_referer } from "../../includes/LiferayFunctions";
 import { deleteAPI, saveAPI } from '../../includes/apifunctions.js';
@@ -151,10 +152,11 @@ const Tecnicos = () => {
         //let totalPages = 1;
         //let page = 0;
         //return {data, error,totalPages, page}
-        const tmp = await data.map(i => { return ({ id: i.userId, firstName: i.firstName, lastName: i.lastName, emailAddress: i.emailAddress, checked: false }) });
-        await console.log("los datos procesados");
-        await console.log(tmp);
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: 99, page: page });
+        // TODO: ver como resolver esto
+        //const tmp = await data.map(i => { return ({ id: i.userId, firstName: i.firstName, lastName: i.lastName, emailAddress: i.emailAddress, checked: false }) });
+        //await console.log("los datos procesados");
+        //await console.log(tmp);
+        //await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: 99, page: page });
 
     }
 

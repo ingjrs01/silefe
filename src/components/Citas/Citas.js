@@ -1,6 +1,7 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
@@ -24,13 +25,11 @@ const Citas = () => {
     const { id } = useParams();
     const { state } = useLocation();
     const navigate = useNavigate();
-
     const referer = `${url_referer}/citas`;
 
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
-            console.log("primera carga del form");
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             if (id != 'undefined' && id > 0)
                 loadParticipante(id);
@@ -102,8 +101,6 @@ const Citas = () => {
             form.fields.methodId.options = opts;
         });
 
-        console.log("estamos haciendo el initForm");
-        console.debug(items);
         fetchAPIData('/silefe.participante/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.participanteId, label: obj.nombre + " " + obj.apellido1 + " " + obj.apellido2 } })];
             form.fields.participantInId.options = opts;
@@ -170,10 +167,15 @@ const Citas = () => {
         //console.log("descarga finalizada");
     }
 
+    const beforeEdit = (itemSel) => {
+        loadParticipantes(itemSel.originInId, 'originInId');
+        loadParticipantes(itemSel.originOutId, 'originOutId');
+    }
+
     //form.downloadFunc = downloadFile;
-    //form.handleSave = handleSave;
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
+    form.downloadFunc = downloadFile;
 
     const fetchData = async () => {
         if (form.fields.tipoCitaId.options == 'undefined') {
@@ -201,28 +203,8 @@ const Citas = () => {
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, total: totalItems, totalPages: totalPages, page: page });
     }
 
-    const beforeEdit = (itemSel) => {
-        loadParticipantes(itemSel.originInId, 'originInId');
-        loadParticipantes(itemSel.originOutId, 'originOutId');
-    }
-
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
-
-    const className3 = 'class-name-for-style',
-        filename = 'Excel-file',
-        fields = {
-          "index": "Index",
-          "guid": "GUID"
-        },
-        style = {
-          padding: "5px"
-        },
-        data = [
-          { index: 0, guid: 'asdf231234'},
-          { index: 1, guid: 'wetr2343af'}
-        ],
-        text = "Convert Json to Excel";        
 
     return (
         <>

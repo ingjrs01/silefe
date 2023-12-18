@@ -20,6 +20,7 @@ export const SUBTABLE_ACTIONS = {
     SETSEARCHFIELD: 18,
     LOAD: 19,
     SETFORM: 20,
+    SETPAGESEARCH: 21,
   }
 export const iniState = {
     form: {},
@@ -31,6 +32,11 @@ export const iniState = {
     status: "list",
     participanteId: 0,
     pagination: {
+        page: 0,
+        pageSize: 4,
+        totalPages: 1,
+    },
+    paginationSearch: {
         page: 0,
         pageSize: 4,
         totalPages: 1,
@@ -67,10 +73,14 @@ export const reducerSubtable = (state, action ) => {
             }
 
         case SUBTABLE_ACTIONS.SELECT_ITEM:
+            tmpar = [state.searchItems[action.index]];
+            let tmpPar3 = [...state.searchItems];
+            tmpPar3.splice(action.index,1);
+
             return {
                 ...state,
-                item: state.items[action.index],
-                status: "edit",
+                items: [...state.items,...tmpar.map(i => ({...i,checked:false}))],
+                searchItems: tmpPar3,
             }
         case SUBTABLE_ACTIONS.NEW_ITEM:
             return {
@@ -94,7 +104,7 @@ export const reducerSubtable = (state, action ) => {
             return {
                 ...state,
                 searchItems: action.items.map(item => ({...item, checked:false})),
-                pagination: {...state.pagination, totalPages: action.totalPages},
+                paginationSearch: {...state.paginationSearch, totalPages: action.totalPages},
             }
         case SUBTABLE_ACTIONS.CHECKSEARCH: 
             tmpar = state.searchItems;
@@ -178,6 +188,12 @@ export const reducerSubtable = (state, action ) => {
             return {
                 ...state,
                 pagination: {...state.pagination, page: action.page},
+                load: state.load + 1,
+            }
+        case SUBTABLE_ACTIONS.SETPAGESEARCH: 
+            return {
+                ...state,
+                paginationSearch: {...state.paginationSearch, page: action.page},
                 load: state.load + 1,
             }
         case SUBTABLE_ACTIONS.SETPAGES:

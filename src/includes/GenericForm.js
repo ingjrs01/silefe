@@ -1,4 +1,5 @@
-
+import { Liferay } from '../common/services/liferay/liferay';
+  
 export const GenericForm = {
     title: Liferay.Language.get('Elemento'),
     languages: ["es-ES","en-US","gl-ES"],

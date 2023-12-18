@@ -1,6 +1,7 @@
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import { ClayCheckbox, ClayInput } from '@clayui/form';
 import React from 'react';
+import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
 import { validateEmail } from '../../Validators';
 import { ITEMS_ACTIONS } from '../../reducers/items.reducer';

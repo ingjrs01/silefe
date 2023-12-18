@@ -3,11 +3,11 @@ import ClayPaginationBar from '@clayui/pagination-bar';
 import React, { useState } from "react";
 import { spritemap } from "../LiferayFunctions";
 
-export const MiniPaginator = ({itemsHandle,items, ITEMS_ACTIONS}) => {
-  const [active, setActive] = useState(items.pagination.page+1);
+export const MiniPaginator = ( {pagination, changePage}) => {
+  const [active, setActive] = useState(pagination.page+1);
   const setPage = (p) => {
     setActive(p);
-    itemsHandle({type: ITEMS_ACTIONS.SETPAGE,page:p-1});
+    changePage(p-1);
   }
 
   return (
@@ -18,7 +18,7 @@ export const MiniPaginator = ({itemsHandle,items, ITEMS_ACTIONS}) => {
         ellipsisprops={{ "aria-label": "Más", title: "Más" }}
         onActiveChange={evt => setPage(evt)}
         spritemap={spritemap}
-        totalPages={items.pagination.totalPages}
+        totalPages={pagination.totalPages}
       />
     </ClayPaginationBar>
   );

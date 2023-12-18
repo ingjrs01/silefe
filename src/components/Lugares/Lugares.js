@@ -1,6 +1,7 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, url_referer } from '../../includes/LiferayFunctions';
 import { fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
@@ -69,7 +70,7 @@ const Lugares = () => {
         fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.tiposViaId, label: obj.nombre } })];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'tipoViaId', options: opts });
-        }).catch(error => reject([]));
+        }).catch(error => console.error("Error"));
     }
 
     const loadCsv = () => {
@@ -129,6 +130,27 @@ const Lugares = () => {
         const tmp = await data.map(i => ({ ...i, checked: false }));
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
     }
+
+    const confirmDelete = async () => {
+        // TODO
+        //const endpoint = '/silefe.mbaja/remove-m-bajas';
+        //let s = items.arr.filter(item => item.checked).map(i => { return i.id });
+        //deleteAPI(endpoint, s, referer).then(res => {
+        //    if (res) {
+        //        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+        //        fetchData();
+        //    }
+        //    else
+        //        setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "dangaer", text: Liferay.Language.get('Borrado_no') }]);
+        //});
+
+    }
+
+    const processCsv = () => {
+        // TODO: este método está sin implementar
+        console.log("processCSV")
+    }
+
 
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)

@@ -1,3 +1,4 @@
+import { Liferay } from '../common/services/liferay/liferay';
 
 export const Errors = {
     1:Liferay.Language.get("Error_guardando"),

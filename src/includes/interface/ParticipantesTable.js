@@ -5,6 +5,7 @@ import ClayTable from '@clayui/table';
 import ClayUpperToolbar from '@clayui/upper-toolbar';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from "../../includes/LiferayFunctions";
 import { MiniPaginator } from "../../includes/interface/MiniPaginator";
 import { PARTICIPANTE_ACTIONS } from "../../includes/reducers/participantes.reducer";
@@ -114,10 +115,10 @@ const ParticipantesTable = ({participantes,participantesHandler, editUrl, backUr
                 <ClayTable.Cell key={"sr"+item.email+index} headingTitle>{ item.email}</ClayTable.Cell>
                 <ClayTable.Cell key={"sr-accion"+index}>
                     <ClayButtonWithIcon
-                        aria-label={Liferay.Language.get("Quitar")}
+                        aria-label={Liferay.Language.get("Añadir")}
                         spritemap={spritemap}
                         symbol="plus"
-                        title="quitar"
+                        title={Liferay.Language.get("Añadir")}
                         displayType="primary"
                     />
 

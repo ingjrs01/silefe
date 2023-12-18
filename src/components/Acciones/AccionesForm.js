@@ -6,6 +6,7 @@ import ClayLocalizedInput from '@clayui/localized-input';
 import ClayPanel from '@clayui/panel';
 import ClayTabs from '@clayui/tabs';
 import React, { useState } from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, locales, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import ParticipantesTable from '../../includes/interface/ParticipantesTable';

@@ -1,6 +1,7 @@
 import ClayIcon, { ClayIconSpriteContext } from '@clayui/icon';
 import React from "react";
 //import {ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
+import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from "../LiferayFunctions";
 import { ITEMS_ACTIONS } from "../reducers/items.reducer";
 

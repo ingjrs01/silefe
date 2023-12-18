@@ -1,9 +1,10 @@
-import React from "react";
+import ClayButton from '@clayui/button';
 import { ClayCheckbox } from '@clayui/form';
 import ClayTable from '@clayui/table';
-import ClayButton from '@clayui/button';
+import React from "react";
 import { CENTROS_ACTIONS } from "../../includes/reducers/centros.reducer";
 //import { CentrosForm } from "./CentrosForm";
+import { Liferay } from '../../common/services/liferay/liferay';
 
 const OfertasRender = ({reducer,centrosHandle}) =>  {
     if (!reducer.items) 

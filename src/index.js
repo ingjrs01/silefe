@@ -1,24 +1,48 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-//import reportWebVitals from './reportWebVitals';
-import Application from './Application';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
 
+//const root = ReactDOM.createRoot(document.getElementById('root'));
+//root.render(
+//  <React.StrictMode>
+//    <App />
+//  </React.StrictMode>
+//);
 
-/**
- * This is the main entry point of the portlet.
- *
- * See https://tinyurl.com/js-ext-portlet-entry-point for the most recent 
- * information on the signature of this function.
- *
- * @param  {Object} params a hash with values of interest to the portlet
- * @return {void}
- */
-export default function main({portletNamespace, contextPath, portletElementId, configuration}) {
-    const root = ReactDOM.createRoot(document.getElementById(portletElementId));
-    root.render(
-            <Application />
-    );
+reportWebVitals();
+class WebComponent extends HTMLElement {
+	constructor() {
+		super();
+	}
 
-  //  reportWebVitals();
+	connectedCallback() {
+		createRoot(this).render(
+			<App
+			/>,
+			this
+		);
+
+		//if (Liferay.ThemeDisplay.isSignedIn()) {
+		//	api('o/headless-admin-user/v1.0/my-user-account')
+		//		.then((response) => response.json())
+		//		.then((response) => {
+		//			if (response.givenName) {
+		//				const nameElements = document.getElementsByClassName(
+		//					'hello-world-name'
+		//				);
+		//				if (nameElements.length) {
+		//					nameElements[0].innerHTML = response.givenName;
+		//				}
+		//			}
+		//		});
+		//}
+	}
 }
 
+const ELEMENT_ID = 'silefe-front';
+
+if (!customElements.get(ELEMENT_ID)) {
+	customElements.define(ELEMENT_ID, WebComponent);
+}

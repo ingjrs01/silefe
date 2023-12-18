@@ -3,6 +3,7 @@ import { ClayInput, ClaySelect } from '@clayui/form';
 import { ClayIconSpriteContext } from '@clayui/icon';
 import ClayToolbar from '@clayui/toolbar';
 import React from 'react';
+import { Liferay } from '../common/services/liferay/liferay';
 import { spritemap } from '../includes/LiferayFunctions';
 import { MgtToolbar } from '../includes/interface/MgtToolbar';
 import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';

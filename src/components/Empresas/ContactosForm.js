@@ -2,6 +2,7 @@ import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import ClayCard from "@clayui/card";
 import ClayForm, { ClayCheckbox, ClayInput } from '@clayui/form';
 import React from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from '../../includes/LiferayFunctions';
 import { CONTACTOS_ACTIONS } from "../../includes/reducers/contactos.reducer";
 

@@ -39,21 +39,19 @@ import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
 import TitulacionesNivel from './components/TitulacionesNivel/TitulacionesNivel';
 import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
 import VMenu from './components/VMenu';
-import { getRolesUser } from './includes/LiferayFunctions';
+//import { getRolesUser } from './includes/LiferayFunctions';
 import { ProtectRoute } from './includes/ProtectRoute';
 
-//const queryClient = new QueryClient();
-
 const Application = () => {
-
     const url = "/home";
     const allow = true;
-    //console.log("parametros cargados cargados" + getUserId());
-    console.log("los roles son2: ");
-    getRolesUser().then(response => {
-        console.log("resposne");
-        console.log(response);
-    })
+    console.log("Cargando Aplication");
+    
+    //console.log("los roles son2: ");
+    //getRolesUser().then(response => {
+    //    console.log("resposne");
+    //    console.log(response);
+    //})
     //Liferay.Service('/role/get-user-roles',{userId: getUserId()}, (response) => {
     //    console.debug(response);
     //    response.forEach(e => console.debug(e));
@@ -61,7 +59,6 @@ const Application = () => {
 
     return (
         <BrowserRouter>
-        {/*<QueryClientProvider client={queryClient} >*/}
                 <div className="container">
                     <div className="sheet">
                         <div className="row">
@@ -124,7 +121,6 @@ const Application = () => {
                         </div>
                     </div>
                 </div>
-        {/*</QueryClientProvider>*/}
             </BrowserRouter>
     )
 }

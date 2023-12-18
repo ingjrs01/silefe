@@ -1,4 +1,6 @@
+import { Liferay } from '../../common/services/liferay/liferay';
 import { GenericForm } from "../../includes/GenericForm";
+
 export const form = {
     ...GenericForm,
     title: Liferay.Language.get('RangosEdad'),

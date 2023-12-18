@@ -1,19 +1,28 @@
-import { ClayButtonWithIcon } from '@clayui/button';
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayTable from '@clayui/table';
 import ClayUpperToolbar from '@clayui/upper-toolbar';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { MiniPaginator } from "../../includes/interface/MiniPaginator";
-import { PARTICIPANTE_ACTIONS } from "../../includes/reducers/participantes.reducer";
 import { SUBTABLE_ACTIONS } from "../../includes/reducers/subtable.reducer";
 
 const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
-    let lang = getLanguageId().replace("_", "-");
+    let lang = getLanguageId();
     //const backUrl = '/proyectos';
     const [showSearch, setShowSearch] = useState(false);
+
+    const changePage = (page) => {
+        handler({type: SUBTABLE_ACTIONS.SETPAGE,page:page});
+    }
+
+    const changePageSearch = (page) => {
+        handler({type: SUBTABLE_ACTIONS.SETPAGESEARCH,page:page});
+    }
+
 
     if (!data.items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
@@ -31,7 +40,7 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                 symbol="view"
                                 spritemap={spritemap}
                                 onClick={() => {
-                                    handler({ type: PARTICIPANTE_ACTIONS.LOAD });
+                                    handler({ type: SUBTABLE_ACTIONS.LOAD });
                                     setShowSearch(!showSearch);
                                 }}
                             />
@@ -46,7 +55,7 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                         key={"cif"}
                                         value={data.search}
                                         onChange={e => {
-                                            handler({ type: PARTICIPANTE_ACTIONS.SETSEARCH, value: e.target.value });
+                                            handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value });
                                         }}>
                                     </ClayInput>
                                 </ClayUpperToolbar.Item>
@@ -55,7 +64,7 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                         id={"campo"}
                                         name={"campo"}
                                         key={"campo"}
-                                        onChange={evt => handler({ type: PARTICIPANTE_ACTIONS.SETSEARCHFIELD, value: evt.target.value })}
+                                        onChange={evt => handler({ type: SUBTABLE_ACTIONS.SETSEARCHFIELD, value: evt.target.value })}
                                         value={data.searchField} >
                                         <ClaySelect.Option
                                             key={"option-1"}
@@ -81,17 +90,92 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                         spritemap={spritemap}
                                         symbol="search"
                                         title="Search"
-                                        onClick={() => handler({ type: PARTICIPANTE_ACTIONS.LOAD })}
+                                        onClick={() => handler({ type: SUBTABLE_ACTIONS.LOAD })}
                                     />
                                 </ClayUpperToolbar.Item>
                             </>
                         }
                     </ClayUpperToolbar>
+                    {/* tabla de búsqueda */}
+                    <ClayTable>
+                        <caption>{"Buscando acciones"}</caption>
+                        <ClayTable.Head>
+                            <ClayTable.Row>
+                                <ClayTable.Cell headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKALLSEARCH })} />
+                                </ClayTable.Cell>
+                                {
+                                    data.form.table.map(column => (
+                                        <ClayTable.Cell headingCell>{column.columnTitle}</ClayTable.Cell>
+                                    ))
+                                }
+                                <ClayTable.Cell className='table-cell-minw-100'>
+                                    {"Acciones"}
+                                </ClayTable.Cell>
+                            </ClayTable.Row>
+                        </ClayTable.Head>
+                        <ClayTable.Body>
+                            {data.searchItems.map((item, index) => {
+                                return (
+                                    <>
+                                        <ClayTable.Row key={"k-" + item.id}>
+                                            <ClayTable.Cell><ClayCheckbox checked={item.checked} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKSEARCH, index: index })} />
+                                            </ClayTable.Cell>
+                                            {
+                                                data.form.table.map(column => {
+                                                    //console.log(lang);console.debug(column);
+                                                    //console.log(item[column.columnName][lang]);
+                                                    //console.debug(item);
+                                                    //console.log("---------");
+                                                    switch (column.columnType) {
+                                                        case "multilang":
+                                                            return (<ClayTable.Cell> {item[column.columnName][lang]} </ClayTable.Cell>)
+                                                        case "string":
+                                                            return (<ClayTable.Cell>{item[column.columnName]}</ClayTable.Cell>)
+                                                        case "boolean":
+                                                            return (<ClayTable.Cell key={column.columnName + item.id}>
+                                                                {<ClayCheckbox checked={item[column.columnName]} disabled />}
+                                                            </ClayTable.Cell>)
+                                                    }
+                                                    <ClayTable.Cell headingCell>{item[column.columnName]}</ClayTable.Cell>
+                                                })
+                                            }
+
+                                            <ClayTable.Cell>
+                                                <div className="btn-toolbar pull-right">
+                                                    <ClayButtonWithIcon
+                                                        aria-label={Liferay.Language.get("Seleccionar")}
+                                                        key={"bi-" + item.id}
+                                                        className="ml-1"
+                                                        spritemap={spritemap}
+                                                        symbol="plus"
+                                                        title={Liferay.Language.get("Añadir")}
+                                                        displayType="primary"
+                                                        onClick={() => handler({ type: SUBTABLE_ACTIONS.SELECT_ITEM, index: index })}
+                                                    />
+                                                </div>
+                                            </ClayTable.Cell>
+                                        </ClayTable.Row>
+                                    </>
+                                );
+                            })}
+
+                        </ClayTable.Body>
+                    </ClayTable>
+                    <MiniPaginator
+                        pagination={data.paginationSearch}
+                        changePage={changePageSearch}
+                    />
+
+
+                <ClayButton displayType="primary" onClick={ ()=> handler({type:SUBTABLE_ACTIONS.SELECT_ITEMS})}>
+				    {Liferay.Language.get("Seleccionar")}
+			    </ClayButton>
+                    {/* */}
                     <ClayTable>
                         <caption>{data.form.title}</caption>
                         <ClayTable.Head>
                             <ClayTable.Row>
-                                <ClayTable.Cell headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({ type: PARTICIPANTE_ACTIONS.CHECKALL })} />
+                                <ClayTable.Cell headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKALL })} />
                                 </ClayTable.Cell>
                                 {
                                     data.form.table.map(column => (
@@ -108,7 +192,7 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                 return (
                                     <>
                                         <ClayTable.Row key={"k-" + item.id}>
-                                            <ClayTable.Cell><ClayCheckbox checked={item.checked} onChange={() => handler({ type: PARTICIPANTE_ACTIONS.CHECK, index: index })} />
+                                            <ClayTable.Cell><ClayCheckbox checked={item.checked} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECK, index: index })} />
                                             </ClayTable.Cell>
                                             {
                                                 data.form.table.map(column => {
@@ -145,7 +229,7 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                             symbol="trash"
                                                             title="Delete"
                                                             displayType="danger"
-                                                            onClick={() => handler({ type: PARTICIPANTE_ACTIONS.DELETE_ITEM, index: index })}
+                                                            onClick={() => handler({ type: SUBTABLE_ACTIONS.DELETE_ITEM, index: index })}
                                                         />
                                                 </div>
                                             </ClayTable.Cell>
@@ -157,9 +241,8 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                         </ClayTable.Body>
                     </ClayTable>
                     <MiniPaginator
-                        items={data}
-                        itemsHandle={handler}
-                        ITEMS_ACTIONS={SUBTABLE_ACTIONS}
+                        pagination={data.pagination}
+                        changePage={changePage}
                     />
                 </>
             }

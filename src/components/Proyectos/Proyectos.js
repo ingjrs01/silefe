@@ -21,6 +21,7 @@ import { form as eform } from './EmpresaForm';
 import { form as oform } from './OfertaForm';
 import { form as pform } from './ParticipantesForm';
 //import Papa from "papaparse";
+import { Liferay } from '../../common/services/liferay/liferay';
 
 const Proyectos = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -41,12 +42,14 @@ const Proyectos = () => {
         if (!isInitialized.current) {
             initForm();
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
+            // Cargo todas las acciones posibles: 
+            loadAllAcciones();
             accionesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: aform });
             ofertasHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: oform });
             participantesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: pform });
             empresasHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: eform });
 
-            if (id != 'undefined' && id > 0)
+            if (id !== 'undefined' && id > 0)
                 loadProyecto(id);
             else {
                 fetchData();
@@ -54,7 +57,7 @@ const Proyectos = () => {
 
             isInitialized.current = true;
         } else {
-            if (id != 'undefined' && id > 0)
+            if (id !== 'undefined' && id > 0)
                 loadProyecto(id)
             else {
                 const timeoutId = setTimeout(fetchData, 350);
@@ -64,22 +67,26 @@ const Proyectos = () => {
     }, [items.load]);
 
     useEffect(() => {
-        if (items.item.id != 'undefined' && items.item.id > 0)
+        if (items.item.id !== 'undefined' && items.item.id > 0)
             loadAcciones(items.item.id);
     }, [acciones.load]);
 
     useEffect(() => {
-        if (items.item.id != 'undefined' && items.item.id > 0)
+        loadAllAcciones();
+    }, [acciones.paginationSearch.page]);
+
+    useEffect(() => {
+        if (items.item.id !== 'undefined' && items.item.id > 0)
             loadOfertas(items.item.id);
     }, [ofertas.load]);
 
     useEffect(() => {
-        if (items.item.id != 'undefined' && items.item.id > 0)
+        if (items.item.id !== 'undefined' && items.item.id > 0)
             loadParticipantes(items.item.id);
     }, [participantes.load]);
 
     useEffect(() => {
-        if (items.item.id != 'undefined' && items.item.id > 0)
+        if (items.item.id !== 'undefined' && items.item.id > 0)
             loadEmpresas(items.item.id);
     }, [empresas.load]);
 
@@ -177,7 +184,7 @@ const Proyectos = () => {
         if (id === undefined)
             lid = items.arr.filter(item => item.checked)[0].id;
         else
-            lid = id;
+            lid = id.proyectoId;
 
         if (lid > 0) {
             loadAcciones(lid);
@@ -197,7 +204,7 @@ const Proyectos = () => {
     form.loadCsv = loadCsv;
 
     const fetchData = () => {
-        if (form.fields.entidadId.options == undefined) {
+        if (form.fields.entidadId.options === 'undefined') {
             initForm();
         }
         const postdata = {
@@ -224,42 +231,61 @@ const Proyectos = () => {
     }
 
     const loadAcciones = (id) => {
-        if (id != 'undefined') {
-
+        console.log("vamos a cargar las accines desde loadAcciones: " + id );
+        if (id !== 'undefined') {
+            console.log("ehhhh");
             const postdata = {
                 pagination: { page: acciones.pagination.page, pageSize: 5 },
                 options: {
                     filters: [{ name: "proyectoId", value: id }],
                 }
             }
+            console.debug(postdata);
             fetchAPIData('/silefe.accion/filter', postdata, referer).then(response => {
+                console.log("respuesta chachi");
+                console.debug(response);
+                if (response.data !== 'undefined')
                 accionesHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: response.data, pages: response.totalPages });
             });
-
         }
     }
 
+    const loadAllAcciones = () => {
+        const postdata = {
+            id: items.item.id ?? 1,
+            pagination: { page: acciones.paginationSearch.page??1, pageSize: acciones.paginationSearch.pageSize??4 },
+            options: {
+                filters: [],
+            }
+        }
+        fetchAPIData('/silefe.accion/filter', postdata, referer).then(response => accionesHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}))
+    }
+
     const loadParticipantes = (id) => {
-        if (id != 'undefined') {
+        if (id !== 'undefined') {
             const postdata = {
                 id: id,
+                pagination: { page: participantes.pagination.page, pageSize: 5 },
                 options: {
-                    pagination: { page: participantes.pagination.page, pageSize: 5 },
                     filters: [{ name: "proyectoId", value: id }],
                 }
             }
             fetchAPIData('/silefe.participante/filter-by-project', postdata, referer).then(response => {
-                const tmp = response.data.map(item => ({
-                    ...item,
-                    id: item.participanteId
-                }));
-                participantesHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: tmp, pages: response.totalPages });
+                console.log("recibiendo los participantes");
+                console.debug(response);
+                if (response.data !== 'undefined') {
+                    const tmp = response.data.map(item => ({
+                        ...item,
+                        id: item.participanteId
+                    }));
+                    participantesHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: tmp, pages: response.totalPages });
+                }
             });
         }
     }
 
     const loadEmpresas = (id) => {
-        if (id != 'undefined') {
+        if (id !== 'undefined') {
             const postdata = {
                 id: id, // TODO: esto cambiar por el projectId
                 options: {

@@ -1,13 +1,19 @@
 import ClayAutocomplete from '@clayui/autocomplete';
+import { MD5 } from 'crypto-js';
 import React, { useEffect, useState } from 'react';
-CryptoJS = require('crypto-js');
+import { Liferay } from '../../../common/services/liferay/liferay';
+import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
-export const Selectfilter = ({ change, field, item }) => {
+export const Selectfilter = ({ itemsHandle, field, item }) => {
     const [options, setOptions] = useState(new Map());
     const [val, setVal ] = useState ("");
     var selected = "";
     var sha1 = ""; 
-    
+
+    const change = (fieldname,value) => {
+        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: fieldname, value: value });
+    }
+     
     const loadOptions = () => {
         var tmp = new Map();       
         selected = "";
@@ -22,10 +28,10 @@ export const Selectfilter = ({ change, field, item }) => {
 
         for ( var opcion of field.options) {            
             if (sitem == opcion.value) {
-                selected = CryptoJS.MD5(opcion.label).toString();
+                selected = MD5(opcion.label).toString();
                 setVal(opcion.label);
             }
-            sha1 = CryptoJS.MD5(opcion.label);       
+            sha1 = MD5(opcion.label);       
             tmp.set(sha1.toString(),{...opcion,hash: sha1.toString()});
         }
         return tmp;
@@ -37,10 +43,10 @@ export const Selectfilter = ({ change, field, item }) => {
     },[field.options]);
 
     const onChangeSelect = (value) => {
-        var s = CryptoJS.MD5(value).toString();
+        var s = MD5(value).toString();
         const ttmp = options.get(s);
         if (ttmp != undefined) {
-            debugger;
+            //debugger;
             change(field.name,ttmp.value);            
         }
             //itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: ttmp.value })

@@ -3,6 +3,7 @@ import ClayCard from "@clayui/card";
 import ClayForm, { ClaySelect } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
 import React, { useState } from "react";
+import { Liferay } from '../../common/services/liferay/liferay';
 import { locales, spritemap } from '../../includes/LiferayFunctions';
 import { validateAll } from '../../includes/Validators';
 import { ITEMS_ACTIONS } from "../../includes/reducers/items.reducer";
