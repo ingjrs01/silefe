@@ -163,6 +163,11 @@ const Citas = () => {
 
     const downloadFile = () => {
         console.log("download");
+
+        //const worksheet = XLSX.utils.json_to_sheet(items.arr);
+        //const workbook = XLSX.utils.book_new();
+        //XLSX.utils.book_append_sheet(workbook, worksheet, "Dates");
+        //console.log("descarga finalizada");
     }
 
     //form.downloadFunc = downloadFile;
@@ -203,6 +208,21 @@ const Citas = () => {
 
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
+
+    const className3 = 'class-name-for-style',
+        filename = 'Excel-file',
+        fields = {
+          "index": "Index",
+          "guid": "GUID"
+        },
+        style = {
+          padding: "5px"
+        },
+        data = [
+          { index: 0, guid: 'asdf231234'},
+          { index: 1, guid: 'wetr2343af'}
+        ],
+        text = "Convert Json to Excel";        
 
     return (
         <>

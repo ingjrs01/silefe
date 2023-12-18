@@ -89,7 +89,7 @@ const Docentes = () => {
         })
     }
     const downloadFile = () => {
-        cosole.log("downloadFile");
+        console.log("downloadFile");
     }
 
     //form.downloadFunc = downloadFile;
@@ -199,7 +199,7 @@ const Docentes = () => {
             };
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: data });
         }).catch(error => {
-            cosole.error("Error cargando docente");
+            console.error("Error cargando docente");
             console.error(error);
         })
     }
