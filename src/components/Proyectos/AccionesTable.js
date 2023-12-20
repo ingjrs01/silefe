@@ -97,6 +97,8 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                         }
                     </ClayUpperToolbar>
                     {/* tabla de búsqueda */}
+                    {showSearch &&
+                    <>
                     <ClayTable>
                         <caption>{"Buscando acciones"}</caption>
                         <ClayTable.Head>
@@ -160,17 +162,18 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                             })}
 
                         </ClayTable.Body>
-                    </ClayTable>
+                    </ClayTable>                    
                     <MiniPaginator
                         pagination={data.paginationSearch}
                         changePage={changePageSearch}
                     />
 
-
                 <ClayButton displayType="primary" onClick={ ()=> handler({type:SUBTABLE_ACTIONS.SELECT_ITEMS})}>
 				    {Liferay.Language.get("Seleccionar")}
 			    </ClayButton>
-                    {/* */}
+                {/* */}
+                    </>
+                    }
                     <ClayTable>
                         <caption>{data.form.title}</caption>
                         <ClayTable.Head>

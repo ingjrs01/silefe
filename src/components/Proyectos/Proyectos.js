@@ -1,5 +1,6 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
@@ -12,12 +13,10 @@ import TabsForm from '../../includes/interface/TabsForm';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import Menu from '../Menu';
-import AccionesTable from "./AccionesTable";
-import { form } from './Form';
-//import OfertasTable from './OfertasTable';
-import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { form as aform } from './AccionForm';
+import AccionesTable from "./AccionesTable";
 import { form as eform } from './EmpresaForm';
+import { form } from './Form';
 import { form as oform } from './OfertaForm';
 import { form as pform } from './ParticipantesForm';
 //import Papa from "papaparse";
@@ -44,6 +43,8 @@ const Proyectos = () => {
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             // Cargo todas las acciones posibles: 
             loadAllAcciones();
+            loadAllOfertas();
+            loadAllEmpresas();
             accionesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: aform });
             ofertasHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: oform });
             participantesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: pform });
@@ -74,6 +75,14 @@ const Proyectos = () => {
     useEffect(() => {
         loadAllAcciones();
     }, [acciones.paginationSearch.page]);
+
+    useEffect(  () => {
+        loadAllOfertas();
+    }, [ofertas.paginationSearch.page]);
+
+    useEffect(  () => {
+        loadAllEmpresas();
+    }, [empresas.paginationSearch.page]);
 
     useEffect(() => {
         if (items.item.id !== 'undefined' && items.item.id > 0)
@@ -109,7 +118,6 @@ const Proyectos = () => {
             console.log("error");
             console.debug(error);
         });
-
     }
 
     const loadCsv = () => {
@@ -198,8 +206,6 @@ const Proyectos = () => {
         console.log("descargando fichero");
     }
 
-    //form.downloadFunc = downloadFile;
-    //form.handleSave = handleSave;
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
 
@@ -251,14 +257,46 @@ const Proyectos = () => {
     }
 
     const loadAllAcciones = () => {
+        const pagesearch = acciones.paginationSearch.page??1 ;
         const postdata = {
             id: items.item.id ?? 1,
-            pagination: { page: acciones.paginationSearch.page??1, pageSize: acciones.paginationSearch.pageSize??4 },
+            pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: acciones.paginationSearch.pageSize??4 },
             options: {
                 filters: [],
+                excludes: acciones.items.map(item => item.accionId)
             }
         }
-        fetchAPIData('/silefe.accion/filter', postdata, referer).then(response => accionesHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}))
+        fetchAPIData('/silefe.accion/filter', postdata, referer).then(response => 
+            accionesHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}));
+    }
+
+    const loadAllOfertas = () => {
+        const pagesearch = ofertas.paginationSearch.page??1 ;
+        const postdata = {
+            id: items.item.id ?? 1,
+            pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: ofertas.paginationSearch.pageSize??4 },
+            options: {
+                filters: [],
+                excludes: ofertas.items.map(item => item.ofertaId)
+            }
+        }
+        fetchAPIData('/silefe.oferta/filter', postdata, referer).then(response => ofertasHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}))
+    }
+
+    const loadAllEmpresas = () => {
+        console.log("loadAllEmpresas");
+        const pagesearch = empresas.paginationSearch.page??1 ;
+        const postdata = {
+            id: items.item.id ?? 1,
+            pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: empresas.paginationSearch.pageSize??4 },
+            options: {
+                filters: [],
+                excludes: empresas.items.map(item => item.id)
+            }
+        }
+        console.log("preguntando");
+        console.debug(postdata);
+        fetchAPIData('/silefe.empresa/filter', postdata, referer).then(response => empresasHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}))
     }
 
     const loadParticipantes = (id) => {
@@ -271,9 +309,9 @@ const Proyectos = () => {
                 }
             }
             fetchAPIData('/silefe.participante/filter-by-project', postdata, referer).then(response => {
-                console.log("recibiendo los participantes");
-                console.debug(response);
-                if (response.data !== 'undefined') {
+                //console.log("recibiendo los participantes 2");
+                //console.debug(response);
+                if (response.data !== undefined) {
                     const tmp = response.data.map(item => ({
                         ...item,
                         id: item.participanteId

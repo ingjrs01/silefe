@@ -44,6 +44,7 @@ export const iniState = {
     load: 0,
 }
 let tmpar= []; 
+let tmp=[];
 
 export const reducerSubtable = (state, action ) => {
     switch (action.type) {
@@ -69,7 +70,8 @@ export const reducerSubtable = (state, action ) => {
             return {
                 ...state,
                 items: action.items,
-                pagination: {...state.pagination, totalPages: action.pages}
+                pagination: {...state.pagination, totalPages: action.pages},
+                paginationSearch: {...state.paginationSearch, page: -1}
             }
 
         case SUBTABLE_ACTIONS.SELECT_ITEM:
@@ -101,10 +103,18 @@ export const reducerSubtable = (state, action ) => {
                 search: action.value
             }
         case SUBTABLE_ACTIONS.SETSEARCHITEMS: 
+            const pag = (state.paginationSearch.page > 0)?state.paginationSearch.page:0;
+            console.log("cargo items, y la pagina es : "+ pag);
+            console.debug(action.items);
+            if (action.items === undefined)
+                return {
+                    ...state
+                }
+
             return {
                 ...state,
-                searchItems: action.items.map(item => ({...item, checked:false})),
-                paginationSearch: {...state.paginationSearch, totalPages: action.totalPages},
+                searchItems: action.items.map(item => ({...item, nuevo: true, checked:false})),
+                paginationSearch: {...state.paginationSearch, page: pag, totalPages: action.totalPages},
             }
         case SUBTABLE_ACTIONS.CHECKSEARCH: 
             tmpar = state.searchItems;
@@ -147,12 +157,13 @@ export const reducerSubtable = (state, action ) => {
 
         case SUBTABLE_ACTIONS.DELETE_ITEM:
             let obj = {...state.items[action.index]};
-            tmp = [...state.items];
-            tmp.splice(action.index,1);
-            
+            let tmp2 = [...state.items];
+            tmp2.splice(action.index,1);
+           
             return {
                 ...state,
-                items: tmp,
+                items: tmp2,
+                searchItems: [...state.searchItems, obj],
                 deleted: (obj.nuevo)?[...state.deleted]:[...state.deleted,obj],
             }
         case SUBTABLE_ACTIONS.SELECT_ITEMS: 
@@ -191,10 +202,11 @@ export const reducerSubtable = (state, action ) => {
                 load: state.load + 1,
             }
         case SUBTABLE_ACTIONS.SETPAGESEARCH: 
+            console.log("me cambian la page, y viene: ");
             return {
                 ...state,
                 paginationSearch: {...state.paginationSearch, page: action.page},
-                load: state.load + 1,
+                //load: state.load + 1,
             }
         case SUBTABLE_ACTIONS.SETPAGES:
             return {
