@@ -152,7 +152,7 @@ const Proyectos = () => {
     }
 
     const handleSave = async () => {
-        const data = {
+        const pdata = {
             id: items.item.id,
             obj: {
                 ...items.item,
@@ -164,8 +164,49 @@ const Proyectos = () => {
         if (items.status === 'new')
             endpoint = '/silefe.proyecto/add-proyecto';
 
-        let { status, error } = await saveAPI(endpoint, data, referer);
-        if (status) {
+        let { status, error, data } = await saveAPI(endpoint, pdata, referer);
+        if (status) { 
+            const accionestosave = acciones.items.filter(accion => accion.nuevo).map(item => item.accionId);
+            const postdata = {
+                acciones: accionestosave,
+                projectId: data.proyectoId,
+            }
+            let { status2, error2 } = await saveAPI('/silefe.accion/change-project-acciones', postdata, referer);
+
+            // borrando los que no se quieren.
+            const postdatadelete = {
+                acciones: acciones.deleted.map(item => item.accionId),
+                projectId: 0,
+            }
+            let { status3, error3 } = await saveAPI('/silefe.accion/change-project-acciones', postdatadelete, referer);
+            // Ofertas: 
+            const postofertas = {
+                ofertas: ofertas.items.filter(oferta => oferta.nuevo).map(item => item.ofertaId),
+                projectId: data.proyectoId,
+            }
+            await saveAPI('/silefe.oferta/change-project-id', postofertas, referer);
+
+            if (ofertas.deleted.length > 0) {
+                const postofertas2 = {
+                    ofertas: ofertas.deleted.map(oferta => oferta.ofertaId),
+                    projectId: 0,
+                }
+                await saveAPI('/silefe.oferta/change-project-id', postofertas2, referer);
+            }
+            // vamos con las empresas
+            const pempresas = {
+                empresas: empresas.items.filter(empresa => empresa.nuevo).map(empresa => empresa.empresaId),
+                projectId: data.proyectoId
+            }
+            await saveAPI('/silefe.proyecto/add-empresas',pempresas, referer);
+            if (empresas.deleted.length > 0) {
+                const pempresas = {
+                    empresas: empresas.deleted.map(empresa => empresa.id),
+                    projectId: data.proyectoId
+                }
+                await saveAPI('/silefe.proyecto/remove-empresas', pempresas, referer);
+            }
+
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
         }
