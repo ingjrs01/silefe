@@ -213,5 +213,5 @@ export const form = {
             key: "c5",
         },
     ],
-    searchFields: ['documento', 'razonSocial'],
+    searchFields: ['razonSocial', 'documento' ],
 };

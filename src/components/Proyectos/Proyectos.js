@@ -74,15 +74,15 @@ const Proyectos = () => {
 
     useEffect(() => {
         loadAllAcciones();
-    }, [acciones.paginationSearch.page]);
+    }, [acciones.paginationSearch.page, acciones.search]);
 
     useEffect(  () => {
         loadAllOfertas();
-    }, [ofertas.paginationSearch.page]);
+    }, [ofertas.paginationSearch.page, ofertas.search]);
 
     useEffect(  () => {
         loadAllEmpresas();
-    }, [empresas.paginationSearch.page]);
+    }, [empresas.paginationSearch.page, empresas.search]);
 
     useEffect(() => {
         if (items.item.id !== 'undefined' && items.item.id > 0)
@@ -278,21 +278,16 @@ const Proyectos = () => {
     }
 
     const loadAcciones = (id) => {
-        console.log("vamos a cargar las accines desde loadAcciones: " + id );
         if (id !== 'undefined') {
-            console.log("ehhhh");
             const postdata = {
                 pagination: { page: acciones.pagination.page, pageSize: 5 },
                 options: {
                     filters: [{ name: "proyectoId", value: id }],
                 }
             }
-            console.debug(postdata);
             fetchAPIData('/silefe.accion/filter', postdata, referer).then(response => {
-                console.log("respuesta chachi");
-                console.debug(response);
                 if (response.data !== 'undefined')
-                accionesHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: response.data, pages: response.totalPages });
+                    accionesHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: response.data, pages: response.totalPages });
             });
         }
     }
@@ -303,7 +298,7 @@ const Proyectos = () => {
             id: items.item.id ?? 1,
             pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: acciones.paginationSearch.pageSize??4 },
             options: {
-                filters: [],
+                filters: [{ name: acciones.searchField, value: (acciones.search && typeof acciones.search !== 'undefined') ? acciones.search : "" },],
                 excludes: acciones.items.map(item => item.accionId)
             }
         }
@@ -317,7 +312,10 @@ const Proyectos = () => {
             id: items.item.id ?? 1,
             pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: ofertas.paginationSearch.pageSize??4 },
             options: {
-                filters: [],
+                filters: [{ 
+                    name: ofertas.searchField === ""?"titulo":ofertas.searchField, 
+                    value: (ofertas.search && typeof ofertas.search !== 'undefined') ? ofertas.search : "" 
+                },],
                 excludes: ofertas.items.map(item => item.ofertaId)
             }
         }
@@ -325,18 +323,18 @@ const Proyectos = () => {
     }
 
     const loadAllEmpresas = () => {
-        console.log("loadAllEmpresas");
         const pagesearch = empresas.paginationSearch.page??1 ;
         const postdata = {
             id: items.item.id ?? 1,
             pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: empresas.paginationSearch.pageSize??4 },
             options: {
-                filters: [],
+                filters: [{ 
+                    name: empresas.searchField === ""?"razonSocial":empresas.searchField, 
+                    value: (empresas.search && typeof empresas.search !== 'undefined') ? empresas.search : "" 
+                },],
                 excludes: empresas.items.map(item => item.id)
             }
         }
-        console.log("preguntando");
-        console.debug(postdata);
         fetchAPIData('/silefe.empresa/filter', postdata, referer).then(response => empresasHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}))
     }
 
@@ -350,8 +348,6 @@ const Proyectos = () => {
                 }
             }
             fetchAPIData('/silefe.participante/filter-by-project', postdata, referer).then(response => {
-                //console.log("recibiendo los participantes 2");
-                //console.debug(response);
                 if (response.data !== undefined) {
                     const tmp = response.data.map(item => ({
                         ...item,

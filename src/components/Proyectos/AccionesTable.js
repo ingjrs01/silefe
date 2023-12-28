@@ -4,7 +4,6 @@ import ClayIcon from '@clayui/icon';
 import ClayTable from '@clayui/table';
 import ClayUpperToolbar from '@clayui/upper-toolbar';
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { MiniPaginator } from "../../includes/interface/MiniPaginator";
@@ -22,7 +21,6 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
     const changePageSearch = (page) => {
         handler({type: SUBTABLE_ACTIONS.SETPAGESEARCH,page:page});
     }
-
 
     if (!data.items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
@@ -65,22 +63,14 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                         name={"campo"}
                                         key={"campo"}
                                         onChange={evt => handler({ type: SUBTABLE_ACTIONS.SETSEARCHFIELD, value: evt.target.value })}
-                                        value={data.searchField} >
-                                        <ClaySelect.Option
-                                            key={"option-1"}
-                                            label={"Nombre"}
-                                            value={"nombre"}
-                                        />
-                                        <ClaySelect.Option
-                                            key={"option-2"}
-                                            label={"Apellidos"}
-                                            value={"apellidos"}
-                                        />
-                                        <ClaySelect.Option
-                                            key={"option-3"}
-                                            label={"Documento"}
-                                            value={"documento"}
-                                        />
+                                        value={ data.form.searchField} >
+                                        { data.form.searchFields.map( searchitem => (
+                                            <ClaySelect.Option
+                                                key={searchitem}
+                                                label={ data.form.fields[searchitem].label}
+                                                value={searchitem}
+                                            />
+                                        ))}
                                     </ClaySelect>
                                 </ClayUpperToolbar.Item>
 
@@ -215,6 +205,8 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
 
                                             <ClayTable.Cell>
                                                 <div className="btn-toolbar pull-right">
+                                                    {/*
+
                                                     <Link to={{ pathname: `${editUrl}${item.id}` }} state={{ backUrl, ancestorId }}  > {
                                                     <ClayButtonWithIcon
                                                         aria-label={Liferay.Language.get("Editar")}
@@ -223,13 +215,14 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                         symbol="pencil"
                                                         title="Edit"
                                                         displayType="secondary"
-                                                    />}</Link>
+                                                    />}</Link>*/
+                                                    }
                                                         <ClayButtonWithIcon
                                                             aria-label={Liferay.Language.get("Quitar")}
                                                             key={"bi-" + item.id}
                                                             className="ml-1"
                                                             spritemap={spritemap}
-                                                            symbol="trash"
+                                                            symbol="hr"
                                                             title="Delete"
                                                             displayType="danger"
                                                             onClick={() => handler({ type: SUBTABLE_ACTIONS.DELETE_ITEM, index: index })}
