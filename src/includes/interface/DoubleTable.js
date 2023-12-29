@@ -5,11 +5,11 @@ import ClayTable from '@clayui/table';
 import ClayUpperToolbar from '@clayui/upper-toolbar';
 import React, { useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
-import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
-import { MiniPaginator } from "../../includes/interface/MiniPaginator";
-import { SUBTABLE_ACTIONS } from "../../includes/reducers/subtable.reducer";
+import { getLanguageId, spritemap } from '../LiferayFunctions';
+import { SUBTABLE_ACTIONS } from "../reducers/subtable.reducer";
+import { MiniPaginator } from "./MiniPaginator";
 
-const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
+const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
     let lang = getLanguageId();
     //const backUrl = '/proyectos';
     const [showSearch, setShowSearch] = useState(false);
@@ -90,7 +90,7 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                     {showSearch &&
                     <>
                     <ClayTable>
-                        <caption>{"Buscando acciones"}</caption>
+                        <caption>{Liferay.Language.get("Buscando")}</caption>
                         <ClayTable.Head>
                             <ClayTable.Row>
                                 <ClayTable.Cell headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKALLSEARCH })} />
@@ -246,4 +246,4 @@ const AccionesTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
     );
 }
 
-export default AccionesTable;
+export default DoubleTable;

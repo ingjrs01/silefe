@@ -300,7 +300,7 @@ export const form = {
         participantes: {
             key: 31,
             type: "other",
-            componentName: "ParticipantesTable",
+            componentName: "DoubleTable",
             name: "participantes",
         },
         empresa: {

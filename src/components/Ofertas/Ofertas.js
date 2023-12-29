@@ -5,21 +5,23 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, deleteAPIParams, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import DoubleTable from '../../includes/interface/DoubleTable';
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
-import ParticipantesTable from '../../includes/interface/ParticipantesTable';
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
-import { PARTICIPANTE_ACTIONS, initialParticipantes, reducerParticipantes } from '../../includes/reducers/participantes.reducer';
+import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
+import { formatDefaultEmail, formatDefaultPhone } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './OfertaForm';
+import { form as fparticipantes } from './ParticipanteForm';
 
 const Ofertas = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
-    const [redParticipantes, participantesHandler] = useReducer(reducerParticipantes, initialParticipantes);
+    const [redParticipantes, participantesHandler] = useReducer(reducerSubtable, iniState);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -31,24 +33,41 @@ const Ofertas = () => {
 
     const beforeEdit = (item) => {
         const s = (item == undefined || item == null) ? items.arr.filter(item => item.checked).map(i => { return i.id })[0] : item.ofertaId;
+        loadCandidatosOferta(s);
+    }
 
-        fetchAPIData('/silefe.oferta/participantes-oferta', { ofertaId: s }, referer).then(response => {
-            const pts = response.data.map(i => {
-                let email = "";
-                if (i.email != null && i.email.length > 0) {
-                    const tmpmail = JSON.parse(i.email);
-                    if (tmpmail.length > 0)
-                        email = JSON.parse(i.email)[0].value;
-                }
-                return {
+    const loadCandidatosOferta = (ofertaId) => {
+        const postdata = {
+            ofertaId: ofertaId, 
+            pagination: {
+                page: redParticipantes.pagination.page,
+                pageSize: redParticipantes.pagination.pageSize??4,
+            },
+            options: {}
+        }
+
+        fetchAPIData('/silefe.oferta/participantes-oferta', postdata, referer).then(response => {
+            const pts = response.data.map(i => ({
                     ...i,
+                    id: i.ofertaId,
                     apellidos: i.apellido1 + " " + i.apellido2,
-                    nuevo: true,
-                    email: email
+                    email: formatDefaultEmail(i.email),
+                    telefono: formatDefaultPhone(i.telefono),
                 }
-            });
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SETITEMS, items: pts });
+            ));
+            participantesHandler({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: pts,pages: response.totalPages });
         });
+    }
+
+    useEffect( ()=> {
+        console.log("Cambiando la paginación");
+        console.debug(items);
+        if (items.item.ofertaId !== undefined )
+            loadCandidatosOferta(items.item.ofertaId);
+    }, [redParticipantes.pagination.page]);
+        
+    const loadCsv = () => {
+        itemsHandle({ type: ITEMS_ACTIONS.LOAD })
     }
 
     const processCsv = () => {
@@ -79,7 +98,7 @@ const Ofertas = () => {
                 if (redParticipantes.deleted.length > 0) {
                     const s = redParticipantes.deleted.map(i => { return i.participanteId });
                     deleteAPIParams('/silefe.oferta/delete-participantes-oferta', { ofertaId: data.ofertaId, identifiers: s }, referer).then(res => {
-                        console.log("borrado");
+                        console.log("Borrando: " + res);
                     });
                 }
 
@@ -89,8 +108,6 @@ const Ofertas = () => {
             else
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
 
-            console.log("justo hasta aquí estaba bien");
-            console.log(state);
             if (state != 'undefined' && state != null && state.backUrl.length > 0)
                 navigate(state.backUrl);
         });
@@ -100,14 +117,13 @@ const Ofertas = () => {
         console.log("downloadFile");
     }
 
-    //form.handleSave = handleSave;
-    //form.downloadFunc = downloadFile;
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
 
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
+            participantesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: fparticipantes });
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             if (id != 'undefined' && id > 0) {
                 loadOferta(id);
@@ -128,18 +144,19 @@ const Ofertas = () => {
     }, [items.load]);
 
     useEffect(() => {
-        loadParticipantes();
-    }, [redParticipantes.load]);
+        loadParticipantesAll();
+    }, [redParticipantes.paginationSearch.page, redParticipantes.search]);
 
-    const loadParticipantes = () => {
+    const loadParticipantesAll = () => {
+        const pagesearch = redParticipantes.paginationSearch.page??1;
         let filters = [];
         if (redParticipantes.search.length > 0)
             filters = [{ name: redParticipantes.searchField, value: redParticipantes.search }];
 
         const postdata = {
             pagination: {
-                page: redParticipantes.pagination.page,
-                pageSize: 4
+                page: pagesearch>0?pagesearch:0,
+                pageSize: redParticipantes.paginationSearch.pageSize??4,
             },
             options: {
                 filters: filters,
@@ -150,29 +167,18 @@ const Ofertas = () => {
 
         fetchAPIData('/silefe.participante/filter', postdata, referer).then(response => {
             const pts = response.data.map(i => {
-                let email = "";
-                if (i.email != null && i.email.length > 0) {
-                    const tmpmail = JSON.parse(i.email);
-                    if (tmpmail.length > 0)
-                        email = JSON.parse(i.email)[0].value;
-                }
                 return {
                     ...i,
+                    id: i.ofertaId,
                     apellidos: i.apellido1 + " " + i.apellido2,
                     nuevo: true,
-                    email: email
+                    email: formatDefaultEmail(i.email),
+                    telefono: formatDefaultPhone(i.telefono),
                 }
             });
-            const totalPages = response.totalPages;
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS, items: pts, totalPages: totalPages });
+            participantesHandler({ type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: pts, totalPages: response.totalPages });
         });
     }
-
-
-    const loadCsv = () => {
-        itemsHandle({ type: ITEMS_ACTIONS.LOAD })
-    }
-
 
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map(i => { return i.id });
@@ -193,27 +199,12 @@ const Ofertas = () => {
 
     const plugin = () => {
         return {
-            ParticipantesTable:
-                <ParticipantesTable
-                    participantes={redParticipantes}
-                    participantesHandler={participantesHandler}
+            DoubleTable:
+                <DoubleTable
+                    data={redParticipantes}
+                    handler={participantesHandler}
                 />
         }
-    }
-
-    const searchCandidatos = (filters) => {
-        const filters2 = [];
-        Object.keys(filters).forEach(it => {
-            if (filters[it].length == 0 || filters[it] == 0) {
-                console.log("esta vacio " + it);
-            }
-            else {
-                filters2.push({ fieldname: it, value: filters[it] });
-            }
-        });
-        fetchAPIData('/silefe.participante/filter-candidatos', { filters: filters2 }, referer).then(response => {
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_CANDIDATOS, candidatos: response.data });
-        });
     }
 
     const loadOferta = (id) => {
@@ -270,7 +261,7 @@ const Ofertas = () => {
 
     const initForm = () => {
         // inicializo participantes: 
-        participantesHandler({ type: PARTICIPANTE_ACTIONS.START });
+        //participantesHandler({ type: PARTICIPANTE_ACTIONS.START });
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         const opciones_requerido = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Recomendable" }, { value: "2", label: "Obligatorio" }];
         fetchAPIData('/silefe.edad/all', { lang: getLanguageId() }, referer).then(response => {
@@ -324,44 +315,44 @@ const Ofertas = () => {
         form.fields.jornadaId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: Liferay.Language.get("Completa") }, { value: "2", label: Liferay.Language.get("Parcial") }];
     }
 
-    const initFormParticipantes = () => {
-        // Cargamos algunos datos para las ofertas:
-        fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_RANGOS, rangos: opts });
-        });
-
-        // Cargamos algunos datos para las provincias:
-        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_PROVINCIAS, provincias: opts });
-        });
-
-        // Cargamos algunos datos para las municipios:
-        fetchAPIData('/silefe.municipio/all', { lang: getLanguageId() }, referer).then(response => {
-            //const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_MUNICIPIOS, municipios: response.data });
-        });
-
-        // Cargamos algunos datos para las ocupaciones:
-        fetchAPIData('/silefe.cno/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_OCUPACIONES, ocupaciones: opts });
-        });
-
-        // Cargamos algunos datos para los colectivos
-        fetchAPIData('/silefe.colectivo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            console.log("estos son los colectivos");
-            console.debug(opts);
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_COLECTIVOS, colectivos: opts });
-        });
-
-        fetchAPIData('/silefe.horario/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_JORNADAS, jornadas: opts });
-        });
-    }
+//    const initFormParticipantes = () => {
+//        // Cargamos algunos datos para las ofertas:
+//        fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
+//            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+//            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_RANGOS, rangos: opts });
+//        });
+//
+//        // Cargamos algunos datos para las provincias:
+//        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
+//            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+//            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_PROVINCIAS, provincias: opts });
+//        });
+//
+//        // Cargamos algunos datos para las municipios:
+//        fetchAPIData('/silefe.municipio/all', { lang: getLanguageId() }, referer).then(response => {
+//            //const opts = [ {value:"0",label:"Seleccionar"} ,...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
+//            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_MUNICIPIOS, municipios: response.data });
+//        });
+//
+//        // Cargamos algunos datos para las ocupaciones:
+//        fetchAPIData('/silefe.cno/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+//            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+//            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_OCUPACIONES, ocupaciones: opts });
+//        });
+//
+//        // Cargamos algunos datos para los colectivos
+//        fetchAPIData('/silefe.colectivo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+//            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+//            console.log("estos son los colectivos");
+//            console.debug(opts);
+//            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_COLECTIVOS, colectivos: opts });
+//        });
+//
+//        fetchAPIData('/silefe.horario/all', { lang: getLanguageId() }, referer).then(response => {
+//            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+//            participantesHandler({ type: PARTICIPANTE_ACTIONS.SET_JORNADAS, jornadas: opts });
+//        });
+//    }
 
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)

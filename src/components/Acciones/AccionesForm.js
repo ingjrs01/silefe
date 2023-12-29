@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, locales, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
-import ParticipantesTable from '../../includes/interface/ParticipantesTable';
+import DoubleTable from '../../includes/interface/DoubleTable';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import { Formacion } from './Formacion';
 
@@ -183,7 +183,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                       }}>
                     </ClayInput>
                   </ClayForm.Group>
-
                     </div>
                   </>
                 }
@@ -307,8 +306,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     />
                   </ClayPanel.Body>
                   </ClayPanel>
-
-
                   </>
 
                 }
@@ -316,22 +313,19 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
               </ClayTabs.TabPane>
 
               <ClayTabs.TabPane aria-labelledby="tab-3" key={"tab-content-3"}>
-                
-                <ParticipantesTable
-                  participantes={docentes}
-                  participantesHandler={docentesHandler}
+                <DoubleTable
+                  data={docentes}
+                  handler={docentesHandler}
                   editUrl={"/docente/"}
                   backUrl={"/accion/"}
                   ancestorId={items.item.id}
-  
-                />
-                
+                />               
               </ClayTabs.TabPane>
 
               <ClayTabs.TabPane aria-labelledby="tab-4" key={"tab-content-4"}>
-                <ParticipantesTable
-                  participantes={participantes}
-                  participantesHandler={participantesHandler}
+                <DoubleTable
+                  data={participantes}
+                  handler={participantesHandler}
                   editUrl={"/participante/"}
                   backUrl={"/accion/"}
                   ancestorId={items.item.id}

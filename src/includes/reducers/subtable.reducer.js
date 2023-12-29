@@ -104,8 +104,6 @@ export const reducerSubtable = (state, action ) => {
             }
         case SUBTABLE_ACTIONS.SETSEARCHITEMS: 
             const pag = (state.paginationSearch.page > 0)?state.paginationSearch.page:0;
-            console.log("cargo items, y la pagina es : "+ pag);
-            console.debug(action.items);
             if (action.items === undefined)
                 return {
                     ...state
@@ -134,15 +132,13 @@ export const reducerSubtable = (state, action ) => {
 
         case SUBTABLE_ACTIONS.SAVE:
             let tmp = [];
-
             if (state.item.id > 0) {
                 tmp = [...state.items];
                 const index = tmp.findIndex(item => item.id == state.item.id );
                 tmp.splice(index,1,state.item);
             }
-            else {
-                tmp = [...state.items,state.item];
-            }
+            else 
+                tmp = [...state.items,state.item];           
 
             return {
                 ...state,
@@ -202,7 +198,6 @@ export const reducerSubtable = (state, action ) => {
                 load: state.load + 1,
             }
         case SUBTABLE_ACTIONS.SETPAGESEARCH: 
-            console.log("me cambian la page, y viene: ");
             return {
                 ...state,
                 paginationSearch: {...state.paginationSearch, page: action.page},

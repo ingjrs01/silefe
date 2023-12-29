@@ -12,19 +12,21 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
-import { PARTICIPANTE_ACTIONS, initialParticipantes, reducerParticipantes } from '../../includes/reducers/participantes.reducer';
-import { toHours } from '../../includes/utils';
+import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
+import { formatDefaultEmail, formatDefaultPhone, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import AccionesForm from "./AccionesForm";
+import { form as DocentesForm } from './DocentesForm';
 import { EJECUCION_ACTIONS, iniState as iniEjecucion, reducerEjecucion } from './Ejecucion.reducer';
 import { form as eform } from './EjecucionForm';
 import { form } from './Form';
+import { form as ParticipantesForm } from './ParticipantesForm';
 //import Papa from "papaparse";
 
 const Acciones = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
-    const [docentes, docentesHandler] = useReducer(reducerParticipantes, initialParticipantes);
-    const [participantes, participantesHandler] = useReducer(reducerParticipantes, initialParticipantes);
+    const [docentes, docentesHandler] = useReducer(reducerSubtable, iniState);
+    const [participantes, participantesHandler] = useReducer(reducerSubtable, iniState);
     const [ejecucionT, ejecucionHandlerT] = useReducer(reducerEjecucion, iniEjecucion);
     const [ejecucionP, ejecucionHandlerP] = useReducer(reducerEjecucion, iniEjecucion);
     const [ejecucionG, ejecucionHandlerG] = useReducer(reducerEjecucion, iniEjecucion);
@@ -58,7 +60,7 @@ const Acciones = () => {
             if (docentes.deleted.length > 0) {
                 const deleteItems = docentes.deleted.map(d => { return (d.docenteId) });
                 deleteAPIParams('/silefe.accion/delete-docentes-accion', { id: data.accionId, docentes: deleteItems }, referer).then(res => {
-                    console.log("se han borrad los docentes");
+                    console.log("se han borrado los docentes");
                 })
             };
             const obj3 = { id: data.accionId, participantes: participantes.items, userId: getUserId() };
@@ -70,7 +72,7 @@ const Acciones = () => {
                 });
             }
 
-            // TODO: Revisar según el tpo de formaicon que sea:
+            // TODO: Revisar según el tipo de formacion que sea:
             let obj4 = { id: ejecucionT.item.id, obj: ejecucionT.item };
             respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
             obj4 = { id: ejecucionP.item.id, obj: ejecucionP.item };
@@ -134,8 +136,6 @@ const Acciones = () => {
     }
 
     const fetchData = async () => {
-        docentesHandler({ type: PARTICIPANTE_ACTIONS.START });
-        participantesHandler({ type: PARTICIPANTE_ACTIONS.START });
         ejecucionHandlerT({ type: EJECUCION_ACTIONS.START, tipoFormacion: 1 });
         ejecucionHandlerP({ type: EJECUCION_ACTIONS.START, tipoFormacion: 2 });
         ejecucionHandlerG({ type: EJECUCION_ACTIONS.START, tipoFormacion: 3 });
@@ -160,18 +160,7 @@ const Acciones = () => {
     }
 
     const beforeEdit = (item) => {
-        fetchAPIData('/silefe.docente/all', { lang: getLanguageId() }).then(response => {
-            const tits = response.data.map(i => {
-                let tt = JSON.parse(i.email);
-                return {
-                    ...i,
-                    apellidos: i.apellido1 + " " + i.apellido2,
-                    nuevo: true,
-                    email: tt[0].value,
-                }
-            });
-            docentesHandler({ type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS, items: tits });
-        })
+        loadDocentesSearch();
 
         if (item.accionId != undefined && item.accionId > 0) {
             const accionId = item.accionId;
@@ -179,41 +168,8 @@ const Acciones = () => {
             ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
             ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
 
-            fetchAPIData('/silefe.accion/filter-docentes-by-accion', { accionId: accionId }, referer).then(response => {
-                const tits = response.data.map(i => {
-                    let email = '';
-                    if (i.email.length > 0)
-                        email = JSON.parse(i.email)[0].value;
-
-                    return {
-                        ...i,
-                        apellidos: i.apellido1 + " " + i.apellido2,
-                        nuevo: false,
-                        email: email,
-                        id: i.docenteId,
-                    }
-                });
-                docentesHandler({ type: PARTICIPANTE_ACTIONS.SETITEMS, items: tits });
-            });
-
-            fetchAPIData('/silefe.accion/filter-participantes-by-accion', { accionId: accionId }, referer).then(response => {
-                const tits = response.data.map(i => {
-                    let email = '';
-                    if (i.email != null && i.email.length > 0) {
-                        const tmp = JSON.parse(i.email);
-                        if (tmp.length > 0)
-                            email = tmp[0].value;
-                    }
-                    return {
-                        ...i,
-                        apellidos: i.apellido1 + " " + i.apellido2,
-                        nuevo: false,
-                        email: email,
-                        id: i.participanteId,
-                    }
-                });
-                participantesHandler({ type: PARTICIPANTE_ACTIONS.SETITEMS, items: tits });
-            });
+            loadDocentes(accionId);
+            loadParticipantes(accionId);
             // Cargando los datos de las acciones: 
             fetchAPIData('/silefe.formacionaccion/get-formacion-accion', { accionId: accionId, tipoFormacion: 1 }, referer).then(response => {
                 const item = {
@@ -257,15 +213,48 @@ const Acciones = () => {
         }
     }
 
-    const loadParticipantes = () => {
+    const loadDocentes = (id) => {
+        fetchAPIData('/silefe.accion/filter-docentes-by-accion', { accionId: id }, referer).then(response => {
+            const tits = (response.data !== undefined && response.data.length > 0)?response.data.map(i => {
+                return {
+                    ...i,
+                    apellidos: i.apellido1 + " " + i.apellido2,
+                    nuevo: false,
+                    email: formatDefaultEmail(i.email),
+                    telefono: formatDefaultPhone(i.telefono),
+                    id: i.docenteId,
+                }
+            }):[];
+            docentesHandler({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: tits, pages: response.totalPages });
+        });
+    }
+
+    const loadParticipantes = (id) =>  {
+        fetchAPIData('/silefe.accion/filter-participantes-by-accion', { accionId: id }, referer).then(response => {
+            const tits = (response.data !== undefined && response.data.length > 0)?response.data.map(i => {
+                return {
+                    ...i,
+                    apellidos: i.apellido1 + " " + i.apellido2,
+                    nuevo: false,
+                    email: formatDefaultEmail(i.email),
+                    telefono: formatDefaultPhone(i.telefono), 
+                    id: i.participanteId,
+                }
+            }):[];
+            participantesHandler({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: tits, pages: response.totalPages });
+        });
+    }    
+
+    const loadParticipantesSearch = () => {
+        const pagesearch = participantes.paginationSearch.page??1;
         let filters = [];
         if (participantes.search.length > 0)
             filters = [{ name: participantes.searchField, value: participantes.search }];
 
         const postdata = {
             pagination: {
-                page: participantes.pagination.page,
-                pageSize: 4
+                page: (pagesearch>0)?pagesearch:0,
+                pageSize: participantes.paginationSearch.pageSize??4
             },
             options: {
                 filters: filters,
@@ -275,35 +264,29 @@ const Acciones = () => {
         }
 
         fetchAPIData('/silefe.participante/filter', postdata, referer).then(response => {
-            const pts = response.data.map(i => {
-                let email = "";
-                if (i.email != null && i.email.length > 0) {
-                    const tmpmail = JSON.parse(i.email);
-                    if (tmpmail.length > 0)
-                        email = JSON.parse(i.email)[0].value;
-                }
+            const pts = (response.data !== undefined && response.data.length > 0)?response.data.map(i => {
                 return {
                     ...i,
                     apellidos: i.apellido1 + " " + i.apellido2,
                     nuevo: true,
-                    email: email,
+                    email: formatDefaultEmail(i.email),
+                    telefono: formatDefaultPhone(i.telefono),
                     id: i.participanteId,
                 }
-            });
-            const totalPages = response.totalPages;
-            participantesHandler({ type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS, items: pts, totalPages: totalPages });
+            }):[];
+            participantesHandler({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: pts, totalPages: response.totalPages});
         });
     }
 
-    const loadDocentes = () => {
+    const loadDocentesSearch = () => {
         let filters = [];
         if (docentes.search.length > 0)
             filters = [{ name: docentes.searchField, value: docentes.search }];
 
         const postdata = {
             pagination: {
-                page: docentes.pagination.page,
-                pageSize: 4
+                page: docentes.paginationSearch.page,
+                pageSize: docentes.paginationSearch.pageSize??4
             },
             options: {
                 filters: filters,
@@ -313,19 +296,16 @@ const Acciones = () => {
         }
 
         fetchAPIData('/silefe.docente/filter', postdata, referer).then(response => {
-            const pts = response.data.map(i => {
-                let email = "";
-                if (i.email != null && i.email.length > 0)
-                    email = JSON.parse(i.email)[0].value;
+            const pts = (response.data !== undefined && response.data.length > 0)?response.data.map(i => {
                 return {
                     ...i,
                     apellidos: i.apellido1 + " " + i.apellido2,
                     nuevo: true,
-                    email: email
+                    email: formatDefaultEmail(i.email),
+                    telefono: formatDefaultPhone(i.telefono),
                 }
-            });
-            const totalPages = response.totalPages;
-            docentesHandler({ type: PARTICIPANTE_ACTIONS.SETSEARCHITEMS, items: pts, totalPages: totalPages });
+            }):[];
+            docentesHandler({ type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: pts, totalPages: response.totalPages });
         });
     }
 
@@ -430,10 +410,15 @@ const Acciones = () => {
             changeCompany(ejecucionG.item.empresaId).then((data) => ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETEMPRESA, empresa: data }));
     }, [ejecucionG.item.empresaId]);
 
+    useEffect( () => {
+        loadParticipantes(items.item.id);
+    }, [participantes.load]);
 
     useEffect(() => {
         if (!isInitialized.current) {
             loadForm();
+            docentesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: DocentesForm});
+            participantesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: ParticipantesForm});
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             if (id != 'undefined' && id > 0) {
                 loadAccion(id);
@@ -453,13 +438,12 @@ const Acciones = () => {
     }, [items.load]);
 
     useEffect(() => {
-        loadParticipantes()
-
-    }, [participantes.load]);
+        loadParticipantesSearch();
+    }, [participantes.paginationSearch.page, participantes.search]);
 
     useEffect(() => {
-        loadDocentes()
-    }, [docentes.load])
+        loadDocentesSearch()
+    }, [docentes.paginationSearch.page, docentes.search])
 
     if (!items)
         return (<div>Liferay.Language.get('Cargando')</div>)

@@ -76,9 +76,11 @@ export const formatDocument = (tipoDoc, value) => {
     return dni_mostrado
   }
 
-  export const formatDefaultPhone = (phones) => {
-    if (phones == null || phones.length == 0)
+  export const formatDefaultPhone = (inputphones) => {
+    const phones = (typeof(inputphones) === "string")?JSON.parse(inputphones):inputphones;
+    if (phones === undefined || phones.length == 0)
       return "";
+
     const seleccionado = phones.filter(i => i.default);
     if (seleccionado.length > 0)
       return seleccionado[0].value;
@@ -86,7 +88,8 @@ export const formatDocument = (tipoDoc, value) => {
     return phones[0].value;    
   }
 
-  export const formatDefaultEmail = (emails) => {
+  export const formatDefaultEmail = (inputemails) => {
+    let emails = (typeof (inputemails) == "string")?JSON.parse(inputemails):inputemails;
     if (emails == 'undefined' || emails.length == 0)
       return "";
     const seleccionado = emails.filter(i => i.default);

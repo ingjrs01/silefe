@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import DoubleTable from "../../includes/interface/DoubleTable";
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
@@ -14,7 +15,6 @@ import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import Menu from '../Menu';
 import { form as aform } from './AccionForm';
-import AccionesTable from "./AccionesTable";
 import { form as eform } from './EmpresaForm';
 import { form } from './Form';
 import { form as oform } from './OfertaForm';
@@ -348,13 +348,11 @@ const Proyectos = () => {
                 }
             }
             fetchAPIData('/silefe.participante/filter-by-project', postdata, referer).then(response => {
-                if (response.data !== undefined) {
-                    const tmp = response.data.map(item => ({
-                        ...item,
-                        id: item.participanteId
-                    }));
-                    participantesHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: tmp, pages: response.totalPages });
-                }
+                const tmp = (response.data !== undefined && response.data.length > 0)? response.data.map(item => ({
+                    ...item,
+                    id: item.participanteId
+                })):[];
+                participantesHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: tmp, pages: response.totalPages });
             });
         }
     }
@@ -387,10 +385,10 @@ const Proyectos = () => {
                 }
             };
             fetchAPIData('/silefe.oferta/filter', postdata, referer).then(response => {
-                const itms = response.data.map(i => ({
+                const itms = (response.data !== undefined && response.data.length > 0) ?response.data.map(i => ({
                     ...i,
                     fechaIncorporacion: (i.fechaIncorporacion != null) ? new Date(i.fechaIncorporacion).toISOString().substring(0, 10) : "",
-                }));
+                })):[];
                 ofertasHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: itms, pages: response.totalPages });
             });
         }
@@ -399,7 +397,7 @@ const Proyectos = () => {
     const initForm = () => {
         fetchAPIData('/silefe.cofinanciadas/all', { lang: getLanguageId() }, referer).then(response => {
             form.fields.entidadId.change = () => { };
-            form.fields.entidadId.options = response.data.map(obj => { return { value: obj.id, label: obj.descripcion } });
+            form.fields.entidadId.options = (response.data !== undefined && response.data.length > 0)?response.data.map(obj => { return { value: obj.id, label: obj.descripcion } }):[];
         });
         fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
             //  [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
@@ -419,7 +417,7 @@ const Proyectos = () => {
 
     const plugin = () => {
         return {
-            Ofertas: <AccionesTable
+            Ofertas: <DoubleTable
                 data={ofertas}
                 handler={ofertasHandle}
                 editUrl={"/oferta/"}
@@ -427,7 +425,7 @@ const Proyectos = () => {
                 ancestorId={items.item.id}
             />,
             Acciones:
-                <AccionesTable
+                <DoubleTable
                     data={acciones}
                     handler={accionesHandle}
                     editUrl={"/accion/"}
@@ -435,7 +433,7 @@ const Proyectos = () => {
                     ancestorId={items.item.id}
                 />,
             OParticipantes:
-                <AccionesTable
+                <DoubleTable
                     data={participantes}
                     handler={participantesHandle}
                     editUrl={"/participante/"}
@@ -443,7 +441,7 @@ const Proyectos = () => {
                     ancestorId={items.item.id}
                 />,
             Empresas:
-                <AccionesTable
+                <DoubleTable
                     data={empresas}
                     handler={empresasHandle}
                     editUrl={"/empresa/"}
