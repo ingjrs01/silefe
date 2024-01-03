@@ -261,6 +261,29 @@ export const form = {
             options: [],
             change: ()=>{console.log("cambia el select");}
         },
+        salarioId: {
+            key: 36,
+            type: "select",
+            label: Liferay.Language.get('Salario'),
+            name: "salarioId",
+            value:"",
+            enabled:true,
+            options: [],
+            className: 'col-3',
+            change: ()=>{console.log("cambia el select");},
+        },
+        infoSalario: {
+            key: 37,
+            type: "textarea",
+            label: Liferay.Language.get('Info Salario'),
+            name: "infoSalario",
+            value:"",
+            //enabled:true,
+            className: 'col-9',
+            value:"lelele",
+            placeholder:Liferay.Language.get('Comentarios'),
+            conditions:[]
+        },
         estado: {
             key: 32,
             type: "text",
@@ -336,6 +359,10 @@ export const form = {
                 {
                     key:41,
                     cols: ['jornadaId','infoJornada']
+                },
+                {
+                    key:44,
+                    cols: ['salarioId','infoSalario']
                 },
                 {
                     key:42,

@@ -309,6 +309,11 @@ const Ofertas = () => {
         });
 
         form.fields.jornadaId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: Liferay.Language.get("Completa") }, { value: "2", label: Liferay.Language.get("Parcial") }];
+
+        fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            form.fields.salarioId.options = opts;
+        });
     }
 
 //    const initFormParticipantes = () => {

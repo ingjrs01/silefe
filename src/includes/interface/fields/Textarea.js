@@ -13,7 +13,7 @@ export const Textarea = ({itemsHandle, field, item}) => {
           type="text"
           key={"tarea" + field.key}
           value={item}
-          onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: e.target.value }) }
+          onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: e.target.value }) }
         />
       </>
 
