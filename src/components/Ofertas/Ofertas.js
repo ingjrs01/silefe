@@ -80,32 +80,26 @@ const Ofertas = () => {
                 userId: getUserId(),
             },
         }
-
         let endpoint = '/silefe.oferta/save-oferta';
         if (items.status === 'new')
             endpoint = '/silefe.oferta/add-oferta';
-
         saveAPI(endpoint, data, referer).then(response => {
             let { status, data, error } = response;
-
             if (status) {
                 const participantes = redParticipantes.items.map(i => { return i.participanteId });
                 saveAPI('/silefe.oferta/save-participantes-oferta', { ofertaId: data.ofertaId, identifiers: participantes }, referer).then(res => {
                 });
-
                 if (redParticipantes.deleted.length > 0) {
                     const s = redParticipantes.deleted.map(i => { return i.participanteId });
                     deleteAPIParams('/silefe.oferta/delete-participantes-oferta', { ofertaId: data.ofertaId, identifiers: s }, referer).then(res => {
                         console.log("Borrando: " + res);
                     });
                 }
-
                 fetchData();
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
             }
             else
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-
             if (state != 'undefined' && state != null && state.backUrl.length > 0)
                 navigate(state.backUrl);
         });
@@ -243,6 +237,7 @@ const Ofertas = () => {
                 id: i.ofertaId,
                 fechaIncorporacion: (i.fechaIncorporacion != null) ? new Date(i.fechaIncorporacion).toISOString().substring(0, 10) : "",
                 fechaUltimoEstado: (i.fechaUltimoEstado != null) ? new Date(i.fechaUltimoEstado).toISOString().substring(0, 10) : "",
+                colectivos: i.colectivos ?? [],
                 checked: false
             });
         });
@@ -313,6 +308,11 @@ const Ofertas = () => {
         fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.salarioId.options = opts;
+        });
+
+        fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            form.fields.colectivos.options = opts;
         });
     }
 

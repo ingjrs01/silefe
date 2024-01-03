@@ -344,6 +344,19 @@ export const form = {
             enabled:true,
             conditions: [],
         },
+        colectivos: {
+            key: 38,
+            type: "doublelist",
+            label: Liferay.Language.get('Colectivos'),
+            name: "colectivos",
+            value:"",
+            enabled:true,
+            className: 'col-12',
+            value:"lelele",
+            placeholder:Liferay.Language.get('Comentarios'),
+            options: [{label: "1", value: "uno"}, {label: "2", value: "dos"}]
+        },
+
     },
     tabActive:0,
     tabs: [
@@ -371,6 +384,10 @@ export const form = {
                 {
                     key:43,
                     cols: ['puestoId','cnaeId', 'tipoContratoId','fechaIncorporacion']
+                },
+                {
+                    key:46,
+                    cols: ['colectivos']
                 },
                 {
                     key:45,

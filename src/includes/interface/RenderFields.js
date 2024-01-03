@@ -3,6 +3,7 @@ import React from "react";
 import { spritemap } from '../LiferayFunctions';
 import { Dateinput } from './fields/Dateinput';
 import { Dni } from './fields/Dni';
+import { DoubleList } from './fields/DoubleList';
 import { Email } from './fields/Email';
 import { Fileinput } from './fields/Fileinput';
 import { Hour } from './fields/Hour';
@@ -44,6 +45,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => (
                     {(items.fields.fields[it].type === 'radio')       && <Radio          itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]}  />}
                     {(items.fields.fields[it].type === 'multilang')   && <LocalizedInput itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]}  />}
                     {(items.fields.fields[it].type === 'multilist')   && <Multilist      itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]}  />}
+                    {(items.fields.fields[it].type === 'doublelist')  && <DoubleList     itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]}  />}
                     {(items.fields.fields[it].type === 'selectfilter')&& <Selectfilter   itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]}  />}
                     {(items.fields.fields[it].type === 'other')       && <> { plugin()[items.fields.fields[it].componentName] } </> }
                     {
