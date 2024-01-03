@@ -295,7 +295,7 @@ export const form = {
         },
         observaciones: {
             key: 27,
-            type: "text",
+            type: "textarea",
             label: Liferay.Language.get('Observaciones'),
             name: "observaciones",
             value:"",

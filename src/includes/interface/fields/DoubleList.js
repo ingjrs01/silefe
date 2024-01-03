@@ -1,4 +1,5 @@
 import { ClayDualListBox } from '@clayui/form';
+import ClayPanel from '@clayui/panel';
 import React, { useState } from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
@@ -30,6 +31,20 @@ export const DoubleList = ({itemsHandle, field, item}) => {
 
   return (
     <>
+
+
+<ClayPanel
+    collapsble
+    displayTitle={
+      <ClayPanel.Title>
+        <h3>{field.label}</h3>
+      </ClayPanel.Title>
+    }
+    displayType="secondary"
+    showCollapseIcon={false}
+    spritemap={spritemap}
+  >
+    <ClayPanel.Body>
       <ClayDualListBox
         items={items}
         left={{
@@ -46,6 +61,9 @@ export const DoubleList = ({itemsHandle, field, item}) => {
         size={8}
         spritemap={spritemap}
       />
+    </ClayPanel.Body>
+  </ClayPanel>
+
     </>
   );
 }
