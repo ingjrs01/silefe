@@ -16,8 +16,8 @@ export const LocalizedInput = ({itemsHandle, field, item}) => {
         spritemap={spritemap}
         onSelectedLocaleChange={setSelectedLocale}
         onTranslationsChange={evt => {
-          validateLocalized(it, evt, field, itemsHandle);
-          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: it, value: evt });
+          validateLocalized(field.name, evt, field, itemsHandle);
+          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: evt });
         }
         }
         selectedLocale={selectedLocale}

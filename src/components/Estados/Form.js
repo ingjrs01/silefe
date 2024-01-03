@@ -22,9 +22,22 @@ export const form = {
             value:"lelele",
             placeholder: Liferay.Language.get('Nombre'),
             conditions: ["text"]
+        },
+        origin: {
+            key:3,
+            type: "select",
+            label: Liferay.Language.get('Origen'),
+            name: "origin",
+            options: [],
+            enabled: true,
+            change: ()=>{console.log("cambia el select");}
         }
     },
     rows: [
+        {
+            key:6,
+            cols: ['origin']
+        },
         {
             key:7,
             cols: ['nombre']

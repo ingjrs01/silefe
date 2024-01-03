@@ -60,8 +60,6 @@ const Ofertas = () => {
     }
 
     useEffect( ()=> {
-        console.log("Cambiando la paginación");
-        console.debug(items);
         if (items.item.ofertaId !== undefined )
             loadCandidatosOferta(items.item.ofertaId);
     }, [redParticipantes.pagination.page]);
@@ -238,14 +236,6 @@ const Ofertas = () => {
         if (form.fields.edadId.options == undefined)
             initForm()
 
-        // Inicializando todos los datos de los participantes:
-
-        //if (redParticipantes == undefined || redParticipantes.provinciasOptions.length == 0)
-        //    initFormParticipantes();
-        //else {
-        //    console.log("los datos ya están cargados, y no vuelvo a cargarlos");
-        //}
-
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.oferta/filter', postdata, referer);
         const tmp = await data.map(i => {
             return ({
@@ -311,7 +301,13 @@ const Ofertas = () => {
         form.fields.informaticaRequerido.options = opciones_requerido;
         form.fields.experienciaRequerido.options = opciones_requerido;
         form.fields.generoId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Hombre" }, { value: "2", label: "Mujer" }];
-        form.fields.estadoId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Activa" }, { value: "2", label: "Con Inserción" }, { value: "3", label: "Cerrada" }];
+
+        const postdata = {lang: getLanguageId(), origin: "offer"}
+        fetchAPIData('/silefe.estado/get-estados-from-origin', postdata, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+            form.fields.estadoId.options = opts;
+        });
+
         form.fields.jornadaId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: Liferay.Language.get("Completa") }, { value: "2", label: Liferay.Language.get("Parcial") }];
     }
 

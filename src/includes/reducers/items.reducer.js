@@ -109,21 +109,17 @@ let index = 0;
 let tmp = []
 
 export const red_items = (state, action ) => {
-    //debugger;
+    let tmp_item = {};
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS:
             console.log(action.form);
-            //debugger;
             return {
                 ...state,
                 fields: {...state.fields, ...action.form},
                 errors: resetErrors(action.form),
-                //status: 'list',
-                //item: createItem(action.form),
-              //  load: 1//(state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.START:
-            let tmp_item = {};
+            tmp_item = {};
             if (state.load == 0) {
                 Object.keys(action.fields.fields).forEach(j => {
                     switch (action.fields.fields[j].type) {

@@ -26,6 +26,17 @@ const Estados = () => {
         itemsHandle({ type: ITEMS_ACTIONS.LOAD });
     }
 
+    const loadForm = () => {
+        // TODO, ver como gudardar esto
+        console.log("Estoy cargando el log");
+        console.debug(form);
+        form.fields.origin.options = [
+            {label: "lalala", value: "0"},
+            {label: "Oferta", value: 'offer'},
+            {label: "Proyecto", value: "0"},
+        ];
+    }
+
     const processCsv = () => {
         console.log("processCsv");
         //if (file) {
@@ -109,6 +120,8 @@ const Estados = () => {
 
     useEffect(() => {
         if (!isInitialized.current) {
+            console.log("estoy en userEffect");
+            loadForm();
             fetchData();
             isInitialized.current = true;
         } else {
