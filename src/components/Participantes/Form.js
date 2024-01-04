@@ -277,6 +277,33 @@ export const form = {
             componentName: "Experiencias",
             name: "Experiencias",
         },        
+        vehiculoPropio: {
+            key:29,
+            type: "toggle",
+            label: Liferay.Language.get('Vehículo propio'),
+            name: "vehiculoPropio",
+            enabled: true,
+            change: ()=>{console.log("vehiculo");},
+            className: 'col-2'
+        },
+        cargasFamiliares: {
+            key:30,
+            type: "toggle",
+            label: Liferay.Language.get('Cargas Familiares'),
+            name: "cargasFamiliares",
+            enabled: true,
+            change: ()=>{console.log("cargas");},
+            className: 'col-2'
+        },
+        discapacidad: {
+            key:31,
+            type: "toggle",
+            label: Liferay.Language.get('Discapacidad'),
+            name: "discapacidad",
+            enabled: true,
+            change: ()=>{console.log("discapacidad");},
+            className: 'col-2'
+        },
     },
     tabActive:0,
     tabs : [
@@ -311,6 +338,10 @@ export const form = {
                 },
                 {
                     key: 49,
+                    cols: ['vehiculoPropio', 'cargasFamiliares', 'discapacidad']
+                },
+                {
+                    key: 50,
                     cols: ['colectivos']
                 },
             ]
