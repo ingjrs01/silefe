@@ -40,6 +40,7 @@ import TitulacionesNivel from './components/TitulacionesNivel/TitulacionesNivel'
 import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
 import VMenu from './components/VMenu';
 //import { getRolesUser } from './includes/LiferayFunctions';
+import Discapacidad from './components/Discapacidad/Discapacidad';
 import { ProtectRoute } from './includes/ProtectRoute';
 
 const Application = () => {
@@ -115,6 +116,7 @@ const Application = () => {
                                         <Route path='/login'                element={<ProtectRoute isAllowed={true} redirectTo={url}><Login /></ProtectRoute> } />
                                         <Route path='/proyectos'            element={<ProtectRoute isAllowed={allow} redirectTo={url}><Proyectos /> </ProtectRoute> } />
                                         <Route path='/citas'                element={<ProtectRoute isAllowed={allow} redirectTo={url}><Citas /> </ProtectRoute> } />
+                                        <Route path='/discapacidad'         element={<ProtectRoute isAllowed={allow} redirectTo={url}><Discapacidad /> </ProtectRoute> } />
                                     </Routes>
                                 </div>
                             </div>
