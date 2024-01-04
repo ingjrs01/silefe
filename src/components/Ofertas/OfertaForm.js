@@ -302,15 +302,15 @@ export const form = {
             enabled:true,
             conditions: []
         },
-        colectivos: {
-            key: 28,
-            type: "multilist",
-            label: Liferay.Language.get("Colectivos"),
-            name: 'colectivos',
-            placeholder: 'lalala',
-            options: [],
-            enabled: true
-        },
+        //colectivos: {
+        //    key: 28,
+        //    type: "multilist",
+        //    label: Liferay.Language.get("Colectivos"),
+        //    name: 'colectivos',
+        //    placeholder: 'lalala',
+        //    options: [],
+        //    enabled: true
+        //},
         objetivos: {
             key: 29,
             type: "textarea",
@@ -354,7 +354,7 @@ export const form = {
             className: 'col-12',
             value:"lelele",
             placeholder:Liferay.Language.get('Comentarios'),
-            options: [{label: "1", value: "uno"}, {label: "2", value: "dos"}]
+            options: []
         },
 
     },

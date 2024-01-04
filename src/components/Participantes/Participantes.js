@@ -44,7 +44,6 @@ const Participantes = () => {
         beforeExperiencia(item.id);
     }
 
-
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
@@ -239,6 +238,8 @@ const Participantes = () => {
                 email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
                 telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
                 tipoDoc: i.tipoDoc.toString(),
+                colectivos: i.colectivos ?? [],
+                carnets: i.carnets ?? [],
                 checked: false
             })
         });
@@ -250,8 +251,22 @@ const Participantes = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            form.fields.situacionLaboral.options = opts;
+            form.fields.colectivos.options = opts;
         });
+
+        fetchAPIData('/silefe.carnet/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            form.fields.carnets.options = opts;
+        });
+
+        // TODO: Ver como rellenar la situación laboral
+        form.fields.situacionLaboral.options = [
+            { value: "0", label: seleccionarlabel }, 
+            { value: "1", label: "Trabajando" }, 
+            { value: "2", label: "Desempleado" },
+            { value: "3", label: "Estudiando" }
+        ];
+
         fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.rangoSalarialId.options = opts;

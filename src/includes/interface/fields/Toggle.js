@@ -3,7 +3,7 @@ import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
 export const Toggle = ({itemsHandle, field, item}) => {
     return (
-        <>
+        <div className="pt-3">        
         <ClayToggle
           label={field.label}
           onToggle={val => {
@@ -14,7 +14,7 @@ export const Toggle = ({itemsHandle, field, item}) => {
           toggled={item}
           key={field.key}
         />
-      </>
+      </div>
 
     )
 }

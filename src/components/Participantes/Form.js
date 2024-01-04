@@ -31,7 +31,7 @@ export const form = {
             label: Liferay.Language.get('Documento'),
             name: "documento",
             value:"documento",
-            className: 'col-3',
+            className: 'col-2',
             placeholder: Liferay.Language.get('Documento'),
             conditions: []
         },
@@ -245,6 +245,25 @@ export const form = {
             name: "admiteEnvios",
             enabled: true,
             change: ()=>{console.log("admiteEnvios");},
+            className: 'col-2'
+        },
+        colectivos: {
+            key: 27,
+            type: "doublelist",
+            label: Liferay.Language.get("Colectivos"),
+            name: 'colectivos',
+            options: [],
+            enabled: true,
+            className: 'col-12',
+        },
+        carnets: {
+            key: 28,
+            type: "doublelist",
+            label: Liferay.Language.get("Carnets"),
+            name: 'carnets',
+            options: [],
+            enabled: true,
+            className: 'col-12',
         },
         titulaciones: {
             key: 25,
@@ -268,7 +287,7 @@ export const form = {
             rows: [
                 {
                     key:41,
-                    cols: ['tipoDoc','documento', 'fechaNacimiento', 'sexo']
+                    cols: ['tipoDoc','documento', 'fechaNacimiento', 'sexo', 'admiteEnvios']
                 },
                 {
                     key:43,
@@ -288,7 +307,11 @@ export const form = {
                 },
                 {
                     key: 48,
-                    cols: ['admiteEnvios']
+                    cols: ['carnets']
+                },
+                {
+                    key: 49,
+                    cols: ['colectivos']
                 },
             ]
         },
