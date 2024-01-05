@@ -58,7 +58,7 @@ export const DoubleList = ({itemsHandle, field, item}) => {
           onSelectChange: setRightSelected,
           selected: rightSelected
         }}
-        size={8}
+        size={5}
         spritemap={spritemap}
       />
     </ClayPanel.Body>

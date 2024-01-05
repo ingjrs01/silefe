@@ -240,6 +240,7 @@ const Participantes = () => {
                 tipoDoc: i.tipoDoc.toString(),
                 colectivos: i.colectivos ?? [],
                 carnets: i.carnets ?? [],
+                prestaciones: i.prestaciones ?? [],
                 checked: false
             })
         });
@@ -250,13 +251,18 @@ const Participantes = () => {
     const initForm = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.colectivos.options = opts;
         });
 
         fetchAPIData('/silefe.carnet/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.carnets.options = opts;
+        });
+
+        fetchAPIData('/silefe.prestacion/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            form.fields.prestaciones.options = opts;
         });
 
         // TODO: Ver como rellenar la situación laboral
@@ -275,6 +281,17 @@ const Participantes = () => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.jornadaId.options = opts;
         });
+      
+        fetchAPIData('/silefe.discapacidad/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            form.fields.tipoDiscapacidad.options = opts;
+        });
+        
+        fetchAPIData('/silefe.porcentajediscapacidad/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            form.fields.porcentajeDiscapacidad.options = opts;
+        });
+
         fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             form.fields.provinciaId.options = opts;

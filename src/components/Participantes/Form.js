@@ -284,7 +284,7 @@ export const form = {
             name: "vehiculoPropio",
             enabled: true,
             change: ()=>{console.log("vehiculo");},
-            className: 'col-2'
+            className: 'col-3'
         },
         cargasFamiliares: {
             key:30,
@@ -293,7 +293,7 @@ export const form = {
             name: "cargasFamiliares",
             enabled: true,
             change: ()=>{console.log("cargas");},
-            className: 'col-2'
+            className: 'col-3'
         },
         discapacidad: {
             key:31,
@@ -302,7 +302,77 @@ export const form = {
             name: "discapacidad",
             enabled: true,
             change: ()=>{console.log("discapacidad");},
-            className: 'col-2'
+            className: 'col-3'
+        },
+		tipoDiscapacidad: {
+            key:32,
+            type: "select",
+            label: Liferay.Language.get('TipoDiscapacidad'),
+            name: "tipoDiscapacidad",
+            value:"",
+            enabled: true,
+            options: [],
+            conditions: [],
+            className: 'col-3',
+        },
+		porcentajeDiscapacidad: {
+            key:33,
+            type: "select",
+            label: Liferay.Language.get('Porcentaje Discapacidad'),
+            name: "porcentajeDiscapacidad",
+            value:"",
+            enabled: true,
+            options: [],
+            conditions: [],
+            className: 'col-3',
+        },
+		tratamiento: {
+            key: 34,
+            type: "text",
+            label: Liferay.Language.get('Tratamiento'),
+            name: "tratamiento",
+            value:"",
+            placeholder: Liferay.Language.get('Tratamiento'),
+            className: 'col-6',
+            conditions: []
+        },
+		incompatibilidades: {
+            key: 35,
+            type: "text",
+            label: Liferay.Language.get('Incompatibilidades'),
+            name: "incompatibilidades",
+            value:"",
+            placeholder: Liferay.Language.get('Incompatibilidades'),
+            className: 'col-12',
+            conditions: []
+        },
+		adaptaciones: {
+            key: 36,
+            type: "text",
+            label: Liferay.Language.get('Adaptaciones'),
+            name: "adaptaciones",
+            value:"",
+            placeholder: Liferay.Language.get('Adaptaciones'),
+            className: 'col-12',
+            conditions: []
+        },
+		percibePrestacion: {
+            key:31,
+            type: "toggle",
+            label: Liferay.Language.get('Percibe Prestacion'),
+            name: "percibePrestacion",
+            enabled: true,
+            change: ()=>{console.log("percibePrestacion");},
+            className: 'col-3'
+        },
+		prestaciones: {
+            key: 28,
+            type: "doublelist",
+            label: Liferay.Language.get("Prestaciones"),
+            name: 'prestaciones',
+            options: [],
+            enabled: true,
+            className: 'col-12',
         },
     },
     tabActive:0,
@@ -338,12 +408,25 @@ export const form = {
                 },
                 {
                     key: 49,
-                    cols: ['vehiculoPropio', 'cargasFamiliares', 'discapacidad']
+                    cols: ['vehiculoPropio', 'cargasFamiliares', 'discapacidad', 'percibePrestacion']
+                },
+                {
+                    key: 51,
+                    cols: ['tipoDiscapacidad', 'porcentajeDiscapacidad', 'tratamiento']
+                },
+                {
+                    key: 52,
+                    cols: ['incompatibilidades', 'adaptaciones']
+                },
+                {
+                    key: 54,
+                    cols: ['prestaciones']
                 },
                 {
                     key: 50,
                     cols: ['colectivos']
                 },
+
             ]
         },
         {
