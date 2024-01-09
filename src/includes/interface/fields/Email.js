@@ -16,7 +16,7 @@ export const Email = ({ itemsHandle, field, item }) => {
             {
                 item.map((v, k) => {
                     return (
-                        <>
+                        
                             <ClayInput.Group spaced={"any"} className='mt-1' key={"cig" + v.key}>
                                 <ClayInput
                                     key={field.name + v.key}
@@ -41,7 +41,7 @@ export const Email = ({ itemsHandle, field, item }) => {
                                     key={"cbtt" + v.key}
                                 />
                             </ClayInput.Group>
-                        </>
+                        
                     )
                 })
             }

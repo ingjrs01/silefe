@@ -357,7 +357,7 @@ export const form = {
             conditions: []
         },
 		percibePrestacion: {
-            key:31,
+            key:37,
             type: "toggle",
             label: Liferay.Language.get('Percibe Prestacion'),
             name: "percibePrestacion",
@@ -374,6 +374,20 @@ export const form = {
             enabled: true,
             className: 'col-12',
         },
+        citas: {
+            key: 38,
+            type: "other",
+            componentName: "Citas",
+            name: "Citas",
+        },        
+        participaciones: {
+            key: 39,
+            type: "other",
+            componentName: "Participaciones",
+            name: "Participaciones",
+        },        
+
+
     },
     tabActive:0,
     tabs : [
@@ -462,7 +476,7 @@ export const form = {
         {
             caption: Liferay.Language.get("Experiencias"),
             key:4,
-            ariacontrols: "tabpanel-2",
+            ariacontrols: "tabpanel-4",
             rows: [
                 {
                     key:301,
@@ -470,6 +484,29 @@ export const form = {
                 },
             ]
         },
+        {
+            caption: Liferay.Language.get("Citas"),
+            key:5,
+            ariacontrols: "tabpanel-5",
+            rows: [
+                {
+                    key:401,
+                    cols: ['citas']
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Participaciones"),
+            key:6,
+            ariacontrols: "tabpanel-6",
+            rows: [
+                {
+                    key:501,
+                    cols: ['participaciones']
+                },
+            ]
+        },
+
     ],
     table: {
         id: {

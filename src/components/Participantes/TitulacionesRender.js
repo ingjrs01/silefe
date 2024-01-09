@@ -36,6 +36,7 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
                       <ClayTable.Cell headingTitle>{item.titulacionName}</ClayTable.Cell>
                       <ClayTable.Cell>
                         <ClayButtonWithIcon
+                          aria-label={Liferay.Language.get("Editar")}
                           onClick={e => {
                             titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value: redTitulaciones.items[index].titulacionTipoId });
                             titulacionHandler({ type: TITULACIONES_ACTIONS.SELECT_ITEM, index: index });

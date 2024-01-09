@@ -34,6 +34,7 @@ const Estados = () => {
             {label: "lalala", value: "0"},
             {label: "Oferta", value: 'offer'},
             {label: "Proyecto", value: "0"},
+            {label: "Participacion Oferta", value: "offerparticipation"},
         ];
     }
 

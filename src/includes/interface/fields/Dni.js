@@ -5,11 +5,6 @@ import { formatDocument } from '../../utils';
 
 export const Dni = ({itemsHandle, field, item, tipoDoc }) => {
 
-    console.log("Estoy en dni");
-    console.debug(field);
-    console.debug(item);
-    console.debug(tipoDoc);
-
     const writeDocument = (target, name, value) => {
         switch (tipoDoc) {
           case '1':

@@ -5,18 +5,24 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getAuthToken, getLanguageId, getUserId, url_api, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
+import Citas from '../../includes/interface/Citas';
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
+import { CITAS_ACTIONS, initialState as iniCitas, reducerCitas } from '../../includes/reducers/citas.reducer';
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import { TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
+import { toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
+import { form as citasform } from './CitasForm';
 import { ExperienciasRender } from './ExperienciasRender';
 import { form } from "./Form";
+import { form as participacionesForm } from './ParticipacionesForm';
 import { TitulacionesRender } from './TitulacionesRender';
 
 
@@ -24,6 +30,8 @@ const Participantes = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, titsIni);
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, { items: [], deleted: [], item: {}, status: "list", participanteId: 0 });
+    const [citas, citasHandler]            = useReducer(reducerCitas, iniCitas);
+    const [participaciones, participacionesHandler] = useReducer (reducerSubtable, iniState); 
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -42,12 +50,54 @@ const Participantes = () => {
         });
         beforeFormacion(item.id);
         beforeExperiencia(item.id);
+        // Cargamos las citas: 
+        const postcitas = {
+            participanteId: item.id,
+            pagination: { page: 1, pageSize: 10 },
+            options: {
+                filters: [
+                ],
+            },
+        }
+        fetchAPIData('/silefe.cita/get-citas-participante', postcitas, referer).then(response => {
+            citasHandler({ type: CITAS_ACTIONS.LOAD, items: response.data.map(item=>({
+                ...item,
+                appointmentDate: toDate(item.appointmentDate),
+                appointmentHour: toHours(item.appointmentHour),
+                appointmentDateTime: toDate(item.appointmentDate) + " " + toHours(item.appointmentHour)
+            }))});
+        });
+
+        // TODO: Están buscando en que participa: 
+        const postparticipaciones = {
+            participanteId: item.id,
+            pagination: { page: 1, pageSize: 10 },
+            options: {
+                filters: [
+                ],
+            },
+        }
+        fetchAPIData('/silefe.oferta/get-ofertas-by-participante', postparticipaciones, referer).then(response => {
+            console.debug("tratando los datos de participaciones");
+            console.debug(response);
+            const data_part = response.data.map(item => ({
+                ...item, 
+                tipoParticipacion: "Oferta", 
+                participacionIni: toDate(item.fechaIncorporacion),
+                nombreParticipacion: item.titulo}));            
+            console.debug(data_part);
+
+            participacionesHandler({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: data_part, pages: response.totalPages });
+        });
+
     }
 
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
+            citasHandler({ type: CITAS_ACTIONS.SETFORM, form: citasform});
+            participacionesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: participacionesForm});
             if (id != 'undefined' && id > 0)
                 loadParticipante(id);
             else
@@ -89,6 +139,7 @@ const Participantes = () => {
             console.log("error");
             console.debug(error);
         });
+
     }
 
     const loadCsv = () => {
@@ -102,7 +153,6 @@ const Participantes = () => {
             formData.append('file', file);
             console.debug(formData);
 
-            //kasdflkasjdfñlkasdjf
             const auth = getAuthToken();
             const endpoint = url_api + '/silefe.participante/save-file';
             fetch(endpoint, {
@@ -380,7 +430,6 @@ const Participantes = () => {
     }
 
     const plugin = () => {
-        console.log("han llamado a plugin");
         return {
             Titulaciones:
                 <TitulacionesRender
@@ -391,6 +440,16 @@ const Participantes = () => {
                 <ExperienciasRender
                     experiencias={redExperiencias}
                     experienciasHandler={experienciasHandler}
+                />,
+            Citas:
+                <Citas
+                    items={citas}
+                    handler={citasHandler}
+                />,
+            Participaciones:
+                <Citas
+                    items={participaciones}
+                    handler={participacionesHandler}                     
                 />
         }
     }

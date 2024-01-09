@@ -14,8 +14,8 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
     return (
         <>
         { ( experiencias.status === "list" ) &&
-        <>
-            <ClayTable>
+        <div>
+            <ClayTable key="key_experiencias">
             <ClayTable.Head>
                 <ClayTable.Row>
                 <ClayTable.Cell headingCell><ClayCheckbox checked={false} />
@@ -44,6 +44,7 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
                         spritemap={spritemap}
                         symbol="pencil"
                         title="Edit"
+                        aria-label="Edit"
                     />
                     <ClayButtonWithIcon 
                         className='ml-1'
@@ -52,6 +53,7 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
                         spritemap={spritemap}
                         symbol="trash"
                         title="Close"
+                        aria-label="Close"
                     />
                     
                 </ClayTable.Cell>
@@ -66,7 +68,7 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
             }} 
             displayType="primary">{Liferay.Language.get('Nuevo')} 
             </ClayButton>
-            </>
+        </div>
         }
 
         {

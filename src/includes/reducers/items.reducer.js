@@ -111,8 +111,7 @@ let tmp = []
 export const red_items = (state, action ) => {
     let tmp_item = {};
     switch (action.type) {
-        case ITEMS_ACTIONS.SET_FIELDS:
-            console.log(action.form);
+        case ITEMS_ACTIONS.SET_FIELDS:            
             return {
                 ...state,
                 fields: {...state.fields, ...action.form},
@@ -205,7 +204,7 @@ export const red_items = (state, action ) => {
             else
             return state;
             }
-            console.log("Estoy en select_item: " + seleccionado);
+            
             if (state.fields.hasOwnProperty('beforeEdit'))
                 state.fields.beforeEdit(seleccionado);
 

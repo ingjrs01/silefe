@@ -10,6 +10,12 @@ export const toHours = (data) => {
     return horas + ":"  +  minutos;
 }
 
+export const toDate = (data) => {
+  if (data == undefined)
+    return "";
+  return  new Date(data).toISOString().substring(0, 10)
+}
+
 export const handleDelete = (index, items, itemsHandle,onOpenChange) => {
     if (index != -1) {
         itemsHandle({type:ITEMS_ACTIONS.CHECK,index:index});            
