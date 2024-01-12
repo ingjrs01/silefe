@@ -3,8 +3,9 @@ export const SUBTABLE_ACTIONS = {
     LOAD_ITEMS: 1,
     SELECT_ITEM: 2,
     NEW_ITEM: 3,
+    SET: 5,
     SETFIELD: 4,
-    SETSEARCH: 5,
+    SETSEARCH: 23,
     SETSEARCHITEMS: 6,
     CHECKSEARCH: 7,
     CHECKALLSEARCH: 8,
@@ -21,6 +22,7 @@ export const SUBTABLE_ACTIONS = {
     LOAD: 19,
     SETFORM: 20,
     SETPAGESEARCH: 21,
+    EDIT_ITEM: 22
   }
 export const iniState = {
     form: {},
@@ -132,13 +134,14 @@ export const reducerSubtable = (state, action ) => {
 
         case SUBTABLE_ACTIONS.SAVE:
             let tmp = [];
+            
             if (state.item.id > 0) {
                 tmp = [...state.items];
                 const index = tmp.findIndex(item => item.id == state.item.id );
-                tmp.splice(index,1,state.item);
+                tmp.splice(index,1,{...state.item, modified: true});
             }
             else 
-                tmp = [...state.items,state.item];           
+                tmp = [...state.items,{...state.item, modified: true}];
 
             return {
                 ...state,
@@ -217,6 +220,21 @@ export const reducerSubtable = (state, action ) => {
             return {
                 ...state,
                 load: state.load + 1,
+            }
+        case SUBTABLE_ACTIONS.EDIT_ITEM:
+            return {
+                ...state,
+                item: {
+                    ...state.items[action.index]
+                }
+            }
+        case SUBTABLE_ACTIONS.SET:
+            return {
+                ...state,
+                item: {
+                    ...state.item,
+                    [action.fieldname] : action.value
+                }                
             }
        
         default: 

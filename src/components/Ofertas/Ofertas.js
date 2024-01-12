@@ -49,7 +49,6 @@ const Ofertas = () => {
         fetchAPIData('/silefe.oferta/participantes-oferta', postdata, referer).then(response => {
             const pts = response.data.map(i => ({
                     ...i,
-                    id: i.ofertaId,
                     apellidos: i.apellido1 + " " + i.apellido2,
                     email: formatDefaultEmail(i.email),
                     telefono: formatDefaultPhone(i.telefono),
@@ -86,8 +85,8 @@ const Ofertas = () => {
         saveAPI(endpoint, data, referer).then(response => {
             let { status, data, error } = response;
             if (status) {
-                const participantes = redParticipantes.items.map(i => { return i.participanteId });
-                saveAPI('/silefe.oferta/save-participantes-oferta', { ofertaId: data.ofertaId, identifiers: participantes }, referer).then(res => {
+                //const participantes = redParticipantes.items.map(i => { return i.participanteId });
+                saveAPI('/silefe.oferta/save-participantes-oferta', { ofertaId: data.ofertaId, participantes: redParticipantes.items }, referer).then(res => {
                 });
                 if (redParticipantes.deleted.length > 0) {
                     const s = redParticipantes.deleted.map(i => { return i.participanteId });
@@ -115,7 +114,13 @@ const Ofertas = () => {
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
-            participantesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: fparticipantes });
+
+            fetchAPIData('/silefe.estado/get-estados-from-origin', { lang: getLanguageId(), origin: "offerparticipation" }, referer).then(response => {
+                const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+                fparticipantes.fields.estadoParticipacionId.options = opts; //[{label: "prueba", value:0}, {label: "ola", value: 1}];
+                participantesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: fparticipantes });
+            });
+                
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             if (id != 'undefined' && id > 0) {
                 loadOferta(id);
@@ -161,9 +166,10 @@ const Ofertas = () => {
             const pts = response.data.map(i => {
                 return {
                     ...i,
-                    id: i.ofertaId,
+                    id: i.participanteId,
                     apellidos: i.apellido1 + " " + i.apellido2,
                     nuevo: true,
+                    estadoParticipacionId: 0,
                     email: formatDefaultEmail(i.email),
                     telefono: formatDefaultPhone(i.telefono),
                 }

@@ -1,15 +1,19 @@
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
-import { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
+import ClayForm, { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
+import ClayModal, { useModal } from '@clayui/modal';
 import ClayTable from '@clayui/table';
 import ClayUpperToolbar from '@clayui/upper-toolbar';
 import React, { useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../LiferayFunctions';
+import { RenderFormFields } from '../interface/RenderFormFields';
 import { SUBTABLE_ACTIONS } from "../reducers/subtable.reducer";
 import { MiniPaginator } from "./MiniPaginator";
 
 const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
+    const { observer, onOpenChange, open } = useModal();
+
     let lang = getLanguageId();
     //const backUrl = '/proyectos';
     const [showSearch, setShowSearch] = useState(false);
@@ -24,8 +28,49 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
 
     if (!data.items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
+
     return (
         <>
+
+{open && (
+    <ClayForm className="sheet">
+        <ClayModal
+          observer={observer}
+          size="lg"
+          spritemap={spritemap}
+          status="info"
+        >
+          <ClayModal.Header>{data.form.title}</ClayModal.Header>
+          <ClayModal.Body>
+
+            <RenderFormFields
+                itemsHandle={handler}
+                items={data}
+            />
+
+          </ClayModal.Body>
+          <ClayModal.Footer
+            last={
+              <ClayButton.Group spaced>
+                <ClayButton
+                  displayType="secondary"
+                  onClick={() => onOpenChange(false)}
+                >
+                  {Liferay.Language.get("Cancel")}
+                </ClayButton>
+                <ClayButton onClick={() => {
+                    handler({type: SUBTABLE_ACTIONS.SAVE});
+                    onOpenChange(false);
+                    }}>
+                  {Liferay.Language.get("Guardar")}
+                </ClayButton>
+              </ClayButton.Group>
+            }
+          />
+        </ClayModal>
+    </ClayForm>
+      )}
+
             {(data.status === "list") &&
                 <>
                     <ClayUpperToolbar>
@@ -194,6 +239,23 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                             return (<ClayTable.Cell> {item[column.columnName][lang]} </ClayTable.Cell>)
                                                         case "string":
                                                             return (<ClayTable.Cell>{item[column.columnName]}</ClayTable.Cell>)
+                                                        case "select":
+                                                            let aa = ""; 
+                                                            console.log("select: " + column.columnName);
+                                                            console.debug(item);
+
+                                                            if (item[column.columnName] === undefined || item[column.columnName] === null) 
+                                                                aa = "ND";                                                            
+                                                            else  {
+                                                                let arr = data.form.fields[column.columnName].options.filter(i => i.value == item[column.columnName].toString());
+                                                                if (arr.length > 0)
+                                                                    aa = arr[0].label;
+                                                                else
+                                                                    aa = "ND";
+                                                            }
+                                                            
+                                                             //= data.form.fields[column.columnName].options.filter(i => i.value == item[column.columnName].toString());
+                                                            return (<ClayTable.Cell>{ aa } </ClayTable.Cell>)
                                                         case "boolean":
                                                             return (<ClayTable.Cell key={column.columnName + item.id}>
                                                                 {<ClayCheckbox checked={item[column.columnName]} disabled />}
@@ -205,9 +267,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
 
                                             <ClayTable.Cell>
                                                 <div className="btn-toolbar pull-right">
-                                                    {/*
-
-                                                    <Link to={{ pathname: `${editUrl}${item.id}` }} state={{ backUrl, ancestorId }}  > {
+                                                                                                      
                                                     <ClayButtonWithIcon
                                                         aria-label={Liferay.Language.get("Editar")}
                                                         key={"edit-" + item.id}
@@ -215,8 +275,11 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                         symbol="pencil"
                                                         title="Edit"
                                                         displayType="secondary"
-                                                    />}</Link>*/
-                                                    }
+                                                        onClick={() => { 
+                                                            handler({type: SUBTABLE_ACTIONS.EDIT_ITEM, index:index }); 
+                                                            onOpenChange(true);
+                                                        }}
+                                                    />                                                    
                                                         <ClayButtonWithIcon
                                                             aria-label={Liferay.Language.get("Quitar")}
                                                             key={"bi-" + item.id}

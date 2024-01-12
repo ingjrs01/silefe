@@ -3,7 +3,7 @@ import { GenericForm } from '../../includes/GenericForm';
 
 export const form = {
     ...GenericForm,
-    title: Liferay.Language.get('Participantes'),
+    title: Liferay.Language.get('Candidato'),
     fields: {
         id: {
             key:1,
@@ -32,6 +32,7 @@ export const form = {
             name: "documento",
             value:"documento",
             className: 'col-3',
+            enabled:false,
             placeholder: Liferay.Language.get('Documento'),
             conditions: []
         },
@@ -50,6 +51,7 @@ export const form = {
             label: Liferay.Language.get('Nombre'),
             name: "nombre",
             value:"nombre",
+            enabled:false,
             placeholder: Liferay.Language.get('Nombre'),
             conditions: ["text"]
         },
@@ -238,101 +240,53 @@ export const form = {
             conditions: [],
             change: ()=>{console.log("disponibilidad");},
         },
-        admiteEnvios: {
-            key:24,
-            type: "toggle",
-            label: Liferay.Language.get('Envios'),
-            name: "admiteEnvios",
-            enabled: true,
-            change: ()=>{console.log("admiteEnvios");},
+        estadoParticipacionId: {
+            key:27,
+            type: "select",
+            label: Liferay.Language.get('Estado'),
+            name: "estadoParticipacionId",
+            value:"",
+            enabled:true,
+            options: [],
+            conditions: [],
+            className: "col-3"
         },
-        titulaciones: {
-            key: 25,
-            type: "other",
-            componentName: "Titulaciones",
-            name: "Titulaciones",
-        },        
-        experiencias: {
-            key: 26,
-            type: "other",
-            componentName: "Experiencias",
-            name: "Experiencias",
-        },        
+        observacionesParticipacion: {
+            key: 28,
+            type: "text",
+            label: Liferay.Language.get('Observaciones'),
+            name: "observacionesParticipacion",
+            value:"",
+            placeholder: Liferay.Language.get('Observaciones'),
+            className: 'col-9',
+            conditions: []
+        }
     },
-    tabActive:0,
-    tabs : [
+    rows: [
         {
-            caption: "Datos",
-            key: 1,
-            ariacontrols: "tabpanel-1",
-            rows: [
-                {
-                    key:41,
-                    cols: ['tipoDoc','documento', 'fechaNacimiento', 'sexo']
-                },
-                {
-                    key:43,
-                    cols: ['nombre','apellido1','apellido2']
-                },
-                {
-                    key:44,
-                    cols: ['provinciaId', 'municipioId', 'localidad']
-                },
-                {
-                    key:45,
-                    cols: ['tipoviaId','nombreVia','numero','piso']
-                },
-                {
-                    key:46,
-                    cols: ['email','telefono']
-                },
-                {
-                    key: 48,
-                    cols: ['admiteEnvios']
-                },
-            ]
+            key:41,
+            cols: ['documento', 'nombre', 'apellido1']
         },
         {
-            caption: "Empleabilidad",
-            key:2,
-            ariacontrols: "tabpanel-2",
-            rows: [
-                {
-                    key:101,
-                    cols: ['situacionLaboral','insercion','busca_empleo']
-                },
-                {
-                    key:102,
-                    cols: ['autoempleo','rangoSalarialId','jornadaId']
-                },
-                {
-                    key:103,
-                    cols: ['disponibilidad']
-                },
-            ]
+            key:43,
+            cols: [ "estadoParticipacionId", "observacionesParticipacion"]
         },
-        {
-            caption: Liferay.Language.get("Titulaciones"),
-            key:3,
-            ariacontrols: "tabpanel-3",
-            rows: [
-                {
-                    key:201,
-                    cols: ['titulaciones'],
-                },
-            ]
-        },
-        {
-            caption: Liferay.Language.get("Experiencias"),
-            key:4,
-            ariacontrols: "tabpanel-2",
-            rows: [
-                {
-                    key:301,
-                    cols: ['experiencias']
-                },
-            ]
-        },
+//        {
+//            key:44,
+//            cols: ['provinciaId', 'municipioId', 'localidad']
+//        },
+//        {
+//            key:45,
+//            cols: ['tipoviaId','nombreVia','numero','piso']
+//        },
+//        {
+//            key:46,
+//            cols: ['email','telefono']
+//        },
+//        {
+//            key: 48,
+//            cols: ['admiteEnvios']
+//        },
     ],
     table: [
         {
@@ -358,12 +312,12 @@ export const form = {
         //    columnType: "multilang",
         //    key: "tc5",
         //},
-        {
-            columnName: "localidad", 
-            columnTitle: Liferay.Language.get('Localidad'),
-            columnType: "multilang",
-            key: "tc6",
-        },
+        //{
+        //    columnName: "localidad", 
+        //    columnTitle: Liferay.Language.get('Localidad'),
+        //    columnType: "multilang",
+        //    key: "tc6",
+        //},
         {
             columnName: "telefono", 
             columnTitle: Liferay.Language.get('Teléfono'),
@@ -376,6 +330,13 @@ export const form = {
             columnType: "string",
             key: "tc8",
         },
+        {
+            columnName: "estadoParticipacionId",
+            columnTitle: Liferay.Language.get('Estado'),
+            columnType: "select",
+            key: "tc9",
+        },
+
     ],
-    searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId','admiteEnvios'],
+    searchFields: ['nombre', 'documento','apellido1'],
 };

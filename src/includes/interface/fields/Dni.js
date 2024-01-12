@@ -41,6 +41,7 @@ export const Dni = ({itemsHandle, field, item, tipoDoc }) => {
         <>
         <label htmlFor="basicInput" key={"label" + field.label}>{field.label} </label>
         <ClayInput
+          readOnly={(field.enabled !== undefined || field.enabled) ?false:true}
           type="text"
           name={field.name}
           key={field.key}
