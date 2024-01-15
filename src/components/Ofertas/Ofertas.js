@@ -37,13 +37,25 @@ const Ofertas = () => {
     }
 
     const loadCandidatosOferta = (ofertaId) => {
+        let filters = [];
+
+        if (redParticipantes.search2.length > 0)
+            filters = [{ name: redParticipantes.form.searchFieldMain, value: redParticipantes.search2 }];
+
+        if (redParticipantes.filters.length > 0) {            
+            filters = [...filters, ...redParticipantes.filters.map (filter => ({name: filter.name,value: filter.value }))];
+        }
+
         const postdata = {
             ofertaId: ofertaId, 
             pagination: {
                 page: redParticipantes.pagination.page,
                 pageSize: redParticipantes.pagination.pageSize??4,
             },
-            options: {}
+            options: {
+                filters: filters,
+                order: [{ name: 'apellido1', direction: 'asc' }],
+            }
         }
 
         fetchAPIData('/silefe.oferta/participantes-oferta', postdata, referer).then(response => {
@@ -61,7 +73,7 @@ const Ofertas = () => {
     useEffect( ()=> {
         if (items.item.ofertaId !== undefined )
             loadCandidatosOferta(items.item.ofertaId);
-    }, [redParticipantes.pagination.page]);
+    }, [redParticipantes.pagination.page, redParticipantes.search2, redParticipantes.filters]);
         
     const loadCsv = () => {
         itemsHandle({ type: ITEMS_ACTIONS.LOAD })
@@ -85,8 +97,11 @@ const Ofertas = () => {
         saveAPI(endpoint, data, referer).then(response => {
             let { status, data, error } = response;
             if (status) {
-                //const participantes = redParticipantes.items.map(i => { return i.participanteId });
+                
                 saveAPI('/silefe.oferta/save-participantes-oferta', { ofertaId: data.ofertaId, participantes: redParticipantes.items }, referer).then(res => {
+                    if (res.status === false ) {
+                        setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[res.error] }]);
+                    }
                 });
                 if (redParticipantes.deleted.length > 0) {
                     const s = redParticipantes.deleted.map(i => { return i.participanteId });
@@ -148,7 +163,7 @@ const Ofertas = () => {
         const pagesearch = redParticipantes.paginationSearch.page??1;
         let filters = [];
         if (redParticipantes.search.length > 0)
-            filters = [{ name: redParticipantes.searchField, value: redParticipantes.search }];
+            filters = [{ name: redParticipantes.form.searchField, value: redParticipantes.search }];
 
         const postdata = {
             pagination: {

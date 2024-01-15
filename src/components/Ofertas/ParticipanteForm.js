@@ -338,5 +338,11 @@ export const form = {
         },
 
     ],
+    tableOptions: {
+        editButton: true
+    },
     searchFields: ['nombre', 'documento','apellido1'],
+    searchField: 'nombre',
+    searchFieldsMain: ['nombre', 'documento','apellido1', 'estadoParticipacionId'],
+    searchFieldMain: 'nombre',
 };

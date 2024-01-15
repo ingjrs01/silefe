@@ -22,13 +22,16 @@ export const SUBTABLE_ACTIONS = {
     LOAD: 19,
     SETFORM: 20,
     SETPAGESEARCH: 21,
-    EDIT_ITEM: 22
+    EDIT_ITEM: 22,
+    ADD_FILTER: 24,
+    REMOVE_FILTER: 25,
   }
 export const iniState = {
     form: {},
     items: [],
     deleted: [],
     search: "",
+    search2: "",
     searchField: "",
     searchItems: [],
     status: "list",
@@ -44,11 +47,14 @@ export const iniState = {
         totalPages: 1,
     },
     load: 0,
+    filters: [], //{name: 'hola', value:"1", operator: "="}
 }
 let tmpar= []; 
-let tmp=[];
 
 export const reducerSubtable = (state, action ) => {
+    let tmp = [];
+    let index = 0;
+    
     switch (action.type) {
         case SUBTABLE_ACTIONS.SETFORM: 
             return {
@@ -73,7 +79,8 @@ export const reducerSubtable = (state, action ) => {
                 ...state,
                 items: action.items,
                 pagination: {...state.pagination, totalPages: action.pages},
-                paginationSearch: {...state.paginationSearch, page: -1}
+                paginationSearch: {...state.paginationSearch, page: -1}, 
+                //filters: [{name: 'hola', value:"1", operator: "="}]
             }
 
         case SUBTABLE_ACTIONS.SELECT_ITEM:
@@ -100,10 +107,16 @@ export const reducerSubtable = (state, action ) => {
                 item: {...state.item, [action.fieldname]:action.value}
             }
         case SUBTABLE_ACTIONS.SETSEARCH: 
+            if (action.hasOwnProperty('table') && action.table === 1) {
+                return {
+                    ...state,
+                    search2: action.value
+                }
+            }
             return {
                 ...state,
                 search: action.value
-            }
+            }            
         case SUBTABLE_ACTIONS.SETSEARCHITEMS: 
             const pag = (state.paginationSearch.page > 0)?state.paginationSearch.page:0;
             if (action.items === undefined)
@@ -132,9 +145,7 @@ export const reducerSubtable = (state, action ) => {
                 searchItems: state.searchItems.map(i => ({...i,checked:check}))
             }
 
-        case SUBTABLE_ACTIONS.SAVE:
-            let tmp = [];
-            
+        case SUBTABLE_ACTIONS.SAVE:            
             if (state.item.id > 0) {
                 tmp = [...state.items];
                 const index = tmp.findIndex(item => item.id == state.item.id );
@@ -212,9 +223,20 @@ export const reducerSubtable = (state, action ) => {
                 pagination: {...state.pagination, totalPages: action.pages}
             }
         case SUBTABLE_ACTIONS.SETSEARCHFIELD: 
+            let sf = 'searchField';
+            let sf2 = 'search';
+            if (action.hasOwnProperty('table') && action.table == 1) { 
+                sf = 'searchFieldMain';
+                sf2 = 'search2';
+            }
+            console.log("cambiando el campo por el que buscar: " + sf);
             return {
                 ...state,
-                searchField: action.value,
+                form: {
+                    ...state.form,
+                    [sf]: action.value,
+                },
+                [sf2]: '',
             }
         case SUBTABLE_ACTIONS.LOAD: 
             return {
@@ -235,6 +257,24 @@ export const reducerSubtable = (state, action ) => {
                     ...state.item,
                     [action.fieldname] : action.value
                 }                
+            }
+        case SUBTABLE_ACTIONS.ADD_FILTER: 
+            return {
+                ...state,
+                filters: [
+                    ...state.filters,
+                    { name: state.form.searchFieldMain, value: state.search2 , operator: "=" }
+                ]
+            }
+        case SUBTABLE_ACTIONS.REMOVE_FILTER: 
+            index = state.filters.findIndex(x => x.name == action.fieldname);
+            if (index >= 0) {
+                tmp = [...state.filters];
+                tmp.splice(index,1);
+            }
+            return {
+                ...state,
+                filters: tmp,
             }
        
         default: 

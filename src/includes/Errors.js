@@ -20,4 +20,5 @@ export const Errors = {
     1006: Liferay.Language.get("El correo no tiene un formato correcto"),
     1007: Liferay.Language.get("El teléfono no tiene formato correcto"),
     1008: Liferay.Language.get("El código postal no es válido"),
+    2001: Liferay.Language.get("No se pude modificar oferta cerrada"),
 }
