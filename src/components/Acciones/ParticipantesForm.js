@@ -381,4 +381,7 @@ export const form = {
         },
     ],
     searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId','admiteEnvios'],
+    searchField: 'nombre',
+    searchFieldsMain: ['nombre', 'documento','apellido1','provinciaId', 'municipioId','admiteEnvios'],
+    searchFieldMain: 'nombre',
 };

@@ -206,4 +206,7 @@ export const form = {
         },
     ],
     searchFields: ['accionTipoId','nombre','accionTipoFormacionId'],
+    searchField: 'nombre',
+    searchFieldsMain: ['accionTipoId','nombre','accionTipoFormacionId'],
+    searchFieldMain: 'nombre',
 };

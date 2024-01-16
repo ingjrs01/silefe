@@ -323,4 +323,7 @@ export const form = {
         //},
     ],
     searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId'],
+    searchField: 'nombre',
+    searchFieldsMain: ['nombre', 'documento','apellido1','provinciaId', 'municipioId'],
+    searchFieldMain: 'nombre',
 };

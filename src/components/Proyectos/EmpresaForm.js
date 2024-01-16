@@ -214,4 +214,7 @@ export const form = {
         },
     ],
     searchFields: ['razonSocial', 'documento' ],
+    searchField: 'razonSocial',
+    searchFieldsMain: ['razonSocial', 'documento' ],
+    searchFieldMain: 'razonSocial',
 };

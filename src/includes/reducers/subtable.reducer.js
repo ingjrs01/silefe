@@ -80,7 +80,6 @@ export const reducerSubtable = (state, action ) => {
                 items: action.items,
                 pagination: {...state.pagination, totalPages: action.pages},
                 paginationSearch: {...state.paginationSearch, page: -1}, 
-                //filters: [{name: 'hola', value:"1", operator: "="}]
             }
 
         case SUBTABLE_ACTIONS.SELECT_ITEM:
