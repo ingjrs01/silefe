@@ -7,21 +7,24 @@ import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFun
 import { deleteAPI, deleteAPIParams, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
 import DoubleTable from '../../includes/interface/DoubleTable';
 import { FAvisos } from '../../includes/interface/FAvisos';
+import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
+import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
-import { formatDefaultEmail, formatDefaultPhone } from '../../includes/utils';
+import { formatDefaultEmail, formatDefaultPhone, toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './OfertaForm';
 import { form as fparticipantes } from './ParticipanteForm';
 
-const Ofertas = () => {
+const Ofertas = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [redParticipantes, participantesHandler] = useReducer(reducerSubtable, iniState);
+    const [historico, historicoHandle] = useReducer(reducerHistorico, iniHistorico);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -31,9 +34,31 @@ const Ofertas = () => {
     const navigate = useNavigate();
     const referer = `${url_referer}/oferta`;
 
+    const loadHistory = (ofertaId) => {
+        const prequest = {
+            ofertaId: ofertaId,
+            pagination: {
+                page: historico.pagination.page,
+                pageSize: 5,
+            },
+            options: {}
+        }
+        fetchAPIData('/silefe.ofertahistory/get-oferta-history-by-oferta-id', prequest, referer).then(response => {
+            console.log("recibidos los datos del histórico:");
+            console.debug(response);
+            const respuesta = response.data.map(item => ({...item,
+                //user: item.userId,
+                date: toDate(item.date) + " " + toHours(item.date),
+            }));
+            historicoHandle({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages});
+        });
+    }
+
     const beforeEdit = (item) => {
         const s = (item == undefined || item == null) ? items.arr.filter(item => item.checked).map(i => { return i.id })[0] : item.ofertaId;
         loadCandidatosOferta(s);
+        console.log("Voy desde beforeEdit");
+        loadHistory(item.id);
     }
 
     const loadCandidatosOferta = (ofertaId) => {
@@ -135,7 +160,7 @@ const Ofertas = () => {
                 fparticipantes.fields.estadoParticipacionId.options = opts; //[{label: "prueba", value:0}, {label: "ola", value: 1}];
                 participantesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: fparticipantes });
             });
-                
+               
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             if (id != 'undefined' && id > 0) {
                 loadOferta(id);
@@ -216,6 +241,11 @@ const Ofertas = () => {
                 <DoubleTable
                     data={redParticipantes}
                     handler={participantesHandler}
+                />,
+            Historico: 
+                <FHistoryEntity 
+                    data={historico}
+                    handler={historicoHandle}
                 />
         }
     }
@@ -376,6 +406,13 @@ const Ofertas = () => {
 //        });
 //    }
 
+    useEffect(()=> {
+        if (items !== undefined) {
+            console.log("voy desde useEffect");
+            loadHistory(items.item.id);
+        }
+    }, [historico.pagination.page])
+
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -400,6 +437,7 @@ const Ofertas = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     plugin={plugin}
+                    user={user}
                 />
             }
             {

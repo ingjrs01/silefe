@@ -1,5 +1,5 @@
 //import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Acciones from './components/Acciones/Acciones';
 import AccionesTipo from './components/AccionesTipo/AccionesTipo';
@@ -40,6 +40,7 @@ import TitulacionesNivel from './components/TitulacionesNivel/TitulacionesNivel'
 import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
 import VMenu from './components/VMenu';
 //import { getRolesUser } from './includes/LiferayFunctions';
+import { Liferay } from './common/services/liferay/liferay';
 import Discapacidad from './components/Discapacidad/Discapacidad';
 import { ProtectRoute } from './includes/ProtectRoute';
 
@@ -47,16 +48,21 @@ const Application = () => {
     const url = "/home";
     const allow = true;
     console.log("Cargando Aplication");
+    const [user, setUser] = useState({userId: 0, roles: []});
     
-    //console.log("los roles son2: ");
-    //getRolesUser().then(response => {
-    //    console.log("resposne");
-    //    console.log(response);
-    //})
-    //Liferay.Service('/role/get-user-roles',{userId: getUserId()}, (response) => {
-    //    console.debug(response);
-    //    response.forEach(e => console.debug(e));
-    //});
+    useEffect(()=>{
+        Liferay.Service('/role/get-user-roles',  { userId: Liferay.ThemeDisplay.getUserId()},response => {
+              var roles = [];
+              if (response !== undefined  && response !== null) {
+                  response.forEach(function(e){
+                      roles.push(e.name); // or e.roleId
+                  });  
+                  setUser({userId: Liferay.ThemeDisplay.getUserId(), roles: roles})
+              }
+            }
+          );        
+    }, []);
+    
 
     return (
         <BrowserRouter>
@@ -101,7 +107,7 @@ const Application = () => {
                                         <Route path='/empresa/:id'          element={<ProtectRoute isAllowed={true} redirectTo={url}><Empresas /></ProtectRoute> } />
                                         <Route path='/empresas'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Empresas /></ProtectRoute> } />
                                         <Route path='/oferta/:id'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Ofertas /></ProtectRoute> } />
-                                        <Route path='/ofertas'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Ofertas /></ProtectRoute> } />
+                                        <Route path='/ofertas'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Ofertas user={user} /></ProtectRoute> } />
                                         <Route path='/edades'               element={<ProtectRoute isAllowed={true} redirectTo={url}><Edades /></ProtectRoute> } />
                                         <Route path='/carnets'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Carnets /></ProtectRoute> } />
                                         <Route path='/estados'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Estados /></ProtectRoute> } />

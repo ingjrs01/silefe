@@ -6,10 +6,7 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 
 export const History = ({ data, itemsHandle, prevState }) => {
-
-    console.log("estoy en History");
-    console.debug(data);
-    
+   
     return (
         <>
             <ClayCard>

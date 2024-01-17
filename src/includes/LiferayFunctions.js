@@ -18,6 +18,8 @@ export function getLanguageId() {
 
 export const getUserId = () => Liferay.ThemeDisplay.getUserId();
 
+export const getUserRoles = () => Liferay.ThemeDisplay.getUserRoles();//   getRolesUser();
+
 export const getRolesUser = () => {
     return Liferay.Service('/role/get-user-roles',{userId: getUserId()}, (response) => {
         const l = response.map(e => (e.name) );

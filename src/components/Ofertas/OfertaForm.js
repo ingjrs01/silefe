@@ -356,6 +356,13 @@ export const form = {
             placeholder:Liferay.Language.get('Comentarios'),
             options: []
         },
+        historico: {
+            key: 39,
+            type: "other",
+            componentName: "Historico",
+            name: "historico",
+        },
+
 
     },
     tabActive:0,
@@ -392,6 +399,7 @@ export const form = {
                 {
                     key:45,
                     cols: ['tareas']
+                    
                 },
             ]
         },
@@ -441,6 +449,18 @@ export const form = {
                 {
                     key: 72,
                     cols: ['observaciones']
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Histórico"),
+            key: 5,
+            ariacontrols: "tabpanel-5",
+            admin: true,
+            rows: [
+                {
+                    key: 81,
+                    cols: ['historico']
                 },
             ]
         },

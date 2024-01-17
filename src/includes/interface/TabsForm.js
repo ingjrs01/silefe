@@ -7,23 +7,40 @@ import { validateAll } from '../Validators';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
-const TabsForm = ({ itemsHandle, save, items, plugin }) => {
+const TabsForm = ({ itemsHandle, save, items, plugin, user }) => {
 
   return (
     <>
       <ClayForm className='sheet'>
         <ClayTabs active={items.fields.tabActive} modern >
           {items.fields.tabs.map((tab, index) => {
-            return (
-              <ClayTabs.Item
-                key={"tab-item" + tab.key}
-                innerProps={{
-                  "aria-controls": "tabpanel-2"
-                }}
-              >
-                <a onClick={a => { itemsHandle({ type: ITEMS_ACTIONS.SET_ACTIVETAB, active: index }) }}>  {tab.caption}  </a>
-              </ClayTabs.Item>
-            );
+            if (tab.hasOwnProperty("admin") ) {
+              if (user.roles.includes("Administrator"))
+                return (
+                  <ClayTabs.Item
+                  key={"tab-item" + tab.key}
+                  innerProps={{
+                    "aria-controls": "tabpanel-2"
+                  }}
+                >
+                  <a onClick={a => { itemsHandle({ type: ITEMS_ACTIONS.SET_ACTIVETAB, active: index }) }}>  {tab.caption}  </a>
+                </ClayTabs.Item>
+                )
+            }
+            else {
+              return (
+                
+                <ClayTabs.Item
+                  key={"tab-item" + tab.key}
+                  innerProps={{
+                    "aria-controls": "tabpanel-2"
+                  }}
+                >
+                  <a onClick={a => { itemsHandle({ type: ITEMS_ACTIONS.SET_ACTIVETAB, active: index }) }}>  {tab.caption} </a>
+                </ClayTabs.Item>
+                
+              );
+            }
           })}
         </ClayTabs>
         <ClayTabs.Content activeIndex={items.fields.tabActive} fade>
