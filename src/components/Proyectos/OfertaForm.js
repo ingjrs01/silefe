@@ -417,9 +417,9 @@ export const form = {
         },
         
     ],
-    searchFields: ['titulo','estado','puesto','empresa','estado','centro'],
+    searchFields: ['titulo','estado','puesto','empresa','centro'],
     searchField: 'titulo',
-    searchFieldsMain: ['titulo','estado','puesto','empresa','estado','centro'],
+    searchFieldsMain: ['titulo','estado','puesto','empresa','centro'],
     searchFieldMain: 'titulo',
 
 };

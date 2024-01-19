@@ -13,8 +13,8 @@ class WebComponent extends HTMLElement {
 	connectedCallback() {
 		createRoot(this).render(
 			<App
-			/>,
-			this
+			/>//,
+			//this
 		);
 
 		//if (Liferay.ThemeDisplay.isSignedIn()) {

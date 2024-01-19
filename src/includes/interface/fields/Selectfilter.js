@@ -73,7 +73,7 @@ export const Selectfilter = ({ itemsHandle, field, item }) => {
                 }}
                 placeholder={ (field.placeholder != 'undefined')?field.placeholder:""}
                 onChange={onChangeSelect}
-                onItemsChange={()=>console.log("los items han cambiado")}
+                //onItemsChange={()=>console.log("los items han cambiado")}
             >
                 {
                     cambiar().map(item => (<ClayAutocomplete.Item key={item}>{item}</ClayAutocomplete.Item>))

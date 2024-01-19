@@ -1,4 +1,3 @@
-//import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Liferay } from './common/services/liferay/liferay';
@@ -46,17 +45,14 @@ import { ProtectRoute } from './includes/ProtectRoute';
 const Application = () => {
     const url = "/home";
     const allow = true;
-    console.log("Cargando Aplication");
     const [user, setUser] = useState({userId: 0, roles: []});
     
     useEffect(()=>{
         Liferay.Service('/role/get-user-roles',  { userId: Liferay.ThemeDisplay.getUserId()},response => {
               var roles = [];
-              console.log("recibidos los roles");
-              console.debug(response);
-              if (response !== undefined  && response !== null) {
+              if (response !== 'undefined'  && response !== null) {
                   response.forEach(function(e){
-                      roles.push(e.name); // or e.roleId
+                      roles.push(e.name);
                   });  
                   setUser({userId: Liferay.ThemeDisplay.getUserId(), roles: roles})
               }

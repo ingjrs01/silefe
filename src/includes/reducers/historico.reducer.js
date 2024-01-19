@@ -38,7 +38,6 @@ export const reducerHistorico = (state=initialState, action ) => {
         }
 
     case HISTORICO_ACTIONS.LOAD: 
-        console.debug(action.items);
         return {
             ...state, 
             items: action.items,

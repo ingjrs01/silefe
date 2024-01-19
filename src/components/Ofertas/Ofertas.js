@@ -127,7 +127,7 @@ const Ofertas = ({user}) => {
                 if (redParticipantes.deleted.length > 0) {
                     const s = redParticipantes.deleted.map(i => { return i.participanteId });
                     deleteAPIParams('/silefe.oferta/delete-participantes-oferta', { ofertaId: data.ofertaId, identifiers: s }, referer).then(res => {
-                        console.log("Borrando: " + res);
+                        console.error("Borrando: " + res);
                     });
                 }
                 fetchData();
@@ -292,7 +292,6 @@ const Ofertas = ({user}) => {
     }
 
     const loadCentros = (empresaId) => {
-        console.log("Estoy en loadCentros: " + empresaId);
         fetchAPIData('/silefe.empresacentros/filter-by-empresa', { empresaId: empresaId }, referer).then(response => {
             const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.empresaCentrosId, label: obj.nombre } })];
             itemsHandle({type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: "centroId", options: opts });
@@ -414,9 +413,7 @@ const Ofertas = ({user}) => {
     }, [historico.pagination.page]);
 
     useEffect(()=>{
-        console.log("modificando las opcioens de la empresa");        
         if (items !== undefined && items.item.empresaId > 0) {
-            console.debug(items);
             loadCentros(items.item.empresaId);
         }
     },[items.item.empresaId]);

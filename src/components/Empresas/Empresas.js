@@ -58,32 +58,22 @@ const Empresas = ({user}) => {
     }
 
     const beforeEdit = (id) => {
-        let empresaId = 0;
-        if (typeof (id) == 'int')
-            empresaId = id;
-        else
-            empresaId = id.id;
+        let empresaId = (typeof (id) == 'int')?id:id.id;
 
         loadHistory(empresaId);
         fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
-            let centros = response.data.map(i => {
-                return {
-                    ...i,
-                    id: i.empresaCentrosId
-                }
-            });
+            const centros = response.data.map(i => ({...i, id: i.empresaCentrosId}));
             centrosHandle({ type: CENTROS_ACTIONS.LOAD, items: centros });
         });
 
         fetchAPIData('/silefe.contacto/filter-by-empresa', { empresaId: empresaId }, referer).then(response2 => {
-            let contacts = response2.data.map(j => {
-                return {
+            const contacts = response2.data.map(j => ({
                     ...j,
                     id: j.contactoId,
                     email: (j.email != null && j.email.length > 0) ? JSON.parse(j.email) : [],
                     telefono: (j.telefono != null && j.telefono.length > 0) ? JSON.parse(j.telefono) : [],
-                }
-            });
+                })
+            );
             contactosHandle({ type: CONTACTOS_ACTIONS.LOAD, items: contacts });
         });
     }
@@ -106,14 +96,14 @@ const Empresas = ({user}) => {
                 if (redCentros.modified.length > 0) {
                     const oo = redCentros.items.filter(i => redCentros.modified.includes(i.id));
                     saveAPI('/silefe.empresacentros/save-centros-by-empresa', { id: data.empresaId, centros: oo, userId: getUserId() }, referer).then(respon => {
-                        console.log("lalala")
+                        console.log("lalala");
                     });
                 }
                 // ahora tenemos que borrar los items que hallan sido borrados
                 if (redCentros.deleted.length > 0) {
-                    const delCentros = redCentros.deleted.map(d => { return (d.empresaCentrosId) });
+                    const delCentros = redCentros.deleted.map(d => d.empresaCentrosId);
                     deleteAPI('/silefe.empresacentros/delete-empresa-centros', delCentros, referer).then(res => {
-                        console.log("delete experiencias");
+                        console.error("delete experiencias");
                     });
                 }
 
@@ -123,7 +113,6 @@ const Empresas = ({user}) => {
                     const contacts = redContactos.items.filter(i => redContactos.modified.includes(i.id)).map((item) => ({ ...item, origenId: data.empresaId, userId: getUserId() }));
                     saveAPI('/silefe.contacto/save-by-empresa', { id: data.empresaId, contactos: contacts }, referer).then(response => {
                         console.log("a la vuelta de guardar los contactos");
-                        console.debug(response.data);
                     });
                 }
 
@@ -171,18 +160,14 @@ const Empresas = ({user}) => {
 
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
 
-        const tmp = await data.map(i => {
-            if (i.email != null && i.email.length > 0) {
-                console.log("el email");
-            }
-            return ({
+        const tmp = await data.map(i => ({
                 ...i,
                 id: i.empresaId,
-                email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
+                email:  (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
                 telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
                 checked: false
             })
-        });
+        );
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
     }
 
@@ -209,8 +194,6 @@ const Empresas = ({user}) => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             centrosHandle({ type: CENTROS_ACTIONS.TIPOS_VIA, tipos: opts })
         });
-
-
     }
 
     const confirmDelete = async () => {

@@ -5,11 +5,8 @@ import { HISTORICO_ACTIONS } from '../../includes/reducers/historico.reducer';
 import { MiniPaginator } from "./MiniPaginator";
 
 export const FHistoryEntity = ({data, handler}) => {
-    console.log("history");
-    console.debug(data);
 
     const changePageSearch = (page) => {
-        console.log("cambiando la página");
         handler({ type: HISTORICO_ACTIONS.SETPAGESEARCH, page: page });
     }
 
@@ -31,10 +28,10 @@ export const FHistoryEntity = ({data, handler}) => {
         <ClayTable.Body>
             {
                 data.items.map(item => (
-                    <ClayTable.Row>
-                        <ClayTable.Cell headingTitle>{ item.user }</ClayTable.Cell>
-                        <ClayTable.Cell>{ item.comment }</ClayTable.Cell>
-                        <ClayTable.Cell>{ item.date }</ClayTable.Cell>
+                    <ClayTable.Row key={"rowhistory"+item.id}>
+                        <ClayTable.Cell key={item.id + "hisuser"} headingTitle>{ item.user }</ClayTable.Cell>
+                        <ClayTable.Cell key={item.id + "hiscomment"}>{ item.comment }</ClayTable.Cell>
+                        <ClayTable.Cell key={item.id + "hisdate"}>{ item.date }</ClayTable.Cell>
                     </ClayTable.Row>
                 ))
             }

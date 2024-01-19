@@ -1,10 +1,8 @@
 import { useModal } from '@clayui/modal';
-import Papa from "papaparse";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
-import { Errors } from '../../includes/Errors';
-import { getUserId, url_referer } from '../../includes/LiferayFunctions';
-import { batchAPI, deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
+import { url_referer } from '../../includes/LiferayFunctions';
+import { deleteAPI, fetchAPIData } from "../../includes/apifunctions";
 import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
@@ -39,53 +37,51 @@ const Convocatorias = () => {
     }
 
     const processCsv = () => {
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true, delimiter: ";", delimitersToGuess: [";"] });
-                const parsedData = csv?.data;
-                let end = '/silefe.cno/add-multiple';
-                let ttmp = { cnos: parsedData, userId: Liferay.ThemeDisplay.getUserId() };
-
-                batchAPI(end, ttmp, referer).then(res2 => {
-                    if (res2.ok) {
-                        setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
-                        fetchData();
-                    }
-                    else {
-                        setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
-                    }
-                });
-            };
-            reader.readAsText(file);
-        }
-        else {
-            console.log("fichero no cargado")
-        }
+        console.log("esto es processCsv, y vou a guardar");
+        downloadFile();
+        //if (file) {
+        //    const reader = new FileReader();
+//
+        //    reader.onload = async ({ target }) => {
+        //        const csv = Papa.parse(target.result, { header: true, delimiter: ";", delimitersToGuess: [";"] });
+        //        const parsedData = csv?.data;
+        //        let end = '/silefe.cno/add-multiple';
+        //        let ttmp = { cnos: parsedData, userId: Liferay.ThemeDisplay.getUserId() };
+//
+        //        batchAPI(end, ttmp, referer).then(res2 => {
+        //            if (res2.ok) {
+        //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
+        //                fetchData();
+        //            }
+        //            else {
+        //                setToastItems([...toastItems, { title: Liferay.Liferay.get("Carga_Masiva"), type: "danger", text: Liferay.Language.get("Elementos_no_cargados") }]);
+        //            }
+        //        });
+        //    };
+        //    reader.readAsText(file);
+        //}
+        //else {
+        //    console.log("fichero no cargado")
+        //}
     }
 
     const handleSave = async () => {
-        //console.log("handleSave");
-        //console.debug(items);
-        //console.debug(item)
-        //debugger;
-        const data = {
-            convocatoriaId: items.item.id,
-            obj: items.item,
-            userId: getUserId(),
-        }
-        let endpoint = '/silefe.convocatoria/save-convocatoria';
-        if (items.status === 'new')
-            endpoint = '/silefe.convocatoria/add-convocatoria';
-        let { status, error } = await saveAPI(endpoint, data, referer);
-        if (status) {
-            fetchData();
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
-        }
-        else {
-            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-        }
+        //const data = {
+        //    convocatoriaId: items.item.id,
+        //    obj: items.item,
+        //    userId: getUserId(),
+        //}
+        //let endpoint = '/silefe.convocatoria/save-convocatoria';
+        //if (items.status === 'new')
+        //    endpoint = '/silefe.convocatoria/add-convocatoria';
+        //let { status, error } = await saveAPI(endpoint, data, referer);
+        //if (status) {
+        //    fetchData();
+        //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
+        //}
+        //else {
+        //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
+        //}
     }
 
     const confirmDelete = async () => {
@@ -101,48 +97,57 @@ const Convocatorias = () => {
         })
     }
 
+    const uploadFile = () => {
+        console.log("subiendo el fichero");
+        //if (file) {
+        //    const reader = new FileReader();
+        //    reader.onload = async ({ target }) => {
+        //        const csv = Papa.parse(target.result, { header: true, delimiter: ";", delimitersToGuess: [";"] });
+        //        const parsedData = csv?.data;
+        //        let end = '/silefe.cno/add-multiple';
+        //        let ttmp = { cnos: parsedData, userId: Liferay.ThemeDisplay.getUserId() };
+        //        
+        //    };
+        //    reader.readAsText(file);
+        //}
+        //else {
+        //    console.log("fichero no cargado")
+        //}
+
+    }
+
     const downloadFile = async() => {
         console.log("downloadFile");
-        //console.log(items);
-        // const data = {
-        //     convocatoriaId: items.item.id,
-        //     obj: items.item,
-        //     userId: getUserId(),
-        // }
-        // console.log("probando la carga de archivos");
-        // console.debug(file);
-        // let endpoint = '/silefe.convocatoria/add-file';
-        // let { status, error } = await saveFileAPI(endpoint, data, referer);
-        // console.log("ya han llegado ");
-        // console.debug(status);
+        console.log("viendo como enviar un document a al document library2");
 
         const reader = new FileReader();
         reader.onload = async ({ target }) => {
             const Liferay = window.Liferay;
-    
+            
             Liferay.Service(
                 '/dlapp/add-file-entry',
                 {
                 //    externalReferenceCode: "AAAA",
                     repositoryId: 20119,
-                    folderId: 37279,
+                    folderId: 39909,
                     sourceFileName: file.name,
                     mimeType: file.type,
                     title: file.name,
                     description: '',
                     changeLog: '',
-                    file: target.result,
+                    bytes: target.result,
                     expirationDate : null,
                     reviewDate: null,
                 },
                 function(obj) {
-                    console.log("algo se hace");
+                    console.log("algo se hace en binario");
                     console.log(obj);
                 }
                 );        
         }
-        reader.readAsText(file);
-       
+        //reader.readAsText(file);       
+        reader.readAsBinaryString(file);
+        console.log("leído en binario");
     }
 
     form.downloadFunc = downloadFile;

@@ -73,7 +73,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
 
             {(data.status === "list") &&
                 <>
-                    <ClayUpperToolbar>
+                    <ClayUpperToolbar key={"toolbarTop"}>
                         <ClayUpperToolbar.Item className="text-left">
                             <label htmlFor="basicInput">{Liferay.Language.get("Candidatos")}</label>
                         </ClayUpperToolbar.Item>
@@ -94,24 +94,22 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                     <ClayInput
                                         placeholder={"Buscar..."}
                                         type="text"
-                                        name={"cif"}
-                                        key={"cif"}
+                                        name={"tableTopSearch"}
+                                        //key={"cif"}
                                         value={data.search}
-                                        onChange={e => {
-                                            handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value });
-                                        }}>
+                                        onChange={e => handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value })}>
                                     </ClayInput>
                                 </ClayUpperToolbar.Item>
                                 <ClayUpperToolbar.Item className="text-left">
                                     <ClaySelect aria-label="Select Label"
-                                        id={"campo"}
-                                        name={"campo"}
-                                        key={"campo"}
+                                        id={"tableTopSearchField"}
+                                        name={"tableTopSearchField"}
+                                        key={"tableTopSearchField"}
                                         onChange={evt => handler({ type: SUBTABLE_ACTIONS.SETSEARCHFIELD, value: evt.target.value })}
                                         value={data.form.searchField} >
                                         {data.form.searchFields.map(searchitem => (
                                             <ClaySelect.Option
-                                                key={searchitem}
+                                                key={"tableTop" + searchitem}
                                                 label={data.form.fields[searchitem].label}
                                                 value={searchitem}
                                             />
@@ -134,18 +132,14 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                     {/* tabla de búsqueda */}
                     {showSearch &&
                         <>
-                            <ClayTable>
+                            <ClayTable key="TableTop">
                                 <caption>{Liferay.Language.get("Buscando")}</caption>
                                 <ClayTable.Head>
-                                    <ClayTable.Row>
-                                        <ClayTable.Cell headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKALLSEARCH })} />
+                                    <ClayTable.Row key={"tabletoptitles"}>
+                                        <ClayTable.Cell key={"tableTopcheck"} headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKALLSEARCH })} />
                                         </ClayTable.Cell>
-                                        {
-                                            data.form.table.map(column => (
-                                                <ClayTable.Cell headingCell>{column.columnTitle}</ClayTable.Cell>
-                                            ))
-                                        }
-                                        <ClayTable.Cell className='table-cell-minw-100'>
+                                        {data.form.table.map(column => (<ClayTable.Cell headingCell key={"top"+column.columnTitle}>{column.columnTitle}</ClayTable.Cell>))}
+                                        <ClayTable.Cell key={"table-top_accines"} className='table-cell-minw-100'>
                                             {"Acciones"}
                                         </ClayTable.Cell>
                                     </ClayTable.Row>
@@ -154,7 +148,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                     {data.searchItems.map((item, index) => {
                                         return (
                                             <>
-                                                <ClayTable.Row key={"k-" + item.id}>
+                                                <ClayTable.Row key={"ktop-" + index}>
                                                     <ClayTable.Cell><ClayCheckbox checked={item.checked} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKSEARCH, index: index })} />
                                                     </ClayTable.Cell>
                                                     {
@@ -165,9 +159,9 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                             //console.log("---------");
                                                             switch (column.columnType) {
                                                                 case "multilang":
-                                                                    return (<ClayTable.Cell> {item[column.columnName][lang]} </ClayTable.Cell>)
+                                                                    return (<ClayTable.Cell key={"ttop" + item.id + column.columnName} > {item[column.columnName][lang]} </ClayTable.Cell>)
                                                                 case "string":
-                                                                    return (<ClayTable.Cell>{item[column.columnName]}</ClayTable.Cell>)
+                                                                    return (<ClayTable.Cell key={"ttop" + item.id + column.columnName}>{item[column.columnName]}</ClayTable.Cell>)
                                                                 case "select":
                                                                     let aa = "";
                                                                     if (item[column.columnName] === undefined || item[column.columnName] === null)
@@ -179,21 +173,21 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                                         else
                                                                             aa = "ND";
                                                                     }
-                                                                    return (<ClayTable.Cell>{aa} </ClayTable.Cell>)
+                                                                    return (<ClayTable.Cell key={"ttop" + item.id + column.columnName}>{aa} </ClayTable.Cell>)
                                                                 case "boolean":
-                                                                    return (<ClayTable.Cell key={column.columnName + item.id}>
+                                                                    return (<ClayTable.Cell  key={"ttop" + item.id + column.columnName}>
                                                                         {<ClayCheckbox checked={item[column.columnName]} disabled />}
                                                                     </ClayTable.Cell>)
                                                             }
-                                                            <ClayTable.Cell headingCell>{item[column.columnName]}</ClayTable.Cell>
+                                                            <ClayTable.Cell headingCell key={"ttop" + item.id + column.columnName}>{item[column.columnName]}</ClayTable.Cell>
                                                         })
                                                     }
 
-                                                    <ClayTable.Cell>
+                                                    <ClayTable.Cell key={"acciones_top" + item.id}>
                                                         <div className="btn-toolbar pull-right">
                                                             <ClayButtonWithIcon
                                                                 aria-label={Liferay.Language.get("Seleccionar")}
-                                                                key={"bi-" + item.id}
+                                                                key={"toSel-" + item.id}
                                                                 className="ml-1"
                                                                 spritemap={spritemap}
                                                                 symbol="plus"
@@ -211,6 +205,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                 </ClayTable.Body>
                             </ClayTable>
                             <MiniPaginator
+                                key={"paginatorbottom"}
                                 pagination={data.paginationSearch}
                                 changePage={changePageSearch}
                             />
@@ -222,9 +217,9 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                         </>
                     }
 
-                    <hr class="hr hr-blurry" />
+                    <hr className="hr hr-blurry" />
 
-                    <ClayUpperToolbar>
+                    <ClayUpperToolbar key={"toolbarBottom"}>
                         <ClayUpperToolbar.Item className="text-left">
                         </ClayUpperToolbar.Item>
                         <>
@@ -233,9 +228,9 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                     <>
                                         {
                                             <ClaySelect aria-label="Select Label"
-                                                id={"campo"}
-                                                name={"campo"}
-                                                key={"campo"}
+                                                id={"searchBottonField"}
+                                                name={"searchBottonField"}
+                                                key={"searchBottonField"}
                                                 value={data.search2}
                                                 onChange={e => { handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value, table: 1 }) }}>
                                                 {data.form.fields[data.form.searchFieldMain].options.map(field => (
@@ -254,8 +249,8 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                     <ClayInput
                                         placeholder={"Buscar..."}
                                         type="text"
-                                        name={"cif2"}
-                                        key={"cif2"}
+                                        name={"searchBottonValue"}
+                                        key={"searchBottonValue"}
                                         value={data.search2}
                                         onChange={e => {
                                             handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value, table: 1 });
@@ -265,14 +260,14 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                             </ClayUpperToolbar.Item>
                             <ClayUpperToolbar.Item className="text-left">
                                 <ClaySelect aria-label="Select Label"
-                                    id={"campo"}
-                                    name={"campo"}
-                                    key={"campo"}
+                                    id={"searchBottonSelect"}
+                                    name={"searchBottonSelect"}
+                                    key={"searchBottonSelect"}
                                     onChange={evt => handler({ type: SUBTABLE_ACTIONS.SETSEARCHFIELD, value: evt.target.value, table: 1 })}
                                     value={data.form.searchFieldMain} >
                                     {data.form.searchFieldsMain.map(searchitem => (
                                         <ClaySelect.Option
-                                            key={searchitem}
+                                            key={"botSelSearch" + data.form.title + searchitem}
                                             label={data.form.fields[searchitem].label}
                                             value={searchitem}
                                         />
@@ -335,22 +330,18 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                         }
 
                     </ClayIconSpriteContext.Provider>
-                    <ClayTable>
+                    <ClayTable key="TableBottom">
                         <ClayTable.Head>
-                            <ClayTable.Row>
-                                <ClayTable.Cell headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKALL })} />
+                            <ClayTable.Row  key={"tablebottomtitles"}>
+                                <ClayTable.Cell  key={"tablebottomchecks"} headingCell><ClayCheckbox checked={data.checkAll} onChange={() => handler({ type: SUBTABLE_ACTIONS.CHECKALL })} />
                                 </ClayTable.Cell>
-                                {
-                                    data.form.table.map(column => (
-                                        <ClayTable.Cell headingCell>{column.columnTitle}</ClayTable.Cell>
-                                    ))
-                                }
-                                <ClayTable.Cell className='table-cell-minw-100'>
+                                {data.form.table.map(column => (<ClayTable.Cell headingCell key={"bottonTitle"+column.columnTitle}>{column.columnTitle}</ClayTable.Cell>))}
+                                <ClayTable.Cell key={"tablebottomacciones"} className='table-cell-minw-100'>
                                     {"Acciones"}
                                 </ClayTable.Cell>
                             </ClayTable.Row>
                         </ClayTable.Head>
-                        <ClayTable.Body>
+                        <ClayTable.Body key={"tablebottombody"}>
                             {data.items.map((item, index) => {
                                 return (
                                     <>
@@ -361,9 +352,9 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                 data.form.table.map(column => {
                                                     switch (column.columnType) {
                                                         case "multilang":
-                                                            return (<ClayTable.Cell> {item[column.columnName][lang]} </ClayTable.Cell>)
+                                                            return (<ClayTable.Cell key={"tbot" + index + column.columnName}> {item[column.columnName][lang]} </ClayTable.Cell>)
                                                         case "string":
-                                                            return (<ClayTable.Cell>{item[column.columnName]}</ClayTable.Cell>)
+                                                            return (<ClayTable.Cell key={"tbot" + index + column.columnName}>{item[column.columnName]}</ClayTable.Cell>)
                                                         case "select":
                                                             let aa = "";
                                                             if (item[column.columnName] === undefined || item[column.columnName] === null)
@@ -375,13 +366,13 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                                 else
                                                                     aa = "ND";
                                                             }
-                                                            return (<ClayTable.Cell>{aa} </ClayTable.Cell>)
+                                                            return (<ClayTable.Cell key={"tbot" + index + column.columnName}>{aa} </ClayTable.Cell>)
                                                         case "boolean":
                                                             return (<ClayTable.Cell key={column.columnName + item.id}>
                                                                 {<ClayCheckbox checked={item[column.columnName]} disabled />}
                                                             </ClayTable.Cell>)
                                                     }
-                                                    <ClayTable.Cell headingCell>{item[column.columnName]}</ClayTable.Cell>
+                                                    <ClayTable.Cell headingCell key={"tbot" + index + column.columnName}>{item[column.columnName]}</ClayTable.Cell>
                                                 })
                                             }
 
@@ -421,6 +412,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                         </ClayTable.Body>
                     </ClayTable>
                     <MiniPaginator
+                        key={"paginatorbottom"}
                         pagination={data.pagination}
                         changePage={changePage}
                     />

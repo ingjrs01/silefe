@@ -202,87 +202,87 @@ export const form = {
     tabs: [
         {
             caption: "Datos",
-            key: 1,
+            key: 1000,
             ariacontrols: "tabpanel-1",
             rows: [
                 {
-                    key: 5,
+                    key: 1005,
                     cols: ['descripcion', 'codigo', 'convocatoriaId', 'participantes']
                 },
                 {
-                    key: 6,
+                    key: 1006,
                     cols: ['ambito_geo']
                 },
                 {
-                    key: 7,
+                    key: 1007,
                     cols: ['inicio', 'fin', 'presupuesto', 'porcentaje_total', 'porcentaje_cofinanciacion']
                 },
                 {
-                    key: 8,
+                    key: 1008,
                     cols: ['fondos_propios', 'cofinanciacion', 'entidadId']
                 },
                 {
-                    key: 11,
+                    key: 1011,
                     cols: ['colectivos']
                 },
                 {
-                    key: 13,
+                    key: 1013,
                     cols: ['objetivos']
                 },
             ]
         },
         {
             caption: Liferay.Language.get("Acciones"),
-            key: 2,
+            key: 2000,
             ariacontrols: "tabpanel-2",
             rows: [
                 {
-                    key: 14,
+                    key: 2014,
                     cols: ['acciones']
                 },
             ]
         },
         {
             caption: Liferay.Language.get("Ofertas"),
-            key: 3,
+            key: 3000,
             ariacontrols: "tabpanel-3",
             rows: [
                 {
-                    key: 15,
+                    key: 3015,
                     cols: ['ofertas']
                 },
             ]
         },
         {
             caption: Liferay.Language.get("Participantes"),
-            key: 4,
+            key: 4000,
             ariacontrols: "tabpanel-4",
             rows: [
                 {
-                    key: 15,
+                    key: 4015,
                     cols: ['oparticipantes']
                 },
             ]
         },
         {
             caption: Liferay.Language.get("Empresas"),
-            key: 5,
+            key: 5000,
             ariacontrols: "tabpanel-5",
             rows: [
                 {
-                    key: 16,
+                    key: 5016,
                     cols: ['empresas']
                 },
             ]
         },
         {
             caption: Liferay.Language.get("Histórico"),
-            key: 6,
+            key: 6000,
             ariacontrols: "tabpanel-6",
             admin: true,
             rows: [
                 {
-                    key: 21,
+                    key: 6021,
                     cols: ['historico']
                 },
             ]

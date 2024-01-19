@@ -42,7 +42,6 @@ const Proyectos = ({user}) => {
     const referer = `${url_referer}/proyectos`;
 
     const loadHistory = (proyectoId) => {
-        console.log("Esto es loadhistory");
         const prequest = {
             proyectoId: proyectoId,
             pagination: {

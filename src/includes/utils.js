@@ -95,7 +95,9 @@ export const formatDocument = (tipoDoc, value) => {
   }
 
   export const formatDefaultEmail = (inputemails) => {
+    //console.log("formatenado");
     let emails = (typeof (inputemails) == "string")?JSON.parse(inputemails):inputemails;
+    //console.debug(emails);
     if (emails == 'undefined' || emails.length == 0)
       return "";
     const seleccionado = emails.filter(i => i.default);
