@@ -8,7 +8,7 @@ import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import RenderFields from "./RenderFields";
 
 const TabsForm = ({ itemsHandle, save, items, plugin, user }) => {
-
+ 
   return (
     <>
       <ClayForm className='sheet'>

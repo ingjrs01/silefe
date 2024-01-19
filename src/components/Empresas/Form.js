@@ -181,6 +181,13 @@ export const form = {
             componentName: "Contactos",
             name: "contactos",
         },
+        historico: {
+            key: 39,
+            type: "other",
+            componentName: "Historico",
+            name: "historico",
+        },
+
     },
     tabActive: 0,
     tabs: [
@@ -239,6 +246,17 @@ export const form = {
                 cols: ['contactos'],
             }]
         },
+        {
+            caption: "Historico",
+            key: 4,
+            ariacontrols: "tabpanel-4",
+            admin: true,
+            rows: [{
+                key: 62,
+                cols: ['historico'],
+            }]
+        },
+
     ],
     table: {
         id: {

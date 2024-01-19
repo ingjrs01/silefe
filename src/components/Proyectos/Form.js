@@ -189,7 +189,13 @@ export const form = {
             type: "other",
             componentName: "Empresas",
             name: "Empresas",
-        }
+        },
+        historico: {
+            key: 23,
+            type: "other",
+            componentName: "Historico",
+            name: "historico",
+        },
 
     },
     tabActive: 0,
@@ -269,6 +275,19 @@ export const form = {
                 },
             ]
         },
+        {
+            caption: Liferay.Language.get("Histórico"),
+            key: 6,
+            ariacontrols: "tabpanel-6",
+            admin: true,
+            rows: [
+                {
+                    key: 21,
+                    cols: ['historico']
+                },
+            ]
+        },
+
     ],
     table: {
         id: {

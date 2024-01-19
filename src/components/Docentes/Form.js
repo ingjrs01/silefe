@@ -23,7 +23,7 @@ export const form = {
             value:"",
             placeholder:"",
             conditions: ["text"],
-            className: "col-2",
+            className: "col-3",
         },
         nombre: {
             key:2,
@@ -153,7 +153,7 @@ export const form = {
             name: "cpostal",
             value:"",
             placeholder:"",
-            conditions: ["text"],
+            conditions: [],
             validate: false,
         },
         nombreVia: {
@@ -184,25 +184,56 @@ export const form = {
             placeholder: Liferay.Language.get('Telefono'),
             conditions: ["text"]
         },
+        historico: {
+            key: 19,
+            type: "other",
+            componentName: "Historico",
+            name: "historico",
+        },
+
     },
-    rows: [
+    tabActive: 0,
+    tabs: [
         {
-            key:41,
-            cols: ['tipoDoc', 'documento','nombre','apellido1'],
+            caption: "Datos",
+            key: 1,
+            ariacontrols: "tabpanel-1",
+            rows: [
+                {
+                    key:41,
+                    cols: ['tipoDoc', 'documento','nombre'],
+                },
+                {
+                    key:43,
+                    cols: ['apellido1','apellido2','fechaNacimiento', 'sexo',],
+                },
+                {
+                    key:44,
+                    cols: ['provinciaId', 'municipioId']
+                },
+                {
+                    key:45,
+                    cols: ['tipoviaId','nombreVia','numero', 'cpostal','piso']
+                },
+                {
+                    key:46,
+                    cols: ['email','telefono']
+                },
+            ]
         },
         {
-            key:43,
-            cols: ['apellido2','fechaNacimiento', 'sexo','provinciaId'],
+            caption: "Historico",
+            key: 2,
+            ariacontrols: "tabpanel-2",
+            admin: true,
+            rows: [
+                {
+                    key:51,
+                    cols: ['historico'],
+                },
+            ]
         },
-        {
-            key:44,
-            cols: [  'municipioId','tipoviaId','nombreVia','numero','piso']
-        },
-        {
-            key:46,
-            cols: ['email','telefono']
-        },
-],
+    ],
     table: {
         id: {
             columnTitle: "Id",

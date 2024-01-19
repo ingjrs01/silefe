@@ -5,18 +5,23 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
-import DefaultForm from "../../includes/interface/DefaultForm";
+//import DefaultForm from "../../includes/interface/DefaultForm";
 import { FAvisos } from '../../includes/interface/FAvisos';
+import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
+import TabsForm from "../../includes/interface/TabsForm";
+import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './Form';
 
-const Docentes = () => {
+const Docentes = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [historico, historicoHandle] = useReducer (reducerHistorico, iniHis);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -29,6 +34,34 @@ const Docentes = () => {
     const loadCsv = () => {
         itemsHandle({ type: ITEMS_ACTIONS.LOAD });
     }
+
+    const loadHistory = (docenteId) => {
+        const prequest = {
+            docenteId: docenteId,
+            pagination: {
+                page: historico.pagination.page,
+                pageSize: 5,
+            },
+            options: {}
+        }
+        fetchAPIData('/silefe.docentehistory/get-docente-history-by-docente-id', prequest, referer).then(response => {
+            const respuesta = response.data.map(item => ({...item,
+                date: toDate(item.date) + " " + toHours(item.date),
+            }));
+            historicoHandle({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages});
+        });
+    }
+
+    const beforeEdit = (id) => {
+        let docenteId = 0;
+        if (typeof (id) == 'int')
+            docenteId = id;
+        else
+            docenteId = id.id;
+
+        loadHistory(docenteId);
+    }
+
 
     const processCsv = () => {
         //if (file) {
@@ -58,9 +91,12 @@ const Docentes = () => {
     const handleSave = async () => {
         const data = {
             id: items.item.id,
-            obj: items.item,
-            userId: getUserId()
+            obj: {
+                ...items.item,
+                userId: getUserId()
+            },
         }
+        
         let endpoint = '/silefe.docente/save-docente';
         if (items.status === 'new')
             endpoint = '/silefe.docente/add-docente';
@@ -96,6 +132,8 @@ const Docentes = () => {
 
     //form.downloadFunc = downloadFile;
     //form.handleSave = handleSave;
+    form.loadCsv = loadCsv;
+    form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
@@ -158,6 +196,16 @@ const Docentes = () => {
             const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
         });
+    }
+
+    const plugin = () => {
+        return {
+            Historico: 
+                <FHistoryEntity
+                    data={historico}
+                    handler={historicoHandle}
+                />
+        }
     }
 
     useEffect(() => {
@@ -225,10 +273,12 @@ const Docentes = () => {
                     itemsHandle={itemsHandle}
                 />}
             {(items.status === 'edit' || items.status === 'new') &&
-                <DefaultForm
-                    handleSave={handleSave}
+                <TabsForm
+                    save={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
+                    plugin={plugin}
+                    user={user}
                 />
             }
             {

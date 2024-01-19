@@ -11,6 +11,7 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
+import { HISTORICO_ACTIONS, initialState as hisIni, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import Menu from '../Menu';
@@ -21,13 +22,16 @@ import { form as oform } from './OfertaForm';
 import { form as pform } from './ParticipantesForm';
 //import Papa from "papaparse";
 import { Liferay } from '../../common/services/liferay/liferay';
+import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
+import { toDate, toHours } from '../../includes/utils';
 
-const Proyectos = () => {
+const Proyectos = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [acciones, accionesHandle] = useReducer(reducerSubtable, iniState);
     const [ofertas, ofertasHandle] = useReducer(reducerSubtable, iniState);
     const [participantes, participantesHandle] = useReducer(reducerSubtable, iniState);
     const [empresas, empresasHandle] = useReducer(reducerSubtable, iniState);
+    const [historico, historicoHandle] = useReducer(reducerHistorico, hisIni);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -36,6 +40,24 @@ const Proyectos = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
     const referer = `${url_referer}/proyectos`;
+
+    const loadHistory = (proyectoId) => {
+        console.log("Esto es loadhistory");
+        const prequest = {
+            proyectoId: proyectoId,
+            pagination: {
+                page: historico.pagination.page,
+                pageSize: 5,
+            },
+            options: {}
+        }
+        fetchAPIData('/silefe.proyectohistory/get-proyectos-history-by-id', prequest, referer).then(response => {
+            const respuesta = response.data.map(item => ({...item,
+                date: toDate(item.date) + " " + toHours(item.date),
+            }));
+            historicoHandle({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages});
+        });
+    }
 
     useEffect(() => {
         if (!isInitialized.current) {
@@ -156,6 +178,7 @@ const Proyectos = () => {
             id: items.item.id,
             obj: {
                 ...items.item,
+                userId: getUserId(),
             },
             userId: getUserId(),
         }
@@ -240,6 +263,7 @@ const Proyectos = () => {
             loadOfertas(lid);
             loadParticipantes(lid);
             loadEmpresas(lid);
+            loadHistory(lid);
         }
     }
 
@@ -447,6 +471,11 @@ const Proyectos = () => {
                     editUrl={"/empresa/"}
                     backUrl={"/proyecto/"}
                     ancestorId={items.item.id}
+                />,
+            Historico: 
+                <FHistoryEntity
+                    data={historico}
+                    handler={historicoHandle}
                 />
         }
     }
@@ -472,6 +501,7 @@ const Proyectos = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     plugin={plugin}
+                    user={user}
                 />
             }
             {

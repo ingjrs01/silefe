@@ -6,6 +6,7 @@ import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
 import { FAvisos } from '../../includes/interface/FAvisos';
+import { FHistoryEntity } from "../../includes/interface/FHistoryEntity";
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
@@ -13,16 +14,19 @@ import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
 import { CENTROS_ACTIONS, initialState as iniCentros, reducerCentros } from "../../includes/reducers/centros.reducer";
 import { CONTACTOS_ACTIONS, initialState as iniContactos, reducerContactos } from "../../includes/reducers/contactos.reducer";
+import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from "../../includes/reducers/historico.reducer";
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import CentrosRender from "./CentrosRender";
 import ContactosRender from "./ContactosRender";
 import { form } from "./Form";
 
-const Empresas = () => {
+const Empresas = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [redCentros, centrosHandle] = useReducer(reducerCentros, iniCentros);
     const [redContactos, contactosHandle] = useReducer(reducerContactos, iniContactos);
+    const [historico, historicoHandle] = useReducer(reducerHistorico, iniHis);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -36,6 +40,22 @@ const Empresas = () => {
         console.log("loadCsv");
     }
 
+    const loadHistory = (empresaId) => {
+        const prequest = {
+            empresaId: empresaId,
+            pagination: {
+                page: historico.pagination.page,
+                pageSize: 5,
+            },
+            options: {}
+        }
+        fetchAPIData('/silefe.empresahistory/get-empresa-history-by-empresa-id', prequest, referer).then(response => {
+            const respuesta = response.data.map(item => ({...item,
+                date: toDate(item.date) + " " + toHours(item.date),
+            }));
+            historicoHandle({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages});
+        });
+    }
 
     const beforeEdit = (id) => {
         let empresaId = 0;
@@ -44,6 +64,7 @@ const Empresas = () => {
         else
             empresaId = id.id;
 
+        loadHistory(empresaId);
         fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
             let centros = response.data.map(i => {
                 return {
@@ -216,6 +237,11 @@ const Empresas = () => {
                 <ContactosRender
                     redContactos={redContactos}
                     contactosHandle={contactosHandle}
+                />,
+            Historico: 
+                <FHistoryEntity
+                    data={historico}
+                    handler={historicoHandle}
                 />
         }
     }
@@ -286,6 +312,7 @@ const Empresas = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     plugin={plugin2}
+                    user={user}
                 />
             }
             {

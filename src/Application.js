@@ -1,6 +1,7 @@
 //import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Liferay } from './common/services/liferay/liferay';
 import Acciones from './components/Acciones/Acciones';
 import AccionesTipo from './components/AccionesTipo/AccionesTipo';
 import AccionesTipoFormacion from './components/AccionesTipoFormacion/AccionesTipoFormacion';
@@ -13,6 +14,7 @@ import Cofinanciadas from './components/Cofinanciadas/Cofinanciadas';
 import Colectivos from './components/Colectivos/Colectivos';
 import Convocatorias from './components/Convocatorias/Convocatorias';
 import DGeografica from './components/DGeografica/DGeografica';
+import Discapacidad from './components/Discapacidad/Discapacidad';
 import Docentes from './components/Docentes/Docentes';
 import Edades from './components/Edades/Edades';
 import Empresas from './components/Empresas/Empresas';
@@ -39,9 +41,6 @@ import TitulacionesFam from './components/TitulacionesFam/TitulacionesFam';
 import TitulacionesNivel from './components/TitulacionesNivel/TitulacionesNivel';
 import TitulacionesTipo from './components/TitulacionesTipo/TitulacionesTipo';
 import VMenu from './components/VMenu';
-//import { getRolesUser } from './includes/LiferayFunctions';
-import { Liferay } from './common/services/liferay/liferay';
-import Discapacidad from './components/Discapacidad/Discapacidad';
 import { ProtectRoute } from './includes/ProtectRoute';
 
 const Application = () => {
@@ -53,6 +52,8 @@ const Application = () => {
     useEffect(()=>{
         Liferay.Service('/role/get-user-roles',  { userId: Liferay.ThemeDisplay.getUserId()},response => {
               var roles = [];
+              console.log("recibidos los roles");
+              console.debug(response);
               if (response !== undefined  && response !== null) {
                   response.forEach(function(e){
                       roles.push(e.name); // or e.roleId
@@ -82,8 +83,8 @@ const Application = () => {
                                         <Route path='/titnivel'             element={<ProtectRoute isAllowed={true} redirectTo={url}> <TitulacionesNivel /> </ProtectRoute> } />
                                         <Route path='/tittipo'              element={<ProtectRoute isAllowed={true} redirectTo={url}><TitulacionesTipo /></ProtectRoute> } />
                                         <Route path='/titulaciones'         element={<ProtectRoute isAllowed={true} redirectTo={url}><Titulaciones /></ProtectRoute> } />
-                                        <Route path='/docente/:id'          element={<ProtectRoute isAllowed={true} redirectTo={url}><Docentes /></ProtectRoute> } />
-                                        <Route path='/docentes'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Docentes /></ProtectRoute> } />
+                                        <Route path='/docente/:id'          element={<ProtectRoute isAllowed={true} redirectTo={url}><Docentes user={user} /></ProtectRoute> } />
+                                        <Route path='/docentes'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Docentes user={user} /></ProtectRoute> } />
                                         <Route path='/colectivos'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Colectivos /></ProtectRoute> } />
                                         <Route path='/provincias'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Provincias /></ProtectRoute> } />
                                         <Route path='/cnaes'                element={<ProtectRoute isAllowed={true} redirectTo={url}><Cnaes /></ProtectRoute> } />
@@ -97,16 +98,16 @@ const Application = () => {
                                         <Route path='/cofinanciadas'        element={<ProtectRoute isAllowed={true} redirectTo={url}><Cofinanciadas /></ProtectRoute> } />
                                         <Route path='/tecnicos'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Tecnicos /></ProtectRoute> } />
                                         <Route path='/convocatorias'        element={<ProtectRoute isAllowed={true} redirectTo={url}><Convocatorias /></ProtectRoute> } />
-                                        <Route path='/proyecto/:id'         element={<ProtectRoute isAllowed={true} redirectTo={url}><Proyectos /></ProtectRoute> } />
+                                        <Route path='/proyecto/:id'         element={<ProtectRoute isAllowed={true} redirectTo={url}><Proyectos user={user} /></ProtectRoute> } />
                                         <Route path='/ambitos'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Ambitos /></ProtectRoute> } />
                                         <Route path='/participante/:id'     element={<ProtectRoute isAllowed={true} redirectTo={url}><Participantes /></ProtectRoute> } />
                                         <Route path='/participantes'        element={<ProtectRoute isAllowed={true} redirectTo={url}><Participantes /></ProtectRoute> } />
                                         <Route path='/localidades'          element={<ProtectRoute isAllowed={true} redirectTo={url}><Localidades /></ProtectRoute> } />
                                         <Route path='/tiposvia'             element={<ProtectRoute isAllowed={true} redirectTo={url}><TiposVia /></ProtectRoute> } />
                                         <Route path='/tipocontrato'         element={<ProtectRoute isAllowed={true} redirectTo={url}><TipoContrato /></ProtectRoute> } />
-                                        <Route path='/empresa/:id'          element={<ProtectRoute isAllowed={true} redirectTo={url}><Empresas /></ProtectRoute> } />
-                                        <Route path='/empresas'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Empresas /></ProtectRoute> } />
-                                        <Route path='/oferta/:id'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Ofertas /></ProtectRoute> } />
+                                        <Route path='/empresa/:id'          element={<ProtectRoute isAllowed={true} redirectTo={url}><Empresas user={user} /></ProtectRoute> } />
+                                        <Route path='/empresas'             element={<ProtectRoute isAllowed={true} redirectTo={url}><Empresas user={user} /></ProtectRoute> } />
+                                        <Route path='/oferta/:id'           element={<ProtectRoute isAllowed={true} redirectTo={url}><Ofertas user={user} /></ProtectRoute> } />
                                         <Route path='/ofertas'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Ofertas user={user} /></ProtectRoute> } />
                                         <Route path='/edades'               element={<ProtectRoute isAllowed={true} redirectTo={url}><Edades /></ProtectRoute> } />
                                         <Route path='/carnets'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Carnets /></ProtectRoute> } />
@@ -120,7 +121,7 @@ const Application = () => {
                                         <Route path='/lugares'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Lugares /></ProtectRoute> } />
                                         <Route path='AccionesTipoFormacion' element={<ProtectRoute isAllowed={true} redirectTo={url}><AccionesTipoFormacion /></ProtectRoute> } />
                                         <Route path='/login'                element={<ProtectRoute isAllowed={true} redirectTo={url}><Login /></ProtectRoute> } />
-                                        <Route path='/proyectos'            element={<ProtectRoute isAllowed={allow} redirectTo={url}><Proyectos /> </ProtectRoute> } />
+                                        <Route path='/proyectos'            element={<ProtectRoute isAllowed={allow} redirectTo={url}><Proyectos user={user} /> </ProtectRoute> } />
                                         <Route path='/citas'                element={<ProtectRoute isAllowed={allow} redirectTo={url}><Citas /> </ProtectRoute> } />
                                         <Route path='/discapacidad'         element={<ProtectRoute isAllowed={allow} redirectTo={url}><Discapacidad /> </ProtectRoute> } />
                                     </Routes>

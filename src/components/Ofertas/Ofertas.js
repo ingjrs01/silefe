@@ -44,10 +44,7 @@ const Ofertas = ({user}) => {
             options: {}
         }
         fetchAPIData('/silefe.ofertahistory/get-oferta-history-by-oferta-id', prequest, referer).then(response => {
-            console.log("recibidos los datos del histórico:");
-            console.debug(response);
             const respuesta = response.data.map(item => ({...item,
-                //user: item.userId,
                 date: toDate(item.date) + " " + toHours(item.date),
             }));
             historicoHandle({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages});
@@ -57,7 +54,6 @@ const Ofertas = ({user}) => {
     const beforeEdit = (item) => {
         const s = (item == undefined || item == null) ? items.arr.filter(item => item.checked).map(i => { return i.id })[0] : item.ofertaId;
         loadCandidatosOferta(s);
-        console.log("Voy desde beforeEdit");
         loadHistory(item.id);
     }
 
@@ -263,7 +259,7 @@ const Ofertas = ({user}) => {
             }
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: datatmp });
         }).catch(error => {
-            console.log("error");
+            console.error("error");
             console.debug(error);
         });
     }
@@ -295,6 +291,15 @@ const Ofertas = ({user}) => {
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
+    const loadCentros = (empresaId) => {
+        console.log("Estoy en loadCentros: " + empresaId);
+        fetchAPIData('/silefe.empresacentros/filter-by-empresa', { empresaId: empresaId }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.empresaCentrosId, label: obj.nombre } })];
+            itemsHandle({type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: "centroId", options: opts });
+            //form.fields.centroId.options = opts;
+        });
+    }    
+
     const initForm = () => {
         // inicializo participantes: 
         //participantesHandler({ type: PARTICIPANTE_ACTIONS.START });
@@ -308,16 +313,14 @@ const Ofertas = ({user}) => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.razonSocial } })];
             form.fields.empresaId.options = opts;
         });
-        fetchAPIData('/silefe.empresacentros/filter-by-empresa', { empresaId: 1 }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.empresaCentrosId, label: obj.nombre } })];
-            form.fields.centroId.options = opts;
-        });
+        // TODO: ver si cargarlo aqui, o sacarlo directamente: 
+        //loadCentros(); 
         fetchAPIData('/silefe.proyecto/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.proyectoId.options = opts;
         }).catch((error) => {
-            console.log("hay errores");
-            console.log(error);
+            console.error("hay errores");
+            console.error(error);
         });
         // consulto los cno's
         fetchAPIData('/silefe.cno/all', { lang: getLanguageId() }, referer).then(response => {
@@ -332,8 +335,6 @@ const Ofertas = ({user}) => {
         // cargamos los tipos de contrato
         fetchAPIData('/silefe.tipocontrato/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
-            console.log("tipos contrato:");
-            console.debug(opts);
             form.fields.tipoContratoId.options = opts;
         });
         // cargamos los candidatos: 
@@ -408,10 +409,17 @@ const Ofertas = ({user}) => {
 
     useEffect(()=> {
         if (items !== undefined) {
-            console.log("voy desde useEffect");
             loadHistory(items.item.id);
         }
-    }, [historico.pagination.page])
+    }, [historico.pagination.page]);
+
+    useEffect(()=>{
+        console.log("modificando las opcioens de la empresa");        
+        if (items !== undefined && items.item.empresaId > 0) {
+            console.debug(items);
+            loadCentros(items.item.empresaId);
+        }
+    },[items.item.empresaId]);
 
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
