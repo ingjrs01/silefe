@@ -2,7 +2,7 @@ import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { url_referer } from '../../includes/LiferayFunctions';
-import { deleteAPI, fetchAPIData } from "../../includes/apifunctions";
+import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
@@ -116,7 +116,27 @@ const Convocatorias = () => {
 
     }
 
-    const downloadFile = async() => {
+    const downloadFile = async () => {
+        const reader = new FileReader();
+        reader.onload = async ({ target }) => {
+            //const Liferay = window.Liferay;            
+            const pdata = {
+                filedata: target.result.toString('base64')
+            }
+            const endpoint = '/silefe.convocatoria/get-file';
+            const { status, error } = await saveAPI(endpoint, pdata, referer);
+            await console.log(status);
+
+            
+        }
+        //reader.readAsText(file);
+        reader.readAsBinaryString(file);
+        console.log("leído en binario");
+
+    }
+
+
+    const downloadFile2 = async() => {
         console.log("downloadFile");
         console.log("viendo como enviar un document a al document library2");
 
@@ -145,7 +165,7 @@ const Convocatorias = () => {
                 }
                 );        
         }
-        //reader.readAsText(file);       
+        //reader.readAsText(file);
         reader.readAsBinaryString(file);
         console.log("leído en binario");
     }
