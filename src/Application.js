@@ -43,7 +43,7 @@ import VMenu from './components/VMenu';
 import { ProtectRoute } from './includes/ProtectRoute';
 
 const Application = () => {
-    const url = "/home";
+    const url = "/";
     const allow = true;
     const [user, setUser] = useState({userId: 0, roles: []});
     
@@ -51,6 +51,7 @@ const Application = () => {
         Liferay.Service('/role/get-user-roles',  { userId: Liferay.ThemeDisplay.getUserId()},response => {
               var roles = [];
               if (response !== 'undefined'  && response !== null) {
+                  console.debug(response);
                   response.forEach(function(e){
                       roles.push(e.name);
                   });  
@@ -120,6 +121,7 @@ const Application = () => {
                                         <Route path='/proyectos'            element={<ProtectRoute isAllowed={allow} redirectTo={url}><Proyectos user={user} /> </ProtectRoute> } />
                                         <Route path='/citas'                element={<ProtectRoute isAllowed={allow} redirectTo={url}><Citas /> </ProtectRoute> } />
                                         <Route path='/discapacidad'         element={<ProtectRoute isAllowed={allow} redirectTo={url}><Discapacidad /> </ProtectRoute> } />
+                                        <Route path='/tecnicos'             element={<ProtectRoute isAllowed={allow} redirectTo={url}><Tecnicos /> </ProtectRoute> } />
                                     </Routes>
                                 </div>
                             </div>

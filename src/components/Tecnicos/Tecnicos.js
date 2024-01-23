@@ -2,8 +2,8 @@ import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
-import { getAuthToken, getUserId, url_api, url_referer } from "../../includes/LiferayFunctions";
-import { deleteAPI, saveAPI } from '../../includes/apifunctions.js';
+import { getUserId, url_referer } from "../../includes/LiferayFunctions";
+import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
 import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
@@ -57,23 +57,28 @@ const Tecnicos = () => {
 
     const handleSave = async () => {
         const postdata = {
-            colectivoId: items.item.id,
-            descripcion: items.item.descripcion,
-            userId: getUserId(),
+            tecnicoId: items.item.id,
+            obj: {
+                ...items.item,
+                tecnicoId: items.item.id,
+                userId: getUserId(),
+                status: items.status,
+            },
         }
+        console.log("handleSave");
+        console.debug(postdata);
 
-        let endpoint = '/silefe.colectivo/save-colectivo';
+        let endpoint = '/silefe.tecnico/save-tecnico';
         if (items.status === 'new')
-            endpoint = '/silefe.colectivo/add-colectivo';
+            endpoint = '/silefe.tecnico/add-tecnico';
 
         let { status, error } = await saveAPI(endpoint, postdata, referer);
         if (status) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
             fetchData();
         }
-        else {
-            setToastItems([...toastItems, { title: Liferay.Language.get("Error"), type: "danger", text: Errors[error] }]);
-        }
+        else 
+            setToastItems([...toastItems, { title: Liferay.Language.get("Error"), type: "danger", text: Errors[error] }]);        
     }
 
     const confirmDelete = async () => {
@@ -99,70 +104,58 @@ const Tecnicos = () => {
     //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
 
-
     const fetchData = async () => {
-        console.log("Entrada de tecnicos");
-        //const endpoint = "/user/get-user-group-users";
-        //userGroupId: 52272
-        const endpoint = '/silefe.tecnico/filter';
-
         const postdata = {
             pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
             options: {
                 filters: [
-                    { name: "descripcion", value: '' },
+                    { name: "firstname", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
                 ],
-                order: items.order
-            },
-        };
+                order: items.order,
+            }
+        }
 
-        const auth = getAuthToken();
-        const response = fetch(url_api, {
-            "credentials": "include",
-            "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                "Accept": "*/*",
-                "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                "contenttype": "undefined",
-                "x-csrf-token": auth,
-                "Content-Type": "text/plain;charset=UTF-8",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin"
-            },
-            "referrer": `\"${referer}\"`,
-            "body": `{\"${endpoint}\":${JSON.stringify(postdata)}}`,
-            "method": "POST",
-            "mode": "cors"
-        }).then(response => {
-            console.log("peticion a tenicos");
-            console.log(response);
-        });
-
-        //let {data,totalPages, page} = await fetchAPIData(endpoint, postdata,referer);
-        //console.log("los datos");
-        //console.log(data);
-
-        console.log("Hecha la consulta");
-        //console.log(response);
-        //let data = await response.json();
-        //console.debug(data);
-
-        //let { data, totalPages, page, error } = await JSON.parse(await response.json());
-        //let totalPages = 1;
-        //let page = 0;
-        //return {data, error,totalPages, page}
-        // TODO: ver como resolver esto
-        //const tmp = await data.map(i => { return ({ id: i.userId, firstName: i.firstName, lastName: i.lastName, emailAddress: i.emailAddress, checked: false }) });
-        //await console.log("los datos procesados");
-        //await console.log(tmp);
-        //await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: 99, page: page });
-
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.tecnico/filter', postdata, referer);
+        await console.log("recibiendo datos de los tecnicos");
+        await console.debug(data);
+        const tmp = await data.map(i => { return ({ ...i,tecnicoUserId: i.id, checked: false }) });
+        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
+    const initForm = () => {
+        console.log("initForm");
+        const url = '/silefe.tecnico/get-users';
+        fetchAPIData(url, { }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get("Nuevo") }, ...response.data.map(obj => { return { value: obj.userId, label: obj.firstName } })];
+            form.fields.tecnicoUserId.options = opts;
+        });
+    }
+
+    const loadUserData = async (userId) => {
+        const {data } = await fetchAPIData('/silefe.tecnico/get-user', { userId: userId }, referer);
+        await itemsHandle({type: ITEMS_ACTIONS.SETCOMPLETEITEM, item: data});
+    }
+
+    useEffect(()=>{
+        if (items.status !== 'undefined' && items.status === 'new') {
+            form.fields.tecnicoUserId.enabled= true;
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+        }
+        if (items.status !== 'undefined' && items.status === 'edit') {
+            form.fields.tecnicoUserId.enabled= false;
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+        }
+    }, [items.status]);
+
+    useEffect(()=>{
+        console.log("han cambiado el usuario addunto");
+        if (items.item.tecnicoUserId !== undefined && items.item.tecnicoUserId > 0)
+            loadUserData(items.item.tecnicoUserId);
+    },[items.item.tecnicoUserId]);
 
     useEffect(() => {
         if (!isInitialized.current) {
+            initForm();
             fetchData();
             isInitialized.current = true;
         } else {

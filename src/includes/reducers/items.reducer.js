@@ -30,6 +30,7 @@ export const ITEMS_ACTIONS = {
     HISTORY: 28,
     SET_ACTIVETAB: 29,
     SETUNCOLATERAL: 30,
+    SETCOMPLETEITEM: 31,
 }
 
 export const initialState = {
@@ -182,6 +183,19 @@ export const red_items = (state, action ) => {
                 ...state,
                 item: {...state.item,[action.fieldname]:action.value}
             }
+
+        case ITEMS_ACTIONS.SETCOMPLETEITEM:
+            //console.log("complete");
+            //console.debug()
+            //if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
+            //    state.fields.fields[action.fieldname].change(action.value,action.fieldname);
+            //}
+            return {
+                ...state,
+                item: {...state.item,
+                    ...action.item,
+                }
+            }    
             
         case ITEMS_ACTIONS.SETUNCOLATERAL:
             return {

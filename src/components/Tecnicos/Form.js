@@ -3,7 +3,7 @@ import { GenericForm } from "../../includes/GenericForm";
 
 export const form = {
     ...GenericForm,
-    title: Liferay.Language.get('Tecnicos'),
+    title: Liferay.Language.get('Técnicos'),
     fields: {
         id: {
             key: 1,
@@ -13,6 +13,17 @@ export const form = {
             value: "lalala",
             placeholder: "Identifier",
             conditions: ["number"]
+        },
+        tecnicoUserId: {
+            key: 2,
+            type: "select",
+            label: Liferay.Language.get('Usuario'),
+            name: "tecnicoUserId",
+            value:"",
+            enabled:true,
+            options: [],
+            className: 'col-3',
+            change: ()=>{console.log("cambia el select");},
         },
         firstName: {
             key: 3,
@@ -41,12 +52,11 @@ export const form = {
             placeholder: Liferay.Language.get('Email'),
             conditions: ["text"]
         }
-
     },
     rows: [
         {
-            key: 9,
-            cols: ['id']
+            key: 8,
+            cols: ['tecnicoUserId']
         },
         {
             key: 7,
@@ -67,6 +77,16 @@ export const form = {
             columnTitle: Liferay.Language.get('Nombre'),
             columnType: "string",
             key: "c3",
+        },
+        lastName: {
+            columnTitle: Liferay.Language.get('Apellido'),
+            columnType: "string",
+            key: "c4",
+        },
+        emailAddress: {
+            columnTitle: Liferay.Language.get('email'),
+            columnType: "string",
+            key: "c4",
         },
     },
     searchFields: ['firstName'],
