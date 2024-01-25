@@ -24,7 +24,6 @@ const Tecnicos = () => {
     const referer = `${url_referer}/tecnicos`;
 
     const loadCsv = () => {
-        console.log("Cargando un csv");
         itemsHandle({ type: ITEMS_ACTIONS.LOAD });
     }
 
@@ -65,8 +64,6 @@ const Tecnicos = () => {
                 status: items.status,
             },
         }
-        console.log("handleSave");
-        console.debug(postdata);
 
         let endpoint = '/silefe.tecnico/save-tecnico';
         if (items.status === 'new')
@@ -116,20 +113,29 @@ const Tecnicos = () => {
         }
 
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.tecnico/filter', postdata, referer);
-        await console.log("recibiendo datos de los tecnicos");
-        await console.debug(data);
         const tmp = await data.map(i => { return ({ ...i,tecnicoUserId: i.id, checked: false }) });
         await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
     const initForm = () => {
         console.log("initForm");
+        const postdata = {            
+            options: {
+                excludes: items.arr.map(i => i.id)
+            }
+        }
         const url = '/silefe.tecnico/get-users';
-        fetchAPIData(url, { }, referer).then(response => {
+        fetchAPIData(url, postdata, referer).then(response => {
             const opts = [{ value: "0", label: Liferay.Language.get("Nuevo") }, ...response.data.map(obj => { return { value: obj.userId, label: obj.firstName } })];
             form.fields.tecnicoUserId.options = opts;
         });
     }
+
+    useEffect(()=>{
+        console.log("han cambiado los datos, y pido los tecnicos sin asignar");
+        if (items !== 'undefined')
+            initForm();
+    },[items.arr]);
 
     const loadUserData = async (userId) => {
         const {data } = await fetchAPIData('/silefe.tecnico/get-user', { userId: userId }, referer);
@@ -148,14 +154,13 @@ const Tecnicos = () => {
     }, [items.status]);
 
     useEffect(()=>{
-        console.log("han cambiado el usuario addunto");
         if (items.item.tecnicoUserId !== undefined && items.item.tecnicoUserId > 0)
             loadUserData(items.item.tecnicoUserId);
     },[items.item.tecnicoUserId]);
 
     useEffect(() => {
         if (!isInitialized.current) {
-            initForm();
+            //initForm();
             fetchData();
             isInitialized.current = true;
         } else {

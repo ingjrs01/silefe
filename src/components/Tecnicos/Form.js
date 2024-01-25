@@ -34,6 +34,16 @@ export const form = {
             placeholder: Liferay.Language.get('Nombre'),
             conditions: ["text"]
         },
+        username: {
+            key: 6,
+            type: "text",
+            label: Liferay.Language.get('Usuario'),
+            name: "username",
+            value: "",
+            placeholder: Liferay.Language.get('username'),
+            conditions: ["text"],
+            className: 'col-3',
+        },
         lastName: {
             key: 4,
             type: "text",
@@ -56,7 +66,7 @@ export const form = {
     rows: [
         {
             key: 8,
-            cols: ['tecnicoUserId']
+            cols: ['tecnicoUserId' ,'username']
         },
         {
             key: 7,
@@ -86,7 +96,7 @@ export const form = {
         emailAddress: {
             columnTitle: Liferay.Language.get('email'),
             columnType: "string",
-            key: "c4",
+            key: "c5",
         },
     },
     searchFields: ['firstName'],

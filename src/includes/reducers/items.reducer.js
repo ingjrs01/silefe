@@ -111,6 +111,7 @@ let tmp = []
 
 export const red_items = (state, action ) => {
     let tmp_item = {};
+    let tt = {};
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS:            
             return {
@@ -265,7 +266,7 @@ export const red_items = (state, action ) => {
             Object.keys(state.fields.fields).forEach(fila => {
                 switch (state.fields.fields[fila].type) {
                     case 'multilang':
-                        let tt = {};
+                        tt = {};
                         state.fields.languages.forEach(el => {tt[el]=""});
                         tmp_item[fila] = tt;
                         break;

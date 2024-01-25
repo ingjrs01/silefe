@@ -24,6 +24,7 @@ export const form = {
             placeholder:"",
             conditions: ["text"],
             className: "col-3",
+            enabled: false
         },
         nombre: {
             key:2,
