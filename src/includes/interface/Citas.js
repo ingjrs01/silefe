@@ -3,7 +3,6 @@ import React from "react";
 //import { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
 //import ClayIcon from '@clayui/icon';
 //import ClayUpperToolbar from '@clayui/upper-toolbar';
-//import { MiniPaginator } from "./MiniPaginator";
 import ClayCard from "@clayui/card";
 import { ClayCheckbox } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
@@ -16,9 +15,14 @@ import { Select } from '../interface/fields/Select';
 import { Textarea } from '../interface/fields/Textarea';
 import { Textinput } from '../interface/fields/Textinput';
 import { CITAS_ACTIONS, CITAS_STATES } from '../reducers/citas.reducer';
+import { MiniPaginator } from "./MiniPaginator";
 
 const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
     const lang = getLanguageId();
+
+    const changePageSearch = (page) => {
+        handler({ type: CITAS_ACTIONS.SETPAGE, page: page });
+    }
 
     if (items === undefined || items.items.length < 1)
         return (
@@ -187,6 +191,10 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                             }
                         </ClayTable.Body>
                     </ClayTable>
+                    <MiniPaginator
+                        pagination={items.pagination}
+                        changePage={changePageSearch}
+                    />
                 </>
 
             }

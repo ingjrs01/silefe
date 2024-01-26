@@ -42,6 +42,31 @@ const Participantes = () => {
 
     const referer = `${url_referer}/participantes`;
 
+    const loadCitas = (participanteId) => {
+        const postcitas = {
+            participanteId: participanteId,
+            pagination: { page: citas.pagination.page, pageSize: 2 },
+            options: {
+                filters: [
+                ],
+            },
+        }
+
+        fetchAPIData('/silefe.cita/get-citas-participante', postcitas, referer).then(response => {
+            citasHandler({ type: CITAS_ACTIONS.LOAD, items: response.data.map(item=>({
+                ...item,
+                appointmentDate: toDate(item.appointmentDate),
+                appointmentHour: toHours(item.appointmentHour),
+                appointmentDateTime: toDate(item.appointmentDate) + " " + toHours(item.appointmentHour)
+            })), totalPages: 2, total: 3});
+        });
+    }
+
+    useEffect(() => {
+        if (items.item !== 'undefined') 
+            loadCitas(items.item.id);
+    }, [citas.pagination.page]);
+
     const beforeEdit = (item) => {
         //queryTitulaciones();
         fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: item.provinciaId }, referer).then(response => {
@@ -50,23 +75,7 @@ const Participantes = () => {
         });
         beforeFormacion(item.id);
         beforeExperiencia(item.id);
-        // Cargamos las citas: 
-        const postcitas = {
-            participanteId: item.id,
-            pagination: { page: 1, pageSize: 10 },
-            options: {
-                filters: [
-                ],
-            },
-        }
-        fetchAPIData('/silefe.cita/get-citas-participante', postcitas, referer).then(response => {
-            citasHandler({ type: CITAS_ACTIONS.LOAD, items: response.data.map(item=>({
-                ...item,
-                appointmentDate: toDate(item.appointmentDate),
-                appointmentHour: toHours(item.appointmentHour),
-                appointmentDateTime: toDate(item.appointmentDate) + " " + toHours(item.appointmentHour)
-            }))});
-        });
+        loadCitas(item.id);
 
         // TODO: Están buscando en que participa: 
         const postparticipaciones = {

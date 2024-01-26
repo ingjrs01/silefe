@@ -10,7 +10,8 @@ export const CITAS_ACTIONS = {
     SELECT_ITEM: 6,
     SETFORM: 7,
     VIEW: 8,
-    CLOSEVIEW: 9,    
+    CLOSEVIEW: 9,
+    SETPAGE: 10,
 }
 
 export const CITAS_STATES = {
@@ -24,6 +25,11 @@ export const initialState = {
     form: {
         title: "Citas",
     },
+    pagination: {
+        page: 0,
+        pageSize: 2,
+        totalPages: 1,
+    },
     status: CITAS_STATES.LIST,
 }
 
@@ -34,11 +40,14 @@ export const reducerCitas = (state=initialState, action ) => {
             ...initialState
         }
     case CITAS_ACTIONS.LOAD: 
-        console.log("cargando elementos");
-        console.debug(action.items);
         return {
             ...state, 
-            items: action.items
+            items: action.items,
+            pagination: {
+                ...state.pagination,
+                totalPages: action.totalPages, 
+                total: action.total,                
+            }
         }
     case CITAS_ACTIONS.SETFORM: 
         return {
@@ -69,6 +78,14 @@ export const reducerCitas = (state=initialState, action ) => {
             item: {
                 ...state.item,
                 [action.fieldname]: action.value
+            }
+        }
+    case CITAS_ACTIONS.SETPAGE: 
+        return {
+            ...state,
+            pagination: {
+                ...state.pagination,
+                page: action.page,
             }
         }
     }    

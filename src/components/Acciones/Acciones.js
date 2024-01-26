@@ -160,8 +160,6 @@ const Acciones = () => {
     }
 
     const beforeEdit = (item) => {
-        loadDocentesSearch();
-
         if (item.accionId != undefined && item.accionId > 0) {
             const accionId = item.accionId;
             ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
@@ -285,7 +283,7 @@ const Acciones = () => {
 
         const postdata = {
             pagination: {
-                page: docentes.paginationSearch.page,
+                page: (docentes.paginationSearch.page>0)?docentes.paginationSearch.page:0,
                 pageSize: docentes.paginationSearch.pageSize??4
             },
             options: {
