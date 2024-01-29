@@ -11,9 +11,10 @@ import { History } from '../../includes/interface/History';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
+import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
-import { formatDefaultEmail, formatDefaultPhone, toHours } from '../../includes/utils';
+import { formatDefaultEmail, formatDefaultPhone, toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import AccionesForm from "./AccionesForm";
 import { form as DocentesForm } from './DocentesForm';
@@ -23,13 +24,14 @@ import { form } from './Form';
 import { form as ParticipantesForm } from './ParticipantesForm';
 //import Papa from "papaparse";
 
-const Acciones = () => {
+const Acciones = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [docentes, docentesHandler] = useReducer(reducerSubtable, iniState);
     const [participantes, participantesHandler] = useReducer(reducerSubtable, iniState);
     const [ejecucionT, ejecucionHandlerT] = useReducer(reducerEjecucion, iniEjecucion);
     const [ejecucionP, ejecucionHandlerP] = useReducer(reducerEjecucion, iniEjecucion);
     const [ejecucionG, ejecucionHandlerG] = useReducer(reducerEjecucion, iniEjecucion);
+    const [historico, handleHistorico]    = useReducer(reducerHistorico, iniHistorico );
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -160,11 +162,14 @@ const Acciones = () => {
     }
 
     const beforeEdit = (item) => {
-        if (item.accionId != undefined && item.accionId > 0) {
+        if (item.accionId != undefined && item.accionId > 0) {            
             const accionId = item.accionId;
+            loadHistory(accionId);
+            console.log("vamos a ver");
             ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
             ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
             ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
+            console.log("ejecutado");
 
             loadDocentes(accionId);
             loadParticipantes(accionId);
@@ -376,7 +381,34 @@ const Acciones = () => {
         return { ...data };
     }
 
-    const loadHistory = () => fetchAPIData('/silefe.accionhistory/get-history', { accionId: items.item.accionId }, referer).then(response => itemsHandle({ type: ITEMS_ACTIONS.HISTORY, data: response.data }));
+    const loadHistory = (id) => {
+        console.log("loadHistory");
+        console.log(id);
+
+        const prequest = {
+            accionId: id,
+            pagination: {
+                page: historico.pagination.page,
+                pageSize: 5,
+            },
+            options: {}
+        }
+        fetchAPIData('/silefe.accionhistory/get-history', prequest, referer).then(response => {
+            //itemsHandle({ type: ITEMS_ACTIONS.HISTORY, data: response.data });
+            console.log("se está cargando el historico");
+            console.debug(response);
+            const respuesta = response.data.map(item => ({...item,
+                date: toDate(item.date) + " " + toHours(item.date),
+            }));
+            console.debug(respuesta);
+            handleHistorico({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.totalItems, totalPages: response.totalPages});
+        });
+    } 
+
+    useEffect( () => {
+        if (items.item !== 'undefined' && items.item.id > 0)
+            loadHistory(items.item.id);
+    }, [historico.pagination.page] );
 
     useEffect(() => {
         if (ejecucionT.item.lugarId != 'undefined' && ejecucionT.item.lugarId > 0)
@@ -443,8 +475,9 @@ const Acciones = () => {
         loadDocentesSearch()
     }, [docentes.paginationSearch.page, docentes.search])
 
+
     if (!items)
-        return (<div>Liferay.Language.get('Cargando')</div>)
+        return (<div>{Liferay.Language.get('Cargando')}</div>)
 
     return (
         <>
@@ -473,6 +506,9 @@ const Acciones = () => {
                     ejecucion={[ejecucionT, ejecucionP, ejecucionG]}
                     ejecucionHandler={[ejecucionHandlerT, ejecucionHandlerP, ejecucionHandlerG]}
                     loadHistory={loadHistory}
+                    historico={historico}
+                    handleHistorico={handleHistorico}
+                    user={user}
                 />
             }
             {

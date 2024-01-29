@@ -10,19 +10,23 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, locales, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import DoubleTable from '../../includes/interface/DoubleTable';
+import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import { Formacion } from './Formacion';
 
-const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler, loadHistory }) => {
+
+const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler, loadHistory, historico, handleHistorico, user }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
   return (
     <div className="container">
     <ClayCard>
       <ClayCard.Body>
+        {/*
         <ClayCard.Description displayType="title">
           {Liferay.Language.get("Acciones")}
         </ClayCard.Description>
+  */}
 
         <ClayCard.Description truncate={false} displayType="text">
           <ClayForm>
@@ -210,6 +214,64 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 </ClayForm.Group>
 
                 </div>
+
+                <div className="row">
+                  <ClayForm.Group className={'has-success  col-12'} key={"Group-estado"} >
+                    <label htmlFor="basicInput">{items.fields.fields['estadoId'].label}</label>
+                    <div className="input-group">
+                      <ClaySelect aria-label="Select Label"
+                        id={items.fields.fields['estadoId'].name}
+                        name={items.fields.fields['estadoId'].name}
+                        key={items.fields.fields['estadoId'].key}
+                        disabled={false}
+                        onChange={evt => {
+                          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                        }}
+                        value={items.item['estadoId']} >
+                        {items.fields.fields['estadoId'].options.map(item => (
+                          <ClaySelect.Option
+                            key={ "option-" + items.fields.fields['estadoId'] + item.value}
+                            label={item.label}
+                            value={item.value}
+                          />
+                        ))}
+                      </ClaySelect>
+                      <ClayButtonWithIcon
+                          aria-label={Liferay.Language.get("History")}
+                          spritemap={spritemap}
+                          symbol="time"
+                          title="historia"
+                          displayType="secondary"
+                          size="md"
+                          className='ml-1'
+                          onClick={()=> loadHistory()}
+                      />
+                    </div>
+
+                  </ClayForm.Group>
+                  </div>
+                  <div className="row">
+
+                    <ClayForm.Group className={'has-success  col'} key={"Group-objservaciones"} >
+                      <label htmlFor="basicInputText">{items.fields.fields['observaciones'].label}</label>
+                      <ClayInput
+                        component="textarea"
+                        id={items.fields.fields['observaciones'].name}
+                        name={items.fields.fields['observaciones'].name}
+                        placeholder={Liferay.Language.get("observaciones")}
+                        type="text"
+                        onChange={evt => {
+                          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
+                        }}
+                        value={items.item['observaciones']}
+                        />
+                    </ClayForm.Group>
+
+                </div>
+
+
+
+
                 <div className="row">
                 <ClayForm.Group className={'has-success'} key={"Group-4"} >
                 </ClayForm.Group>
@@ -431,62 +493,12 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 </div>
                 
               </ClayTabs.TabPane>
-              {  /*  lalala */}
               <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-6"}>
-                <h3>{"ESTADO"}</h3>
-                <div className="row">
-                  <ClayForm.Group className={'has-success  col-12'} key={"Group-estado"} >
-                    <label htmlFor="basicInput">{items.fields.fields['estadoId'].label}</label>
-                    <div className="input-group">
-                      <ClaySelect aria-label="Select Label"
-                        id={items.fields.fields['estadoId'].name}
-                        name={items.fields.fields['estadoId'].name}
-                        key={items.fields.fields['estadoId'].key}
-                        disabled={false}
-                        onChange={evt => {
-                          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
-                        }}
-                        value={items.item['estadoId']} >
-                        {items.fields.fields['estadoId'].options.map(item => (
-                          <ClaySelect.Option
-                            key={ "option-" + items.fields.fields['estadoId'] + item.value}
-                            label={item.label}
-                            value={item.value}
-                          />
-                        ))}
-                      </ClaySelect>
-                      <ClayButtonWithIcon
-                          aria-label={Liferay.Language.get("History")}
-                          spritemap={spritemap}
-                          symbol="time"
-                          title="historia"
-                          displayType="secondary"
-                          size="md"
-                          className='ml-1'
-                          onClick={()=> loadHistory()}
-                      />
-                    </div>
-
-                  </ClayForm.Group>
-                  </div>
-                  <div className="row">
-
-                    <ClayForm.Group className={'has-success  col'} key={"Group-objservaciones"} >
-                      <label htmlFor="basicInputText">{items.fields.fields['observaciones'].label}</label>
-                      <ClayInput
-                        component="textarea"
-                        id={items.fields.fields['observaciones'].name}
-                        name={items.fields.fields['observaciones'].name}
-                        placeholder={Liferay.Language.get("observaciones")}
-                        type="text"
-                        onChange={evt => {
-                          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value });
-                        }}
-                        value={items.item['observaciones']}
-                        />
-                    </ClayForm.Group>
-
-                </div>
+                <h3>{Liferay.Language.get("Histórico")}</h3>
+                <FHistoryEntity
+                  data={historico}
+                  handler={handleHistorico}
+                />
                 
               </ClayTabs.TabPane>
 

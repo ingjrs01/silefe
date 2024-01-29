@@ -72,6 +72,7 @@ export const iniState = {
 let tmpar= [];
 
 export const reducerEjecucion = (state, action ) => {
+    console.log("reducer: " + action.type);
     switch (action.type) {
         case EJECUCION_ACTIONS.SETFORM:
             return {
