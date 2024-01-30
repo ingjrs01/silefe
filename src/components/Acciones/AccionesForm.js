@@ -62,12 +62,15 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
               >
                 <a onClick={() => itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 4})}>  { Liferay.Language.get("Elearning")}  </a>
               </ClayTabs.Item>
-              <ClayTabs.Item
-                key={"tab-item6"}
-                innerProps={{ "aria-controls": "tabpanel-5" }}
-              >
-                <a onClick={() => itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 5})}>  { Liferay.Language.get("Estado")}  </a>
-              </ClayTabs.Item>
+              {
+                user.roles.includes("Administrator") &&
+                <ClayTabs.Item
+                  key={"tab-item6"}
+                  innerProps={{ "aria-controls": "tabpanel-5" }}
+                >
+                  <a onClick={() => itemsHandle({type: ITEMS_ACTIONS.SET_ACTIVETAB, active: 5})}>  { Liferay.Language.get("Histórico")}  </a>
+                </ClayTabs.Item>
+              }
 
             </ClayTabs>
 

@@ -385,9 +385,13 @@ export const form = {
             type: "other",
             componentName: "Participaciones",
             name: "Participaciones",
-        },        
-
-
+        },
+        historico: {
+            key: 40,
+            type: "other",
+            componentName: "Historico",
+            name: "Historico",
+        },
     },
     tabActive:0,
     tabs : [
@@ -503,6 +507,18 @@ export const form = {
                 {
                     key:501,
                     cols: ['participaciones']
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Histórico"),
+            key:7,
+            ariacontrols: "tabpanel-7",
+            admin: true,
+            rows: [
+                {
+                    key:601,
+                    cols: ['historico']
                 },
             ]
         },

@@ -97,8 +97,8 @@ const Application = () => {
                                         <Route path='/convocatorias'        element={<ProtectRoute isAllowed={true} redirectTo={url}><Convocatorias /></ProtectRoute> } />
                                         <Route path='/proyecto/:id'         element={<ProtectRoute isAllowed={true} redirectTo={url}><Proyectos user={user} /></ProtectRoute> } />
                                         <Route path='/ambitos'              element={<ProtectRoute isAllowed={true} redirectTo={url}><Ambitos /></ProtectRoute> } />
-                                        <Route path='/participante/:id'     element={<ProtectRoute isAllowed={true} redirectTo={url}><Participantes /></ProtectRoute> } />
-                                        <Route path='/participantes'        element={<ProtectRoute isAllowed={true} redirectTo={url}><Participantes /></ProtectRoute> } />
+                                        <Route path='/participante/:id'     element={<ProtectRoute isAllowed={true} redirectTo={url}><Participantes user={user} /></ProtectRoute> } />
+                                        <Route path='/participantes'        element={<ProtectRoute isAllowed={true} redirectTo={url}><Participantes user={user} /></ProtectRoute> } />
                                         <Route path='/localidades'          element={<ProtectRoute isAllowed={true} redirectTo={url}><Localidades /></ProtectRoute> } />
                                         <Route path='/tiposvia'             element={<ProtectRoute isAllowed={true} redirectTo={url}><TiposVia /></ProtectRoute> } />
                                         <Route path='/tipocontrato'         element={<ProtectRoute isAllowed={true} redirectTo={url}><TipoContrato /></ProtectRoute> } />

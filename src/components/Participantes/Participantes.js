@@ -7,6 +7,7 @@ import { getAuthToken, getLanguageId, getUserId, url_api, url_referer } from '..
 import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
 import Citas from '../../includes/interface/Citas';
 import { FAvisos } from '../../includes/interface/FAvisos';
+import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
@@ -14,6 +15,7 @@ import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
 import { CITAS_ACTIONS, initialState as iniCitas, reducerCitas } from '../../includes/reducers/citas.reducer';
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
+import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import { TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
@@ -26,12 +28,13 @@ import { form as participacionesForm } from './ParticipacionesForm';
 import { TitulacionesRender } from './TitulacionesRender';
 
 
-const Participantes = () => {
+const Participantes = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, titsIni);
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, { items: [], deleted: [], item: {}, status: "list", participanteId: 0 });
     const [citas, citasHandler]            = useReducer(reducerCitas, iniCitas);
     const [participaciones, participacionesHandler] = useReducer (reducerSubtable, iniState); 
+    const [historico, handleHistorico] = useReducer(reducerHistorico, iniHistorico);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -41,6 +44,23 @@ const Participantes = () => {
     const navigate = useNavigate();
 
     const referer = `${url_referer}/participantes`;
+
+    const loadHistory = (id) => {
+        const post = {
+            participanteId: id,
+            pagination: {
+                page: historico.pagination.page,
+                pageSize: historico.pagination.pageSize??4,
+            },
+            options: {}
+        }
+    fetchAPIData('/silefe.participantehistory/get-participante-history-by-participante-id', post, referer).then(response => {
+        const respuesta = response.data.map( item => ({...item,
+            date: toDate(item.date) + " " + toHours(item.date),
+        }));
+        handleHistorico({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages});
+        });
+    }
 
     const loadCitas = (participanteId) => {
         const postcitas = {
@@ -73,6 +93,7 @@ const Participantes = () => {
             const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
         });
+        loadHistory(item.id);
         beforeFormacion(item.id);
         beforeExperiencia(item.id);
         loadCitas(item.id);
@@ -459,7 +480,13 @@ const Participantes = () => {
                 <Citas
                     items={participaciones}
                     handler={participacionesHandler}                     
+                />,
+            Historico: 
+                <FHistoryEntity 
+                    data={historico}
+                    handler={handleHistorico}
                 />
+
         }
     }
 
@@ -487,6 +514,7 @@ const Participantes = () => {
                     itemsHandle={itemsHandle}
                     items={items}
                     plugin={plugin}
+                    user={user}
                 />
             }
             {
