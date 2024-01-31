@@ -1,6 +1,5 @@
 import ClayIcon, { ClayIconSpriteContext } from '@clayui/icon';
 import React from "react";
-//import {ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from "../LiferayFunctions";
 import { ITEMS_ACTIONS } from "../reducers/items.reducer";
@@ -19,7 +18,6 @@ export const MgtToolbar = ({items, itemsHandle}) => {
                             </span>
                         </div>
                     </li>
-
                     {
                     items.order.map( x => (
                         <li className="tbar-item tbar-item-exand">
@@ -52,5 +50,4 @@ export const MgtToolbar = ({items, itemsHandle}) => {
         </nav>
         </ClayIconSpriteContext.Provider>
     )
-
 }

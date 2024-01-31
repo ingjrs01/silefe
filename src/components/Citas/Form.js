@@ -140,6 +140,13 @@ export const form = {
             placeholder:Liferay.Language.get('Comentarios'),
             conditions:["text"]
         },
+        participantInName: {
+            key:18,
+            type: "text",
+            label: "Participante",
+            name: "participantInName",
+            value:"",
+        },
     },
     rows: [
         {
@@ -174,6 +181,11 @@ export const form = {
             columnType: "string",
             key: "tc2",
         },
+        appointmentHour: {
+            columnTitle: Liferay.Language.get('Hora'),
+            columnType: "string",
+            key: "tc6",
+        },
         method: {
             columnTitle: Liferay.Language.get('Método'),
             columnType: "multilang",
@@ -189,6 +201,22 @@ export const form = {
             columnType: "string",
             key: "tc4",
         },
+        telefonoIn: {
+            columnTitle: Liferay.Language.get('Teléfono'),
+            columnType: "string",
+            key: "tc7",
+        },
+        emailIn: {
+            columnTitle: Liferay.Language.get('Email'),
+            columnType: "string",
+            key: "tc8",
+        },
+
     },
-    searchFields: ['appointmentDate'],
+    searchFields: [
+        'appointmentDate',
+        'methodId',
+        'participantInName',
+    ],
+    searchField: 'participantInName',
 };

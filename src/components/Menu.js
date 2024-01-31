@@ -48,21 +48,55 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                 </ClaySelect>
               </ClayToolbar.Item>
             }
-
-            {
-              (items.status == "list") &&
+            {             
+              (items.status == "list") && (items.fields.hasOwnProperty("fields")) && 
               <ClayToolbar.Item>
                 <ClayInput.Group>
                   <ClayInput.GroupItem>
-                    <ClayInput
-                      className="form-contrl-inline"
-                      placeholder={Liferay.Language.get("Texto a buscar")}
-                      onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}
-                    />
+                    {items.fields.fields[items.fields.searchField].type === "select" &&
+                      <>
+                        {
+                          <ClaySelect aria-label="Select Label"
+                            id={"searchBottonField"}
+                            name={"searchBottonField"}
+                            key={"searchBottonField"}
+                            value={items.search}
+                            onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}>
+                            {items.fields.fields[items.fields.searchField].options.map(field => (
+                              <ClaySelect.Option
+                                key={field.key}
+                                label={field.label}
+                                value={field.value}
+                              />
+                            ))}
+                          </ClaySelect>
+                        }
+                      </>
+                    }
+                    {
+                      items.fields.fields[items.fields.searchField].type === "text" &&
+                      <ClayInput
+                        placeholder={"Buscar..."}
+                        type="text"
+                        name={"searchBottonValue"}
+                        key={"searchBottonValue"}
+                        value={items.fields.search}
+                        onChange={e => itemsHandle({ type: 1, value: e.target.value}) }>
+                      </ClayInput>
+                    }
                   </ClayInput.GroupItem>
+                    <ClayInput.GroupItem>
+                        <ClayButtonWithIcon
+                            aria-label={Liferay.Language.get("Buscar")}
+                            spritemap={spritemap}
+                            symbol="search-plus"
+                            title="Search"
+                            onClick={() => itemsHandle({ type: ITEMS_ACTIONS.ADD_FILTER, name: "clase", value: "lalala" })}
+                        />
+                    </ClayInput.GroupItem>
                 </ClayInput.Group>
               </ClayToolbar.Item>
-            }
+              }
 
             <ClayToolbar.Item>
               <ClayToolbar.Section>

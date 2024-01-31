@@ -323,6 +323,10 @@ export const red_items = (state, action ) => {
         case ITEMS_ACTIONS.SEARCH:
             return {
                 ...state,
+                fields: {
+                    ...state.fields,
+                    search: action.value,
+                },
                 search: action.value,
                 pagination: {...state.pagination, page: 0},
                 load: (state.load + 1) % 17
@@ -432,6 +436,10 @@ export const red_items = (state, action ) => {
         case ITEMS_ACTIONS.SET_SEARCHFIELD:
             return {
                 ...state,
+                fields: {
+                    ...state.fields,
+                    searchField: action.value,
+                },
                 searchField: action.value,
             }
         case ITEMS_ACTIONS.HISTORY:

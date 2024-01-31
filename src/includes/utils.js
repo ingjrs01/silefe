@@ -83,6 +83,9 @@ export const formatCif = (dni_limpio) => {
 }
 
 export const formatDefaultPhone = (inputphones) => {
+  if (typeof (inputphones) === "string" && inputphones.length == 0)
+    return "";
+
   const phones = (typeof (inputphones) === "string") ? JSON.parse(inputphones) : inputphones;
   if (phones === undefined || phones.length == 0)
     return "";
@@ -90,7 +93,6 @@ export const formatDefaultPhone = (inputphones) => {
   const seleccionado = phones.filter(i => i.default);
   if (seleccionado.length > 0)
     return seleccionado[0].value;
-
   return phones[0].value;
 }
 

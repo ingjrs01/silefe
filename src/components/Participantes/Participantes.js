@@ -65,7 +65,10 @@ const Participantes = ({user}) => {
     const loadCitas = (participanteId) => {
         const postcitas = {
             participanteId: participanteId,
-            pagination: { page: citas.pagination.page, pageSize: 2 },
+            pagination: { 
+                page: citas.pagination.page, 
+                pageSize: citas.pagination.pageSize??4, 
+            },
             options: {
                 filters: [
                 ],
@@ -88,7 +91,6 @@ const Participantes = ({user}) => {
     }, [citas.pagination.page]);
 
     const beforeEdit = (item) => {
-        //queryTitulaciones();
         fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: item.provinciaId }, referer).then(response => {
             const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });

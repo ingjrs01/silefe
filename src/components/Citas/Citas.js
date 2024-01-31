@@ -12,7 +12,7 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
-import { toHours } from '../../includes/utils';
+import { formatDefaultEmail, formatDefaultPhone, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
 
@@ -83,7 +83,6 @@ const Citas = () => {
     }
 
     const initForm = () => {
-        // ponemos el evento beforeEdit: 
         form.beforeEdit = beforeEdit;
         const seleccionarlabel = Liferay.Language.get("Seleccionar");
         form.fields.originInId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Participante" }, { value: "2", label: "Empresa" }, { value: "3", label: "Oferta" }];
@@ -106,14 +105,13 @@ const Citas = () => {
             form.fields.participantInId.options = opts;
             form.fields.participantOutId.options = opts;
         });
-    }
 
-    //useEffect( ()=> {
-    //    console.log("Cargando los participantes de entrada");
-    //    console.debug(items);
-    //    if (items.fields.fields != undefined)
-    //        loadParticipantes()
-    //},[items.item.originInId])
+        fetchAPIData('/silefe.tecnico/all', { lang: getLanguageId() }, referer).then(response => {
+            const opts = [...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName + " " + obj.middleName + " " + obj.lastName } })];
+            form.fields.tecnicoInId.options = opts;
+            form.fields.tecnicoOutId.options = opts;
+        });
+    }
 
     const loadParticipante = (id) => {
         console.log("loadParcipipante, esto es una fncion vacía");
@@ -197,6 +195,8 @@ const Citas = () => {
                 ...i,
                 appointmentDate: (i.appointmentDate != null) ? new Date(i.appointmentDate).toISOString().substring(0, 10) : "",
                 appointmentHour: toHours(i.appointmentHour),
+                telefonoIn: formatDefaultPhone(i.participantInTelefono), 
+                emailIn: formatDefaultEmail(i.participantInEmail),
                 checked: false
             })
         });
@@ -205,6 +205,8 @@ const Citas = () => {
 
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
+
+    console.log("se va a repintar");
 
     return (
         <>
