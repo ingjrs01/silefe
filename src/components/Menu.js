@@ -81,7 +81,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                         name={"searchBottonValue"}
                         key={"searchBottonValue"}
                         value={items.fields.search}
-                        onChange={e => itemsHandle({ type: 1, value: e.target.value}) }>
+                        onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value}) }>
                       </ClayInput>
                     }
                   </ClayInput.GroupItem>

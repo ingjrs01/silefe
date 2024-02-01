@@ -1,6 +1,7 @@
 export const ITEMS_ACTIONS = {
     START: 0,
     LOAD: 1,
+    LOAD_ITEMS: 32,
     CHECK: 2,
     CHECKALL: 3,
     UNSELECT: 4,
@@ -55,12 +56,13 @@ export const initialState = {
     searchField: "",
     load: 0,
     order: [],
-    history: [{id:1, comment: "Estado pendiente" , user: 'juan', date: '16/08/2023'},{id:2, comment: "Estado pendiente" ,user:'jose', date: '16/08/2023'}],
+    history: [],//[{id:1, comment: "Estado pendiente" , user: 'juan', date: '16/08/2023'},{id:2, comment: "Estado pendiente" ,user:'jose', date: '16/08/2023'}],
 }
 
 const resetErrors = (fields) => {
     let errores = {};
     let tmp_item = {};
+    console.log("resetErrors");
     Object.keys(fields.fields).forEach( j => {
         errores[j]=[];
         if (fields.fields[j].type === "multilang") {
@@ -75,30 +77,28 @@ const resetErrors = (fields) => {
     return errores;
 }
 
-const createItem = form => {
+const createItem = (form) => {
     let tmp_item = {};
-
+    console.log("vaciandoItem");
     Object.keys(form.fields).forEach(j => {
         let tt2 = [];
         switch (form.fields[j].type) {
             case "multilang":
                 let tt = {}
-                form.languages.forEach(el => {tt[el]=""});
+                form.languages.forEach(lang => {tt[lang]=""});
                 tmp_item[j] = tt;
                 break;
             case "multitext":
                 tmp_item[j] = tt2;
                 break;
             case "phone":
-                //let tt2 = []
                 tmp_item[j] = tt2;
                 break;
             case "email":
-                //let tt2 = []
                 tmp_item[j] = tt2;
                 break;
             default:
-                tmp_item[j] = [];
+                tmp_item[j] = "";
                 break;
         }
     });
@@ -113,56 +113,25 @@ export const red_items = (state, action ) => {
     let tmp_item = {};
     let tt = {};
     switch (action.type) {
-        case ITEMS_ACTIONS.SET_FIELDS:            
+        case ITEMS_ACTIONS.SET_FIELDS:  
+            console.log("cargando el formulario");
             return {
                 ...state,
                 fields: {...state.fields, ...action.form},
                 errors: resetErrors(action.form),
             }
-        case ITEMS_ACTIONS.START:
-            tmp_item = {};
-            console.log("Estoy en start");
-            console.log(state.load);
-            if (state.load == 0) {
-                Object.keys(action.fields.fields).forEach(j => {
-                    switch (action.fields.fields[j].type) {
-                        case "multilang":
-                            let tt = {}
-                            action.fields.languages.forEach(el => {tt[el]=""});
-                            tmp_item[j] = tt;
-                            break;
-                        case "multitext":
-                            let tt2 = []
-                            tt2.push({key:9,value:"correo@correo.es",default:false});
-                            tmp_item[j] = tt2;
-                            break;
-                        default:
-                            tmp_item[j] = [];
-                            break;
-                    }
-                });
-                //tmp_item = createItem(action.fields.fields);
-                return {
-                    ...state,
-                    arr: action.items,
-                    pagination: {...state.pagination,totalPages: action.totalPages, total: action.total,},
-                    fields: {...state.fields, ...action.fields},
-                    item: tmp_item,
-                    errors: resetErrors(action.fields),
-                    checkall:false,
-                    status: "list",
-                }
-                }
-            else
-                tmp_item = state.fields;
 
+        case ITEMS_ACTIONS.LOAD_ITEMS: 
             return {
                 ...state,
                 arr: action.items,
-                pagination: {...state.pagination,totalPages: action.totalPages, total: action.total,},
-                //fields: {...state.fields, ...action.fields},
-                item: tmp_item,
-                errors: resetErrors(action.fields),
+                pagination: {
+                    ...state.pagination,
+                    totalPages: action.totalPages, 
+                    total: action.total,
+                },
+                item: createItem(state.fields),
+                errors: resetErrors(state.fields),
                 checkall:false,
                 status: "list",
             }
@@ -242,7 +211,9 @@ export const red_items = (state, action ) => {
                 errors: e2,
                 status: 'edit',
             }
-
+        
+        // Esta opcion sirve para cdargar un elemento desde un objeto, y no desde el listado. Se usa 
+        // cuando se entra desde una entrada directa a otra. 
         case ITEMS_ACTIONS.EDIT_ITEM:
             tmp_item = {};
             Object.keys(state.fields.fields).forEach(j => {
@@ -322,6 +293,8 @@ export const red_items = (state, action ) => {
                 ...state,
                 errors: {...state.errors,[action.name]:[]}
             }
+
+        // Esto estaría preparado para cargar archivos desde un csv    
         case ITEMS_ACTIONS.LOAD:
             return {
                 ...state,
@@ -446,8 +419,11 @@ export const red_items = (state, action ) => {
                 fields: {
                     ...state.fields,
                     searchField: action.value,
+                    search: "",
                 },
                 searchField: action.value,
+                search: "",
+                load: (state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.HISTORY:
             return {
