@@ -31,6 +31,8 @@ export const ITEMS_ACTIONS = {
     SET_ACTIVETAB: 29,
     SETUNCOLATERAL: 30,
     SETCOMPLETEITEM: 31,
+    ADD_FILTER: 34,
+    REMOVE_FILTER: 35,
 }
 
 export const initialState = {

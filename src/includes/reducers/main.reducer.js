@@ -32,6 +32,8 @@ export const ITEMS_ACTIONS = {
     SET_ACTIVETAB: 29,
     SETUNCOLATERAL: 30,
     SETCOMPLETEITEM: 31,
+    ADD_FILTER: 34,
+    REMOVE_FILTER: 35,
 }
 
 export const initialState = {
@@ -56,6 +58,7 @@ export const initialState = {
     searchField: "",
     load: 0,
     order: [],
+    filters: [],
     history: [],//[{id:1, comment: "Estado pendiente" , user: 'juan', date: '16/08/2023'},{id:2, comment: "Estado pendiente" ,user:'jose', date: '16/08/2023'}],
 }
 
@@ -112,9 +115,9 @@ let tmp = []
 export const red_items = (state, action ) => {
     let tmp_item = {};
     let tt = {};
+    //console.log("me han dado enla accion  " + action.type + ".");
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS:  
-            console.log("cargando el formulario");
             return {
                 ...state,
                 fields: {...state.fields, ...action.form},
@@ -425,6 +428,29 @@ export const red_items = (state, action ) => {
                 search: "",
                 load: (state.load + 1) % 17,
             }
+        case ITEMS_ACTIONS.ADD_FILTER: 
+            if (state.fields.search === "0")
+                return {...state}
+
+            return {
+                ...state,
+                filters: [
+                    ...state.filters,
+                    { name: state.fields.searchField, value: state.fields.search , operator: "=" }
+                ]
+            }
+        case ITEMS_ACTIONS.REMOVE_FILTER: 
+            index = state.filters.findIndex(x => x.name == action.fieldname);
+            if (index >= 0) {
+                tmp = [...state.filters];
+                tmp.splice(index,1);
+            }
+            return {
+                ...state,
+                filters: tmp,
+                load: (state.load + 1) % 17,
+            }
+
         case ITEMS_ACTIONS.HISTORY:
             return {
                 ...state,

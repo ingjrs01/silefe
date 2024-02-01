@@ -90,8 +90,11 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                             aria-label={Liferay.Language.get("Buscar")}
                             spritemap={spritemap}
                             symbol="search-plus"
-                            title="Search"
-                            onClick={() => itemsHandle({ type: ITEMS_ACTIONS.ADD_FILTER, name: "clase", value: "lalala" })}
+                            title="Searchhh"
+                            onClick={() => {
+                              console.log("le han dado al botón");
+                              itemsHandle({ type: ITEMS_ACTIONS.ADD_FILTER });                              
+                            }}
                         />
                     </ClayInput.GroupItem>
                 </ClayInput.Group>
@@ -171,7 +174,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
         </ClayToolbar>
       </ClayIconSpriteContext.Provider>
       {
-        (items.status == 'list' && (items.search.length > 0 || items.order.length > 0)) &&
+        (items.status == 'list' && (items.search.length > 0 || items.filters.length > 0  || items.order.length > 0)) &&
         <MgtToolbar items={items} itemsHandle={itemsHandle} />
       }
     </>

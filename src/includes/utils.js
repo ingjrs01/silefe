@@ -108,3 +108,22 @@ export const formatDefaultEmail = (inputemails) => {
 
   return emails[0].value;
 }
+
+export const formatPost = (items) => {
+  console.log("esta es la version nueva");
+  let filtros =  [...items.filters]; 
+  if (items.search && typeof items.fields.search !== 'undefined' && items.fields.search !== "0")
+      filtros.push({ name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" });
+  
+  return {
+      pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
+      options: {
+          filters: [                    
+              ...filtros
+          ],
+          order: items.order,
+      },
+  }
+
+
+}

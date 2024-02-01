@@ -12,7 +12,7 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
-import { formatDefaultEmail, formatDefaultPhone, toHours } from '../../includes/utils';
+import { formatDefaultEmail, formatDefaultPhone, formatPost, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
 
@@ -30,7 +30,7 @@ const Citas = () => {
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
+            //itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });  // lo estoy haciendo dentro del initForm
             if (id != 'undefined' && id > 0)
                 loadParticipante(id);
             else
@@ -82,35 +82,52 @@ const Citas = () => {
         }
     }
 
+    const beforeEdit = (itemSel) => {
+        loadParticipantes(itemSel.originInId, 'originInId');
+        loadParticipantes(itemSel.originOutId, 'originOutId');
+    }
+
     const initForm = () => {
+        //const jsonS = localStorage.getItem("citasForm");
+        //if (jsonS !== null) {
+        //    const f = JSON.parse(jsonS);
+        //    itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: f });
+        //    return;
+        //}
+        
         form.beforeEdit = beforeEdit;
         const seleccionarlabel = Liferay.Language.get("Seleccionar");
         form.fields.originInId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Participante" }, { value: "2", label: "Empresa" }, { value: "3", label: "Oferta" }];
         form.fields.originOutId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Participante" }, { value: "2", label: "Empresa" }, { value: "3", label: "Oferta" }];
         form.fields.originInId.change = loadParticipantes;
         form.fields.originOutId.change = loadParticipantes;
-
+        
         fetchAPIData('/silefe.acciontipo/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.tipoCitaId.options = opts;
         });
-
+        
         fetchAPIData('/silefe.method/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.name } })];
+            console.log("Se han consultado los métodos");
+            console.debug(opts);
             form.fields.methodId.options = opts;
         });
-
+        
         fetchAPIData('/silefe.participante/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.participanteId, label: obj.nombre + " " + obj.apellido1 + " " + obj.apellido2 } })];
             form.fields.participantInId.options = opts;
             form.fields.participantOutId.options = opts;
         });
-
+        
         fetchAPIData('/silefe.tecnico/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName + " " + obj.middleName + " " + obj.lastName } })];
             form.fields.tecnicoInId.options = opts;
             form.fields.tecnicoOutId.options = opts;
         });
+
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
+        //localStorage.setItem("citasForm", JSON.stringify(form));
     }
 
     const loadParticipante = (id) => {
@@ -165,31 +182,12 @@ const Citas = () => {
         //console.log("descarga finalizada");
     }
 
-    const beforeEdit = (itemSel) => {
-        loadParticipantes(itemSel.originInId, 'originInId');
-        loadParticipantes(itemSel.originOutId, 'originOutId');
-    }
-
-    //form.downloadFunc = downloadFile;
-    form.beforeEdit = beforeEdit;
+    //form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
     form.downloadFunc = downloadFile;
 
-    const fetchData = async () => {
-        if (form.fields.tipoCitaId.options == 'undefined') {
-            initForm();
-        }
-
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            },
-        }
-        let { data, totalPages, page, totalItems } = await fetchAPIData('/silefe.cita/filter', postdata, referer);
+    const fetchData = async () => {       
+        let { data, totalPages, page, totalItems } = await fetchAPIData('/silefe.cita/filter', formatPost(items), referer);
         const tmp = await data.map(i => {
             return ({
                 ...i,
