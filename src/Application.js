@@ -51,7 +51,7 @@ const Application = () => {
         Liferay.Service('/role/get-user-roles',  { userId: Liferay.ThemeDisplay.getUserId()},response => {
               var roles = [];
               if (response !== 'undefined'  && response !== null) {
-                  console.debug(response);
+                  //console.debug(response);
                   response.forEach(function(e){
                       roles.push(e.name);
                   });  

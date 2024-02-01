@@ -109,9 +109,16 @@ export const formatDefaultEmail = (inputemails) => {
   return emails[0].value;
 }
 
+export const formatEmails = (emails) => {
+  return (emails != null && emails.length > 0) ? JSON.parse(emails) : []
+}
+
+export const formatPhones = (telefonos) => {
+  return (telefonos != null && telefonos.length > 0) ? JSON.parse(telefonos) : []
+}
+
 export const formatPost = (items) => {
-  console.log("esta es la version nueva");
-  let filtros =  [...items.filters]; 
+  let filtros = (items.filters !== 'undefined')?[...items.filters]:[]; 
   if (items.search && typeof items.fields.search !== 'undefined' && items.fields.search !== "0")
       filtros.push({ name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" });
   

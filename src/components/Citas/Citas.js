@@ -12,7 +12,7 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
-import { formatDefaultEmail, formatDefaultPhone, formatPost, toHours } from '../../includes/utils';
+import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
 
@@ -53,7 +53,6 @@ const Citas = () => {
         if (field == 'originOutId')
             fieldname = 'participantOutId';
 
-        console.log("loadParticipantes con fieldname = " + fieldname);
         switch (value) {
             case '1':
                 fetchAPIData('/silefe.participante/all', { lang: getLanguageId() }, referer).then(response => {
@@ -109,8 +108,6 @@ const Citas = () => {
         
         fetchAPIData('/silefe.method/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.name } })];
-            console.log("Se han consultado los métodos");
-            console.debug(opts);
             form.fields.methodId.options = opts;
         });
         
@@ -191,7 +188,7 @@ const Citas = () => {
         const tmp = await data.map(i => {
             return ({
                 ...i,
-                appointmentDate: (i.appointmentDate != null) ? new Date(i.appointmentDate).toISOString().substring(0, 10) : "",
+                appointmentDate: toDate(i.appointmentDate),
                 appointmentHour: toHours(i.appointmentHour),
                 telefonoIn: formatDefaultPhone(i.participantInTelefono), 
                 emailIn: formatDefaultEmail(i.participantInEmail),

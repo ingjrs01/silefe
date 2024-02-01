@@ -5,7 +5,6 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, fetchAPIRow, saveAPI } from "../../includes/apifunctions";
-//import DefaultForm from "../../includes/interface/DefaultForm";
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { FModal } from '../../includes/interface/FModal';
@@ -14,8 +13,8 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from "../../includes/interface/TabsForm";
 import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from '../../includes/reducers/historico.reducer';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
-import { toDate, toHours } from '../../includes/utils';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { formatEmails, formatPhones, formatPost, toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './Form';
 
@@ -40,7 +39,7 @@ const Docentes = ({user}) => {
             docenteId: docenteId,
             pagination: {
                 page: historico.pagination.page,
-                pageSize: 5,
+                pageSize: historico.pagination.pageSize,
             },
             options: {}
         }
@@ -141,29 +140,18 @@ const Docentes = ({user}) => {
             await initForm();
         }
 
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            },
-        }
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.docente/filter', postdata, referer);
-
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.docente/filter', formatPost(items), referer);
         const tmp = await data.map(i => {
             return (
                 {
                     ...i,
-                    fechaNacimiento: (i.fechaNacimiento != null) ? new Date(i.fechaNacimiento).toISOString().substring(0, 10) : "",
-                    email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
-                    telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
-                    checked: false
+                    fechaNacimiento:  toDate(i.fechaNacimiento),
+                    email: formatEmails(i.email),
+                    telefono: formatPhones(i.telefono),
+                    checked: false,
                 })
         });
-
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     const initForm = async () => {
@@ -189,6 +177,7 @@ const Docentes = ({user}) => {
         form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "Pasaporte" }];
         form.fields.sexo.options = [{ key: 0, value: "H", label: Liferay.Language.get('Hombre') }, { key: 1, value: "M", label: Liferay.Language.get('Mujer') }];
 
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form });
     }
 
     const changeProvince = (id) => {
@@ -211,7 +200,7 @@ const Docentes = ({user}) => {
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form });
+            
             if (id != 'undefined' && id > 0) {
                 loadDocente(id);
             }

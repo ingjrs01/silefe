@@ -436,7 +436,12 @@ export const red_items = (state, action ) => {
                 ...state,
                 filters: [
                     ...state.filters,
-                    { name: state.fields.searchField, value: state.fields.search , operator: "=" }
+                    { 
+                        name: state.fields.searchField, 
+                        label: state.fields.fields[state.fields.searchField].label??"Sin nombre",
+                        value: state.fields.search , operator: "=" ,
+                        valueLabel: (state.fields.fields[state.fields.searchField].type == "select")?state.fields.fields[state.fields.searchField].options.filter(it => it.value == state.fields.search)[0].label:valueLabel = state.fields.search,
+                    }
                 ]
             }
         case ITEMS_ACTIONS.REMOVE_FILTER: 

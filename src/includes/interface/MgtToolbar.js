@@ -25,7 +25,7 @@ export const MgtToolbar = ({items, itemsHandle}) => {
                             <div className="tbar-section">
                                 <span className="label label-dismissible component-label tbar-label">
                                     <span className="label-item label-item-expand">
-                                        <div className="label-section">Filtro: <strong>{x.name} {x.value }</strong></div>
+                                        <div className="label-section">Filtro: <strong>{x.label} {x.valueLabel }</strong></div>
                                     </span>
                                     <span className="label-item label-item-after">
                                         <ClayIcon 

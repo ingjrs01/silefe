@@ -91,10 +91,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                             spritemap={spritemap}
                             symbol="search-plus"
                             title="Searchhh"
-                            onClick={() => {
-                              console.log("le han dado al botón");
-                              itemsHandle({ type: ITEMS_ACTIONS.ADD_FILTER });                              
-                            }}
+                            onClick={() => itemsHandle({ type: ITEMS_ACTIONS.ADD_FILTER })}
                         />
                     </ClayInput.GroupItem>
                 </ClayInput.Group>
