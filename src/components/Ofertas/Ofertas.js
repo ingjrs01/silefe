@@ -14,9 +14,9 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
-import { formatDefaultEmail, formatDefaultPhone, toDate, toHours } from '../../includes/utils';
+import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './OfertaForm';
 import { form as fparticipantes } from './ParticipanteForm';
@@ -265,30 +265,18 @@ const Ofertas = ({user}) => {
     }
 
     const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            },
-        }
-        if (form.fields.edadId.options == undefined)
-            initForm()
-
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.oferta/filter', postdata, referer);
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.oferta/filter', formatPost(items), referer);
         const tmp = await data.map(i => {
             return ({
                 ...i,
                 id: i.ofertaId,
-                fechaIncorporacion: (i.fechaIncorporacion != null) ? new Date(i.fechaIncorporacion).toISOString().substring(0, 10) : "",
-                fechaUltimoEstado: (i.fechaUltimoEstado != null) ? new Date(i.fechaUltimoEstado).toISOString().substring(0, 10) : "",
+                fechaIncorporacion:  toDate(i.fechaIncorporacion),
+                fechaUltimoEstado: toDate(i.fechaUltimoEstado), 
                 colectivos: i.colectivos ?? [],
                 checked: false
             });
         });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     const loadCentros = (empresaId) => {

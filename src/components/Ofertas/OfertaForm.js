@@ -508,5 +508,6 @@ export const form = {
         //},
         
     },
-    searchFields: ['titulo','estado','puesto','empresa','centro'],
+    searchFields: ['titulo','estadoId','puesto','empresa'],
+    searchField: 'titulo',
 };

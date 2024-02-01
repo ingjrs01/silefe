@@ -9,20 +9,22 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { formatPost } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
 
 const Convocatorias = () => {
-    const [items, itemsHandle] = useReducer(red_items, initialState);
-    const [toastItems, setToastItems] = useState([]);
+    const [items, itemsHandle]             = useReducer(red_items, initialState);
+    const [toastItems, setToastItems]      = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const [file, setFile] = useState();
-    const isInitialized = useRef(null);
+    const [file, setFile]                  = useState();
+    const isInitialized                    = useRef(null);
     const referer = `${url_referer}/cnos`;
 
     useEffect(() => {
         if (!isInitialized.current) {
+            initForm();
             fetchData();
             isInitialized.current = true;
         } else {
@@ -34,6 +36,10 @@ const Convocatorias = () => {
     const loadCsv = () => {
         console.log("Cargando un csv");
         itemsHandle({ type: ITEMS_ACTIONS.LOAD })
+    }
+
+    const initForm = () => {
+        itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
     }
 
     const processCsv = () => {
@@ -175,18 +181,18 @@ const Convocatorias = () => {
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: "descripcion", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            }
-        }
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.convocatoria/filter', postdata, referer);
+        //const postdata = {
+        //    pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
+        //    options: {
+        //        filters: [
+        //            { name: "descripcion", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
+        //        ],
+        //        order: items.order,
+        //    }
+        //}
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.convocatoria/filter', formatPost(items), referer);
         const tmp = await data.map(i => { return ({ ...i, id: i.convocatoriaId, checked: false }) });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     if (!items)
