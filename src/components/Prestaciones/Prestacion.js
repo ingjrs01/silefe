@@ -102,7 +102,7 @@ const Prestaciones = () => {
 
     useEffect(() => {
         if (!isInitialized.current) {
-            itemsHandle({ITEMS_ACTIONS.SET_FIELDS, form: form});
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
             fetchData();
             isInitialized.current = true;
         } else {

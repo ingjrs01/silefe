@@ -111,7 +111,7 @@ const TitulacionesNivel = () => {
     }
 
     const fetchData = async () => {
-        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.titulacionnivel/filter', formatPost(itemsº), referer);
+        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.titulacionnivel/filter', formatPost(items), referer);
         const tmp = await data.map(i => ({
                 ...i,
                // titulacionNivelDescripcion: form.fields.titulacionTipoId.options.filter(o => o.value == i.titulacionTipoId)[0].label,
