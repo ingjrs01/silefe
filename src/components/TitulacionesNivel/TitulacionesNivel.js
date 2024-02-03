@@ -10,9 +10,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form } from './Form';
+import { formatPost } from '../../includes/utils.js';
 
 const TitulacionesNivel = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -103,43 +104,26 @@ const TitulacionesNivel = () => {
     //form.handleSave = handleSave,
     form.loadCsv = loadCsv;
 
-    const fetchData = async () => {
-        const endpoint = '/silefe.titulacionnivel/filter';
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== "undefined") ? items.search : "", },
-                ],
-                order: items.order
-            },
-        };
-        let { data, totalPages, totalItems, page } = await fetchAPIData(endpoint, postdata, referer);
-
-        if (form.fields.titulacionTipoId.options == undefined || form.fields.titulacionTipoId.options.length == 0) {
-            form.fields.titulacionTipoId.options = await getNivelesTitulaciones();
-        }
-        //form.fields.titulacionTipoId.options = options;
-
-        const tmp = await data.map(i => {
-            return ({
-                ...i,
-                titulacionNivelDescripcion: form.fields.titulacionTipoId.options.filter(o => o.value == i.titulacionTipoId)[0].label,
-                checked: false
-            }
-            );
+    const initForm = () => {
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
+            form.fields.titulacionTipoId.options = response.data.map(obj => ({value: obj.id, label: obj.descripcion}))
         });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
     }
 
-    const getNivelesTitulaciones = async () => {
-        let { data } = await fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, referer);
-        const options = await data.map(obj => { return { value: obj.id, label: obj.descripcion } });
-        return options
+    const fetchData = async () => {
+        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.titulacionnivel/filter', formatPost(itemsº), referer);
+        const tmp = await data.map(i => ({
+                ...i,
+               // titulacionNivelDescripcion: form.fields.titulacionTipoId.options.filter(o => o.value == i.titulacionTipoId)[0].label,
+                checked: false
+            } ));
+        
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     useEffect(() => {
         if (!isInitialized.current) {
+            initForm();
             fetchData();
             isInitialized.current = true;
         } else {

@@ -567,4 +567,5 @@ export const form = {
         },
     },
     searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId','admiteEnvios'],
+    searchField: 'nombre',
 };

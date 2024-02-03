@@ -166,4 +166,5 @@ export const form = {
         },
     },
     searchFields: ['nombre', 'localidad','municipio'],
+    searchField: 'nombre',
 };

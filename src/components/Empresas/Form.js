@@ -286,4 +286,5 @@ export const form = {
         },
     },
     searchFields: ['documento', 'razonSocial', 'admiteEnvios'],
+    searchField: 'razonSocial'
 };

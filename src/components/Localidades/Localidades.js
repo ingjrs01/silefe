@@ -10,9 +10,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form } from './Form';
+import { formatPhones, formatPost } from '../../includes/utils';
 
 const Localidades = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -110,29 +111,25 @@ const Localidades = () => {
     //form.downloadFunc = downloadFile;
     form.loadCsv = loadCsv;
 
-    const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            },
-        };
+    const initForm = () => {
         if (form.fields.provinciaId == undefined || form.fields.provinciaId.options.length == 0) {
             fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
                 const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
                 form.fields.provinciaId.options = opts;
             });
         }
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.ayuntamiento/filter', postdata, referer);
+        itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+    }
+
+    const fetchData = async () => {
+        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.ayuntamiento/filter', formatPost(items), referer);
         const tmp = await data.map(i => ({ ...i, checked: false }));
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     useEffect(() => {
         if (!isInitialized.current) {
+            initForm();
             fetchData();
             isInitialized.current = true;
         } else {

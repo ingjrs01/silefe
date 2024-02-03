@@ -10,9 +10,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form as formulario } from './Form';
+import { formatPost } from '../../includes/utils';
 
 const AccionesTipoFormacion = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -76,7 +77,6 @@ const AccionesTipoFormacion = () => {
         const endpoint = '/silefe.acciontipoformacion/remove-acciones-formacion-tipo';
         let s = items.arr.filter(item => item.checked).map(i => { return i.id });
 
-
         deleteAPI(endpoint, s, referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
@@ -93,22 +93,14 @@ const AccionesTipoFormacion = () => {
     }
 
     const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: "descripcion", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            },
-        }
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.acciontipoformacion/filter', postdata, referer);
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.acciontipoformacion/filter', formatPost(items), referer);
         const tmp = await data.map(i => { return ({ ...i, checked: false }) });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     useEffect(() => {
         if (!isInitialized.current) {
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form})
             fetchData();
             isInitialized.current = true;
         } else {

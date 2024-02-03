@@ -15,8 +15,8 @@ import TabsForm from '../../includes/interface/TabsForm';
 import { CENTROS_ACTIONS, initialState as iniCentros, reducerCentros } from "../../includes/reducers/centros.reducer";
 import { CONTACTOS_ACTIONS, initialState as iniContactos, reducerContactos } from "../../includes/reducers/contactos.reducer";
 import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from "../../includes/reducers/historico.reducer";
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
-import { toDate, toHours } from '../../includes/utils';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { toDate, toHours, formatPost, formatEmails, formatPhones } from '../../includes/utils';
 import Menu from '../Menu';
 import CentrosRender from "./CentrosRender";
 import ContactosRender from "./ContactosRender";
@@ -145,30 +145,20 @@ const Empresas = ({user}) => {
 
     const fetchData = async () => {
         contactosHandle({ type: CONTACTOS_ACTIONS.START });
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.nombre && typeof items.search !== 'undefined') ? items.nombre : "" },
-                ],
-                order: items.order
-            },
-        }
-
         if (redCentros == undefined || redCentros.provincias.length == 0)
             initCentrosForm();
 
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.empresa/filter', postdata, referer);
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.empresa/filter', formatPost(items), referer);
 
         const tmp = await data.map(i => ({
                 ...i,
                 id: i.empresaId,
-                email:  (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
-                telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
+                email: formatEmails(i.email),
+                telefono: formatPhones(i.telefono),
                 checked: false
             })
         );
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: toastItems, page: page });
     }
 
     const initCentrosForm = () => {
@@ -236,8 +226,8 @@ const Empresas = ({user}) => {
                 ...r,
                 data: {
                     ...r.data,
-                    email: (r.data.email != null && r.data.email.length > 0) ? JSON.parse(r.data.email) : [],
-                    telefono: (r.data.telefono != null && r.data.telefono.length > 0) ? JSON.parse(r.data.telefono) : [],
+                    email: formatEmails(r.data.email), 
+                    telefono: formatPhones(r.data.telefono),
                 }
             }
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: tmp });

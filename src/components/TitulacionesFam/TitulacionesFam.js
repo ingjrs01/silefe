@@ -10,9 +10,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form } from './Form';
+import { formatPost } from '../../includes/utils.js';
 
 const TitulacionesFam = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -104,27 +105,19 @@ const TitulacionesFam = () => {
     //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
 
-
-    const fetchData = async () => {
-        const endpoint = '/silefe.titulacionfam/filter';
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== "undefined") ? items.search : "", }
-                ],
-                order: items.order,
-            },
-        };
-
-        let { data, totalPages, totalItems, page } = await fetchAPIData(endpoint, postdata, referer);
-
+    const initForm = async () => {
         if (form.fields.titulacionNivelId.options == undefined || form.fields.titulacionNivelId.options.length == 0) {
             form.fields.titulacionNivelId.options = await getNivelesTitulaciones();
         }
+        itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form:form});
+    }
+
+    const fetchData = async () => {
+        const endpoint = '/silefe.titulacionfam/filter';
+        const { data, totalPages, totalItems, page } = await fetchAPIData(endpoint, formatPost(items), referer);
+
         //form.fields.titulacionNivelId.options = options;
         const tmp = await data.map(i => {
-            console.log(i);
             return ({
                 ...i,
                 id: i.titulacionFamId,
@@ -132,7 +125,7 @@ const TitulacionesFam = () => {
                 checked: false
             })
         });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     const getNivelesTitulaciones = async () => {
@@ -143,6 +136,7 @@ const TitulacionesFam = () => {
 
     useEffect(() => {
         if (!isInitialized.current) {
+            initForm();
             fetchData();
             isInitialized.current = true;
         } else {

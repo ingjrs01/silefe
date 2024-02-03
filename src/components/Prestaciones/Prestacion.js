@@ -10,9 +10,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form } from './Form';
+import { formatPost } from '../../includes/utils';
 
 const Prestaciones = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -93,27 +94,15 @@ const Prestaciones = () => {
     //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
 
-
     const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: "descripcion", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            },
-        }
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.prestacion/filter', postdata, referer);
-        await console.log("los datos han llegado");
-        await console.debug(data);
+        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.prestacion/filter', formatPost(items), referer);
         const tmp = await data.map(i => { return ({ ...i, checked: false }) });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     useEffect(() => {
-        console.log("estoy en useEffect");
         if (!isInitialized.current) {
+            itemsHandle({ITEMS_ACTIONS.SET_FIELDS, form: form});
             fetchData();
             isInitialized.current = true;
         } else {

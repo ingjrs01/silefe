@@ -12,7 +12,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
 import { HISTORICO_ACTIONS, initialState as hisIni, reducerHistorico } from '../../includes/reducers/historico.reducer';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import Menu from '../Menu';
 import { form as aform } from './AccionForm';
@@ -23,7 +23,7 @@ import { form as pform } from './ParticipantesForm';
 //import Papa from "papaparse";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
-import { toDate, toHours } from '../../includes/utils';
+import { formatPost, toDate, toHours } from '../../includes/utils';
 
 const Proyectos = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -277,26 +277,26 @@ const Proyectos = ({user}) => {
         if (form.fields.entidadId.options === 'undefined') {
             initForm();
         }
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order
-            }
-        }
-        fetchAPIData('/silefe.proyecto/filter', postdata, referer).then(({ data, totalPages, page, totalItems }) => {
+        // const postdata = {
+        //     pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
+        //     options: {
+        //         filters: [
+        //             { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
+        //         ],
+        //         order: items.order
+        //     }
+        // }
+        fetchAPIData('/silefe.proyecto/filter',formatPost(items) , referer).then(({ data, totalPages, page, totalItems }) => {
             const tmp = data.map(i => ({
                 ...i,
                 id: i.proyectoId,
                 //nparticipantes: i.participantes,
-                inicio: (i.inicio != null) ? new Date(i.inicio).toISOString().substring(0, 10) : "",
-                fin: (i.fin != null) ? new Date(i.fin).toISOString().substring(0, 10) : "",
+                inicio: toDate(i.inicio), //(i.inicio != null) ? new Date(i.inicio).toISOString().substring(0, 10) : "",
+                fin: toDate(i.fin),// (i.fin != null) ? new Date(i.fin).toISOString().substring(0, 10) : "",
                 checked: false
             })
             );
-            itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
+            itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: toastItems, page: page });
         });
     }
 

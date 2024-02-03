@@ -10,9 +10,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer.js';
 import Menu from '../Menu';
 import { form } from './Form';
+import { formatPost } from '../../includes/utils.js';
 
 
 const Tecnicos = () => {
@@ -102,23 +103,12 @@ const Tecnicos = () => {
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: "firstname", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            }
-        }
-
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.tecnico/filter', postdata, referer);
+        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.tecnico/filter', formatPost(items), referer);
         const tmp = await data.map(i => { return ({ ...i,tecnicoUserId: i.id, checked: false }) });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp,totalPages: totalPages, total: totalItems, page: page });
     }
 
     const initForm = () => {
-        console.log("initForm");
         const postdata = {            
             options: {
                 excludes: items.arr.map(i => i.id)
@@ -129,10 +119,10 @@ const Tecnicos = () => {
             const opts = [{ value: "0", label: Liferay.Language.get("Nuevo") }, ...response.data.map(obj => { return { value: obj.userId, label: obj.firstName } })];
             form.fields.tecnicoUserId.options = opts;
         });
+        itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
     }
 
     useEffect(()=>{
-        console.log("han cambiado los datos, y pido los tecnicos sin asignar");
         if (items !== 'undefined')
             initForm();
     },[items.arr]);

@@ -10,9 +10,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form } from './Form';
+import { formatPost } from '../../includes/utils';
 
 const Horarios = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -24,6 +25,7 @@ const Horarios = () => {
 
     useEffect(() => {
         if (!isInitialized.current) {
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
             fetchData();
             isInitialized.current = true;
         } else {
@@ -106,18 +108,9 @@ const Horarios = () => {
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: "descripcion", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            }
-        }
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.horario/filter', postdata, referrer);
+        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.horario/filter', formatPost(items), referrer);
         let tmp = await data.map(i => { return ({ ...i, id: i.horarioId, checked: false }) });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     if (!items)

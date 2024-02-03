@@ -16,10 +16,10 @@ import TabsForm from '../../includes/interface/TabsForm';
 import { CITAS_ACTIONS, initialState as iniCitas, reducerCitas } from '../../includes/reducers/citas.reducer';
 import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import { TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
-import { toDate, toHours } from '../../includes/utils';
+import { formatEmails, formatPhones, formatPost, toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form as citasform } from './CitasForm';
 import { ExperienciasRender } from './ExperienciasRender';
@@ -161,9 +161,9 @@ const Participantes = ({user}) => {
                 ...r,
                 data: {
                     ...r.data,
-                    fechaNacimiento: (r.data.fechaNacimiento != null) ? new Date(r.data.fechaNacimiento).toISOString().substring(0, 10) : "",
-                    email: (r.data.email != null && r.data.email.length > 0) ? JSON.parse(r.data.email) : [],
-                    telefono: (r.data.telefono != null && r.data.telefono.length > 0) ? JSON.parse(r.data.telefono) : [],
+                    fechaNacimiento: toDate(r.data.fechaNacimiento),
+                    email: formatEmails(r.data.email),
+                    telefono: formatPhones(r.data.telefono),
                 }
             }
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: datatmp });
@@ -302,25 +302,14 @@ const Participantes = ({user}) => {
         if (form.fields.situacionLaboral.options == undefined)
             await initForm();
 
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { 
-                        name: items.searchField??"nombre", 
-                        value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            },
-        }
-        let { data, totalPages, page, totalItems } = await fetchAPIData('/silefe.participante/filter', postdata, referer);
+        let { data, totalPages, page, totalItems } = await fetchAPIData('/silefe.participante/filter', formatPost(items), referer);
         const tmp = await data.map(i => {
             return ({
                 ...i,
                 id: i.participanteId,
-                fechaNacimiento: (i.fechaNacimiento != null) ? new Date(i.fechaNacimiento).toISOString().substring(0, 10) : "",
-                email: (i.email != null && i.email.length > 0) ? JSON.parse(i.email) : [],
-                telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono) : [],
+                fechaNacimiento: toDate(i.fechaNacimiento),
+                email: formatEmails(i.email),
+                telefono: formatPhones(i.telefono), 
                 tipoDoc: i.tipoDoc.toString(),
                 colectivos: i.colectivos ?? [],
                 carnets: i.carnets ?? [],
@@ -329,7 +318,7 @@ const Participantes = ({user}) => {
             })
         });
 
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, total: totalItems, totalPages: totalPages, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, total: totalItems, totalPages: totalPages, page: page });
     }
 
     const initForm = () => {

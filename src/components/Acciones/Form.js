@@ -219,4 +219,5 @@ export const form = {
         },
     },
     searchFields: ['accionTipoId','nombre','accionTipoFormacionId'],
+    searchField: 'nombre',
 };

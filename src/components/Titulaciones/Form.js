@@ -119,4 +119,5 @@ export const form = {
         }
     },
     searchFields: ['descripcion', 'familia', 'nivel', 'tipo'],
+    searchField: 'descripcion',
 };

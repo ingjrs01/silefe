@@ -10,9 +10,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form } from "./Form";
+import { formatPost } from '../../includes/utils';
 
 const Ambitos = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -24,6 +25,7 @@ const Ambitos = () => {
 
     useEffect(() => {
         if (!isInitialized.current) {
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form:form});
             fetchData();
             isInitialized.current = true;
         } else {
@@ -108,24 +110,9 @@ const Ambitos = () => {
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: "descripcion", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order,
-            }
-        }
-
-        //const postdata = {
-        //    pagination: {page: items.pagination.page, pageSize: items.pagination.pageSize},
-        //    options: {
-        //    },
-        //}
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.ambito/filter', postdata, referer);
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.ambito/filter', formatPost(items), referer);
         const tmp = await data.map(i => { return ({ ...i, id: i.ambitoId, checked: false }) });
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
     if (!items)

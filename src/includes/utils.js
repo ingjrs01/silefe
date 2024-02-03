@@ -131,6 +131,5 @@ export const formatPost = (items) => {
           order: items.order,
       },
   }
-
-
 }
+

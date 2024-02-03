@@ -73,4 +73,5 @@ export const form = {
         },
     },
     searchFields: ['descripcion', 'tipo'],
+    searchField: 'descripcion',
 };

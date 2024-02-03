@@ -11,9 +11,10 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form } from "./Form";
+import { formatPost } from '../../includes/utils';
 
 const Lugares = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -68,9 +69,10 @@ const Lugares = () => {
         });
 
         fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.tiposViaId, label: obj.nombre } })];
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'tipoViaId', options: opts });
+            form.fields.tipoViaId.options= [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.tiposViaId, label: obj.nombre } })];
+            //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'tipoViaId', options: opts });
         }).catch(error => console.error("Error"));
+        itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
     }
 
     const loadCsv = () => {
@@ -95,9 +97,8 @@ const Lugares = () => {
 
     useEffect(() => {
         //initCentrosForm();
-        initForm();
         if (!isInitialized.current) {
-            itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
+            initForm();
             if (id != 'undefined' && id > 0) {
                 loadItem(id);
             }
@@ -117,18 +118,9 @@ const Lugares = () => {
     }, [items.load]);
 
     const fetchData = async () => {
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-                ],
-                order: items.order
-            },
-        }
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.lugar/filter', postdata, referer);
+        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.lugar/filter', formatPost(items), referer);
         const tmp = await data.map(i => ({ ...i, checked: false }));
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: toastItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: toastItems, page: page });
     }
 
     const confirmDelete = async () => {

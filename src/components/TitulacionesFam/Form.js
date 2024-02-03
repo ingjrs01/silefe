@@ -87,4 +87,5 @@ export const form = {
         },
     },
     searchFields: ['descripcion', 'nivel', 'tipo'],
+    searchField: 'descripcion',
 };

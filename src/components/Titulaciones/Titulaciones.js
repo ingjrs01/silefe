@@ -9,11 +9,12 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { TITULACIONES_ACTIONS, reducerTitulacion } from '../../includes/reducers/titulaciones.reducer';
 import Menu from '../Menu';
 import { form } from './Form';
 import { TitulacionForm } from './TitulacionForm';
+import { formatPost } from '../../includes/utils.js';
 
 const Titulaciones = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -110,20 +111,9 @@ const Titulaciones = () => {
         if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0)
             queryTitulaciones();
 
-        if (form.fields.titulacionTipoId.options == undefined || form.fields.titulacionTipoId.options.length == 0)
-            initForm();
-
-        const postdata = {
-            pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-            options: {
-                filters: [
-                    { name: items.searchField, value: (items.search && typeof items.search !== "undefined") ? items.search : "" },
-                ],
-                order: items.order
-            },
-        };
-
-        let { data, error, totalPages, totalItems, page } = await fetchAPIData('/silefe.titulacion/filter', postdata, referer);
+        //if (form.fields.titulacionTipoId.options == undefined || form.fields.titulacionTipoId.options.length == 0)
+        //    initForm();
+        const { data, error, totalPages, totalItems, page } = await fetchAPIData('/silefe.titulacion/filter', formatPost(items), referer);
 
         if (error == 1) {
             setToastItems([...toastItems, { title: Liferay.Language.get("Cargando"), type: "danger", text: Liferay.Language.get("Pagina_no_existente") }]);
@@ -135,7 +125,7 @@ const Titulaciones = () => {
                 checked: false
             })
         );
-        await itemsHandle({ type: ITEMS_ACTIONS.START, items: tmp, fields: form, totalPages: totalPages, total: totalItems, page: page });
+        await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp,totalPages: totalPages, total: totalItems, page: page });
     }
 
     const initForm = () => {
@@ -159,6 +149,8 @@ const Titulaciones = () => {
             titulacionesFamiliaOptions = response.data;
             form.fields.titulacionFamiliaId.change = cambiaTitulacionFamilia;
         });
+
+        itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
 
         //queryTitulaciones();
     }
@@ -206,6 +198,7 @@ const Titulaciones = () => {
 
     useEffect(() => {
         if (!isInitialized.current) {
+            initForm();
             fetchData();
             isInitialized.current = true;
         } else {

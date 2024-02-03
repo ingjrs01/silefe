@@ -332,4 +332,5 @@ export const form = {
         },
     },
     searchFields: ['codigo', 'descripcion', 'convocatoria'],
+    searchField: 'descripcion',
 };

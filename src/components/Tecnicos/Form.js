@@ -100,4 +100,5 @@ export const form = {
         },
     },
     searchFields: ['firstName'],
+    searchField: 'firstName',
 };
