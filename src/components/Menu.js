@@ -74,7 +74,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                       </>
                     }
                     {
-                      items.fields.fields[items.fields.searchField].type === "text" &&
+                      ["text", "multilang", "dni"].includes( items.fields.fields[items.fields.searchField].type) &&
                       <ClayInput
                         placeholder={"Buscar..."}
                         type="text"
