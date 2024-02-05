@@ -52,15 +52,15 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
               (items.status == "list") && (items.fields.hasOwnProperty("fields")) && 
               <ClayToolbar.Item>
                 <ClayInput.Group>
-                  <ClayInput.GroupItem>
-                    {items.fields.fields[items.fields.searchField].type === "select" &&
+                  <ClayInput.GroupItem >
+                    { ["select"].includes(items.fields.fields[items.fields.searchField].type) &&
                       <>
                         {
                           <ClaySelect aria-label="Select Label"
                             id={"searchBottonField"}
                             name={"searchBottonField"}
                             key={"searchBottonField"}
-                            value={items.search}
+                            value={items.search}                           
                             onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}>
                             {items.fields.fields[items.fields.searchField].options.map(field => (
                               <ClaySelect.Option
@@ -73,6 +73,31 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                         }
                       </>
                     }
+                    { ["toggle"].includes(items.fields.fields[items.fields.searchField].type) &&
+                      <>
+                        {
+                          <ClaySelect aria-label="Select Label"
+                            id={"searchBottonField"}
+                            name={"searchBottonField"}
+                            key={"searchBottonField"}
+                            value={items.search}                           
+                            onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}
+                          >
+                              <ClaySelect.Option
+                                key={"searchBottonField"+"si"}
+                                label={"Si   "}
+                                value={true}
+                              />
+                              <ClaySelect.Option
+                                key={"searchBottonField"+"si"}
+                                label={"No  "}
+                                value={false}
+                              />
+                          </ClaySelect>
+                        }
+                      </>
+                    }
+
                     {
                       ["text", "multilang", "dni"].includes( items.fields.fields[items.fields.searchField].type) &&
                       <ClayInput
@@ -118,9 +143,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                       spritemap={spritemap}
                       symbol="pencil"
                     />
-
                   }
-
                   {
                     (items.status === 'new' || items.status === 'edit') &&
                     <ClayButtonWithIcon

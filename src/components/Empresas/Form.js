@@ -275,12 +275,12 @@ export const form = {
             key: "c3",
         },
         email: {
-            columnTitle: Liferay.Language.get('Emailll'),
+            columnTitle: Liferay.Language.get('Email'),
             columnType: "email",
             key: "c4",
         },
         telefono: {
-            columnTitle: Liferay.Language.get('Teléfonooo'),
+            columnTitle: Liferay.Language.get('Teléfono'),
             columnType: "phone",
             key: "c5",
         },

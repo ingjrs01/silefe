@@ -55,6 +55,14 @@ export const form = {
             conditions: ["text"],
             className: "col-3"
         },
+        apellidos: {
+            key:20,
+            type: "text",
+            label: "Apellidos",
+            name: "apellidos",
+            placeholder:"",
+            className: "col-6",
+        },
         fechaNacimiento: {
             key:12,
             type: "date",
@@ -277,6 +285,6 @@ export const form = {
             key: "c7",
         }
     },
-    searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId'],
+    searchFields: ['nombre','apellidos', 'documento','provinciaId', 'municipioId'],
     searchField: 'nombre',
 };
