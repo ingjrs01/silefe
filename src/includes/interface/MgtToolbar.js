@@ -1,6 +1,5 @@
 import ClayIcon, { ClayIconSpriteContext } from '@clayui/icon';
 import React from "react";
-//import {ITEMS_ACTIONS} from '../../includes/reducers/items.reducer';
 import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from "../LiferayFunctions";
 import { ITEMS_ACTIONS } from "../reducers/items.reducer";
@@ -15,12 +14,30 @@ export const MgtToolbar = ({items, itemsHandle}) => {
                     <li className="tbar-item">
                         <div className="tbar-section">
                             <span className="component-text text-truncate-inline">
-                                <span className="text-truncate">{items.pagination.total} { Liferay.Language.get("resultados")} "<strong>{items.search}</strong>"</span>
+                                <span className="text-truncate">{items.pagination.total} { Liferay.Language.get("resultados")} </span>
                             </span>
                         </div>
                     </li>
-
                     {
+                        
+                    items.filters.map( x => (
+                        <li className="tbar-item tbar-item-exand">
+                            <div className="tbar-section">
+                                <span className="label label-dismissible component-label tbar-label">
+                                    <span className="label-item label-item-expand">
+                                        <div className="label-section">Filtro: <strong>{x.label} {x.valueLabel }</strong></div>
+                                    </span>
+                                    <span className="label-item label-item-after">
+                                        <ClayIcon 
+                                            symbol="times" 
+                                            onClick={() => itemsHandle({type:ITEMS_ACTIONS.REMOVE_FILTER,fieldname:x.name})}
+                                            />
+                                    </span>
+                                </span>
+                            </div>
+                        </li>
+                        ))
+                    }{
                     items.order.map( x => (
                         <li className="tbar-item tbar-item-exand">
                             <div className="tbar-section">
@@ -32,12 +49,13 @@ export const MgtToolbar = ({items, itemsHandle}) => {
                                         <ClayIcon 
                                             symbol="times" 
                                             onClick={() => itemsHandle({type:ITEMS_ACTIONS.DELETE_ORDER,fieldname:x.name})}
-                                        />
+                                            />
                                     </span>
                                 </span>
                             </div>
                         </li>
                         ))
+                      
                     }
                     {/*
 
@@ -52,5 +70,4 @@ export const MgtToolbar = ({items, itemsHandle}) => {
         </nav>
         </ClayIconSpriteContext.Provider>
     )
-
 }
