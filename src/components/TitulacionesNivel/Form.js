@@ -66,12 +66,12 @@ export const form = {
             columnType: "multilang",
             key: "c3",
         },
-        titulacionNivelDescripcion: {
+        tipo: {
             columnTitle: Liferay.Language.get('Tipo'),
-            columnType: "string",
+            columnType: "multilang",
             key: "c4",
         },
     },
-    searchFields: ['descripcion', 'tipo'],
+    searchFields: ['descripcion', 'titulacionTipoId'],
     searchField: 'descripcion',
 };

@@ -11,9 +11,9 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { formatPost } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './Form';
-import { formatPost } from '../../includes/utils';
 
 const Experiencias = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -85,7 +85,7 @@ const Experiencias = () => {
 
     useEffect(() => {
         if (!isInitialized.current) {
-            itemsHandle({type: ITEMS_ACTIONS, form: form});
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
             fetchData();
             isInitialized.current = true;
         } else {

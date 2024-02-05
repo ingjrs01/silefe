@@ -165,6 +165,6 @@ export const form = {
             key: "c5",
         },
     },
-    searchFields: ['nombre', 'localidad','municipio'],
+    searchFields: ['nombre', 'localidad','municipioId'],
     searchField: 'nombre',
 };

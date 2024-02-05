@@ -11,9 +11,9 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { formatPost } from '../../includes/utils.js';
 import Menu from '../Menu';
 import { form } from './Form';
-import { formatPost } from '../../includes/utils.js';
 
 const TitulacionesNivel = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -108,6 +108,7 @@ const TitulacionesNivel = () => {
         fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
             form.fields.titulacionTipoId.options = response.data.map(obj => ({value: obj.id, label: obj.descripcion}))
         });
+        itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
     }
 
     const fetchData = async () => {

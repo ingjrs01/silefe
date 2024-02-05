@@ -43,5 +43,5 @@ export const form = {
         },
     },
     searchFields: ['descripcion'],
-    searchFields: 'descripcion',
+    searchField: 'descripcion',
 };

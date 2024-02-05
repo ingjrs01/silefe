@@ -43,5 +43,5 @@ export const form = {
         },
     },
     searchFields: ['nombre'],
-    searchFields: 'nombre'
+    searchField: 'nombre'
 };
