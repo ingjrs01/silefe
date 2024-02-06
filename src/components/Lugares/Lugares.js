@@ -12,9 +12,9 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { formatPost } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
-import { formatPost } from '../../includes/utils';
 
 const Lugares = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -67,6 +67,14 @@ const Lugares = () => {
             console.log("error");
             console.error(error);
         });
+
+        fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: 36 }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+            form.fields.municipioId.options = opts;
+            //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
+        }).catch(error => console.error(error));
+
+        //loadMunicipiosProvincia(36); 
 
         fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId() }, referer).then(response => {
             form.fields.tipoViaId.options= [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.tiposViaId, label: obj.nombre } })];
