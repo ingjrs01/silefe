@@ -508,6 +508,6 @@ export const form = {
         //},
         
     },
-    searchFields: ['titulo','estadoId','puesto','empresa'],
+    searchFields: ['titulo','estadoId','puesto','empresa','proyectoId'],
     searchField: 'titulo',
 };

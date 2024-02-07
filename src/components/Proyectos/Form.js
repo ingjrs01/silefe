@@ -27,10 +27,10 @@ export const form = {
         descripcion: {
             key: 3,
             type: "multilang",
-            label: Liferay.Language.get('Nombre'),
+            label: Liferay.Language.get('Descripción'),
             name: "descripcion",
             value: "lelele",
-            placeholder: Liferay.Language.get('Nombre'),
+            placeholder: Liferay.Language.get('Descripción'),
             className: 'col-6',
             conditions: ["text"]
         },
