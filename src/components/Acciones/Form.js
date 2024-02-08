@@ -182,15 +182,15 @@ export const form = {
 //            columnType: "string",
 //            key: "c2",
 //        },
-        tipo: {
-            columnTitle: Liferay.Language.get('Tipo'),
-            columnType: "multilang",
-            key: "c4",
-        },
         nombre: {
             columnTitle: Liferay.Language.get('Nombre'),
             columnType: "multilang",
             key: "c3",
+        },
+        tipo: {
+            columnTitle: Liferay.Language.get('Tipo'),
+            columnType: "multilang",
+            key: "c4",
         },
         formacion: {
             columnTitle: Liferay.Language.get('Formacion'),
@@ -217,7 +217,12 @@ export const form = {
             columnType: "string",
             key: "c8",
         },
+        estado: {
+            columnTitle: Liferay.Language.get('Estado'),
+            columnType: "multilang",
+            key: "c9",
+        }
     },
-    searchFields: ['accionTipoId','nombre','accionTipoFormacionId'],
+    searchFields: ['nombre','accionTipoId','accionTipoFormacionId', 'estadoId'],
     searchField: 'nombre',
 };

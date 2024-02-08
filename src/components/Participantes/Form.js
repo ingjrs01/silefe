@@ -392,6 +392,21 @@ export const form = {
             componentName: "Historico",
             name: "Historico",
         },
+        apellidos: {
+            key:41,
+            type: "text",
+            label: Liferay.Language.get('Apellidos'),
+            name: "apellidos",
+            value:"apellidos",
+            placeholder: Liferay.Language.get('Apellidos'),
+        },
+        loadCividas: {
+            key:42,
+            type: "button",
+            label: Liferay.Language.get('Cividas'),
+            name: "loadCividas",            
+        },
+
     },
     tabActive:0,
     tabs : [
@@ -402,7 +417,7 @@ export const form = {
             rows: [
                 {
                     key:41,
-                    cols: ['tipoDoc','documento', 'fechaNacimiento', 'sexo', 'admiteEnvios']
+                    cols: ['tipoDoc','documento', 'fechaNacimiento', 'sexo', 'admiteEnvios', 'loadCividas']
                 },
                 {
                     key:43,
@@ -566,6 +581,6 @@ export const form = {
             key: "tc8",
         },
     },
-    searchFields: ['nombre', 'documento','apellido1','provinciaId', 'municipioId','admiteEnvios'],
+    searchFields: ['nombre', 'documento','apellidos','provinciaId', 'municipioId','admiteEnvios'],
     searchField: 'nombre',
 };

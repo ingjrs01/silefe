@@ -1,6 +1,7 @@
 import ClayForm from '@clayui/form';
 import React from "react";
 import { spritemap } from '../LiferayFunctions';
+import { Button } from './fields/Button';
 import { Dateinput } from './fields/Dateinput';
 import { Dni } from './fields/Dni';
 import { DoubleList } from './fields/DoubleList';
@@ -30,6 +31,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => (
                     key={"Group-" + items.fields.fields[it].key} >
                     {(items.fields.fields[it].type === 'multitext')   && <Phone          itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'text')        && <Textinput      itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
+                    {(items.fields.fields[it].type === 'button')      && <Button         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'textarea')    && <Textarea       itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'percent')     && <Percent        itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
                     {(items.fields.fields[it].type === 'number')      && <Number         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} /> }
