@@ -175,7 +175,7 @@ export const form = {
         id: {
             columnTitle: "Id",
             columnType: "checkbox",
-            key: "c1",
+            key: "col1",
         },
 //        acctionTipo: {
 //            columnTitle: Liferay.Language.get('Tipo'),
@@ -185,7 +185,7 @@ export const form = {
         nombre: {
             columnTitle: Liferay.Language.get('Nombre'),
             columnType: "multilang",
-            key: "c3",
+            key: "col3",
         },
         tipo: {
             columnTitle: Liferay.Language.get('Tipo'),
@@ -195,12 +195,12 @@ export const form = {
         formacion: {
             columnTitle: Liferay.Language.get('Formacion'),
             columnType: "multilang",
-            key: "c9",
+            key: "col9",
         },
         teorica: {
             columnTitle: Liferay.Language.get('Teórica'),
             columnType: "boolean",
-            key: "c5",
+            key: "col5",
         },
         practica: {
             columnTitle: Liferay.Language.get('Práctica'),
@@ -210,17 +210,17 @@ export const form = {
         grupal: {
             columnTitle: Liferay.Language.get('Grupal'),
             columnType: "boolean",
-            key: "c7",
+            key: "col7",
         },
         horas: {
             columnTitle: Liferay.Language.get('Horas'),
             columnType: "string",
-            key: "c8",
+            key: "col8",
         },
         estado: {
             columnTitle: Liferay.Language.get('Estado'),
             columnType: "multilang",
-            key: "c9",
+            key: "col10",
         }
     },
     searchFields: ['nombre','accionTipoId','accionTipoFormacionId', 'estadoId'],
