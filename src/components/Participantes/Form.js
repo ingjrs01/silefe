@@ -41,7 +41,7 @@ export const form = {
             label: Liferay.Language.get('Sexo'),
             name: "sexo",
             change: ()=>{console.log("cambia sexo");},
-            className: 'col-3'
+            className: 'col-2'
             //conditions: []
         },
         nombre: {
@@ -405,6 +405,7 @@ export const form = {
             type: "button",
             label: Liferay.Language.get('Cividas'),
             name: "loadCividas",            
+            onclick: ()=>{console.log("click en botón")},
         },
 
     },

@@ -321,7 +321,25 @@ const Participantes = ({user}) => {
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, total: totalItems, totalPages: totalPages, page: page });
     }
 
+    const loadParticipantExternal = () => {
+
+        fetch('https://jsonplaceholder.typicode.com/users/1')
+            .then((response) => response.json())
+            .then((json) => {                
+                const participante = {
+                    //...json,
+                    nombre: json.name,
+                }
+                itemsHandle({type: ITEMS_ACTIONS.SETCOMPLETEITEM, item: participante});
+            })
+            .catch( error => {
+                console.error(error);
+            })
+
+    }
+
     const initForm = () => {
+        form.fields.loadCividas.onclick = loadParticipantExternal;
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
