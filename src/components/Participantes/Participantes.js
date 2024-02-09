@@ -327,7 +327,6 @@ const Participantes = ({user}) => {
             .then((response) => response.json())
             .then((json) => {                
                 const participante = {
-                    //...json,
                     nombre: json.name,
                 }
                 itemsHandle({type: ITEMS_ACTIONS.SETCOMPLETEITEM, item: participante});

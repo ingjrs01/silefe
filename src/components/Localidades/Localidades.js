@@ -11,9 +11,9 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { formatPost } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './Form';
-import { formatPhones, formatPost } from '../../includes/utils';
 
 const Localidades = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -122,7 +122,7 @@ const Localidades = () => {
     }
 
     const fetchData = async () => {
-        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.ayuntamiento/filter', formatPost(items), referer);
+        const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.municipio/filter', formatPost(items), referer);
         const tmp = await data.map(i => ({ ...i, checked: false }));
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
