@@ -326,7 +326,7 @@ const Acciones = ({user}) => {
             form.fields.plataformaId.options = opts;
         });
 
-        fetchAPIData('/silefe.estado/all', { lang: getLanguageId() }, referer).then(response => {
+        fetchAPIData('/silefe.estado/get-estados-from-origin', { lang: getLanguageId(), origin: "action" }, referer).then(response => {
             const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.estadoId, label: obj.nombre } })];
             form.fields.estadoId.options = opts;
             form.fields.estadoId.change = () => itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: "observaciones", value: "" });
