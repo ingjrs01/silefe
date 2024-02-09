@@ -407,6 +407,16 @@ export const form = {
             name: "loadCividas",            
             onclick: ()=>{console.log("click en botón")},
         },
+        municipio: {
+            key:43,
+            type: "text",
+            label: Liferay.Language.get('Municipio'),
+            name: "municipio",
+            value:"",
+            enabled:true,
+            className: 'col-5',
+            conditions: []
+        },
 
     },
     tabActive:0,
@@ -417,47 +427,47 @@ export const form = {
             ariacontrols: "tabpanel-1",
             rows: [
                 {
-                    key:41,
+                    key:1041,
                     cols: ['tipoDoc','documento', 'fechaNacimiento', 'sexo', 'admiteEnvios', 'loadCividas']
                 },
                 {
-                    key:43,
+                    key:1043,
                     cols: ['nombre','apellido1','apellido2']
                 },
                 {
-                    key:44,
+                    key:1044,
                     cols: ['provinciaId', 'municipioId', 'localidad']
                 },
                 {
-                    key:45,
+                    key:1045,
                     cols: ['tipoviaId','nombreVia','numero','piso']
                 },
                 {
-                    key:46,
+                    key:1046,
                     cols: ['email','telefono']
                 },
                 {
-                    key: 48,
+                    key: 1048,
                     cols: ['carnets']
                 },
                 {
-                    key: 49,
+                    key: 1049,
                     cols: ['vehiculoPropio', 'cargasFamiliares', 'discapacidad', 'percibePrestacion']
                 },
                 {
-                    key: 51,
+                    key: 1051,
                     cols: ['tipoDiscapacidad', 'porcentajeDiscapacidad', 'tratamiento']
                 },
                 {
-                    key: 52,
+                    key: 1052,
                     cols: ['incompatibilidades', 'adaptaciones']
                 },
                 {
-                    key: 54,
+                    key: 1054,
                     cols: ['prestaciones']
                 },
                 {
-                    key: 50,
+                    key: 1050,
                     cols: ['colectivos']
                 },
 
@@ -582,6 +592,6 @@ export const form = {
             key: "tc8",
         },
     },
-    searchFields: ['nombre', 'documento','apellidos','provinciaId', 'municipioId','admiteEnvios'],
+    searchFields: ['nombre', 'documento','apellidos','provinciaId', 'municipio','admiteEnvios'],
     searchField: 'nombre',
 };
