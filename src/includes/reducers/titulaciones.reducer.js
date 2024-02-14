@@ -67,11 +67,13 @@ export const reducerTitulacion = (state, action ) => {
                 tipoOptions: action.tipos.map(item => { return {value:item.titulacionTipoId,label:item.descripcion}}),
                 tipos: action.tipos
             }
+
         case TITULACIONES_ACTIONS.NIVEL:
             return {
                 ...state,
                 niveles: action.nivel
             }
+            
         case TITULACIONES_ACTIONS.FAMILIA:
             return {
                 ...state,

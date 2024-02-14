@@ -334,24 +334,24 @@ const Participantes = ({user}) => {
             .catch( error => {
                 console.error(error);
             })
-
     }
 
     const initForm = () => {
+        const lang = getLanguageId();
         form.fields.loadCividas.onclick = loadParticipantExternal;
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
-        fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.colectivo/all', {  }, referer).then(response => {
+            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.colectivos.options = opts;
         });
 
-        fetchAPIData('/silefe.carnet/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.carnet/all', { }, referer).then(response => {
+            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.carnets.options = opts;
         });
 
-        fetchAPIData('/silefe.prestacion/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.prestacion/all', { }, referer).then(response => {
+            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.prestaciones.options = opts;
         });
 
@@ -363,27 +363,27 @@ const Participantes = ({user}) => {
             { value: "3", label: "Estudiando" }
         ];
 
-        fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.salario/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.rangoSalarialId.options = opts;
         });
-        fetchAPIData('/silefe.horario/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.horario/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.jornadaId.options = opts;
         });
       
-        fetchAPIData('/silefe.discapacidad/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.discapacidad/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.tipoDiscapacidad.options = opts;
         });
         
-        fetchAPIData('/silefe.porcentajediscapacidad/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.porcentajediscapacidad/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.porcentajeDiscapacidad.options = opts;
         });
 
-        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        fetchAPIData('/silefe.provincia/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => ({ value: obj.id, label: obj.nombre[lang] }) )];
             form.fields.provinciaId.options = opts;
             form.fields.provinciaId.change = () => console.log("cambia la provincia");//changeProvince;
         });
@@ -392,8 +392,8 @@ const Participantes = ({user}) => {
         //    form.fields.municipioId.options = opts;
         //    form.fields.municipioId.change = change2;
         //});
-        fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId(), page: 0, province: 1 }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        fetchAPIData('/silefe.tiposvia/all', { page: 0, province: 1 }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             form.fields.tipoviaId.options = opts;
             form.fields.tipoviaId.change = () => { console.log("cambiando el tipo de via") };
         });
@@ -402,8 +402,8 @@ const Participantes = ({user}) => {
     }
 
     const changeProvince = (id) => {
-        fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: id }, referer).then(response => {
-            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        fetchAPIData('/silefe.municipio/filter-by-province', { page: 0, province: id }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => ({ value: obj.id, label: obj.nombre[getLanguageId()] }) )];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
         });
     }
@@ -414,9 +414,9 @@ const Participantes = ({user}) => {
                 const tits = response.data.map(i => ({
                     ...i,
                     id: i.formacionParticipanteId,
-                    ini: (i.inicio != null) ? new Date(i.inicio).toISOString().substring(0, 10) : "",
-                    inicio: (i.inicio != null) ? new Date(i.inicio).toISOString().substring(0, 10) : "",
-                    fin: (i.fin != null) ? new Date(i.fin).toISOString().substring(0, 10) : "",
+                    ini: toDate(i.inicio),
+                    inicio: toDate(i.inicio),
+                    fin: toDate(i.fin),
                     titulacionName: i.titulacion,
                 }));
                 titulacionHandler({ type: TITULACIONES_ACTIONS.LOAD_ITEMS, items: tits })
@@ -434,8 +434,8 @@ const Participantes = ({user}) => {
                     ...item,
                     id: item.experienciaParticipanteId,
                     participanteId: participanteId,
-                    ini: (item.inicio != null) ? new Date(item.inicio).toISOString().substring(0, 10) : "",
-                    fin: (item.fin != null) ? new Date(item.fin).toISOString().substring(0, 10) : "",
+                    ini: toDate(item.inicio),
+                    fin: toDate(item.fin),
                 }
             });
             experienciasHandler({ type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias, participanteId: participanteId });
@@ -443,29 +443,42 @@ const Participantes = ({user}) => {
     }
 
     const queryTitulaciones = () => {
+        const lang = getLanguageId();
         titulacionHandler({ type: TITULACIONES_ACTIONS.START });
-        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: ""}, referer).then(response => {
+            const opts = response.data.map(item => ({
+                ...item,
+                value:item.titulacionTipoId,
+                label:item.descripcion[lang]
+            }));
+            titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: opts });
         });
-        fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: [...response.data] });
+
+        fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(item => ({...item, descripcion: item.descripcion[lang], tipo: item.tipo[lang]}));
+            titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: opts });
         });
-        fetchAPIData('/silefe.titulacionfam/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: [...response.data] });
+
+        fetchAPIData('/silefe.titulacionfam/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(item => ({...item, descripcion: item.descripcion[lang]}));
+            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: opts});
         });
-        fetchAPIData('/silefe.titulacion/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: [...response.data] });
+
+        fetchAPIData('/silefe.titulacion/all', {  }, referer).then(response => {
+            const opts = response.data.map( item => ({...item, descripcion: item.descripcion[lang]}));
+            titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: opts });
         });
-        fetchAPIData('/silefe.tipocontrato/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            experienciasHandler({ type: EXPERIENCIA_ACTIONS.CONTRATOS, contratoOptions: [...response.data] })
+        fetchAPIData('/silefe.tipocontrato/all', {  }, referer).then(response => {
+            const opts = response.data.map(item => ({value:item.tipoContratoId, label: item.descripcion[lang]}));
+            experienciasHandler({ type: EXPERIENCIA_ACTIONS.CONTRATOS, contratoOptions: opts })
         });
-        fetchAPIData('/silefe.mbaja/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            let motivos = [...response.data];
-            motivos.unshift({ id: 0, descripcion: " " });
+        fetchAPIData('/silefe.mbaja/all', { }, referer).then(response => {
+            const motivos = response.data.map(item => ({value: item.id, label: item.descripcion[lang]})).unshift({ id: 0, descripcion: " " });
             experienciasHandler({ type: EXPERIENCIA_ACTIONS.MOTIVOS, motivos: motivos });
         });
-        fetchAPIData('/silefe.cno/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            experienciasHandler({ type: EXPERIENCIA_ACTIONS.OCUPACIONES, ocupaciones: [...response.data] })
+        fetchAPIData('/silefe.cno/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(item => ({value: item.id, label: item.descripcion[lang]}));
+            experienciasHandler({ type: EXPERIENCIA_ACTIONS.OCUPACIONES, ocupaciones: opts });
         });
     }
 

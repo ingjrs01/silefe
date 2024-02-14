@@ -65,7 +65,6 @@ export const initialState = {
 const resetErrors = (fields) => {
     let errores = {};
     let tmp_item = {};
-    console.log("resetErrors");
     Object.keys(fields.fields).forEach( j => {
         errores[j]=[];
         if (fields.fields[j].type === "multilang") {
@@ -82,7 +81,6 @@ const resetErrors = (fields) => {
 
 const createItem = (form) => {
     let tmp_item = {};
-    console.log("vaciandoItem");
     Object.keys(form.fields).forEach(j => {
         let tt2 = [];
         switch (form.fields[j].type) {
@@ -191,8 +189,6 @@ export const red_items = (state, action ) => {
         case ITEMS_ACTIONS.SELECT_ITEM:
             let sel = [];
             let seleccionado = {};
-            //console.debug(state.fields);
-            //debugger;
             if (action.hasOwnProperty('index')) {
                 seleccionado = state.arr[action.index];
             }
@@ -239,7 +235,6 @@ export const red_items = (state, action ) => {
                 }
             });
             //let err2 = resetErrors(state.fields);
-            //console.debug(tmp_item);
             return {
                 ...state,
                 status: 'edit',

@@ -418,17 +418,17 @@ const Proyectos = ({user}) => {
     }
 
     const initForm = () => {
-        fetchAPIData('/silefe.cofinanciadas/all', { lang: getLanguageId() }, referer).then(response => {
+        const lang = getLanguageId();
+        fetchAPIData('/silefe.cofinanciadas/all', { }, referer).then(response => {
             form.fields.entidadId.change = () => { };
-            form.fields.entidadId.options = (response.data !== undefined && response.data.length > 0)?response.data.map(obj => { return { value: obj.id, label: obj.descripcion } }):[];
+            form.fields.entidadId.options = (response.data !== undefined && response.data.length > 0)?response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } }):[];
         });
         fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
-            //  [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.descripcion}})];
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.colectivos.options = opts;
         });
-        fetchAPIData('/silefe.convocatoria/all', { lang: getLanguageId() }, referer).then(response => {
-            form.fields.convocatoriaId.options = response.data.map(obj => { return { value: obj.id, label: obj.descripcion } });
+        fetchAPIData('/silefe.convocatoria/all', { }, referer).then(response => {
+            form.fields.convocatoriaId.options = response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } });
         });
         //fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
         //    form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 

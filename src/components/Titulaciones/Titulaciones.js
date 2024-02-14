@@ -4,6 +4,8 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
 import { getLanguageId, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, saveAPI } from '../../includes/apifunctions.js';
+//import { DefaultForm } from '../../includes/interface/DefaultForm';
+import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
@@ -11,33 +13,32 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { TITULACIONES_ACTIONS, reducerTitulacion } from '../../includes/reducers/titulaciones.reducer';
+import { formatPost } from '../../includes/utils.js';
 import Menu from '../Menu';
 import { form } from './Form';
-import { TitulacionForm } from './TitulacionForm';
-import { formatPost } from '../../includes/utils.js';
 
 const Titulaciones = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, {});
     const [file, setFile] = useState();
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const isInitialized = useRef(null);
-    let opciones_nivel = [];
-    let titulacionesFamiliaOptions = [];
-    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, {});
 
+    // TODO: Ver que demonios hacer aquí
     const beforeEdit = (val) => {
         let seleccionado = (val == undefined) ? items.arr.filter(item => item.checked)[0] : val;
-        //console.debug(items);        
-        //const opt_nivel = opciones_nivel.filter(i => i.titulacionTipoId == seleccionado.titulacionTipoId).map(l => {return {value:l.titulacionNivelId,label:l.descripcion}});
-        //const opt_fam   = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == seleccionado.titulacionNivelId).map(l => {return {value:l.titulacionFamiliaId,label:l.descripcion}});
-        //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionNivelId', options: opt_nivel});
-        //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: 'titulacionFamiliaId', options: opt_fam});
-
-        titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value: seleccionado.titulacionTipoId });
-        titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value: seleccionado.titulacionNivelId });
-        titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA, value: seleccionado.titulacionFamiliaId });
+        //console.log("esto es beforeEdit : "); 
+        //console.debug(seleccionado);
+      
+        //titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value: seleccionado.titulacionTipoId });
+        //titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONNIVEL, value: seleccionado.titulacionNivelId });
+        //titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA, value: seleccionado.titulacionFamiliaId });
     }
+
+    form.beforeEdit = beforeEdit;
+    //form.loadCsv = loadCsv
+    //form.beforeEdit = downloadFile;
 
     const referer = `${url_referer}/titulaciones`;
 
@@ -102,17 +103,10 @@ const Titulaciones = () => {
         console.log("descargando");
     }
 
-    form.beforeEdit = beforeEdit;
-    form.handleSave = handleSave;
-    form.loadCsv = loadCsv
-    form.beforeEdit = downloadFile;
-
     const fetchData = async () => {
-        if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0)
-            queryTitulaciones();
+        //if (redTitulaciones.tipos == undefined || redTitulaciones.tipos.length == 0)
+        //    queryTitulaciones();
 
-        //if (form.fields.titulacionTipoId.options == undefined || form.fields.titulacionTipoId.options.length == 0)
-        //    initForm();
         const { data, error, totalPages, totalItems, page } = await fetchAPIData('/silefe.titulacion/filter', formatPost(items), referer);
 
         if (error == 1) {
@@ -129,76 +123,78 @@ const Titulaciones = () => {
     }
 
     const initForm = () => {
-        let postdata = {
-            descripcion: "",
-            lang: getLanguageId()
-        };
-
-        fetchAPIData('/silefe.titulaciontipo/all', postdata, referer).then(response => {
-            const l = response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })
-            form.fields.titulacionTipoId.options = l;
-            form.fields.titulacionTipoId.change = cambiaTitulacionTipo;
-        });
-
-        fetchAPIData('/silefe.titulacionnivel/all', postdata, referer).then(response => {
-            opciones_nivel = [...response.data];
-            form.fields.titulacionNivelId.change = cambiaTitulacionNivel;
-        });
-
-        fetchAPIData('/silefe.titulacionfam/all', postdata, referer).then(response => {
-            titulacionesFamiliaOptions = response.data;
-            form.fields.titulacionFamiliaId.change = cambiaTitulacionFamilia;
-        });
+        console.log("cdargando el formulario");
 
         itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
-
-        //queryTitulaciones();
     }
+
+    //const initForm = () => {
+    //    const lang = getLanguageId();
+    //    let postdata = {
+    //        descripcion: ""
+    //    };
+    //    fetchAPIData('/silefe.titulaciontipo/all', postdata, referer).then(response => {
+    //        const l = response.data.map(obj => ({ ...obj, value: obj.id, label: obj.descripcion[lang] }) );
+    //        form.fields.titulacionTipoId.options = l;
+    //        form.fields.titulacionTipoId.change = cambiaTitulacionTipo;
+    //    });
+    //    fetchAPIData('/silefe.titulacionnivel/all', postdata, referer).then(response => {
+    //        form.fields.titulacionNivelId.change = cambiaTitulacionNivel;
+    //    });
+    //    fetchAPIData('/silefe.titulacionfam/all', postdata, referer).then(response => {
+    //        form.fields.titulacionFamiliaId.change = cambiaTitulacionFamilia;
+    //    });
+    //    itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+    //}
 
     const queryTitulaciones = () => {
         console.log("Cargando los dados de reducer desde titulaciones");
         titulacionHandler({ type: TITULACIONES_ACTIONS.START });
         const lang = getLanguageId();
-        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: lang }, referer).then(response => {
-            console.log("cargando los tipos");
-            titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: [...response.data] });
+
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(i => ({...i, value: i.id, label: i.descripcion[lang], descripcion: i.descripcion[lang]}));
+            form.fields.titulacionTipoId.options = opts;
+            titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: opts });
         });
-        fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "", lang: lang }, referer).then(response => {
-            titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: [...response.data] });
+
+        fetchAPIData('/silefe.titulacionnivel/all', { descripcion: ""}, referer).then(response => {
+            const opts = response.data.map(i => ({...i, value: i.id, label: i.descripcion[lang], descripcion: i.descripcion[lang]}));
+            form.fields.titulacionNivelId.options = opts; 
+            titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: opts });
         });
-        fetchAPIData('/silefe.titulacionfam/all', { descripcion: "", lang: lang }, referer).then(response => {
-            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: [...response.data] });
+
+        fetchAPIData('/silefe.titulacionfam/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(i => ({...i, value: i.id, label: i.descripcion[lang], descripcion: i.descripcion[lang]}));
+            form.fields.titulacionFamiliaId.options = opts;
+            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: opts });
         });
-        fetchAPIData('/silefe.titulacion/all', { descripcion: "", lang: lang }, referer).then(response => {
-            titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: [...response.data] });
+
+        fetchAPIData('/silefe.titulacion/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(i => ({...i, value: i.id, label: i.descripcion[lang], descripcion: i.descripcion[lang]}));
+            titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: opts });
         });
     }
 
+    useEffect(()=>{
+        if (items.item.titulacionTipoId !== undefined && items.item.titulacionTipoId > 0) {
+            const opts  = redTitulaciones.niveles.filter(nivel => nivel.titulacionTipoId == items.item.titulacionTipoId).map(i => ({value:i.id, label: i.label}));
+            itemsHandle({type:ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'titulacionNivelId',  options: opts});
+        }
+    }, [items.item.titulacionTipoId]);
 
-    const cambiaTitulacionTipo = (value) => {
-        console.log("opciones nivel");
-        console.log(opciones_nivel);
-        let llll = opciones_nivel.filter(i => i.titulacionTipoId == value);
-        const opt_nivel = llll.map(l => { return { value: l.titulacionNivelId, label: l.descripcion } })
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'titulacionNivelId', options: opt_nivel });
-
-        const titnval = llll[0].titulacionNivelId;
-        let lll2 = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == titnval).map(l => { return { value: l.titulacionFamId, label: l.descripcion } })
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'titulacionFamiliaId', options: lll2 });
-    }
-
-    const cambiaTitulacionNivel = (value) => {
-        let tt = titulacionesFamiliaOptions.filter(i => i.titulacionNivelId == value).map(l => { return { value: l.titulacionFamId, label: l.descripcion } })
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'titulacionFamiliaId', options: tt });
-    }
-
-    const cambiaTitulacionFamilia = (value) => {
-        console.log("no hago nada");
-    }
+    useEffect(()=>{
+        if (items.item.titulacionNivelId !== undefined && items.item.titulacionNivelId > 0) {
+            const opts  = redTitulaciones.familias.filter(familia => familia.titulacionNivelId == items.item.titulacionNivelId).map(i => ({value:i.id, label: i.label}));
+            itemsHandle({type:ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'titulacionFamiliaId',  options: opts});
+        }
+    }, [items.item.titulacionNivelId]);
 
     useEffect(() => {
         if (!isInitialized.current) {
-            initForm();
+            //initForm();
+            queryTitulaciones();
+            itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form}); // TODO: esto seguramente lo tenemos que quitar
             fetchData();
             isInitialized.current = true;
         } else {
@@ -227,12 +223,10 @@ const Titulaciones = () => {
                 />}
             {
                 (items.status === 'edit' || items.status === 'new') &&
-                <TitulacionForm
-                    redTitulaciones={redTitulaciones}
-                    titulacionHandler={titulacionHandler}
+                <DefaultForm
+                    handleSave={handleSave}
                     itemsHandle={itemsHandle}
                     items={items}
-                    save={handleSave}
                 />
             }
             {

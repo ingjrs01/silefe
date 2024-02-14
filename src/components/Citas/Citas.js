@@ -93,7 +93,7 @@ const Citas = () => {
         //    itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: f });
         //    return;
         //}
-        
+        const lang = getLanguageId();
         form.beforeEdit = beforeEdit;
         const seleccionarlabel = Liferay.Language.get("Seleccionar");
         form.fields.originInId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Participante" }, { value: "2", label: "Empresa" }, { value: "3", label: "Oferta" }];
@@ -101,23 +101,23 @@ const Citas = () => {
         form.fields.originInId.change = loadParticipantes;
         form.fields.originOutId.change = loadParticipantes;
         
-        fetchAPIData('/silefe.acciontipo/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.acciontipo/all', {  }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.tipoCitaId.options = opts;
         });
         
-        fetchAPIData('/silefe.method/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.name } })];
+        fetchAPIData('/silefe.method/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.name[lang] } })];
             form.fields.methodId.options = opts;
         });
         
-        fetchAPIData('/silefe.participante/all', { lang: getLanguageId() }, referer).then(response => {
+        fetchAPIData('/silefe.participante/all', { }, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.participanteId, label: obj.nombre + " " + obj.apellido1 + " " + obj.apellido2 } })];
             form.fields.participantInId.options = opts;
             form.fields.participantOutId.options = opts;
         });
         
-        fetchAPIData('/silefe.tecnico/all', { lang: getLanguageId() }, referer).then(response => {
+        fetchAPIData('/silefe.tecnico/all', { }, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName + " " + obj.middleName + " " + obj.lastName } })];
             form.fields.tecnicoInId.options = opts;
             form.fields.tecnicoOutId.options = opts;

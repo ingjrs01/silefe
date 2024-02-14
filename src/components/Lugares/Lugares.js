@@ -51,8 +51,8 @@ const Lugares = () => {
 
     const loadMunicipiosProvincia = (pId) => {
         const provinciaId = pId ?? 1;
-        fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: provinciaId }, referer).then(response => {
-            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        fetchAPIData('/silefe.municipio/filter-by-province', {  page: 0, province: provinciaId }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[getLanguageId()] } })];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
         }).catch(error => console.error(error));
     }
@@ -60,25 +60,23 @@ const Lugares = () => {
     const initForm = () => {
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         form.fields.paisId.options = [{ value: "1", label: "España" }];
-        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
-            form.fields.provinciaId.options = [{ value: "0", label: seleccionarlabel }, ...response.data.map(item => ({ label: item.nombre, value: item.provinciaId }))];
+        fetchAPIData('/silefe.provincia/all', {  }, referer).then(response => {
+            form.fields.provinciaId.options = [{ value: "0", label: seleccionarlabel }, ...response.data.map(item => ({ label: item.nombre[getLanguageId()], value: item.provinciaId }))];
         }
         ).catch(error => {
             console.log("error");
             console.error(error);
         });
 
-        fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: 36 }, referer).then(response => {
-            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
-            form.fields.municipioId.options = opts;
-            //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
+        fetchAPIData('/silefe.municipio/filter-by-province', { page: 0, province: 36 }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[getLanguageId()] } })];
+            form.fields.municipioId.options = opts;            
         }).catch(error => console.error(error));
 
-        //loadMunicipiosProvincia(36); 
-
-        fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId() }, referer).then(response => {
-            form.fields.tipoViaId.options= [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.tiposViaId, label: obj.nombre } })];
-            //itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'tipoViaId', options: opts });
+        fetchAPIData('/silefe.tiposvia/all', {  }, referer).then(response => {
+            form.fields.tipoViaId.options= [
+                { value: "0", label: Liferay.Language.get('Seleccionar') }, 
+                ...response.data.map(obj => { return { value: obj.tiposViaId, label: obj.nombre[getLanguageId()] } })];
         }).catch(error => console.error("Error"));
         itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
     }

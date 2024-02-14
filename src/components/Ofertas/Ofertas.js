@@ -288,45 +288,44 @@ const Ofertas = ({user}) => {
     }    
 
     const initForm = () => {
-        // inicializo participantes: 
-        //participantesHandler({ type: PARTICIPANTE_ACTIONS.START });
+        const lang = getLanguageId();
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         const opciones_requerido = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Recomendable" }, { value: "2", label: "Obligatorio" }];
         fetchAPIData('/silefe.edad/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
             form.fields.edadId.options = opts;
         });
-        fetchAPIData('/silefe.empresa/all', { lang: getLanguageId() }, referer).then(response => {
+        fetchAPIData('/silefe.empresa/all', { }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.razonSocial } })];
             form.fields.empresaId.options = opts;
         });
         // TODO: ver si cargarlo aqui, o sacarlo directamente: 
         //loadCentros(); 
-        fetchAPIData('/silefe.proyecto/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.proyecto/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.proyectoId.options = opts;
         }).catch((error) => {
             console.error("hay errores");
             console.error(error);
         });
         // consulto los cno's
-        fetchAPIData('/silefe.cno/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.cno/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.puestoId.options = opts;
         });
         // cargamos las cna's
-        fetchAPIData('/silefe.cnae/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.cnae/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.cnaeId.options = opts;
         });
         // cargamos los tipos de contrato
-        fetchAPIData('/silefe.tipocontrato/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.tipocontrato/all', {  }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.tipoContratoId.options = opts;
         });
         // cargamos los candidatos: 
-        fetchAPIData('/silefe.carnet/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.carnet/all', {  }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.permisos.options = opts;
         });
 
@@ -336,21 +335,21 @@ const Ofertas = ({user}) => {
         form.fields.experienciaRequerido.options = opciones_requerido;
         form.fields.generoId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Hombre" }, { value: "2", label: "Mujer" }];
 
-        const postdata = {lang: getLanguageId(), origin: "offer"}
+        const postdata = { origin: "offer"}
         fetchAPIData('/silefe.estado/get-estados-from-origin', postdata, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             form.fields.estadoId.options = opts;
         });
 
         form.fields.jornadaId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: Liferay.Language.get("Completa") }, { value: "2", label: Liferay.Language.get("Parcial") }];
 
         fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.salarioId.options = opts;
         });
 
         fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.colectivos.options = opts;
         });
     }

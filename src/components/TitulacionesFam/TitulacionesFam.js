@@ -11,9 +11,9 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { formatPost } from '../../includes/utils.js';
 import Menu from '../Menu';
 import { form } from './Form';
-import { formatPost } from '../../includes/utils.js';
 
 const TitulacionesFam = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -101,13 +101,22 @@ const TitulacionesFam = () => {
         console.log("descangando");
     }
 
+    const beforeEdit = () => {
+        console.log("beforeEdit");
+    }
+
     //form.downloadFunc = downloadFile;
     //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
+    form.beforeEdit = beforeEdit;
 
     const initForm = async () => {
+        console.log("initForm");
         if (form.fields.titulacionNivelId.options == undefined || form.fields.titulacionNivelId.options.length == 0) {
-            form.fields.titulacionNivelId.options = await getNivelesTitulaciones();
+            fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "" }, referer).then(response => {                
+                const options = response.data.map(obj => { return { value: obj.id, label: obj.descripcion[getLanguageId()] } });
+                form.fields.titulacionNivelId.options = options;
+            });
         }
         itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form:form});
     }
@@ -116,28 +125,21 @@ const TitulacionesFam = () => {
         const endpoint = '/silefe.titulacionfam/filter';
         const { data, totalPages, totalItems, page } = await fetchAPIData(endpoint, formatPost(items), referer);
 
-        //form.fields.titulacionNivelId.options = options;
         const tmp = await data.map(i => {
             return ({
                 ...i,
                 id: i.titulacionFamId,
-                //titulacionNivelDescripcion:form.fields.titulacionNivelId.options.filter(o => o.value == i.titulacionNivelId)[0].laº1l,
                 checked: false
             })
         });
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
-    const getNivelesTitulaciones = async () => {
-        let { data } = await fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "", lang: getLanguageId() }, referer);
-        const options = await data.map(obj => { return { value: obj.id, label: obj.descripcion } });
-        return options
-    }
-
     useEffect(() => {
         if (!isInitialized.current) {
-            initForm();
-            fetchData();
+            initForm().then(r => {
+                fetchData();
+            });
             isInitialized.current = true;
         } else {
             const timeoutId = setTimeout(fetchData, 350);

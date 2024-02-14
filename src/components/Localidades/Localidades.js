@@ -113,8 +113,8 @@ const Localidades = () => {
 
     const initForm = () => {
         if (form.fields.provinciaId == undefined || form.fields.provinciaId.options.length == 0) {
-            fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
-                const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+            fetchAPIData('/silefe.provincia/all', { }, referer).then(response => {
+                const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[getLanguageId()] } })];
                 form.fields.provinciaId.options = opts;
             });
         }

@@ -80,20 +80,21 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 item: {...state.item, [action.fieldname]:action.value}
             }
         case EXPERIENCIA_ACTIONS.CONTRATOS: 
-            let options = action.contratoOptions.map(item => { return {value:item.tipoContratoId, label: item.descripcion}});            
+            //let options = action.contratoOptions.map(item => { return {value:item.tipoContratoId, label: item.descripcion}});            
             return {
                 ...state,
-                tipoContratoOptions: options//action.contratoOptions.map(item => { return {value:item.tipoContratoId, label: item.descripcion}})
+                tipoContratoOptions: action.contratoOptions
             }
         case EXPERIENCIA_ACTIONS.MOTIVOS: 
         return {
             ...state,
-            motivosOptions: action.motivos.map(item => {return {value: item.id, label: item.descripcion}}),
+            motivosOptions: action.motivos,//action.motivos.map(item => {return {value: item.id, label: item.descripcion}}),
         }
+
         case EXPERIENCIA_ACTIONS.OCUPACIONES:
             return {
                 ...state,
-                ocupacionesOptions: action.ocupaciones.map(item => { return {value: item.id, label: item.descripcion}}),
+                ocupacionesOptions: action.ocupaciones,
             }
         case EXPERIENCIA_ACTIONS.SAVE:
             let tmp = [];

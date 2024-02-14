@@ -63,8 +63,6 @@ const TitulacionesNivel = () => {
                 ...items.item,
                 userId: getUserId(),
             },
-            //descripcion:      items.item.descripcion,
-            //titulacionTipoId: items.item.titulacionTipoId,
         }
 
         let endpoint = '/silefe.titulacionnivel/save-titulacion-nivel';
@@ -105,8 +103,8 @@ const TitulacionesNivel = () => {
     form.loadCsv = loadCsv;
 
     const initForm = () => {
-        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "", lang: getLanguageId() }, referer).then(response => {
-            form.fields.titulacionTipoId.options = response.data.map(obj => ({value: obj.id, label: obj.descripcion}))
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: ""}, referer).then(response => {
+            form.fields.titulacionTipoId.options = response.data.map(obj => ({value: obj.id, label: obj.descripcion[getLanguageId()] }))
         });
         itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
     }
@@ -115,7 +113,6 @@ const TitulacionesNivel = () => {
         const { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.titulacionnivel/filter', formatPost(items), referer);
         const tmp = await data.map(i => ({
                 ...i,
-               // titulacionNivelDescripcion: form.fields.titulacionTipoId.options.filter(o => o.value == i.titulacionTipoId)[0].label,
                 checked: false
             } ));
         

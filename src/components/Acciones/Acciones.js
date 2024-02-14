@@ -303,16 +303,17 @@ const Acciones = ({user}) => {
     }
 
     const loadForm = () => {
+        const lang = getLanguageId();
         const langSel = Liferay.Language.get("Seleccionar");
         form.beforeEdit = beforeEdit;
 
-        fetchAPIData('/silefe.acciontipo/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.acciontipo/all', {  }, referer).then(response => {
+            const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.accionTipoId.options = opts;
         });
 
-        fetchAPIData('/silefe.acciontipoformacion/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.acciontipoformacion/all', {  }, referer).then(response => {
+            const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.accionTipoFormacionId.options = opts;
         });
 
@@ -322,12 +323,12 @@ const Acciones = ({user}) => {
         //});
 
         fetchAPIData('/silefe.plataforma/all', { options: {} }, referer).then(response => {
-            const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.plataformaId, label: obj.nombre } })];
+            const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.plataformaId, label: obj.nombre[lang] } })];
             form.fields.plataformaId.options = opts;
         });
 
-        fetchAPIData('/silefe.estado/get-estados-from-origin', { lang: getLanguageId(), origin: "action" }, referer).then(response => {
-            const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.estadoId, label: obj.nombre } })];
+        fetchAPIData('/silefe.estado/get-estados-from-origin', { origin: "action" }, referer).then(response => {
+            const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.estadoId, label: obj.nombre[lang] } })];
             form.fields.estadoId.options = opts;
             form.fields.estadoId.change = () => itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: "observaciones", value: "" });
         });
@@ -337,7 +338,7 @@ const Acciones = ({user}) => {
         form.fields.cursoId.options = [{ value: 0, label: langSel }, { value: 1, label: "Curso 1" }, { value: 2, label: "Curso 2" }];
 
 
-        fetchAPIData('/silefe.empresa/all', { lang: getLanguageId() }, referer).then(response => {
+        fetchAPIData('/silefe.empresa/all', { }, referer).then(response => {
             const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.id, label: obj.razonSocial } })];
             eform.fields.empresaId.options = opts;
         });
