@@ -91,8 +91,9 @@ const Participantes = ({user}) => {
     }, [citas.pagination.page]);
 
     const beforeEdit = (item) => {
-        fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: item.provinciaId }, referer).then(response => {
-            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        const lang = getLanguageId();
+        fetchAPIData('/silefe.municipio/filter-by-province', { page: 0, province: item.provinciaId }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
         });
         loadHistory(item.id);
@@ -410,14 +411,14 @@ const Participantes = ({user}) => {
 
     const beforeFormacion = (participanteId) => {
         if (participanteId != undefined) {
-            fetchAPIData('/silefe.formacionparticipante/filter-by-participante', { lang: getLanguageId(), participante: participanteId }, referer).then(response => {
+            fetchAPIData('/silefe.formacionparticipante/filter-by-participante', { participante: participanteId }, referer).then(response => {
                 const tits = response.data.map(i => ({
                     ...i,
                     id: i.formacionParticipanteId,
                     ini: toDate(i.inicio),
                     inicio: toDate(i.inicio),
                     fin: toDate(i.fin),
-                    titulacionName: i.titulacion,
+                    titulacionName: i.titulacion[getLanguageId()],
                 }));
                 titulacionHandler({ type: TITULACIONES_ACTIONS.LOAD_ITEMS, items: tits })
             }).catch((e) => {
@@ -428,7 +429,7 @@ const Participantes = ({user}) => {
     }
 
     const beforeExperiencia = (participanteId) => {
-        fetchAPIData('/silefe.experienciaparticipante/filter-by-participante', { lang: getLanguageId(), participante: participanteId }, referer).then(response => {
+        fetchAPIData('/silefe.experienciaparticipante/filter-by-participante', { participante: participanteId }, referer).then(response => {
             const experiencias = response.data.map(item => {
                 return {
                     ...item,
@@ -509,7 +510,6 @@ const Participantes = ({user}) => {
                     data={historico}
                     handler={handleHistorico}
                 />
-
         }
     }
 

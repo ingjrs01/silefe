@@ -16,7 +16,7 @@ import { CENTROS_ACTIONS, initialState as iniCentros, reducerCentros } from "../
 import { CONTACTOS_ACTIONS, initialState as iniContactos, reducerContactos } from "../../includes/reducers/contactos.reducer";
 import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from "../../includes/reducers/historico.reducer";
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
-import { toDate, toHours, formatPost, formatEmails, formatPhones } from '../../includes/utils';
+import { formatEmails, formatPhones, formatPost, toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import CentrosRender from "./CentrosRender";
 import ContactosRender from "./ContactosRender";
@@ -61,7 +61,7 @@ const Empresas = ({user}) => {
         let empresaId = (typeof (id) == 'int')?id:id.id;
 
         loadHistory(empresaId);
-        fetchAPIData('/silefe.empresacentros/filter-by-empresa', { lang: getLanguageId(), empresaId: empresaId }, referer).then(response => {
+        fetchAPIData('/silefe.empresacentros/filter-by-empresa', { empresaId: empresaId }, referer).then(response => {
             const centros = response.data.map(i => ({...i, id: i.empresaCentrosId}));
             centrosHandle({ type: CENTROS_ACTIONS.LOAD, items: centros });
         });
@@ -70,8 +70,8 @@ const Empresas = ({user}) => {
             const contacts = response2.data.map(j => ({
                     ...j,
                     id: j.contactoId,
-                    email: (j.email != null && j.email.length > 0) ? JSON.parse(j.email) : [],
-                    telefono: (j.telefono != null && j.telefono.length > 0) ? JSON.parse(j.telefono) : [],
+                    email: formatEmails(j.email),//(j.email != null && j.email.length > 0) ? JSON.parse(j.email) : [],
+                    telefono: formatPhones(j.telefono), // != null && j.telefono.length > 0) ? JSON.parse(j.telefono) : [],
                 })
             );
             contactosHandle({ type: CONTACTOS_ACTIONS.LOAD, items: contacts });
@@ -162,26 +162,27 @@ const Empresas = ({user}) => {
     }
 
     const initCentrosForm = () => {
+        const lang = getLanguageId();
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
         form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "CIF" }];
 
-        fetchAPIData('/silefe.cnae/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion } })];
+        fetchAPIData('/silefe.cnae/all', {  }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.cnaeId.options = opts;
         });
 
-        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        fetchAPIData('/silefe.provincia/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             centrosHandle({ type: CENTROS_ACTIONS.PROVINCIAS, provincias: opts })
         });
 
-        fetchAPIData('/silefe.municipio/all', { lang: getLanguageId() }, referer).then(response => {
+        fetchAPIData('/silefe.municipio/all', {  }, referer).then(response => {
             if (response.data.length > 0)
                 centrosHandle({ type: CENTROS_ACTIONS.MUNICIPIOS, municipios: [...response.data] })
         });
 
-        fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        fetchAPIData('/silefe.tiposvia/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             centrosHandle({ type: CENTROS_ACTIONS.TIPOS_VIA, tipos: opts })
         });
     }

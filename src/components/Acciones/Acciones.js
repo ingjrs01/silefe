@@ -167,8 +167,8 @@ const Acciones = ({user}) => {
             fetchAPIData('/silefe.formacionaccion/get-formacion-accion', { accionId: accionId, tipoFormacion: 1 }, referer).then(response => {
                 const item = {
                     ...response.data,
-                    inicio: (response.data.inicio != null) ? new Date(response.data.inicio).toISOString().substring(0, 10) : "",
-                    fin: (response.data.fin != null) ? new Date(response.data.fin).toISOString().substring(0, 10) : "",
+                    inicio: toDate(response.data.inicio),
+                    fin: toDate(response.data.fin),
                     hIni1: toHours(response.data.hIni1),
                     hIni2: toHours(response.data.hIni2),
                     hFin1: toHours(response.data.hFin1),
@@ -180,8 +180,8 @@ const Acciones = ({user}) => {
             fetchAPIData('/silefe.formacionaccion/get-formacion-accion', { accionId: accionId, tipoFormacion: 2 }, referer).then(response => {
                 const item = {
                     ...response.data,
-                    inicio: (response.data.inicio != null) ? new Date(response.data.inicio).toISOString().substring(0, 10) : "",
-                    fin: (response.data.fin != null) ? new Date(response.data.fin).toISOString().substring(0, 10) : "",
+                    inicio: toDate(response.data.inicio), 
+                    fin: toDate(response.data.fin), 
                     hIni1: toHours(response.data.hIni1),
                     hIni2: toHours(response.data.hIni2),
                     hFin1: toHours(response.data.hFin1),
@@ -193,8 +193,8 @@ const Acciones = ({user}) => {
             fetchAPIData('/silefe.formacionaccion/get-formacion-accion', { accionId: accionId, tipoFormacion: 3 }, referer).then(response => {
                 const item = {
                     ...response.data,
-                    inicio: (response.data.inicio != null) ? new Date(response.data.inicio).toISOString().substring(0, 10) : "",
-                    fin: (response.data.fin != null) ? new Date(response.data.fin).toISOString().substring(0, 10) : "",
+                    inicio: toDate(response.data.inicio), 
+                    fin: toDate(response.data.fin), 
                     hIni1: toHours(response.data.hIni1),
                     hIni2: toHours(response.data.hIni2),
                     hFin1: toHours(response.data.hFin1),
@@ -317,10 +317,10 @@ const Acciones = ({user}) => {
             form.fields.accionTipoFormacionId.options = opts;
         });
 
-        //fetchAPIData('/silefe.tecnico/all', { lang: getLanguageId() }, referer).then(response => {
-        //    const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName } })];
-        //    form.fields.tecnicoId.options = opts;
-        //});
+        fetchAPIData('/silefe.tecnico/all', {  }, referer).then(response => {
+            const opts = [{value: 0, label: langSel}, ...response.data.map(obj => { return { value: obj.tecnicoId, label: obj.firstName } })];
+            form.fields.tecnicoId.options = opts;
+        });
 
         fetchAPIData('/silefe.plataforma/all', { options: {} }, referer).then(response => {
             const opts = [{ value: 0, label: langSel }, ...response.data.map(obj => { return { value: obj.plataformaId, label: obj.nombre[lang] } })];

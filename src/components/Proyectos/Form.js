@@ -190,8 +190,14 @@ export const form = {
             componentName: "Empresas",
             name: "Empresas",
         },
-        historico: {
+        tecnicos: {
             key: 23,
+            type: "other",
+            componentName: "Tecnicos",
+            name: "Tecnicos",
+        },
+        historico: {
+            key: 24,
             type: "other",
             componentName: "Historico",
             name: "historico",
@@ -276,9 +282,20 @@ export const form = {
             ]
         },
         {
-            caption: Liferay.Language.get("Histórico"),
+            caption: Liferay.Language.get("Técnicos"),
             key: 6000,
             ariacontrols: "tabpanel-6",
+            rows: [
+                {
+                    key: 6016,
+                    cols: ['tecnicos']
+                },
+            ]
+        },
+        {
+            caption: Liferay.Language.get("Histórico"),
+            key: 7000,
+            ariacontrols: "tabpanel-7",
             admin: true,
             rows: [
                 {

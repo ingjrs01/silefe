@@ -69,7 +69,7 @@ const Citas = () => {
             case '3':
                 fetchAPIData('/silefe.oferta/all', { lang: getLanguageId() }, referer).then(response => {
                     const opts = [...response.data.map(obj => {
-                        const fecha = (obj.fechaIncorporacion != null) ? new Date(obj.fechaIncorporacion).toISOString().substring(0, 10) : "";
+                        const fecha = toDate(obj.fechaIncorporacion);
                         return ({
                             value: obj.ofertaId,
                             label: obj.titulo.substring(0, 12) + " " + obj.razonSocial + " " + fecha,

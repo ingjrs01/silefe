@@ -155,24 +155,17 @@ const Docentes = ({user}) => {
     }
 
     const initForm = async () => {
+        const lang = getLanguageId();
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
 
-        fetchAPIData('/silefe.provincia/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        fetchAPIData('/silefe.provincia/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             form.fields.provinciaId.options = opts;
-            form.fields.provinciaId.change = () => console.log("cambiando provincia");//changeProvince;
         });
 
-        //fetchAPIData('/silefe.municipio/filter-by-province', {lang: getLanguageId(), page:0,province: 1},referer).then(response => {
-        //    const opts = [{value:"0",label:seleccionarlabel}, ...response.data.map(obj => {return {value:obj.id,label:obj.nombre}})];
-        //    form.fields.municipioId.options = opts;
-        //    form.fields.municipioId.change = () => console.log("cambiando el municipio");
-        //});
-
-        fetchAPIData('/silefe.tiposvia/all', { lang: getLanguageId(), page: 0, province: 1 }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        fetchAPIData('/silefe.tiposvia/all', { page: 0, province: 1 }, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             form.fields.tipoviaId.options = opts;
-            form.fields.tipoviaId.change = () => { console.log("cambiando el tipo de via") };
         });
         form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "Pasaporte" }];
         form.fields.sexo.options = [{ key: 0, value: "H", label: Liferay.Language.get('Hombre') }, { key: 1, value: "M", label: Liferay.Language.get('Mujer') }];
@@ -181,8 +174,9 @@ const Docentes = ({user}) => {
     }
 
     const changeProvince = (id) => {
-        fetchAPIData('/silefe.municipio/filter-by-province', { lang: getLanguageId(), page: 0, province: id }, referer).then(response => {
-            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
+        const lang = getLanguageId();
+        fetchAPIData('/silefe.municipio/filter-by-province', { page: 0, province: id }, referer).then(response => {
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
         });
     }
@@ -231,9 +225,9 @@ const Docentes = ({user}) => {
                 ...i,
                 data: {
                     ...i.data,
-                    fechaNacimiento: (i.data.fechaNacimiento != null) ? new Date(i.data.fechaNacimiento).toISOString().substring(0, 10) : "",
-                    email: (i.data.email != null && i.data.email.length > 0) ? JSON.parse(i.data.email) : [],
-                    telefono: (i.data.telefono != null && i.data.telefono.length > 0) ? JSON.parse(i.data.telefono) : [],
+                    fechaNacimiento: toDate(i.data.fechaNacimiento),
+                    email: formatEmails(i.data.email),
+                    telefono: formatPhones(i.data.telefono),
                 }
             };
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: data });

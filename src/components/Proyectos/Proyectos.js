@@ -20,6 +20,7 @@ import { form as eform } from './EmpresaForm';
 import { form } from './Form';
 import { form as oform } from './OfertaForm';
 import { form as pform } from './ParticipantesForm';
+import { form as tform } from './TecnicoForm';
 //import Papa from "papaparse";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
@@ -32,6 +33,7 @@ const Proyectos = ({user}) => {
     const [participantes, participantesHandle] = useReducer(reducerSubtable, iniState);
     const [empresas, empresasHandle] = useReducer(reducerSubtable, iniState);
     const [historico, historicoHandle] = useReducer(reducerHistorico, hisIni);
+    const [tecnicos, tecnicosHandle] = useReducer(reducerSubtable,iniState);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -66,10 +68,12 @@ const Proyectos = ({user}) => {
             loadAllAcciones();
             loadAllOfertas();
             loadAllEmpresas();
+            loadAllTecnicos();
             accionesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: aform });
             ofertasHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: oform });
             participantesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: pform });
             empresasHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: eform });
+            tecnicosHandle({type: SUBTABLE_ACTIONS.SETFORM, form: tform});
 
             if (id !== 'undefined' && id > 0)
                 loadProyecto(id);
@@ -130,8 +134,8 @@ const Proyectos = ({user}) => {
                     ...r.data,
                     id: r.data.proyectoId,
                     nparticipantes: r.data.participantes,
-                    inicio: (r.data.inicio != null) ? new Date(r.data.inicio).toISOString().substring(0, 10) : "",
-                    fin: (r.data.fin != null) ? new Date(r.data.fin).toISOString().substring(0, 10) : "",
+                    inicio: toDate(r.data.inicio),
+                    fin: toDate(r.data.fin), 
                 }
             }
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: datatmp });
@@ -291,8 +295,8 @@ const Proyectos = ({user}) => {
                 ...i,
                 id: i.proyectoId,
                 //nparticipantes: i.participantes,
-                inicio: toDate(i.inicio), //(i.inicio != null) ? new Date(i.inicio).toISOString().substring(0, 10) : "",
-                fin: toDate(i.fin),// (i.fin != null) ? new Date(i.fin).toISOString().substring(0, 10) : "",
+                inicio: toDate(i.inicio),
+                fin: toDate(i.fin),
                 checked: false
             })
             );
@@ -410,11 +414,37 @@ const Proyectos = ({user}) => {
             fetchAPIData('/silefe.oferta/filter', postdata, referer).then(response => {
                 const itms = (response.data !== undefined && response.data.length > 0) ?response.data.map(i => ({
                     ...i,
-                    fechaIncorporacion: (i.fechaIncorporacion != null) ? new Date(i.fechaIncorporacion).toISOString().substring(0, 10) : "",
+                    fechaIncorporacion: toDate(i.fechaIncorporacion),
                 })):[];
                 ofertasHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: itms, pages: response.totalPages });
             });
         }
+    }
+
+    const loadAllTecnicos = () => {
+        console.log("loadAllTecnicos");
+        const pagesearch = tecnicos.paginationSearch.page??1 ;
+        const postdata = {
+            id: items.item.id ?? 1,
+            pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: tecnicos.paginationSearch.pageSize??4 },
+            options: {
+                filters: [{ 
+                    name: tecnicos.searchField === "", 
+                    value: (tecnicos.search && typeof tecnicos.search !== 'undefined') ? tecnicos.search : "" 
+                },],
+                excludes: []//empresas.items.map(item => item.id)
+            }
+        }
+        fetchAPIData('/silefe.tecnico/filter', postdata, referer)
+            .then(response => {
+                console.log("lalala");
+                console.debug(response);
+                tecnicosHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages});
+            });
+    }
+
+    const loadTecnicos = (id) => {
+        // cargando los tecncios;
     }
 
     const initForm = () => {
@@ -467,6 +497,14 @@ const Proyectos = ({user}) => {
                 <DoubleTable
                     data={empresas}
                     handler={empresasHandle}
+                    editUrl={"/empresa/"}
+                    backUrl={"/proyecto/"}
+                    ancestorId={items.item.id}
+                />,
+            Tecnicos:
+                <DoubleTable
+                    data={tecnicos}
+                    handler={tecnicosHandle}
                     editUrl={"/empresa/"}
                     backUrl={"/proyecto/"}
                     ancestorId={items.item.id}

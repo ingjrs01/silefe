@@ -148,12 +148,13 @@ const Ofertas = ({user}) => {
     form.loadCsv = loadCsv;
 
     useEffect(() => {
+        const lang = getLanguageId();
         if (!isInitialized.current) {
             initForm();
 
-            fetchAPIData('/silefe.estado/get-estados-from-origin', { lang: getLanguageId(), origin: "offerparticipation" }, referer).then(response => {
-                const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre } })];
-                fparticipantes.fields.estadoParticipacionId.options = opts; //[{label: "prueba", value:0}, {label: "ola", value: 1}];
+            fetchAPIData('/silefe.estado/get-estados-from-origin', { origin: "offerparticipation" }, referer).then(response => {
+                const opts = [{ value: "0", label: Liferay.Language.get("Seleccionar") }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
+                fparticipantes.fields.estadoParticipacionId.options = opts;
                 participantesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: fparticipantes });
             });
                
@@ -221,9 +222,8 @@ const Ofertas = ({user}) => {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
                 fetchData();
             }
-            else {
-                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);
-            }
+            else 
+                setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "danger", text: Liferay.Language.get('Borrado_no') }]);            
         })
     }
 
@@ -253,8 +253,8 @@ const Ofertas = ({user}) => {
                 data: {
                     ...r.data,
                     puesto: "lalala",
-                    fechaIncorporacion: (r.data.fechaIncorporacion != null) ? new Date(r.data.fechaIncorporacion).toISOString().substring(0, 10) : "",
-                    fechaUltimoEstado: (r.data.fechaUltimoEstado != null) ? new Date(r.data.fechaUltimoEstado).toISOString().substring(0, 10) : "",
+                    fechaIncorporacion: toDate(r.data.fechaIncorporacion), 
+                    fechaUltimoEstado: toDate(r.data.fechaUltimoEstado), 
                 }
             }
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: datatmp });
@@ -343,12 +343,12 @@ const Ofertas = ({user}) => {
 
         form.fields.jornadaId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: Liferay.Language.get("Completa") }, { value: "2", label: Liferay.Language.get("Parcial") }];
 
-        fetchAPIData('/silefe.salario/all', { lang: getLanguageId() }, referer).then(response => {
+        fetchAPIData('/silefe.salario/all', { }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.salarioId.options = opts;
         });
 
-        fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
+        fetchAPIData('/silefe.colectivo/all', { }, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.colectivos.options = opts;
         });
