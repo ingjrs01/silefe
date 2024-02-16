@@ -28,12 +28,12 @@ import { form as participacionesForm } from './ParticipacionesForm';
 import { TitulacionesRender } from './TitulacionesRender';
 
 
-const Participantes = ({user}) => {
+const Participantes = ({ user }) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, titsIni);
     const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, { items: [], deleted: [], item: {}, status: "list", participanteId: 0 });
-    const [citas, citasHandler]            = useReducer(reducerCitas, iniCitas);
-    const [participaciones, participacionesHandler] = useReducer (reducerSubtable, iniState); 
+    const [citas, citasHandler] = useReducer(reducerCitas, iniCitas);
+    const [participaciones, participacionesHandler] = useReducer(reducerSubtable, iniState);
     const [historico, handleHistorico] = useReducer(reducerHistorico, iniHistorico);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
@@ -50,24 +50,25 @@ const Participantes = ({user}) => {
             participanteId: id,
             pagination: {
                 page: historico.pagination.page,
-                pageSize: historico.pagination.pageSize??4,
+                pageSize: historico.pagination.pageSize ?? 4,
             },
             options: {}
         }
-    fetchAPIData('/silefe.participantehistory/get-participante-history-by-participante-id', post, referer).then(response => {
-        const respuesta = response.data.map( item => ({...item,
-            date: toDate(item.date) + " " + toHours(item.date),
-        }));
-        handleHistorico({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages});
+        fetchAPIData('/silefe.participantehistory/get-participante-history-by-participante-id', post, referer).then(response => {
+            const respuesta = response.data.map(item => ({
+                ...item,
+                date: toDate(item.date) + " " + toHours(item.date),
+            }));
+            handleHistorico({ type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages });
         });
     }
 
     const loadCitas = (participanteId) => {
         const postcitas = {
             participanteId: participanteId,
-            pagination: { 
-                page: citas.pagination.page, 
-                pageSize: citas.pagination.pageSize??4, 
+            pagination: {
+                page: citas.pagination.page,
+                pageSize: citas.pagination.pageSize ?? 4,
             },
             options: {
                 filters: [
@@ -76,17 +77,21 @@ const Participantes = ({user}) => {
         }
 
         fetchAPIData('/silefe.cita/get-citas-participante', postcitas, referer).then(response => {
-            citasHandler({ type: CITAS_ACTIONS.LOAD, items: response.data.map(item=>({
-                ...item,
-                appointmentDate: toDate(item.appointmentDate),
-                appointmentHour: toHours(item.appointmentHour),
-                appointmentDateTime: toDate(item.appointmentDate) + " " + toHours(item.appointmentHour)
-            })), totalPages: 2, total: 3});
+            console.log("respueta de cargar las citas del aprticipante");
+            console.debug(response);
+            citasHandler({
+                type: CITAS_ACTIONS.LOAD, items: response.data.map(item => ({
+                    ...item,
+                    appointmentDate: toDate(item.appointmentDate),
+                    appointmentHour: toHours(item.appointmentHour),
+                    appointmentDateTime: toDate(item.appointmentDate) + " " + toHours(item.appointmentHour)
+                })), totalPages: response.totalPages, total: response.totalItems
+            });
         });
     }
 
     useEffect(() => {
-        if (items.item !== 'undefined') 
+        if (items.item !== 'undefined')
             loadCitas(items.item.id);
     }, [citas.pagination.page]);
 
@@ -114,10 +119,11 @@ const Participantes = ({user}) => {
             console.debug("tratando los datos de participaciones");
             console.debug(response);
             const data_part = response.data.map(item => ({
-                ...item, 
-                tipoParticipacion: "Oferta", 
+                ...item,
+                tipoParticipacion: "Oferta",
                 participacionIni: toDate(item.fechaIncorporacion),
-                nombreParticipacion: item.titulo}));            
+                nombreParticipacion: item.titulo
+            }));
             console.debug(data_part);
 
             participacionesHandler({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: data_part, pages: response.totalPages });
@@ -129,8 +135,8 @@ const Participantes = ({user}) => {
         if (!isInitialized.current) {
             initForm();
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
-            citasHandler({ type: CITAS_ACTIONS.SETFORM, form: citasform});
-            participacionesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: participacionesForm});
+            citasHandler({ type: CITAS_ACTIONS.SETFORM, form: citasform });
+            participacionesHandler({ type: SUBTABLE_ACTIONS.SETFORM, form: participacionesForm });
             if (id != 'undefined' && id > 0)
                 loadParticipante(id);
             else
@@ -310,7 +316,7 @@ const Participantes = ({user}) => {
                 id: i.participanteId,
                 fechaNacimiento: toDate(i.fechaNacimiento),
                 email: formatEmails(i.email),
-                telefono: formatPhones(i.telefono), 
+                telefono: formatPhones(i.telefono),
                 tipoDoc: i.tipoDoc.toString(),
                 colectivos: i.colectivos ?? [],
                 carnets: i.carnets ?? [],
@@ -326,13 +332,13 @@ const Participantes = ({user}) => {
 
         fetch('https://jsonplaceholder.typicode.com/users/1')
             .then((response) => response.json())
-            .then((json) => {                
+            .then((json) => {
                 const participante = {
                     nombre: json.name,
                 }
-                itemsHandle({type: ITEMS_ACTIONS.SETCOMPLETEITEM, item: participante});
+                itemsHandle({ type: ITEMS_ACTIONS.SETCOMPLETEITEM, item: participante });
             })
-            .catch( error => {
+            .catch(error => {
                 console.error(error);
             })
     }
@@ -341,50 +347,50 @@ const Participantes = ({user}) => {
         const lang = getLanguageId();
         form.fields.loadCividas.onclick = loadParticipantExternal;
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
-        fetchAPIData('/silefe.colectivo/all', {  }, referer).then(response => {
+        fetchAPIData('/silefe.colectivo/all', {}, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.colectivos.options = opts;
         });
 
-        fetchAPIData('/silefe.carnet/all', { }, referer).then(response => {
+        fetchAPIData('/silefe.carnet/all', {}, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.carnets.options = opts;
         });
 
-        fetchAPIData('/silefe.prestacion/all', { }, referer).then(response => {
+        fetchAPIData('/silefe.prestacion/all', {}, referer).then(response => {
             const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.prestaciones.options = opts;
         });
 
         // TODO: Ver como rellenar la situación laboral
         form.fields.situacionLaboral.options = [
-            { value: "0", label: seleccionarlabel }, 
-            { value: "1", label: "Trabajando" }, 
+            { value: "0", label: seleccionarlabel },
+            { value: "1", label: "Trabajando" },
             { value: "2", label: "Desempleado" },
             { value: "3", label: "Estudiando" }
         ];
 
-        fetchAPIData('/silefe.salario/all', { }, referer).then(response => {
+        fetchAPIData('/silefe.salario/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.rangoSalarialId.options = opts;
         });
-        fetchAPIData('/silefe.horario/all', { }, referer).then(response => {
+        fetchAPIData('/silefe.horario/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.jornadaId.options = opts;
         });
-      
-        fetchAPIData('/silefe.discapacidad/all', { }, referer).then(response => {
+
+        fetchAPIData('/silefe.discapacidad/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.tipoDiscapacidad.options = opts;
         });
-        
-        fetchAPIData('/silefe.porcentajediscapacidad/all', { }, referer).then(response => {
+
+        fetchAPIData('/silefe.porcentajediscapacidad/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.porcentajeDiscapacidad.options = opts;
         });
 
-        fetchAPIData('/silefe.provincia/all', { }, referer).then(response => {
-            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => ({ value: obj.id, label: obj.nombre[lang] }) )];
+        fetchAPIData('/silefe.provincia/all', {}, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => ({ value: obj.id, label: obj.nombre[lang] }))];
             form.fields.provinciaId.options = opts;
             form.fields.provinciaId.change = () => console.log("cambia la provincia");//changeProvince;
         });
@@ -404,7 +410,7 @@ const Participantes = ({user}) => {
 
     const changeProvince = (id) => {
         fetchAPIData('/silefe.municipio/filter-by-province', { page: 0, province: id }, referer).then(response => {
-            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => ({ value: obj.id, label: obj.nombre[getLanguageId()] }) )];
+            const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => ({ value: obj.id, label: obj.nombre[getLanguageId()] }))];
             itemsHandle({ type: ITEMS_ACTIONS.SET_FORMOPTIONS, fieldname: 'municipioId', options: opts });
         });
     }
@@ -446,39 +452,39 @@ const Participantes = ({user}) => {
     const queryTitulaciones = () => {
         const lang = getLanguageId();
         titulacionHandler({ type: TITULACIONES_ACTIONS.START });
-        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: ""}, referer).then(response => {
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "" }, referer).then(response => {
             const opts = response.data.map(item => ({
                 ...item,
-                value:item.titulacionTipoId,
-                label:item.descripcion[lang]
+                value: item.titulacionTipoId,
+                label: item.descripcion[lang]
             }));
             titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: opts });
         });
 
         fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "" }, referer).then(response => {
-            const opts = response.data.map(item => ({...item, descripcion: item.descripcion[lang], tipo: item.tipo[lang]}));
+            const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang], tipo: item.tipo[lang] }));
             titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: opts });
         });
 
         fetchAPIData('/silefe.titulacionfam/all', { descripcion: "" }, referer).then(response => {
-            const opts = response.data.map(item => ({...item, descripcion: item.descripcion[lang]}));
-            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: opts});
+            const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
+            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: opts });
         });
 
-        fetchAPIData('/silefe.titulacion/all', {  }, referer).then(response => {
-            const opts = response.data.map( item => ({...item, descripcion: item.descripcion[lang]}));
+        fetchAPIData('/silefe.titulacion/all', {}, referer).then(response => {
+            const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
             titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: opts });
         });
-        fetchAPIData('/silefe.tipocontrato/all', {  }, referer).then(response => {
-            const opts = response.data.map(item => ({value:item.tipoContratoId, label: item.descripcion[lang]}));
+        fetchAPIData('/silefe.tipocontrato/all', {}, referer).then(response => {
+            const opts = response.data.map(item => ({ value: item.tipoContratoId, label: item.descripcion[lang] }));
             experienciasHandler({ type: EXPERIENCIA_ACTIONS.CONTRATOS, contratoOptions: opts })
         });
-        fetchAPIData('/silefe.mbaja/all', { }, referer).then(response => {
-            const motivos = response.data.map(item => ({value: item.id, label: item.descripcion[lang]})).unshift({ id: 0, descripcion: " " });
+        fetchAPIData('/silefe.mbaja/all', {}, referer).then(response => {
+            const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] })).unshift({ id: 0, descripcion: " " });
             experienciasHandler({ type: EXPERIENCIA_ACTIONS.MOTIVOS, motivos: motivos });
         });
         fetchAPIData('/silefe.cno/all', { descripcion: "" }, referer).then(response => {
-            const opts = response.data.map(item => ({value: item.id, label: item.descripcion[lang]}));
+            const opts = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));
             experienciasHandler({ type: EXPERIENCIA_ACTIONS.OCUPACIONES, ocupaciones: opts });
         });
     }
@@ -503,10 +509,10 @@ const Participantes = ({user}) => {
             Participaciones:
                 <Citas
                     items={participaciones}
-                    handler={participacionesHandler}                     
+                    handler={participacionesHandler}
                 />,
-            Historico: 
-                <FHistoryEntity 
+            Historico:
+                <FHistoryEntity
                     data={historico}
                     handler={handleHistorico}
                 />

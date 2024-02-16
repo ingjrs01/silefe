@@ -26,14 +26,14 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { formatPost, toDate, toHours } from '../../includes/utils';
 
-const Proyectos = ({user}) => {
+const Proyectos = ({ user }) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [acciones, accionesHandle] = useReducer(reducerSubtable, iniState);
     const [ofertas, ofertasHandle] = useReducer(reducerSubtable, iniState);
     const [participantes, participantesHandle] = useReducer(reducerSubtable, iniState);
     const [empresas, empresasHandle] = useReducer(reducerSubtable, iniState);
     const [historico, historicoHandle] = useReducer(reducerHistorico, hisIni);
-    const [tecnicos, tecnicosHandle] = useReducer(reducerSubtable,iniState);
+    const [tecnicos, tecnicosHandle] = useReducer(reducerSubtable, iniState);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
     const [file, setFile] = useState();
@@ -53,10 +53,11 @@ const Proyectos = ({user}) => {
             options: {}
         }
         fetchAPIData('/silefe.proyectohistory/get-proyectos-history-by-id', prequest, referer).then(response => {
-            const respuesta = response.data.map(item => ({...item,
+            const respuesta = response.data.map(item => ({
+                ...item,
                 date: toDate(item.date) + " " + toHours(item.date),
             }));
-            historicoHandle({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages});
+            historicoHandle({ type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.total, totalPages: response.totalPages });
         });
     }
 
@@ -74,7 +75,7 @@ const Proyectos = ({user}) => {
             ofertasHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: oform });
             participantesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: pform });
             empresasHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: eform });
-            tecnicosHandle({type: SUBTABLE_ACTIONS.SETFORM, form: tform});
+            tecnicosHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: tform });
 
             if (id !== 'undefined' && id > 0)
                 loadProyecto(id);
@@ -102,11 +103,11 @@ const Proyectos = ({user}) => {
         loadAllAcciones();
     }, [acciones.paginationSearch.page, acciones.search]);
 
-    useEffect(  () => {
+    useEffect(() => {
         loadAllOfertas();
     }, [ofertas.paginationSearch.page, ofertas.search]);
 
-    useEffect(  () => {
+    useEffect(() => {
         loadAllEmpresas();
     }, [empresas.paginationSearch.page, empresas.search]);
 
@@ -125,7 +126,7 @@ const Proyectos = ({user}) => {
             loadEmpresas(items.item.id);
     }, [empresas.load]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (items.item.id !== 'undefined' && items.item.id > 0) {
             loadTecnicos(items.item.id);
         }
@@ -142,7 +143,7 @@ const Proyectos = ({user}) => {
                     id: r.data.proyectoId,
                     nparticipantes: r.data.participantes,
                     inicio: toDate(r.data.inicio),
-                    fin: toDate(r.data.fin), 
+                    fin: toDate(r.data.fin),
                 }
             }
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: datatmp });
@@ -197,7 +198,7 @@ const Proyectos = ({user}) => {
             endpoint = '/silefe.proyecto/add-proyecto';
 
         let { status, error, data } = await saveAPI(endpoint, pdata, referer);
-        if (status) { 
+        if (status) {
             const accionestosave = acciones.items.filter(accion => accion.nuevo).map(item => item.accionId);
             const postdata = {
                 acciones: accionestosave,
@@ -230,7 +231,16 @@ const Proyectos = ({user}) => {
                 empresas: empresas.items.filter(empresa => empresa.nuevo).map(empresa => empresa.empresaId),
                 projectId: data.proyectoId
             }
-            await saveAPI('/silefe.proyecto/add-empresas',pempresas, referer);
+            //const eResponse = await 
+            saveAPI('/silefe.proyecto/add-empresas', pempresas, referer).then((eResponse) => {
+                console.log("Respuesta de los tenicos");
+                console.debug(eResponse);
+                console.log("por alguna razón no veo el resultado");
+                if (!eResponse.status)
+                    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: "Usuario sin permisos" }]);
+            });
+
+
             if (empresas.deleted.length > 0) {
                 const pempresas = {
                     empresas: empresas.deleted.map(empresa => empresa.id),
@@ -241,15 +251,17 @@ const Proyectos = ({user}) => {
             // vamos con los técnicos: 
             const ptecnicos = {
                 tecnicos: tecnicos.items.filter(tecnico => tecnico.nuevo).map(tecnico => tecnico.id),
-                projectId: data.proyectoId
+                projectId: data.proyectoId,
+                userId: getUserId(),
             }
             await saveAPI('/silefe.proyecto/add-tecnicos', ptecnicos, referer);
             if (tecnicos.deleted.length > 0) {
                 const deletePost = {
                     tecnicos: tecnicos.deleted.map(tecnico => tecnico.id),
                     projectId: data.proyectoId,
+                    userId: getUserId(),
                 }
-                await saveAPI('/silefe.proyecto/remove-tecnicos',deletePost, referer);
+                await saveAPI('/silefe.proyecto/remove-tecnicos', deletePost, referer);
             }
 
             fetchData();
@@ -286,7 +298,7 @@ const Proyectos = ({user}) => {
             loadParticipantes(lid);
             loadEmpresas(lid);
             loadHistory(lid);
-            loadTecnicos(lid).then((response)=>{
+            loadTecnicos(lid).then((response) => {
                 console.log("esto es lo que va despues");
                 console.debug(response);
                 const ee = response.map(item => item.id);
@@ -316,7 +328,7 @@ const Proyectos = ({user}) => {
         //         order: items.order
         //     }
         // }
-        fetchAPIData('/silefe.proyecto/filter',formatPost(items) , referer).then(({ data, totalPages, page, totalItems }) => {
+        fetchAPIData('/silefe.proyecto/filter', formatPost(items), referer).then(({ data, totalPages, page, totalItems }) => {
             const tmp = data.map(i => ({
                 ...i,
                 id: i.proyectoId,
@@ -345,49 +357,49 @@ const Proyectos = ({user}) => {
     }
 
     const loadAllAcciones = () => {
-        const pagesearch = acciones.paginationSearch.page??1 ;
+        const pagesearch = acciones.paginationSearch.page ?? 1;
         const postdata = {
             id: items.item.id ?? 1,
-            pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: acciones.paginationSearch.pageSize??4 },
+            pagination: { page: (pagesearch > 0) ? pagesearch : 0, pageSize: acciones.paginationSearch.pageSize ?? 4 },
             options: {
                 filters: [{ name: acciones.searchField, value: (acciones.search && typeof acciones.search !== 'undefined') ? acciones.search : "" },],
                 excludes: acciones.items.map(item => item.accionId)
             }
         }
-        fetchAPIData('/silefe.accion/filter', postdata, referer).then(response => 
-            accionesHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}));
+        fetchAPIData('/silefe.accion/filter', postdata, referer).then(response =>
+            accionesHandle({ type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: response.data, totalPages: response.totalPages }));
     }
 
     const loadAllOfertas = () => {
-        const pagesearch = ofertas.paginationSearch.page??1 ;
+        const pagesearch = ofertas.paginationSearch.page ?? 1;
         const postdata = {
             id: items.item.id ?? 1,
-            pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: ofertas.paginationSearch.pageSize??4 },
+            pagination: { page: (pagesearch > 0) ? pagesearch : 0, pageSize: ofertas.paginationSearch.pageSize ?? 4 },
             options: {
-                filters: [{ 
-                    name: ofertas.searchField === ""?"titulo":ofertas.searchField, 
-                    value: (ofertas.search && typeof ofertas.search !== 'undefined') ? ofertas.search : "" 
+                filters: [{
+                    name: ofertas.searchField === "" ? "titulo" : ofertas.searchField,
+                    value: (ofertas.search && typeof ofertas.search !== 'undefined') ? ofertas.search : ""
                 },],
                 excludes: ofertas.items.map(item => item.ofertaId)
             }
         }
-        fetchAPIData('/silefe.oferta/filter', postdata, referer).then(response => ofertasHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}))
+        fetchAPIData('/silefe.oferta/filter', postdata, referer).then(response => ofertasHandle({ type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: response.data, totalPages: response.totalPages }))
     }
 
     const loadAllEmpresas = () => {
-        const pagesearch = empresas.paginationSearch.page??1 ;
+        const pagesearch = empresas.paginationSearch.page ?? 1;
         const postdata = {
             id: items.item.id ?? 1,
-            pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: empresas.paginationSearch.pageSize??4 },
+            pagination: { page: (pagesearch > 0) ? pagesearch : 0, pageSize: empresas.paginationSearch.pageSize ?? 4 },
             options: {
-                filters: [{ 
-                    name: empresas.searchField === ""?"razonSocial":empresas.searchField, 
-                    value: (empresas.search && typeof empresas.search !== 'undefined') ? empresas.search : "" 
+                filters: [{
+                    name: empresas.searchField === "" ? "razonSocial" : empresas.searchField,
+                    value: (empresas.search && typeof empresas.search !== 'undefined') ? empresas.search : ""
                 },],
                 excludes: empresas.items.map(item => item.id)
             }
         }
-        fetchAPIData('/silefe.empresa/filter', postdata, referer).then(response => empresasHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages}))
+        fetchAPIData('/silefe.empresa/filter', postdata, referer).then(response => empresasHandle({ type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: response.data, totalPages: response.totalPages }))
     }
 
     const loadParticipantes = (id) => {
@@ -400,10 +412,10 @@ const Proyectos = ({user}) => {
                 }
             }
             fetchAPIData('/silefe.participante/filter-by-project', postdata, referer).then(response => {
-                const tmp = (response.data !== undefined && response.data.length > 0)? response.data.map(item => ({
+                const tmp = (response.data !== undefined && response.data.length > 0) ? response.data.map(item => ({
                     ...item,
                     id: item.participanteId
-                })):[];
+                })) : [];
                 participantesHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: tmp, pages: response.totalPages });
             });
         }
@@ -437,10 +449,10 @@ const Proyectos = ({user}) => {
                 }
             };
             fetchAPIData('/silefe.oferta/filter', postdata, referer).then(response => {
-                const itms = (response.data !== undefined && response.data.length > 0) ?response.data.map(i => ({
+                const itms = (response.data !== undefined && response.data.length > 0) ? response.data.map(i => ({
                     ...i,
                     fechaIncorporacion: toDate(i.fechaIncorporacion),
-                })):[];
+                })) : [];
                 ofertasHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: itms, pages: response.totalPages });
             });
         }
@@ -448,10 +460,10 @@ const Proyectos = ({user}) => {
 
     const loadAllTecnicos = (excludes) => {
         console.log("loadAllTecncios");
-        const pagesearch = tecnicos.paginationSearch.page??1 ;
+        const pagesearch = tecnicos.paginationSearch.page ?? 1;
         const postdata = {
             id: items.item.id ?? 1,
-            pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: tecnicos.paginationSearch.pageSize??4 },
+            pagination: { page: (pagesearch > 0) ? pagesearch : 0, pageSize: tecnicos.paginationSearch.pageSize ?? 4 },
             options: {}
             //    excludes: excludes
             //}
@@ -460,7 +472,7 @@ const Proyectos = ({user}) => {
         console.debug(postdata);
         fetchAPIData('/silefe.tecnico/filter', postdata, referer)
             .then(response => {
-                tecnicosHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages});
+                tecnicosHandle({ type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: response.data, totalPages: response.totalPages });
             });
     }
 
@@ -470,8 +482,8 @@ const Proyectos = ({user}) => {
                 projectId: 101,
                 pagination: { page: tecnicos.pagination.page, pageSize: 5 },
             };
-            const {data, totalPages} = await fetchAPIData('/silefe.tecnico/filter-by-project', postdata, referer);
-            tecnicosHandle({type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: data, pages: totalPages});
+            const { data, totalPages } = await fetchAPIData('/silefe.tecnico/filter-by-project', postdata, referer);
+            tecnicosHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: data, pages: totalPages });
             return data;
             // fetchAPIData('/silefe.tecnico/filter-by-project', postdata, referer).then(response => {
             //     const itms = (response.data !== undefined && response.data.length > 0) ?response.data.map(i => ({
@@ -486,15 +498,15 @@ const Proyectos = ({user}) => {
 
     const initForm = () => {
         const lang = getLanguageId();
-        fetchAPIData('/silefe.cofinanciadas/all', { }, referer).then(response => {
+        fetchAPIData('/silefe.cofinanciadas/all', {}, referer).then(response => {
             form.fields.entidadId.change = () => { };
-            form.fields.entidadId.options = (response.data !== undefined && response.data.length > 0)?response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } }):[];
+            form.fields.entidadId.options = (response.data !== undefined && response.data.length > 0) ? response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } }) : [];
         });
         fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.colectivos.options = opts;
         });
-        fetchAPIData('/silefe.convocatoria/all', { }, referer).then(response => {
+        fetchAPIData('/silefe.convocatoria/all', {}, referer).then(response => {
             form.fields.convocatoriaId.options = response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } });
         });
         //fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
@@ -546,7 +558,7 @@ const Proyectos = ({user}) => {
                     backUrl={"/proyecto/"}
                     ancestorId={items.item.id}
                 />,
-            Historico: 
+            Historico:
                 <FHistoryEntity
                     data={historico}
                     handler={historicoHandle}
