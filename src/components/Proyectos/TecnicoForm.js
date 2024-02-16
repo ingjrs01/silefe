@@ -78,12 +78,12 @@ export const form = {
         },
     ],
     table: [
-        {
-            columnName: "id",
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
+        //{
+        //    columnName: "id",
+        //    columnTitle: "Id",
+        //    columnType: "checkbox",
+        //    key: "c1",
+        //},
         {
             columnName: "firstName",
             columnTitle: Liferay.Language.get('Nombre'),

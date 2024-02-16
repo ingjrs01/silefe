@@ -62,13 +62,14 @@ const Proyectos = ({user}) => {
 
     useEffect(() => {
         if (!isInitialized.current) {
+            console.log("inicializándolo todo");
             initForm();
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             // Cargo todas las acciones posibles: 
             loadAllAcciones();
             loadAllOfertas();
             loadAllEmpresas();
-            loadAllTecnicos();
+            //loadAllTecnicos();
             accionesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: aform });
             ofertasHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: oform });
             participantesHandle({ type: SUBTABLE_ACTIONS.SETFORM, form: pform });
@@ -124,6 +125,12 @@ const Proyectos = ({user}) => {
             loadEmpresas(items.item.id);
     }, [empresas.load]);
 
+    useEffect(()=>{
+        if (items.item.id !== 'undefined' && items.item.id > 0) {
+            loadTecnicos(items.item.id);
+        }
+    }, [tecnicos.pagination.page]);
+
     const loadProyecto = id => {
         initForm();
         beforeEdit(id);
@@ -140,8 +147,7 @@ const Proyectos = ({user}) => {
             }
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: datatmp });
         }).catch(error => {
-            console.log("error");
-            console.debug(error);
+            console.error("Error: " + error);
         });
     }
 
@@ -232,6 +238,19 @@ const Proyectos = ({user}) => {
                 }
                 await saveAPI('/silefe.proyecto/remove-empresas', pempresas, referer);
             }
+            // vamos con los técnicos: 
+            const ptecnicos = {
+                tecnicos: tecnicos.items.filter(tecnico => tecnico.nuevo).map(tecnico => tecnico.id),
+                projectId: data.proyectoId
+            }
+            await saveAPI('/silefe.proyecto/add-tecnicos', ptecnicos, referer);
+            if (tecnicos.deleted.length > 0) {
+                const deletePost = {
+                    tecnicos: tecnicos.deleted.map(tecnico => tecnico.id),
+                    projectId: data.proyectoId,
+                }
+                await saveAPI('/silefe.proyecto/remove-tecnicos',deletePost, referer);
+            }
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
@@ -267,6 +286,13 @@ const Proyectos = ({user}) => {
             loadParticipantes(lid);
             loadEmpresas(lid);
             loadHistory(lid);
+            loadTecnicos(lid).then((response)=>{
+                console.log("esto es lo que va despues");
+                console.debug(response);
+                const ee = response.map(item => item.id);
+                loadAllTecnicos(ee);
+                //console.debug(tecnicos);
+            });
         }
     }
 
@@ -294,7 +320,6 @@ const Proyectos = ({user}) => {
             const tmp = data.map(i => ({
                 ...i,
                 id: i.proyectoId,
-                //nparticipantes: i.participantes,
                 inicio: toDate(i.inicio),
                 fin: toDate(i.fin),
                 checked: false
@@ -421,30 +446,42 @@ const Proyectos = ({user}) => {
         }
     }
 
-    const loadAllTecnicos = () => {
-        console.log("loadAllTecnicos");
+    const loadAllTecnicos = (excludes) => {
+        console.log("loadAllTecncios");
         const pagesearch = tecnicos.paginationSearch.page??1 ;
         const postdata = {
             id: items.item.id ?? 1,
             pagination: { page: (pagesearch > 0)?pagesearch:0, pageSize: tecnicos.paginationSearch.pageSize??4 },
-            options: {
-                filters: [{ 
-                    name: tecnicos.searchField === "", 
-                    value: (tecnicos.search && typeof tecnicos.search !== 'undefined') ? tecnicos.search : "" 
-                },],
-                excludes: []//empresas.items.map(item => item.id)
-            }
+            options: {}
+            //    excludes: excludes
+            //}
         }
+        console.log("peticion enviada");
+        console.debug(postdata);
         fetchAPIData('/silefe.tecnico/filter', postdata, referer)
             .then(response => {
-                console.log("lalala");
-                console.debug(response);
                 tecnicosHandle({type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items:response.data, totalPages: response.totalPages});
             });
     }
 
-    const loadTecnicos = (id) => {
-        // cargando los tecncios;
+    const loadTecnicos = async (id) => {
+        if (id != 'undefined') {
+            const postdata = {
+                projectId: 101,
+                pagination: { page: tecnicos.pagination.page, pageSize: 5 },
+            };
+            const {data, totalPages} = await fetchAPIData('/silefe.tecnico/filter-by-project', postdata, referer);
+            tecnicosHandle({type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: data, pages: totalPages});
+            return data;
+            // fetchAPIData('/silefe.tecnico/filter-by-project', postdata, referer).then(response => {
+            //     const itms = (response.data !== undefined && response.data.length > 0) ?response.data.map(i => ({
+            //         ...i,
+            //     })):[];
+            //     console.log("tecnicos recibidos")
+            //     console.debug(itms);
+            //     tecnicosHandle({type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: itms, pages: response.totalPages});
+            // });
+        }
     }
 
     const initForm = () => {
