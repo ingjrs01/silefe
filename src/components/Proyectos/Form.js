@@ -141,14 +141,14 @@ export const form = {
             conditions: ["number"],
             className: 'col-2',
         },
-        colectivos: {
-            key: 15,
-            typexperienciaRequeridoe: "multilist",
-            label: Liferay.Language.get("Colectivos"),
-            name: 'colectivos',
-            placeholder: 'lalala',
-            enabled: true
-        },
+        //colectivos: {
+        //    key: 15,
+        //    typexperienciaRequeridoe: "multilist",
+        //    label: Liferay.Language.get("Colectivos"),
+        //    name: 'colectivos',
+        //    placeholder: 'lalala',
+        //    enabled: true
+        //},
         objetivos: {
             key: 17,
             type: "textarea",
@@ -196,8 +196,17 @@ export const form = {
             componentName: "Tecnicos",
             name: "Tecnicos",
         },
-        historico: {
+        colectivos: {
             key: 24,
+            type: "doublelist",
+            label: Liferay.Language.get("Colectivos"),
+            name: 'colectivos',
+            options: [],
+            enabled: true,
+            className: 'col-12',
+        },
+        historico: {
+            key: 25,
             type: "other",
             componentName: "Historico",
             name: "historico",

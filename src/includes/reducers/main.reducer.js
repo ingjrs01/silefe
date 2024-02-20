@@ -262,6 +262,9 @@ export const red_items = (state, action ) => {
                     case 'select':
                         tmp_item[fila] = "0";
                         break;
+                    case 'doublelist': 
+                        tmp_item[fila] = []
+                        break;
                     default:
                         tmp_item[fila] = null;
                         break;

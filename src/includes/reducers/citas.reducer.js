@@ -27,7 +27,7 @@ export const initialState = {
     },
     pagination: {
         page: 0,
-        pageSize: 2,
+        pageSize: 4,
         totalPages: 1,
     },
     status: CITAS_STATES.LIST,

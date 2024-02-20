@@ -63,7 +63,6 @@ const Proyectos = ({ user }) => {
 
     useEffect(() => {
         if (!isInitialized.current) {
-            console.log("inicializándolo todo");
             initForm();
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             // Cargo todas las acciones posibles: 
@@ -194,8 +193,8 @@ const Proyectos = ({ user }) => {
         }
 
         let endpoint = '/silefe.proyecto/save-proyecto';
-        if (items.status === 'new')
-            endpoint = '/silefe.proyecto/add-proyecto';
+        //if (items.status === 'new')
+        //    endpoint = '/silefe.proyecto/add-proyecto';
 
         let { status, error, data } = await saveAPI(endpoint, pdata, referer);
         if (status) {
@@ -209,7 +208,7 @@ const Proyectos = ({ user }) => {
             // borrando los que no se quieren.
             const postdatadelete = {
                 acciones: acciones.deleted.map(item => item.accionId),
-                projectId: 0,
+                projectId: 0, // al ponerle el cero es como borrarlo
             }
             let { status3, error3 } = await saveAPI('/silefe.accion/change-project-acciones', postdatadelete, referer);
             // Ofertas: 
@@ -299,8 +298,6 @@ const Proyectos = ({ user }) => {
             loadEmpresas(lid);
             loadHistory(lid);
             loadTecnicos(lid).then((response) => {
-                console.log("esto es lo que va despues");
-                console.debug(response);
                 const ee = response.map(item => item.id);
                 loadAllTecnicos(ee);
                 //console.debug(tecnicos);
@@ -334,6 +331,7 @@ const Proyectos = ({ user }) => {
                 id: i.proyectoId,
                 inicio: toDate(i.inicio),
                 fin: toDate(i.fin),
+                colectivos: i.colectivos ?? [],
                 checked: false
             })
             );
@@ -459,7 +457,6 @@ const Proyectos = ({ user }) => {
     }
 
     const loadAllTecnicos = (excludes) => {
-        console.log("loadAllTecncios");
         const pagesearch = tecnicos.paginationSearch.page ?? 1;
         const postdata = {
             id: items.item.id ?? 1,
@@ -468,8 +465,6 @@ const Proyectos = ({ user }) => {
             //    excludes: excludes
             //}
         }
-        console.log("peticion enviada");
-        console.debug(postdata);
         fetchAPIData('/silefe.tecnico/filter', postdata, referer)
             .then(response => {
                 tecnicosHandle({ type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: response.data, totalPages: response.totalPages });
@@ -498,16 +493,19 @@ const Proyectos = ({ user }) => {
 
     const initForm = () => {
         const lang = getLanguageId();
+        const selLabel = Liferay.Language.get("Seleccionar");
         fetchAPIData('/silefe.cofinanciadas/all', {}, referer).then(response => {
-            form.fields.entidadId.change = () => { };
-            form.fields.entidadId.options = (response.data !== undefined && response.data.length > 0) ? response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } }) : [];
+            //form.fields.entidadId.change = () => { };
+            const opts = [...response.data.map(obj => ({ value: obj.id, label: obj.descripcion[lang] })) ];
+            form.fields.entidadId.options = opts; 
         });
         fetchAPIData('/silefe.colectivo/all', { lang: getLanguageId() }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+            const opts = [ ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.colectivos.options = opts;
         });
         fetchAPIData('/silefe.convocatoria/all', {}, referer).then(response => {
-            form.fields.convocatoriaId.options = response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } });
+            const opts = [{ value: "0", label: selLabel }, ...response.data.map(obj => ({ value: obj.id, label: obj.descripcion[lang] }) ) ];
+            form.fields.convocatoriaId.options = opts;
         });
         //fetchAPIData('/silefe.tecnico/all', {lang: getLanguageId()},referer).then(response => {
         //    form.fields.tecnicos.options = response.data.map(obj => {return {value:obj.id,label:obj.firstName}}); 
