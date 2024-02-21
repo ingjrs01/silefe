@@ -1,7 +1,7 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
-import { url_referer } from '../../includes/LiferayFunctions';
+import { getAuthToken, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
@@ -44,7 +44,10 @@ const Convocatorias = () => {
 
     const processCsv = () => {
         console.log("esto es processCsv, y vou a guardar");
-        downloadFile();
+        //sendFile();
+        //downloadFile2();
+        lelele();
+        //downloadFile();
         //if (file) {
         //    const reader = new FileReader();
 //
@@ -142,10 +145,97 @@ const Convocatorias = () => {
     }
 
 
-    const downloadFile2 = async() => {
-        console.log("downloadFile");
-        console.log("viendo como enviar un document a al document library2");
+    const lelele = () => {
+        console.log("lelele2");
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async ({ target }) => {
+                console.debug(target);
+                Liferay.Service(
+                    '/dlapp/add-file-entry',
+                    {
+                        repositoryId: 20119,
+                        folderId: 39909,
+                        sourceFileName: 'a.jpg',
+                        mimeType: 'image/jpeg',
+                        title: 'prueba',
+                        description: '',
+                        changeLog: '',
+                        file: file
+                    },
+                    function(obj) {
+                        console.log(obj);
+                    }
+                );
+            }
+            reader.readAsArrayBuffer(file);  //readAsBinaryString(file);//   .readAsDataURL(file);
+        }
 
+    }
+
+
+
+
+
+    const sendFile = () => {
+		//event.preventDefault();
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async ({ target }) => {
+                console.log("leyendo cosas");
+                const data = new FormData();        
+                data.set('file', target);
+                data.set('folderId', 39909);
+                data.set('repositoryId', 20119);
+                data.set('sourceFileName', file.name);
+                data.set('mimeType', 'image/jpeg');
+                data.set('description', '');
+                data.set('changeLog', '');
+                data.set('p_auth',   getAuthToken() ); 
+
+                console.log("todo listo para enviar");
+                console.debug(data);
+                const url = 'http://lfdevapps01.depo.es:8080/api/jsonws/invoke'; 
+
+                const endpoint = "/dlapp/add-file-entry";
+                fetch(url, {
+                    "credentials": "include",
+                    "headers": {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
+                        "Accept": "*/*",
+                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
+                        "x-csrf-token": getAuthToken(),
+                        "Content-Type":  "multipart/form-data",     //"text/plain;charset=UTF-8",
+                        //"Sec-Fetch-Dest": "empty",
+                        "Sec-Fetch-Mode": "cors",
+                        "Sec-Fetch-Site": "same-origin"
+                    },
+                    "referrer": `\"${referer}\"`,
+                    "body": `${data}`,//`{\"${endpoint}\":${data}}`,      //${JSON.stringify(data)}}`,
+                    "method": "POST",
+                    "cmd": `{\"${endpoint}\"`,
+                    "mode": "cors"
+                }).then(response => {
+                    console.log("se han recibido datos");
+                    console.debug(response);
+                });
+                    //{
+                    //"method": "POST",
+                    //"body": data,
+                    //"cmd": "/dlapp/add-file-entry",
+                    //"Content-Type": 'multipart/form-data',
+                    //}
+            }
+            reader.readAsDataURL(file);
+        }
+        else {
+            console.log("el fihcero no funciona");
+        }
+
+    }
+
+    const downloadFile2 = async() => {
+        console.log("downloadFile6");
         const reader = new FileReader();
         reader.onload = async ({ target }) => {
             const Liferay = window.Liferay;
@@ -162,8 +252,10 @@ const Convocatorias = () => {
                     description: '',
                     changeLog: '',
                     bytes: target.result,
+                    file: target,
                     expirationDate : null,
                     reviewDate: null,
+                    cmd: {"/dlapp/add-file-entry":{}},
                 },
                 function(obj) {
                     console.log("algo se hace en binario");
@@ -172,8 +264,9 @@ const Convocatorias = () => {
                 );        
         }
         //reader.readAsText(file);
-        reader.readAsBinaryString(file);
-        console.log("leído en binario");
+        //reader.readAsBinaryString(file);
+        reader.readAsDataURL(file);
+        console.log("leído en texto");
     }
 
     form.downloadFunc = downloadFile;
@@ -181,15 +274,6 @@ const Convocatorias = () => {
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
-        //const postdata = {
-        //    pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-        //    options: {
-        //        filters: [
-        //            { name: "descripcion", value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-        //        ],
-        //        order: items.order,
-        //    }
-        //}
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.convocatoria/filter', formatPost(items), referer);
         const tmp = await data.map(i => { return ({ ...i, id: i.convocatoriaId, checked: false }) });
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
