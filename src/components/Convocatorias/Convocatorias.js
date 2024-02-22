@@ -1,7 +1,7 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
-import { getAuthToken, url_referer } from '../../includes/LiferayFunctions';
+import { getAuthToken, getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
@@ -75,6 +75,34 @@ const Convocatorias = () => {
     }
 
     const handleSave = async () => {
+        console.log("enviaando los datos con fichero adjunto");
+
+        const reader = new FileReader();
+        reader.onload = async ({ target }) => {
+            const ficheroEnvio = target.result;
+            const data = {
+                convocatoriaId : items.item.id,
+                obj:{
+                    ...items.item,
+                    userId : getUserId(),
+                    fichero: ficheroEnvio,
+                },
+            }
+    
+            let { status, error } = await saveAPI('/silefe.convocatoria/save-convocatoria', data, referer);
+            if (status) {
+                fetchData();
+                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
+            }
+        }
+        reader.readAsDataURL(file);
+
+        //else {
+        //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
+        //}
+    }
+
+    //const handleSave = async () => {
         //const data = {
         //    convocatoriaId: items.item.id,
         //    obj: items.item,
@@ -91,7 +119,7 @@ const Convocatorias = () => {
         //else {
         //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
         //}
-    }
+    //}
 
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map(i => { return i.convocatoriaId });
@@ -145,30 +173,71 @@ const Convocatorias = () => {
     }
 
 
+    //const bla = () => {
+    //    try {
+    //        image = atob(e.target.result.split("data:image/jpeg;base64,")[1]);
+  //
+    //      } catch (e) {
+    //        jpg = false;
+    //      }
+    //      if (jpg == false) {
+    //        try {
+    //          image = atob(e.target.result.split("data:image/png;base64,")[1]);
+    //        } catch (e) {
+    //          alert("Not an image file Rekognition can process");
+    //          return;
+    //        }
+    //      }
+    //      //unencode image bytes for Rekognition DetectFaces API 
+    //      var length = image.length;
+    //      imageBytes = new ArrayBuffer(length);
+    //      var ua = new Uint8Array(imageBytes);
+    //      for (var i = 0; i < length; i++) {
+    //        ua[i] = image.charCodeAt(i);
+    //      }
+    //      //Call Rekognition  
+    //      DetectFaces(ua);
+    //}
+
+
+
     const lelele = () => {
-        console.log("lelele2");
+        console.log("lelele con imágenes array buffer");
+        console.log("tratando de enviar el fihcero atop");
+        
+        
         if (file) {
             const reader = new FileReader();
             reader.onload = async ({ target }) => {
                 console.debug(target);
+                var image = atob(target.result.split("data:image/jpeg;base64,")[1]);
+                
                 Liferay.Service(
                     '/dlapp/add-file-entry',
                     {
                         repositoryId: 20119,
                         folderId: 39909,
-                        sourceFileName: 'a.jpg',
-                        mimeType: 'image/jpeg',
+                        sourceFileName: 'aaa.jpg',
+                        mimeType: 'image/jpg',
                         title: 'prueba',
                         description: '',
                         changeLog: '',
-                        file: file
+                        file: image//target.result,
                     },
                     function(obj) {
                         console.log(obj);
+                    },
+                    function(e) {
+                        console.log("Error trabajando");
+                        console.error(e);
                     }
                 );
+                
+
             }
-            reader.readAsArrayBuffer(file);  //readAsBinaryString(file);//   .readAsDataURL(file);
+            //reader.readAsArrayBuffer(file);  //readAsBinaryString(file);//   .readAsDataURL(file);
+            //reader.readAsText(file);
+            reader.readAsDataURL(file);
         }
 
     }
