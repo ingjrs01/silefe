@@ -15,11 +15,11 @@ import Menu from '../Menu';
 import { form } from "./Form";
 
 const Convocatorias = () => {
-    const [items, itemsHandle]             = useReducer(red_items, initialState);
-    const [toastItems, setToastItems]      = useState([]);
+    const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
-    const [file, setFile]                  = useState();
-    const isInitialized                    = useRef(null);
+    const [file, setFile] = useState();
+    const isInitialized = useRef(null);
     const referer = `${url_referer}/cnos`;
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const Convocatorias = () => {
     }
 
     const initForm = () => {
-        itemsHandle({type: ITEMS_ACTIONS.SET_FIELDS, form: form});
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
     }
 
     const processCsv = () => {
@@ -50,13 +50,13 @@ const Convocatorias = () => {
         //downloadFile();
         //if (file) {
         //    const reader = new FileReader();
-//
+        //
         //    reader.onload = async ({ target }) => {
         //        const csv = Papa.parse(target.result, { header: true, delimiter: ";", delimitersToGuess: [";"] });
         //        const parsedData = csv?.data;
         //        let end = '/silefe.cno/add-multiple';
         //        let ttmp = { cnos: parsedData, userId: Liferay.ThemeDisplay.getUserId() };
-//
+        //
         //        batchAPI(end, ttmp, referer).then(res2 => {
         //            if (res2.ok) {
         //                setToastItems([...toastItems, { title: Liferay.Language.get("Carga_Masiva"), type: "info", text: Liferay.Language.get('Elementos_cargados') }]);
@@ -77,26 +77,21 @@ const Convocatorias = () => {
     const handleSave = async () => {
         console.log("enviaando los datos con fichero adjunto");
 
-        const reader = new FileReader();
-        reader.onload = async ({ target }) => {
-            const ficheroEnvio = target.result;
-            const data = {
-                convocatoriaId : items.item.id,
-                obj:{
-                    ...items.item,
-                    userId : getUserId(),
-                    fichero: ficheroEnvio,
-                    filename: file.name??"probando1.jpg",
-                },
-            }
-    
-            let { status, error } = await saveAPI('/silefe.convocatoria/save-convocatoria', data, referer);
-            if (status) {
-                fetchData();
-                setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
-            }
+        const data = {
+            convocatoriaId: items.item.id,
+            obj: {
+                ...items.item,
+                userId: getUserId(),
+                //fichero: ficheroEnvio, 
+                //filename: items.item.adjuntos.fichero.name ?? "probando1.jpg",
+            },
         }
-        reader.readAsDataURL(file);
+
+        let { status, error } = await saveAPI('/silefe.convocatoria/save-convocatoria', data, referer);
+        if (status) {
+            fetchData();
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
+        }
 
         //else {
         //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
@@ -104,22 +99,22 @@ const Convocatorias = () => {
     }
 
     //const handleSave = async () => {
-        //const data = {
-        //    convocatoriaId: items.item.id,
-        //    obj: items.item,
-        //    userId: getUserId(),
-        //}
-        //let endpoint = '/silefe.convocatoria/save-convocatoria';
-        //if (items.status === 'new')
-        //    endpoint = '/silefe.convocatoria/add-convocatoria';
-        //let { status, error } = await saveAPI(endpoint, data, referer);
-        //if (status) {
-        //    fetchData();
-        //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
-        //}
-        //else {
-        //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-        //}
+    //const data = {
+    //    convocatoriaId: items.item.id,
+    //    obj: items.item,
+    //    userId: getUserId(),
+    //}
+    //let endpoint = '/silefe.convocatoria/save-convocatoria';
+    //if (items.status === 'new')
+    //    endpoint = '/silefe.convocatoria/add-convocatoria';
+    //let { status, error } = await saveAPI(endpoint, data, referer);
+    //if (status) {
+    //    fetchData();
+    //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
+    //}
+    //else {
+    //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
+    //}
     //}
 
     const confirmDelete = async () => {
@@ -165,7 +160,7 @@ const Convocatorias = () => {
             const { status, error } = await saveAPI(endpoint, pdata, referer);
             await console.log(status);
 
-            
+
         }
         //reader.readAsText(file);
         reader.readAsBinaryString(file);
@@ -177,7 +172,7 @@ const Convocatorias = () => {
     //const bla = () => {
     //    try {
     //        image = atob(e.target.result.split("data:image/jpeg;base64,")[1]);
-  //
+    //
     //      } catch (e) {
     //        jpg = false;
     //      }
@@ -205,14 +200,14 @@ const Convocatorias = () => {
     const lelele = () => {
         console.log("lelele con imágenes array buffer");
         console.log("tratando de enviar el fihcero atop");
-        
-        
+
+
         if (file) {
             const reader = new FileReader();
             reader.onload = async ({ target }) => {
                 console.debug(target);
                 var image = atob(target.result.split("data:image/jpeg;base64,")[1]);
-                
+
                 Liferay.Service(
                     '/dlapp/add-file-entry',
                     {
@@ -225,15 +220,15 @@ const Convocatorias = () => {
                         changeLog: '',
                         file: image//target.result,
                     },
-                    function(obj) {
+                    function (obj) {
                         console.log(obj);
                     },
-                    function(e) {
+                    function (e) {
                         console.log("Error trabajando");
                         console.error(e);
                     }
                 );
-                
+
 
             }
             //reader.readAsArrayBuffer(file);  //readAsBinaryString(file);//   .readAsDataURL(file);
@@ -248,12 +243,12 @@ const Convocatorias = () => {
 
 
     const sendFile = () => {
-		//event.preventDefault();
+        //event.preventDefault();
         if (file) {
             const reader = new FileReader();
             reader.onload = async ({ target }) => {
                 console.log("leyendo cosas");
-                const data = new FormData();        
+                const data = new FormData();
                 data.set('file', target);
                 data.set('folderId', 39909);
                 data.set('repositoryId', 20119);
@@ -261,11 +256,11 @@ const Convocatorias = () => {
                 data.set('mimeType', 'image/jpeg');
                 data.set('description', '');
                 data.set('changeLog', '');
-                data.set('p_auth',   getAuthToken() ); 
+                data.set('p_auth', getAuthToken());
 
                 console.log("todo listo para enviar");
                 console.debug(data);
-                const url = 'http://lfdevapps01.depo.es:8080/api/jsonws/invoke'; 
+                const url = 'http://lfdevapps01.depo.es:8080/api/jsonws/invoke';
 
                 const endpoint = "/dlapp/add-file-entry";
                 fetch(url, {
@@ -275,7 +270,7 @@ const Convocatorias = () => {
                         "Accept": "*/*",
                         "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
                         "x-csrf-token": getAuthToken(),
-                        "Content-Type":  "multipart/form-data",     //"text/plain;charset=UTF-8",
+                        "Content-Type": "multipart/form-data",     //"text/plain;charset=UTF-8",
                         //"Sec-Fetch-Dest": "empty",
                         "Sec-Fetch-Mode": "cors",
                         "Sec-Fetch-Site": "same-origin"
@@ -289,12 +284,12 @@ const Convocatorias = () => {
                     console.log("se han recibido datos");
                     console.debug(response);
                 });
-                    //{
-                    //"method": "POST",
-                    //"body": data,
-                    //"cmd": "/dlapp/add-file-entry",
-                    //"Content-Type": 'multipart/form-data',
-                    //}
+                //{
+                //"method": "POST",
+                //"body": data,
+                //"cmd": "/dlapp/add-file-entry",
+                //"Content-Type": 'multipart/form-data',
+                //}
             }
             reader.readAsDataURL(file);
         }
@@ -304,16 +299,16 @@ const Convocatorias = () => {
 
     }
 
-    const downloadFile2 = async() => {
+    const downloadFile2 = async () => {
         console.log("downloadFile6");
         const reader = new FileReader();
         reader.onload = async ({ target }) => {
             const Liferay = window.Liferay;
-            
+
             Liferay.Service(
                 '/dlapp/add-file-entry',
                 {
-                //    externalReferenceCode: "AAAA",
+                    //    externalReferenceCode: "AAAA",
                     repositoryId: 20119,
                     folderId: 39909,
                     sourceFileName: file.name,
@@ -323,15 +318,15 @@ const Convocatorias = () => {
                     changeLog: '',
                     bytes: target.result,
                     file: target,
-                    expirationDate : null,
+                    expirationDate: null,
                     reviewDate: null,
-                    cmd: {"/dlapp/add-file-entry":{}},
+                    cmd: { "/dlapp/add-file-entry": {} },
                 },
-                function(obj) {
+                function (obj) {
                     console.log("algo se hace en binario");
                     console.log(obj);
                 }
-                );        
+            );
         }
         //reader.readAsText(file);
         //reader.readAsBinaryString(file);
