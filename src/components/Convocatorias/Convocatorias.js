@@ -86,6 +86,7 @@ const Convocatorias = () => {
                     ...items.item,
                     userId : getUserId(),
                     fichero: ficheroEnvio,
+                    filename: file.name??"probando1.jpg",
                 },
             }
     

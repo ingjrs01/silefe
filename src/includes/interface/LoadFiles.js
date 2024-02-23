@@ -26,7 +26,8 @@ export const LoadFiles = ({setFile, processCsv,itemsHandle}) => {
                                     }}>
                                 </ClayInput>
                             </ClayForm.Group>
-                            <input type="file" name="files" multiple onChange={(e) => setFile(e.target.files[0])} />
+                            <input type="file" name="files" onChange={(e) => setFile(e.target.files[0])} 
+                            />
                         </ClayForm>
                     </ClayCard.Description>
                     <div className="btn-group">
