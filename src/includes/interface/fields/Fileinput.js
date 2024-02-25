@@ -17,31 +17,16 @@ export const Fileinput = ({ itemsHandle, field, item }) => {
         const file = evt.target.files[0];
         console.log("changeFile con el nuevo evento");
         console.debug(file);
-        const titulo = file.name.split(".")[0];
+        const filename = file.name;
+        const titulo = filename.split(".")[0];
         setTitle(titulo);
 
         const reader = new FileReader();
         reader.onload = async ({ target }) => {
             const ficheroEnvio = target.result;
-            //const data = {
-            //    convocatoriaId: items.item.id,
-            //    obj: {
-            //        ...items.item,
-            //        userId: getUserId(),
-            //        fichero: ficheroEnvio,
-            //        filename: items.item.adjuntos.fichero.name ?? "probando1.jpg",
-            //    },
-            //}
-            //console.log("justo antes de enviar");
-            //console.debug(data);
-            //let { status, error } = await saveAPI('/silefe.convocatoria/save-convocatoria', data, referer);
-            //if (status) {
-            //    fetchData();
-            //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
-            //}
             console.log(ficheroEnvio);
 
-            itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: "adjuntos", value: ficheroEnvio, titulo: titulo });
+            itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: "adjuntos", value: ficheroEnvio, titulo: titulo, filename: filename });
         }
         reader.readAsDataURL(file);
 
@@ -57,7 +42,7 @@ export const Fileinput = ({ itemsHandle, field, item }) => {
                 spritemap={spritemap}
             >
                 <div className="form-group" key={"gf" + field.key} >
-                    <label for="inputFile" key={"fi" + field.key}>FILE UPLOAD</label>
+                    <label for="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
                     <input
                         id="inputFile"
                         key={"inf" + field.key}

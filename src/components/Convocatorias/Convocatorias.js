@@ -82,8 +82,6 @@ const Convocatorias = () => {
             obj: {
                 ...items.item,
                 userId: getUserId(),
-                //fichero: ficheroEnvio, 
-                //filename: items.item.adjuntos.fichero.name ?? "probando1.jpg",
             },
         }
 
@@ -130,208 +128,8 @@ const Convocatorias = () => {
         })
     }
 
-    const uploadFile = () => {
-        console.log("subiendo el fichero");
-        //if (file) {
-        //    const reader = new FileReader();
-        //    reader.onload = async ({ target }) => {
-        //        const csv = Papa.parse(target.result, { header: true, delimiter: ";", delimitersToGuess: [";"] });
-        //        const parsedData = csv?.data;
-        //        let end = '/silefe.cno/add-multiple';
-        //        let ttmp = { cnos: parsedData, userId: Liferay.ThemeDisplay.getUserId() };
-        //        
-        //    };
-        //    reader.readAsText(file);
-        //}
-        //else {
-        //    console.log("fichero no cargado")
-        //}
-
-    }
-
     const downloadFile = async () => {
-        const reader = new FileReader();
-        reader.onload = async ({ target }) => {
-            //const Liferay = window.Liferay;            
-            const pdata = {
-                filedata: target.result.toString('base64')
-            }
-            const endpoint = '/silefe.convocatoria/get-file';
-            const { status, error } = await saveAPI(endpoint, pdata, referer);
-            await console.log(status);
-
-
-        }
-        //reader.readAsText(file);
-        reader.readAsBinaryString(file);
-        console.log("leído en binario");
-
-    }
-
-
-    //const bla = () => {
-    //    try {
-    //        image = atob(e.target.result.split("data:image/jpeg;base64,")[1]);
-    //
-    //      } catch (e) {
-    //        jpg = false;
-    //      }
-    //      if (jpg == false) {
-    //        try {
-    //          image = atob(e.target.result.split("data:image/png;base64,")[1]);
-    //        } catch (e) {
-    //          alert("Not an image file Rekognition can process");
-    //          return;
-    //        }
-    //      }
-    //      //unencode image bytes for Rekognition DetectFaces API 
-    //      var length = image.length;
-    //      imageBytes = new ArrayBuffer(length);
-    //      var ua = new Uint8Array(imageBytes);
-    //      for (var i = 0; i < length; i++) {
-    //        ua[i] = image.charCodeAt(i);
-    //      }
-    //      //Call Rekognition  
-    //      DetectFaces(ua);
-    //}
-
-
-
-    const lelele = () => {
-        console.log("lelele con imágenes array buffer");
-        console.log("tratando de enviar el fihcero atop");
-
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = async ({ target }) => {
-                console.debug(target);
-                var image = atob(target.result.split("data:image/jpeg;base64,")[1]);
-
-                Liferay.Service(
-                    '/dlapp/add-file-entry',
-                    {
-                        repositoryId: 20119,
-                        folderId: 39909,
-                        sourceFileName: 'aaa.jpg',
-                        mimeType: 'image/jpg',
-                        title: 'prueba',
-                        description: '',
-                        changeLog: '',
-                        file: image//target.result,
-                    },
-                    function (obj) {
-                        console.log(obj);
-                    },
-                    function (e) {
-                        console.log("Error trabajando");
-                        console.error(e);
-                    }
-                );
-
-
-            }
-            //reader.readAsArrayBuffer(file);  //readAsBinaryString(file);//   .readAsDataURL(file);
-            //reader.readAsText(file);
-            reader.readAsDataURL(file);
-        }
-
-    }
-
-
-
-
-
-    const sendFile = () => {
-        //event.preventDefault();
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = async ({ target }) => {
-                console.log("leyendo cosas");
-                const data = new FormData();
-                data.set('file', target);
-                data.set('folderId', 39909);
-                data.set('repositoryId', 20119);
-                data.set('sourceFileName', file.name);
-                data.set('mimeType', 'image/jpeg');
-                data.set('description', '');
-                data.set('changeLog', '');
-                data.set('p_auth', getAuthToken());
-
-                console.log("todo listo para enviar");
-                console.debug(data);
-                const url = 'http://lfdevapps01.depo.es:8080/api/jsonws/invoke';
-
-                const endpoint = "/dlapp/add-file-entry";
-                fetch(url, {
-                    "credentials": "include",
-                    "headers": {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
-                        "Accept": "*/*",
-                        "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-                        "x-csrf-token": getAuthToken(),
-                        "Content-Type": "multipart/form-data",     //"text/plain;charset=UTF-8",
-                        //"Sec-Fetch-Dest": "empty",
-                        "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin"
-                    },
-                    "referrer": `\"${referer}\"`,
-                    "body": `${data}`,//`{\"${endpoint}\":${data}}`,      //${JSON.stringify(data)}}`,
-                    "method": "POST",
-                    "cmd": `{\"${endpoint}\"`,
-                    "mode": "cors"
-                }).then(response => {
-                    console.log("se han recibido datos");
-                    console.debug(response);
-                });
-                //{
-                //"method": "POST",
-                //"body": data,
-                //"cmd": "/dlapp/add-file-entry",
-                //"Content-Type": 'multipart/form-data',
-                //}
-            }
-            reader.readAsDataURL(file);
-        }
-        else {
-            console.log("el fihcero no funciona");
-        }
-
-    }
-
-    const downloadFile2 = async () => {
-        console.log("downloadFile6");
-        const reader = new FileReader();
-        reader.onload = async ({ target }) => {
-            const Liferay = window.Liferay;
-
-            Liferay.Service(
-                '/dlapp/add-file-entry',
-                {
-                    //    externalReferenceCode: "AAAA",
-                    repositoryId: 20119,
-                    folderId: 39909,
-                    sourceFileName: file.name,
-                    mimeType: file.type,
-                    title: file.name,
-                    description: '',
-                    changeLog: '',
-                    bytes: target.result,
-                    file: target,
-                    expirationDate: null,
-                    reviewDate: null,
-                    cmd: { "/dlapp/add-file-entry": {} },
-                },
-                function (obj) {
-                    console.log("algo se hace en binario");
-                    console.log(obj);
-                }
-            );
-        }
-        //reader.readAsText(file);
-        //reader.readAsBinaryString(file);
-        reader.readAsDataURL(file);
-        console.log("leído en texto");
+        console.log("función a implementar más tarde");
     }
 
     form.downloadFunc = downloadFile;
@@ -340,7 +138,22 @@ const Convocatorias = () => {
 
     const fetchData = async () => {
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.convocatoria/filter', formatPost(items), referer);
-        const tmp = await data.map(i => { return ({ ...i, id: i.convocatoriaId, checked: false }) });
+        console.log("FECH INICIO");
+        //console.debug(data);
+        const tmp = await data.map(i => {
+            const decoded = JSON.parse(i.adjuntos);
+            console.debug(decoded);
+            console.log("------------");
+            return ({
+                ...i,
+                adjuntos: decoded.map(a => ({ src: a, file: "lalala", filename: "filename.txt", descripcion: "descripcion", titulo: "tiutlo" })),
+                checked: false
+            })
+        });
+
+        console.log("esto es fetchData");
+        console.debug(tmp);
+
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 

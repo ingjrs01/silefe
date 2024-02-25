@@ -178,7 +178,8 @@ export const red_items = (state, action) => {
                         [action.fieldname]: {
                             ...state.item[action.fieldname],
                             fichero: action.value,
-                            title: action.titulo
+                            title: action.titulo,
+                            filename: action.filename
                         },
                     },
                 }
@@ -224,7 +225,7 @@ export const red_items = (state, action) => {
             }
             console.log("seleccionando nodo A");
             // TODO: revisar esto
-            delete seleccionado.adjuntos;
+            //delete seleccionado.adjuntos;
             console.log(seleccionado);
             console.log("fin seleccinado");
 
