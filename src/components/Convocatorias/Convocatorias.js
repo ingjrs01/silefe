@@ -1,7 +1,7 @@
 import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
-import { getAuthToken, getUserId, url_referer } from '../../includes/LiferayFunctions';
+import { getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
@@ -10,7 +10,7 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
-import { formatPost } from '../../includes/utils';
+import { formatPost, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
 
@@ -46,7 +46,7 @@ const Convocatorias = () => {
         console.log("esto es processCsv, y vou a guardar");
         //sendFile();
         //downloadFile2();
-        lelele();
+        
         //downloadFile();
         //if (file) {
         //    const reader = new FileReader();
@@ -137,22 +137,12 @@ const Convocatorias = () => {
     form.loadCsv = loadCsv;
 
     const fetchData = async () => {
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.convocatoria/filter', formatPost(items), referer);
-        console.log("FECH INICIO");
-        //console.debug(data);
-        const tmp = await data.map(i => {
-            const decoded = JSON.parse(i.adjuntos);
-            console.debug(decoded);
-            console.log("------------");
-            return ({
+        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.convocatoria/filter', formatPost(items), referer);        
+        const tmp = await data.map(i => ({
                 ...i,
-                adjuntos: decoded.map(a => ({ src: a, file: "lalala", filename: "filename.txt", descripcion: "descripcion", titulo: "tiutlo" })),
+                adjuntos: i.adjuntos.map(a => ({ ...a, src : toURL(a.uuid, a.groupId) })),
                 checked: false
-            })
-        });
-
-        console.log("esto es fetchData");
-        console.debug(tmp);
+            }));
 
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }

@@ -1,22 +1,19 @@
-import Button from '@clayui/button';
+import Button, { ClayButtonWithIcon } from '@clayui/button';
 import { ClayInput } from '@clayui/form';
-import React, { useState } from 'react';
-import { ITEMS_ACTIONS } from '../../reducers/main.reducer';
+import ClayLink from '@clayui/link';
 import ClayPanel from '@clayui/panel';
-import { getLanguageId, spritemap } from '../../LiferayFunctions';
+import React, { useState } from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
+import { spritemap } from '../../LiferayFunctions';
+import { ITEMS_ACTIONS } from '../../reducers/main.reducer';
 
 export const Fileinput = ({ itemsHandle, field, item }) => {
 
     const [title, setTitle] = useState();
 
-    console.log("Esto es la entrada de un fichero");
-
     const titleInputId = field.name + "title";
-    const changeFile = (evt) => {
+    const changeFile = (evt, index) => {
         const file = evt.target.files[0];
-        console.log("changeFile con el nuevo evento");
-        console.debug(file);
         const filename = file.name;
         const titulo = filename.split(".")[0];
         setTitle(titulo);
@@ -24,47 +21,89 @@ export const Fileinput = ({ itemsHandle, field, item }) => {
         const reader = new FileReader();
         reader.onload = async ({ target }) => {
             const ficheroEnvio = target.result;
-            console.log(ficheroEnvio);
-
-            itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: "adjuntos", value: ficheroEnvio, titulo: titulo, filename: filename });
+            itemsHandle({ type: ITEMS_ACTIONS.SET_FILEFIELD, fieldname: "adjuntos", index: index, objkey: "fichero", value: ficheroEnvio, titulo: titulo, filename: filename })
         }
         reader.readAsDataURL(file);
-
     }
 
     return (
         <>
-            <ClayPanel
-                collapsble
-                displayTitle={Liferay.Language.get("Adjunto")}
-                displayType="secondary"
-                showCollapseIcon={false}
-                spritemap={spritemap}
-            >
-                <div className="form-group" key={"gf" + field.key} >
-                    <label for="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
-                    <input
-                        id="inputFile"
-                        key={"inf" + field.key}
-                        type="file"
-                        onChange={changeFile}
-                    />
-                </div>
-                <div className="form-group" key={"gf2" + field.key} >
-                    <label for="titleInputId" key={"fia" + field.key}>{Liferay.Language.get("Título")}</label>
-                    <ClayInput
-                        placeholder={field.placeholder}
-                        type="text"
-                        name={titleInputId}
-                        id={titleInputId}
-                        key={field.key}
-                        value={title}
-                        onChange={e => { setTitle(e.target.value) }}>
-                    </ClayInput>
+            {
+                item.map((it, index) => (
+                    <ClayPanel
+                        collapsble
+                        displayTitle={Liferay.Language.get("Adjunto")}
+                        displayType="secondary"
+                        showCollapseIcon={false}
+                        spritemap={spritemap}
+                    >
+                        <div className="form-group" key={"gf" + field.key} >
+                            {it.src === undefined || it.src === "" &&
+                                <>
+                                    <label for="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
+                                    <input
+                                        id="inputFile"
+                                        key={"inf" + field.key}
+                                        type="file"
+                                        onChange={evt => changeFile(evt,index)}
+                                    />
+                                </>
+                            }
+                            {it.src !== undefined && it.src != "" &&
+                                <>
+                                    <label for="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
+                                    <ClayInput.Group>
+                                        <ClayInput.GroupItem>
+                                            <ClayInput
+                                                type="text"
+                                                readOnly={true}
+                                                name={field.name}
+                                                id={field.name}
+                                                key={field.key}
+                                                value={it.filename}
+                                            >
+                                            </ClayInput>
 
-                </div>
-            </ClayPanel>
-            <Button>{Liferay.Language.get("Añadir")}</Button>
+                                        </ClayInput.GroupItem>
+                                        <ClayInput.GroupItem>
+                                            <ClayLink displayType="primary" target="_blank" href={it.src} outline>
+                                                {Liferay.Language.get("Descargar")}
+                                            </ClayLink>
+                                        </ClayInput.GroupItem>
+                                        <ClayInput.GroupItem shrink prepend>
+                                        <ClayButtonWithIcon
+                                            aria-label="Delete"
+                                            spritemap={spritemap}
+                                            symbol="times"
+                                            title="Delete"
+                                            displayType="danger"
+                                            onClick={evt => itemsHandle({type: ITEMS_ACTIONS.DELETE_FILEFIELD, fieldname: "adjuntos", index: index})}
+                                        />
+                                        </ClayInput.GroupItem>
+                                    </ClayInput.Group>
+                                </>
+                            }
+                        </div>
+                        <div className="form-group" key={"gf2" + field.key} >
+                            <label for="titleInputId" key={"fia" + field.key}>{Liferay.Language.get("Título")}</label>
+                            <ClayInput
+                                placeholder={field.placeholder}
+                                type="text"
+                                name={titleInputId}
+                                id={titleInputId}
+                                key={field.key}
+                                value={it.title}
+                                onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SET_FILEFIELD, fieldname: "adjuntos", index: index, objkey: "title", value: e.target.value })}>
+                            </ClayInput>
+                        </div>
+                    </ClayPanel>
+                ))
+            }
+            <Button
+                onClick={evt => itemsHandle({ type: ITEMS_ACTIONS.ADD_FILEFIELD, fieldname: 'adjuntos' })}
+            >
+                {Liferay.Language.get("Añadir")}
+            </Button>
         </>
     )
 

@@ -34,6 +34,9 @@ export const ITEMS_ACTIONS = {
     SETCOMPLETEITEM: 31,
     ADD_FILTER: 34,
     REMOVE_FILTER: 35,
+    ADD_FILEFIELD: 36,
+    SET_FILEFIELD: 37,
+    DELETE_FILEFIELD: 38,
 }
 
 export const initialState = {
@@ -170,20 +173,21 @@ export const red_items = (state, action) => {
                 state.fields.fields[action.fieldname].change(action.value, action.fieldname);
             }
 
-            if (state.fields.fields[action.fieldname]["type"] === "file") {
-                return {
-                    ...state,
-                    item: {
-                        ...state.item,
-                        [action.fieldname]: {
-                            ...state.item[action.fieldname],
-                            fichero: action.value,
-                            title: action.titulo,
-                            filename: action.filename
-                        },
-                    },
-                }
-            }
+            // TODO: Cuando veamos que sigue funcionando, quitar este código: 
+            //if (state.fields.fields[action.fieldname]["type"] === "file") {
+            //    return {
+            //        ...state,
+            //        item: {
+            //            ...state.item,
+            //            [action.fieldname]: {
+            //                ...state.item[action.fieldname],
+            //                fichero: action.value,
+            //                title: action.titulo,
+            //                filename: action.filename
+            //            },
+            //        },
+            //    }
+            //}
             return {
                 ...state,
                 item: { ...state.item, [action.fieldname]: action.value }
@@ -223,11 +227,6 @@ export const red_items = (state, action) => {
                 else
                     return state;
             }
-            console.log("seleccionando nodo A");
-            // TODO: revisar esto
-            //delete seleccionado.adjuntos;
-            console.log(seleccionado);
-            console.log("fin seleccinado");
 
             if (state.fields.hasOwnProperty('beforeEdit'))
                 state.fields.beforeEdit(seleccionado);
@@ -489,7 +488,50 @@ export const red_items = (state, action) => {
                 history: action.data,
                 status: "history",
             }
+        case ITEMS_ACTIONS.ADD_FILEFIELD: 
+            let bbb = state.item[action.fieldname];
+
+            return {
+                ...state,
+                item:{
+                    ...state.item,
+                    [action.fieldname] : [...bbb,{                
+                        "id": 0,
+                        "filename": null,
+                        "descripcion": "",
+                        "title": "",
+                        "src": ""
+                    }]
+                } ,
+            }
+        case ITEMS_ACTIONS.SET_FILEFIELD: 
+            let arrb = state.item[action.fieldname];
+            arrb[action.index][action.objkey] = action.value;
+            if (state.fields.fields[action.fieldname]["type"] === "file") {
+                arrb[action.index]["title"] = action.titulo;
+                arrb[action.index]["filename"] = action.filename;
+            }
+            return {
+                ...state,
+                item: {
+                    ...state.item, 
+                    [action.fieldname] : arrb,
+                }
+            }
+        case ITEMS_ACTIONS.DELETE_FILEFIELD: 
+            let arrdel = [...state.item[action.fieldname]];
+            arrdel.splice(action.index,1);
+            return {
+                ...state,
+                item: {
+                    ...state.item, 
+                    [action.fieldname] : arrb,
+                }
+            }
+
         default:
             throw new Error("Accion invalida");
     }
 }
+
+  

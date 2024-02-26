@@ -1,4 +1,10 @@
+import { Liferay } from '../common/services/liferay/liferay';
 import { ITEMS_ACTIONS } from './reducers/items.reducer';
+
+export const toURL =  (uuid, groupId) => {
+  const urlPortal = Liferay.ThemeDisplay.getPortalURL();
+  return  (urlPortal + "/c/document_library/get_file?uuid=" + uuid + "&groupId=" + groupId);
+}
 
 export const toHours = (data) => {
   if (data == undefined)
