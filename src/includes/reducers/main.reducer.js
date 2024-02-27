@@ -37,6 +37,7 @@ export const ITEMS_ACTIONS = {
     ADD_FILEFIELD: 36,
     SET_FILEFIELD: 37,
     DELETE_FILEFIELD: 38,
+    EDIT_FILEFIELD: 39,
 }
 
 export const initialState = {
@@ -525,9 +526,23 @@ export const red_items = (state, action) => {
                 ...state,
                 item: {
                     ...state.item, 
-                    [action.fieldname] : arrb,
+                    [action.fieldname] : arrdel,
                 }
             }
+        //case ITEMS_ACTIONS.EDIT_FILEFIELD:
+        //    let arrc = state.item[action.fieldname];
+        //    arrb[action.index][action.objkey] = action.value;
+        //    if (state.fields.fields[action.fieldname]["type"] === "file") {
+        //        arrb[action.index]["title"] = action.titulo;
+        //        arrb[action.index]["filename"] = action.filename;
+        //    }
+        //    return {
+        //        ...state,
+        //        item: {
+        //            ...state.item, 
+        //            [action.fieldname] : arrc,
+        //        }
+        //    }
 
         default:
             throw new Error("Accion invalida");

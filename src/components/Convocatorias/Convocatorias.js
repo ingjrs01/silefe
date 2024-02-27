@@ -140,7 +140,7 @@ const Convocatorias = () => {
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.convocatoria/filter', formatPost(items), referer);        
         const tmp = await data.map(i => ({
                 ...i,
-                adjuntos: i.adjuntos.map(a => ({ ...a, src : toURL(a.uuid, a.groupId) })),
+                adjuntos: i.adjuntos.map(a => ({ ...a, edit: false, src : toURL(a.uuid, a.groupId) })),
                 checked: false
             }));
 

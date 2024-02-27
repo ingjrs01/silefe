@@ -38,7 +38,7 @@ export const Fileinput = ({ itemsHandle, field, item }) => {
                         spritemap={spritemap}
                     >
                         <div className="form-group" key={"gf" + field.key} >
-                            {it.src === undefined || it.src === "" &&
+                            {(it.src === undefined || it.src === "" || it.edit === true) &&
                                 <>
                                     <label for="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
                                     <input
@@ -49,7 +49,7 @@ export const Fileinput = ({ itemsHandle, field, item }) => {
                                     />
                                 </>
                             }
-                            {it.src !== undefined && it.src != "" &&
+                            {it.src !== undefined && it.src != "" && it.edit === false &&
                                 <>
                                     <label for="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
                                     <ClayInput.Group>
@@ -63,18 +63,30 @@ export const Fileinput = ({ itemsHandle, field, item }) => {
                                                 value={it.filename}
                                             >
                                             </ClayInput>
-
                                         </ClayInput.GroupItem>
+
+                                        <ClayInput.GroupItem>
+                                            <ClayButtonWithIcon
+                                                aria-label="Edit"
+                                                spritemap={spritemap}
+                                                symbol="pencil"
+                                                title="Edit"
+                                                displayType="secondary"
+                                                onClick={evt => itemsHandle({ type: ITEMS_ACTIONS.SET_FILEFIELD, fieldname: "adjuntos", index: index, objkey: "edit", value: true })}
+                                            />                                            
+                                        </ClayInput.GroupItem>
+
                                         <ClayInput.GroupItem>
                                             <ClayLink displayType="primary" target="_blank" href={it.src} outline>
                                                 {Liferay.Language.get("Descargar")}
                                             </ClayLink>
                                         </ClayInput.GroupItem>
-                                        <ClayInput.GroupItem shrink prepend>
+
+                                        <ClayInput.GroupItem>
                                         <ClayButtonWithIcon
                                             aria-label="Delete"
                                             spritemap={spritemap}
-                                            symbol="times"
+                                            symbol="trash"
                                             title="Delete"
                                             displayType="danger"
                                             onClick={evt => itemsHandle({type: ITEMS_ACTIONS.DELETE_FILEFIELD, fieldname: "adjuntos", index: index})}
