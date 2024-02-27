@@ -14,7 +14,7 @@ import Table from '../../includes/interface/Table';
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
-import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours } from '../../includes/utils';
+import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import AccionesForm from "./AccionesForm";
 import { form as DocentesForm } from './DocentesForm';
@@ -147,7 +147,11 @@ const Acciones = ({user}) => {
         }
 
         let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.accion/filter', formatPost(items), referer);
-        const tmp = await data.map(i => { return ({ ...i, checked: false }) });
+        const tmp = await data.map(i => ({ 
+            ...i, 
+            adjuntos: i.adjuntos.map(a => ({ ...a, edit: false, src : toURL(a.uuid, a.groupId) })),
+            checked: false 
+        }) );
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 

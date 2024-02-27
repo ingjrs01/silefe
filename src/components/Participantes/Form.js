@@ -417,6 +417,13 @@ export const form = {
             className: 'col-5',
             conditions: []
         },
+        adjuntos: {
+            key:44,
+            type: "file",
+            label: Liferay.Language.get('Adjuntos'), 
+            name: "adjuntos", 
+        },
+
 
     },
     tabActive:0,
@@ -469,6 +476,10 @@ export const form = {
                 {
                     key: 1050,
                     cols: ['colectivos']
+                },
+                {
+                    key: 1056,
+                    cols: ['adjuntos'],
                 },
 
             ]

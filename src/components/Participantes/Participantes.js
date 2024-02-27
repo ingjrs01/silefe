@@ -19,7 +19,7 @@ import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } fro
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import { TITULACIONES_ACTIONS, reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
-import { formatEmails, formatPhones, formatPost, toDate, toHours } from '../../includes/utils';
+import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import { form as citasform } from './CitasForm';
 import { ExperienciasRender } from './ExperienciasRender';
@@ -321,6 +321,7 @@ const Participantes = ({ user }) => {
                 colectivos: i.colectivos ?? [],
                 carnets: i.carnets ?? [],
                 prestaciones: i.prestaciones ?? [],
+                adjuntos: i.adjuntos.map(a => ({ ...a, edit: false, src : toURL(a.uuid, a.groupId) })),
                 checked: false
             })
         });

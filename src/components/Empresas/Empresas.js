@@ -16,7 +16,7 @@ import { CENTROS_ACTIONS, initialState as iniCentros, reducerCentros } from "../
 import { CONTACTOS_ACTIONS, initialState as iniContactos, reducerContactos } from "../../includes/reducers/contactos.reducer";
 import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from "../../includes/reducers/historico.reducer";
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
-import { formatEmails, formatPhones, formatPost, toDate, toHours } from '../../includes/utils';
+import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import CentrosRender from "./CentrosRender";
 import ContactosRender from "./ContactosRender";
@@ -155,6 +155,7 @@ const Empresas = ({user}) => {
                 id: i.empresaId,
                 email: formatEmails(i.email),
                 telefono: formatPhones(i.telefono),
+                adjuntos: i.adjuntos.map(a => ({ ...a, edit: false, src : toURL(a.uuid, a.groupId) })),
                 checked: false
             })
         );

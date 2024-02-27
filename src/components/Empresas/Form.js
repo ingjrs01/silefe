@@ -181,6 +181,12 @@ export const form = {
             componentName: "Contactos",
             name: "contactos",
         },
+        adjuntos: {
+            key:40,
+            type: "file",
+            label: Liferay.Language.get('Adjuntos'), 
+            name: "adjuntos", 
+        },
         historico: {
             key: 39,
             type: "other",
@@ -223,6 +229,10 @@ export const form = {
                 {
                     key: 74,
                     cols: ['interes']
+                },
+                {
+                    key: 75,
+                    cols: ['adjuntos']
                 },
             ]
         },

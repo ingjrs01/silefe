@@ -211,6 +211,13 @@ export const form = {
             componentName: "Historico",
             name: "historico",
         },
+        adjuntos: {
+            key:26,
+            type: "file",
+            label: Liferay.Language.get('Adjuntos'), 
+            name: "adjuntos", 
+        },
+
 
     },
     tabActive: 0,
@@ -243,6 +250,10 @@ export const form = {
                 {
                     key: 1013,
                     cols: ['objetivos']
+                },
+                {
+                    key: 1014,
+                    cols: ['adjuntos']
                 },
             ]
         },

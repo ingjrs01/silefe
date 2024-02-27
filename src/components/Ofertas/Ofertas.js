@@ -16,7 +16,7 @@ import TabsForm from '../../includes/interface/TabsForm';
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
-import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours } from '../../includes/utils';
+import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './OfertaForm';
 import { form as fparticipantes } from './ParticipanteForm';
@@ -273,6 +273,7 @@ const Ofertas = ({user}) => {
                 fechaIncorporacion:  toDate(i.fechaIncorporacion),
                 fechaUltimoEstado: toDate(i.fechaUltimoEstado), 
                 colectivos: i.colectivos ?? [],
+                adjuntos: i.adjuntos.map(a => ({ ...a, edit: false, src : toURL(a.uuid, a.groupId) })),
                 checked: false
             });
         });

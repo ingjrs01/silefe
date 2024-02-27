@@ -147,7 +147,13 @@ export const form = {
             label: Liferay.Language.get('Observaciones'),
             name: "observaciones",
             placeholder: Liferay.Language.get('Observaciones'),
-        }
+        },
+        adjuntos: {
+            key:18,
+            type: "file",
+            label: Liferay.Language.get('Adjuntos'), 
+            name: "adjuntos", 
+        },        
     },
     rows: [
         {
@@ -165,6 +171,10 @@ export const form = {
         {
             key:11,
             cols: ['horas'],
+        },
+        {
+            key: 13,
+            cols: ['adjuntos'],
         },
         {
             key:12,

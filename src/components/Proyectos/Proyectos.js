@@ -24,7 +24,7 @@ import { form as tform } from './TecnicoForm';
 //import Papa from "papaparse";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
-import { formatPost, toDate, toHours } from '../../includes/utils';
+import { formatPost, toDate, toHours, toURL } from '../../includes/utils';
 
 const Proyectos = ({ user }) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -332,6 +332,7 @@ const Proyectos = ({ user }) => {
                 inicio: toDate(i.inicio),
                 fin: toDate(i.fin),
                 colectivos: i.colectivos ?? [],
+                adjuntos: i.adjuntos.map(a => ({ ...a, edit: false, src : toURL(a.uuid, a.groupId) })),
                 checked: false
             })
             );

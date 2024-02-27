@@ -193,8 +193,14 @@ export const form = {
             placeholder: Liferay.Language.get('Telefono'),
             conditions: ["text"]
         },
+        adjuntos: {
+            key:19,
+            type: "file",
+            label: Liferay.Language.get('Adjuntos'), 
+            name: "adjuntos", 
+        },
         historico: {
-            key: 19,
+            key: 20,
             type: "other",
             componentName: "Historico",
             name: "historico",
@@ -227,6 +233,10 @@ export const form = {
                 {
                     key:46,
                     cols: ['email','telefono']
+                },
+                {
+                    key:47,
+                    cols: ['adjuntos']
                 },
             ]
         },
