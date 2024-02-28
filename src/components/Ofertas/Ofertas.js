@@ -284,7 +284,6 @@ const Ofertas = ({user}) => {
         fetchAPIData('/silefe.empresacentros/filter-by-empresa', { empresaId: empresaId }, referer).then(response => {
             const opts = [{ value: "0", label: Liferay.Language.get('Seleccionar') }, ...response.data.map(obj => { return { value: obj.empresaCentrosId, label: obj.nombre } })];
             itemsHandle({type: ITEMS_ACTIONS.SET_FORMOPTIONS,fieldname: "centroId", options: opts });
-            //form.fields.centroId.options = opts;
         });
     }    
 

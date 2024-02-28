@@ -11,6 +11,7 @@ import { getLanguageId, locales, spritemap } from '../../includes/LiferayFunctio
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import DoubleTable from '../../includes/interface/DoubleTable';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
+import { Fileinput } from '../../includes/interface/fields/Fileinput';
 import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
 import { Formacion } from './Formacion';
 
@@ -272,6 +273,11 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
 
                 </div>
 
+                <div className="row">
+                  <ClayForm.Group className={'has-success  col'} key={"Group-objservaciones"} >
+                    <Fileinput  itemsHandle={itemsHandle} field={items.fields.fields["adjuntos"]} item={items.item["adjuntos"]} />
+                  </ClayForm.Group>
+                </div>
 
 
 
