@@ -153,7 +153,32 @@ export const form = {
             type: "file",
             label: Liferay.Language.get('Adjuntos'), 
             name: "adjuntos", 
-        },        
+        }, 
+        inicio: {
+            key:19,
+            type: "date",
+            label: Liferay.Language.get('FechaInicio'),
+            name: "inicio",
+            value:"",
+            yearmin: 110,
+            yearmax: 0,
+            placeholder:Liferay.Language.get('YYYY-MM-DD'),
+            className: 'col-3',
+            conditions:[]
+        },
+        fin: {
+            key:20,
+            type: "date",
+            label: Liferay.Language.get('FechaFin'),
+            name: "fin",
+            value:"",
+            yearmin: 110,
+            yearmax: 0,
+            placeholder:Liferay.Language.get('YYYY-MM-DD'),
+            className: 'col-3',
+            conditions:[]
+        },
+        
     },
     rows: [
         {

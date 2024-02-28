@@ -7,9 +7,10 @@ import { Link } from "react-router-dom";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import { Dateinput } from '../../includes/interface/fields/Dateinput';
 import { EJECUCION_ACTIONS } from './Ejecucion.reducer';
 
-export const Formacion = ({ ejecucion, ejecucionHandler }) => {
+export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
     
     const editUrl = "/lugar/";
     const backUrl = "/accion/";
@@ -20,10 +21,13 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
         <>
             <div className="container">
 
-                <h3>{"Tipo de Formacion"}</h3>
+                {/* <h3>{"Tipo de Formacion"}</h3> */}
                 <div className="row">
                     <ClayForm.Group className={"col-3"} key={"Group-101"} >
-                        <label htmlFor="basicInput">{"Fecha Inicio"}</label>
+                        <Dateinput itemsHandle={ejecucionHandler} field={items.fields.fields["inicio"]} item={ejecucion.item.inicio} action={EJECUCION_ACTIONS.SETFIELD} />
+                        {/*
+
+                        <label htmlFor="basicInput">{Liferay.Language.get("Fecha Inicio")}</label>
                         <ClayDatePicker
                             onChange={val => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "inicio", value: val })}
                             firstDayOfWeek={1}
@@ -37,9 +41,10 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                                 start: ((new Date().getFullYear() - 0))
                             }}
                         />
+                        */ }
                     </ClayForm.Group>
                     <ClayForm.Group className={"col-3"} key={"Group-102"} >
-                        <label htmlFor="basicInput">{"Fecha fin"}</label>
+                        <label htmlFor="basicInput">{Liferay.Language.get("Fecha fin")}</label>
                         <ClayDatePicker
                             onChange={val => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'fin', value: val })}
                             //placeholder={items.fields.fields[it].placeholder}

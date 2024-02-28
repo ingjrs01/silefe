@@ -1,14 +1,12 @@
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import ClayCard from "@clayui/card";
-import ClayDatePicker from '@clayui/date-picker';
-import ClayForm, { ClayInput, ClaySelect, ClayToggle } from '@clayui/form';
+import ClayForm, { ClayCheckbox, ClayInput, ClaySelect, ClayToggle } from '@clayui/form';
 import ClayLocalizedInput from '@clayui/localized-input';
 import ClayPanel from '@clayui/panel';
 import ClayTabs from '@clayui/tabs';
 import React, { useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
-import { getLanguageId, locales, spritemap } from '../../includes/LiferayFunctions';
-import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import { locales, spritemap } from '../../includes/LiferayFunctions';
 import DoubleTable from '../../includes/interface/DoubleTable';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { Fileinput } from '../../includes/interface/fields/Fileinput';
@@ -292,9 +290,10 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 {
                   (items.item.accionTipoId != 1) &&
                   <>
-                  <div className="row">
-
-                    <ClayForm.Group className={"col-6"} key={"Group-91"} >
+                  <div className="row"> 
+                  {
+                    /*
+                    <ClayForm.Group className={"col-3"} key={"Group-91"} >
                             <label htmlFor="basicInput">{"Fecha Inicio"}</label>
                             <ClayDatePicker
                                 onChange={val => console.log("aaa")}
@@ -311,7 +310,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                                 />
                     </ClayForm.Group>
 
-                    <ClayForm.Group className={"col-6"} key={"Group-92"} >
+                    <ClayForm.Group className={"col-3"} key={"Group-92"} >
                             <label htmlFor="basicInput">{"Fecha Fin"}</label>
                             <ClayDatePicker
                                 onChange={val => console.log("aaa")}
@@ -326,13 +325,41 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                                   start: ((new Date().getFullYear() - 0))
                                 }}
                                 />
+                    </ClayForm.Group>*/
+                  }
+
+                    <ClayForm.Group className={"col-2"} key={"Group-92a"} >
+                            <label htmlFor="basicInput">{Liferay.Language.get("Teórica")}</label>
+                            <ClayCheckbox
+                                checked={false}
+                                onChange={() => console.log("eso es lo que no se sabe")}
+                            />
                     </ClayForm.Group>
+
+                    <ClayForm.Group className={"col-2"} key={"Group-92b"} >
+                            <label htmlFor="basicInput">{Liferay.Language.get("Práctica")}</label>
+                            <ClayCheckbox
+                                checked={false}
+                                onChange={() => console.log("eso es lo que no se sabe")}
+                            />
+                    </ClayForm.Group>
+
+                    <ClayForm.Group className={"col-2"} key={"Group-92c"} >
+                            <label htmlFor="basicInput">{Liferay.Language.get("Grupal")}</label>
+                            <ClayCheckbox
+                                checked={false}
+                                onChange={() => console.log("eso es lo que no se sabe")}
+                            />
+                    </ClayForm.Group>
+
                     </div>
                   </>
                 }
                 {
                   (items.item.accionTipoId == 1 || items.item.accionTipoId == 3) &&
                   <>
+                  {
+                    (items.item.teorica) &&
                   <ClayPanel
                     collapsable
                     displayTitle="Formación Teórica"
@@ -340,14 +367,17 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     showCollapseIcon={true}
                     spritemap={spritemap}
                   >
-                  <ClayPanel.Body>
-                    <Formacion
-                      ejecucion={ejecucion[0]}
-                      ejecucionHandler={ejecucionHandler[0]}
-                    />
-                  </ClayPanel.Body>
+                    <ClayPanel.Body>
+                      <Formacion
+                        ejecucion={ejecucion[0]}
+                        ejecucionHandler={ejecucionHandler[0]}
+                        items={items}
+                      />
+                    </ClayPanel.Body>
                   </ClayPanel>
-
+                  }
+                  {
+                    (items.item.practica ) &&
                   <ClayPanel
                     collapsable
                     displayTitle="Formación Práctica"
@@ -362,7 +392,9 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     />
                   </ClayPanel.Body>
                   </ClayPanel>
-
+                  }
+                  {
+                    (items.item.grupal) &&
                   <ClayPanel
                     collapsable
                     displayTitle="Formación Grupal"
@@ -377,6 +409,8 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                     />
                   </ClayPanel.Body>
                   </ClayPanel>
+                  }
+
                   </>
 
                 }

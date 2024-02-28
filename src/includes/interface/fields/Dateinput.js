@@ -1,15 +1,15 @@
 import ClayDatePicker from '@clayui/date-picker';
 import { getLanguageId, spritemap } from '../../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+//import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 import { getDays, getMonths } from '../DatesLang';
 
-export const Dateinput = ({itemsHandle, field, item, className}) => {
+export const Dateinput = ({itemsHandle, field, item, className, action}) => {
 
     return (
         <>
         <label htmlFor="basicInput" key={"label" + field.key}>{field.label}</label>
         <ClayDatePicker
-          onChange={val => { itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: val }); }}
+          onChange={val => { itemsHandle({ type: action, fieldname: field.name, value: val }); }}
           id={field.name}
           placeholder={field.placeholder}
           firstDayOfWeek={1}
