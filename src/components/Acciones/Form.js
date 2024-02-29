@@ -99,6 +99,7 @@ export const form = {
             label: Liferay.Language.get('Categoría'),
             name: "categoriaId",
             placeholder: Liferay.Language.get('Categoría'),
+            enabled: true,
         },
 		cursoId: {
             key: 12,
@@ -134,6 +135,7 @@ export const form = {
             placeholder: Liferay.Language.get('Estado'),
             options: [{value: 0, label: Liferay.Language.get("Seleccionar")}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}],
             change: () => console.log("ha cambiado el estado"),
+            enabled: true,
         },
 		ultimoEstado: {
             key: 16,
@@ -178,7 +180,46 @@ export const form = {
             className: 'col-3',
             conditions:[]
         },
-        
+        hIni1: {
+            key: 21,  
+            type: "hour",
+            label: Liferay.Language.get('Hora Inicio M.'),
+            name: "hIni1",
+            value:"",
+            placeholder:Liferay.Language.get('YYYY-MM-DD'), 
+            className: 'col-2',
+            conditions:[] 
+        },
+        hFin1: {
+            key: 22,  
+            type: "hour",
+            label: Liferay.Language.get('Hora Fin M.'),
+            name: "hFin1",
+            value:"",
+            placeholder:Liferay.Language.get('YYYY-MM-DD'), 
+            className: 'col-2',
+            conditions:[] 
+        },
+        hIni2: {
+            key: 23,  
+            type: "hour",
+            label: Liferay.Language.get('Hora Inicio T.'),
+            name: "hIni2",
+            value:"",
+            placeholder:Liferay.Language.get('YYYY-MM-DD'), 
+            className: 'col-2',
+            conditions:[] 
+        },
+        hFin2: {
+            key: 24,  
+            type: "hour",
+            label: Liferay.Language.get('Hora Fin T.'),
+            name: "hFin2",
+            value:"",
+            placeholder:Liferay.Language.get('YYYY-MM-DD'), 
+            className: 'col-2',
+            conditions:[] 
+        }, 
     },
     rows: [
         {

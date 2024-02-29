@@ -1,5 +1,6 @@
 import ClayForm from '@clayui/form';
 import React from "react";
+import { ITEMS_ACTIONS } from '../reducers/main.reducer';
 import { Dateinput } from './fields/Dateinput';
 import { Dni } from './fields/Dni';
 import { DoubleList } from './fields/DoubleList';
@@ -43,7 +44,7 @@ export const RenderFormFields = ({ itemsHandle, items }) => {
             {(items.form.fields[it].type === 'hour')         && <Hour           itemsHandle={itemsHandle} field={items.form.fields[it]} item={items.item[it]} />}
             {(items.form.fields[it].type === 'phone')        && <Phone          itemsHandle={itemsHandle} field={items.form.fields[it]} item={items.item[it]} />}
             {(items.form.fields[it].type === 'email')        && <Email          itemsHandle={itemsHandle} field={items.form.fields[it]} item={items.item[it]} />}
-            {(items.form.fields[it].type === 'date')         && <Dateinput      itemsHandle={itemsHandle} field={items.form.fields[it]} item={items.item[it]} />}
+            {(items.form.fields[it].type === 'date')         && <Dateinput      itemsHandle={itemsHandle} field={items.form.fields[it]} item={items.item[it]} action={ITEMS_ACTIONS.SET} />}
             {(items.form.fields[it].type === 'dni')          && <Dni            itemsHandle={itemsHandle} field={items.form.fields[it]} item={items.item[it]} tipoDoc={items.item["tipoDoc"]} />}
             {(items.form.fields[it].type === 'select')       && <Select         itemsHandle={itemsHandle} field={items.form.fields[it]} item={items.item[it]} />}
             {(items.form.fields[it].type === 'toggle')       && <Toggle         itemsHandle={itemsHandle} field={items.form.fields[it]} item={items.item[it]} />}

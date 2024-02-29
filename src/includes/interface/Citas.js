@@ -15,9 +15,11 @@ import { Select } from '../interface/fields/Select';
 import { Textarea } from '../interface/fields/Textarea';
 import { Textinput } from '../interface/fields/Textinput';
 import { CITAS_ACTIONS, CITAS_STATES } from '../reducers/citas.reducer';
+import { ITEMS_ACTIONS } from '../reducers/main.reducer';
 import { MiniPaginator } from "./MiniPaginator";
 
-const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
+//const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
+const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {    
     const lang = getLanguageId();
 
     const changePageSearch = (page) => {
@@ -57,12 +59,14 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                                     field={items.form.fields["appointmentDate"]} 
                                                     item={items.item["appointmentDate"]} 
                                                     className="col-3"
+                                                    action={ITEMS_ACTIONS.SET}
                                                 /> 
                                                 <Hour           
                                                     itemsHandle={handler} 
                                                     field={items.form.fields["appointmentHour"]} 
                                                     item={items.item["appointmentHour"]} 
                                                     className="col-2"
+                                                    action={ITEMS_ACTIONS.SET}
                                                 /> 
                                                 </div>
                                                 <div className='row'>

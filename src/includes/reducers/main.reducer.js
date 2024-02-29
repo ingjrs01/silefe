@@ -123,7 +123,6 @@ let tmp = []
 export const red_items = (state, action) => {
     let tmp_item = {};
     let tt = {};
-    //console.log("me han dado enla accion  " + action.type + ".");
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS:
             return {
@@ -133,7 +132,6 @@ export const red_items = (state, action) => {
             }
 
         case ITEMS_ACTIONS.LOAD_ITEMS:
-            console.log("estamos cargando los items");
             return {
                 ...state,
                 arr: action.items,
@@ -195,7 +193,6 @@ export const red_items = (state, action) => {
             }
 
         case ITEMS_ACTIONS.SETCOMPLETEITEM:
-            //console.log("complete");
             //console.debug()
             //if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
             //    state.fields.fields[action.fieldname].change(action.value,action.fieldname);
@@ -215,7 +212,6 @@ export const red_items = (state, action) => {
             }
 
         case ITEMS_ACTIONS.SELECT_ITEM:
-            console.log("esto es SELECTiTEM");
             let sel = [];
             let seleccionado = {};
             if (action.hasOwnProperty('index')) {

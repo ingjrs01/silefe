@@ -1,10 +1,9 @@
 import { ClayInput } from '@clayui/form';
 import React from 'react';
 //import { spritemap } from '../../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
 
-export const Hour = ({ itemsHandle, field, item, className }) => {
+export const Hour = ({ itemsHandle, field, item, className, action }) => {
 
     return (
         <>
@@ -19,7 +18,7 @@ export const Hour = ({ itemsHandle, field, item, className }) => {
           className={className}
           onChange={e => {
             //validate(e.target.name, e.target.value, items, itemsHandle);
-            itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: e.target.name, value: e.target.value });
+            itemsHandle({ type: action, fieldname: e.target.name, value: e.target.value });
           }}>
         </ClayInput>
       </>

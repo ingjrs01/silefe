@@ -56,6 +56,8 @@ const Acciones = ({user}) => {
         if (items.status === 'new')
             endpoint = '/silefe.accion/add-accion';
         let { data, status, error } = await saveAPI(endpoint, pdata, referer);
+        console.log("Datos enviados a guardar");
+        console.debug(status);
         if (status) {
             const obj2 = { id: data.accionId, docentes: docentes.items, userId: getUserId() };
             let respon = await saveAPI('/silefe.accion/save-docentes-accion', obj2, referer);
@@ -75,12 +77,34 @@ const Acciones = ({user}) => {
             }
 
             // TODO: Revisar según el tipo de formacion que sea:
-            let obj4 = { id: ejecucionT.item.id, obj: ejecucionT.item };
-            respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
-            obj4 = { id: ejecucionP.item.id, obj: ejecucionP.item };
-            respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
-            obj4 = { id: ejecucionG.item.id, obj: ejecucionG.item };
-            respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
+            console.log("Enviando la ejecución");
+            let obj4 = null;
+            if (items.item.teorica !== undefined && items.item.teorica ) {
+                obj4 = { id: ejecucionT.item.id, obj: ejecucionT.item };
+                respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
+                if (respon.status == false) {
+                    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[respon.error] + " " + respon.msg }]);        
+                    return false;
+                }
+            }
+
+            if (items.item.practica !== undefined && items.item.practica ) {
+                obj4 = { id: ejecucionP.item.id, obj: ejecucionP.item };
+                respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
+                if (respon.status == false) {
+                    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[respon.error] + " " + respon.msg  }]);        
+                    return false;
+                }
+            }
+
+            if (items.item.grupal !== undefined && items.item.grupal) {
+                obj4 = { id: ejecucionG.item.id, obj: ejecucionG.item };
+                respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
+                if (respon.status == false) {
+                    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[respon.error] + " " + respon.msg  }]);        
+                    return false;
+                }
+            }
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
@@ -159,11 +183,9 @@ const Acciones = ({user}) => {
         if (item.accionId != undefined && item.accionId > 0) {            
             const accionId = item.accionId;
             loadHistory(accionId);
-            console.log("vamos a ver");
             ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
             ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
             ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
-            console.log("ejecutado");
 
             loadDocentes(accionId);
             loadParticipantes(accionId);
@@ -377,9 +399,6 @@ const Acciones = ({user}) => {
     }
 
     const loadHistory = (id) => {
-        console.log("loadHistory");
-        console.log(id);
-
         const prequest = {
             accionId: id,
             pagination: {
@@ -390,12 +409,9 @@ const Acciones = ({user}) => {
         }
         fetchAPIData('/silefe.accionhistory/get-history', prequest, referer).then(response => {
             //itemsHandle({ type: ITEMS_ACTIONS.HISTORY, data: response.data });
-            console.log("se está cargando el historico");
-            console.debug(response);
             const respuesta = response.data.map(item => ({...item,
                 date: toDate(item.date) + " " + toHours(item.date),
             }));
-            console.debug(respuesta);
             handleHistorico({type: HISTORICO_ACTIONS.LOAD, items: respuesta, total: response.totalItems, totalPages: response.totalPages});
         });
     } 

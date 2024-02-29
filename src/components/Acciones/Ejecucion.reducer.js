@@ -72,7 +72,7 @@ export const iniState = {
 let tmpar= [];
 
 export const reducerEjecucion = (state, action ) => {
-    console.log("reducer: " + action.type);
+    //console.log("Reducer: " + action.type);
     switch (action.type) {
         case EJECUCION_ACTIONS.SETFORM:
             return {
@@ -157,16 +157,16 @@ export const reducerEjecucion = (state, action ) => {
                         dias: {
                             ...ldias
                         },
-                        lugar: {
-                            ...state.item.lugar
-                        },
-                        empresa: {
-                            ...state.item.empresa
-                        }
+                        // TODO: asegurarse de que no hace falta
+                        //lugar: {
+                        //    ...state.item.lugar
+                        //},
+                        //empresa: {
+                        //    ...state.item.empresa
+                        //}
                     }
                 };
             }
-            
             if (state.form.fields[action.fieldname].hasOwnProperty('change')) 
                 state.form.fields[action.fieldname].change(action.value);
             return {

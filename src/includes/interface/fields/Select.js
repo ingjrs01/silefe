@@ -1,7 +1,6 @@
 import { ClaySelect } from '@clayui/form';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
-export const Select = ({itemsHandle, field, item, className}) => {
+export const Select = ({itemsHandle, field, item, className, action}) => {
 
     return (
         <>
@@ -12,7 +11,7 @@ export const Select = ({itemsHandle, field, item, className}) => {
           key={field.key}
           disabled={!field.enabled}
           className={className}
-          onChange={evt => itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: evt.target.name, value: evt.target.value })}
+          onChange={evt => itemsHandle({ type: action, fieldname: evt.target.name, value: evt.target.value })}
           value={item} >
           {field.options !== 'undefined' && field.options.map(item => (
             <ClaySelect.Option

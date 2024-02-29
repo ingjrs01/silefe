@@ -1,13 +1,13 @@
 import { ClayButtonWithIcon } from '@clayui/button';
 import ClayCard from '@clayui/card';
-import ClayDatePicker from '@clayui/date-picker';
-import ClayForm, { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
+import ClayForm, { ClayCheckbox } from '@clayui/form';
 import React from "react";
 import { Link } from "react-router-dom";
 import { Liferay } from '../../common/services/liferay/liferay';
-import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
-import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import { spritemap } from '../../includes/LiferayFunctions';
 import { Dateinput } from '../../includes/interface/fields/Dateinput';
+import { Hour } from '../../includes/interface/fields/Hour';
+import { Select } from '../../includes/interface/fields/Select';
 import { EJECUCION_ACTIONS } from './Ejecucion.reducer';
 
 export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
@@ -20,46 +20,12 @@ export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
     return (
         <>
             <div className="container">
-
-                {/* <h3>{"Tipo de Formacion"}</h3> */}
                 <div className="row">
                     <ClayForm.Group className={"col-3"} key={"Group-101"} >
                         <Dateinput itemsHandle={ejecucionHandler} field={items.fields.fields["inicio"]} item={ejecucion.item.inicio} action={EJECUCION_ACTIONS.SETFIELD} />
-                        {/*
-
-                        <label htmlFor="basicInput">{Liferay.Language.get("Fecha Inicio")}</label>
-                        <ClayDatePicker
-                            onChange={val => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "inicio", value: val })}
-                            firstDayOfWeek={1}
-                            months={getMonths(getLanguageId())}
-                            spritemap={spritemap}
-                            timezone="GMT+01:00"
-                            value={ejecucion.item.inicio}
-                            weekdaysShort={getDays(getLanguageId())}
-                            years={{
-                                end: (((new Date().getFullYear()) + 2)),
-                                start: ((new Date().getFullYear() - 0))
-                            }}
-                        />
-                        */ }
                     </ClayForm.Group>
                     <ClayForm.Group className={"col-3"} key={"Group-102"} >
-                        <label htmlFor="basicInput">{Liferay.Language.get("Fecha fin")}</label>
-                        <ClayDatePicker
-                            onChange={val => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'fin', value: val })}
-                            //placeholder={items.fields.fields[it].placeholder}
-                            firstDayOfWeek={1}
-                            months={getMonths(getLanguageId())}
-                            spritemap={spritemap}
-                            timezone="GMT+01:00"
-                            value={ejecucion.item.fin}
-                            weekdaysShort={getDays(getLanguageId())}
-                            years={{
-                                end: (((new Date().getFullYear()) + 2)),
-                                start: ((new Date().getFullYear() - 0))
-                            }}
-                        />
-
+                        <Dateinput itemsHandle={ejecucionHandler} field={items.fields.fields["fin"]} item={ejecucion.item.fin} action={EJECUCION_ACTIONS.SETFIELD} />
                     </ClayForm.Group>
 
                     <div className="col-6">
@@ -70,7 +36,9 @@ export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
                                     checked={ejecucion.item.dias.L.value}
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"L" })}
                                 />
+                                                            
                             </ClayForm.Group>
+
 
                             <ClayForm.Group className={"col-1"} key={"Group-104"} >
                                 <label htmlFor="basicInput">{"M"}</label>
@@ -125,80 +93,26 @@ export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
                 <div className="row">
 
                     <ClayForm.Group className={"col-2"} key={"Group-110"} >
-                        <label htmlFor="basicInput">{"Hora Inicio M."}</label>
-                        <ClayInput
-                            placeholder={"prueba2"}
-                            type="time"
-                            name={"escondido-3"}
-                            key={"prueba-4"}
-                            value={ejecucion.item.hIni1}
-                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hIni1", value:evt.target.value })}
-                        >
-                        </ClayInput>
+                        <Hour itemsHandle={ejecucionHandler} field={items.fields.fields["hIni1"]} item={ejecucion.item.hIni1} action={EJECUCION_ACTIONS.SETFIELD} />
                     </ClayForm.Group>
 
                     <ClayForm.Group className={"col-2"} key={"Group-111"} >
-                        <label htmlFor="basicInput">{"Hora Fin M."}</label>
-                        <ClayInput
-                            placeholder={"prueba2"}
-                            type="time"
-                            name={"escondido-3"}
-                            key={"prueba-4"}
-                            value={ejecucion.item.hFin1}
-                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hFin1", value:evt.target.value })}
-                        >
-                        </ClayInput>
+                        <Hour itemsHandle={ejecucionHandler} field={items.fields.fields["hFin1"]} item={ejecucion.item.hFin1} action={EJECUCION_ACTIONS.SETFIELD} />
                     </ClayForm.Group>
 
                     <ClayForm.Group className={"col-2"} key={"Group-112"} >
-                        <label htmlFor="basicInput">{"Hora Inicio T."}</label>
-                        <ClayInput
-                            placeholder={"prueba2"}
-                            type="time"
-                            name={"escondido-3"}
-                            key={"prueba-4"}
-                            value={ejecucion.item.hIni2}
-                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hIni2", value:evt.target.value })}
-                        >
-                        </ClayInput>
+                        <Hour itemsHandle={ejecucionHandler} field={items.fields.fields["hIni2"]} item={ejecucion.item.hIni2} action={EJECUCION_ACTIONS.SETFIELD} />
                     </ClayForm.Group>
+
                     <ClayForm.Group className={"col-2"} key={"Group-113"} >
-                        <label htmlFor="basicInput">{"Hora Fin T."}</label>
-                        <ClayInput
-                            placeholder={"prueba2"}
-                            type="time"
-                            name={"escondido-3"}
-                            key={"prueba-4"}
-                            value={ejecucion.item.hFin2}
-                            onChange={evt => ejecucionHandler({type:EJECUCION_ACTIONS.SETFIELD, fieldname: "hFin2", value:evt.target.value })}
-                        >
-                        </ClayInput>
+                        <Hour itemsHandle={ejecucionHandler} field={items.fields.fields["hFin2"]} item={ejecucion.item.hFin2} action={EJECUCION_ACTIONS.SETFIELD} />
                     </ClayForm.Group>
                 </div>
 
                 <div className="row">
                     <ClayForm.Group className={"col-6"} key={"Group-114"} >
-                        <label htmlFor="basicInput">{"Empresa Impartidora"}</label>
-                        <ClaySelect aria-label="Select Label"
-                            id={"empresaId"}
-                            name={"empresaId"}
-                            key={"empresaId"}
-                            disabled={false}
-                            onChange={evt => {
-                                console.log("probando el cambio de empresa");
-                                ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "empresaId", value: evt.target.value })
-                            }}
-                            value={ejecucion.item.empresaId} >
-                            {
-                                ejecucion.form.fields.empresaId.options.map( option => (
-                                    <ClaySelect.Option
-                                        key={"option-"+option.label+option.value}
-                                        label={option.label}
-                                        value={option.value}
-                                    />
-                                ))
-                            }
-                        </ClaySelect>
+                        <Select  itemsHandle={ejecucionHandler} field={ejecucion.form.fields["empresaId"]} item={ejecucion.item.empresaId} action={EJECUCION_ACTIONS.SETFIELD} /> 
+                        
                         <ClayCard>
                             <ClayCard.Body>
                             <ClayCard.Description displayType="title">
@@ -231,26 +145,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
 
                     </ClayForm.Group>
                     <ClayForm.Group className={"col-6"} key={"Group-115"} >
-                        <label htmlFor="basicInput">{"Centro"}</label>
-                        <ClaySelect aria-label="Select Label"
-                            id={"lugarId"}
-                            name={"lugarId"}
-                            key={"lugarId"}
-                            disabled={false}
-                            onChange={evt => {
-                                ejecucionHandler({type: EJECUCION_ACTIONS.SETFIELD, fieldname: "lugarId", value:evt.target.value})
-                            }}
-                            value={ejecucion.item.lugarId} >
-                            {
-                                ejecucion.form.fields.lugarId.options.map( option => (
-                                    <ClaySelect.Option
-                                        key={"option-"+option.label+option.value}
-                                        label={option.label}
-                                        value={option.value}
-                                    />
-                                ))
-                            }
-                        </ClaySelect>
+                        <Select  itemsHandle={ejecucionHandler} field={ejecucion.form.fields["lugarId"]} item={ejecucion.item.lugarId} action={EJECUCION_ACTIONS.SETFIELD} /> 
                         <ClayCard>
                             <ClayCard.Body>
                             <ClayCard.Description displayType="title">

@@ -2,9 +2,8 @@ import ClayLocalizedInput from '@clayui/localized-input';
 import { useState } from 'react';
 import { locales, spritemap } from '../../LiferayFunctions';
 import { validateLocalized } from '../../Validators';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
-export const LocalizedInput = ({itemsHandle, field, item}) => {
+export const LocalizedInput = ({itemsHandle, field, item, action }) => {
     const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
     return (
@@ -17,7 +16,7 @@ export const LocalizedInput = ({itemsHandle, field, item}) => {
         onSelectedLocaleChange={setSelectedLocale}
         onTranslationsChange={evt => {
           validateLocalized(field.name, evt, field, itemsHandle);
-          itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: evt });
+          itemsHandle({ type: action, fieldname: field.name, value: evt });
         }
         }
         selectedLocale={selectedLocale}

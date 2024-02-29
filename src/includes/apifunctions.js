@@ -137,8 +137,8 @@ export const saveAPI = async (endpoint, postdata, referer) => {
         "method": "POST",
         "mode": "cors"
     });
-    let { data, status, error } = await response.json();
-    return { data, status, error };
+    let { data, status, error, msg } = await response.json();
+    return { data, status, error, msg };
 }
 
 export const saveFileAPI = async (endpoint, file, referer) => {
