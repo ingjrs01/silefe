@@ -130,6 +130,134 @@ export const validateDate = (name, value, items, itemsHandle) => {
     return true;
 }
 
+// esta es la nueva version de la funcion que tengo
+
+export const validateDate2 = (name, value, field, itemsHandle) => {
+    console.log("esto es validateDate2: " + value);
+
+    for (var condicion of field["conditions"]) {
+        //if (condicion == "number") {
+        //    if (isNaN(value)) {
+        //        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
+        //        return false;
+        //    }
+        //}
+
+        if (condicion == "required") {
+            if (value == 'undefined' || value == null|| value.length == 0) {
+                itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('no-vacío') });
+                return false;
+            }
+        }
+    }
+
+    if (value == 'undefined' || value == null|| value.length == 0) { // si llego aqui, no es requerido
+        itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+        return true;
+    }
+    // comprobar si la fecha tiene buena pinta.
+    const parts = value.split("-");
+    const anio  = parseInt(parts[0]);
+    const month = parseInt(parts[1]);
+    const day   = parseInt(parts[2]);
+
+    if ( isNaN(anio) || isNaN(month) || isNaN(day)) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('no-es-una-fecha') });
+        return false;
+    }
+
+    if (field.hasOwnProperty('yearmin') ) {
+        const aniomin = new Date().getFullYear() - field.yearmin;
+        if (anio < aniomin) {
+            itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('fecha-no-válida') });
+            return false;
+        }
+    }
+
+    if (field.hasOwnProperty('yearmax') ) {
+        const aniomin   = new Date().getFullYear() - field.yearmax;
+        const datetmp   = new Date(aniomin,month - 1,day);
+        const valuedate = new Date(anio,month - 1,day);
+        if ( valuedate > datetmp   ) {
+            itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('fecha-no-válida') });
+            return false;
+        }
+    }
+
+    if (month > 12) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('fecha-no-válida') });
+        return false;
+    }
+    if (day > 31) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('fecha-no-válida') });
+        return false;
+    }
+    
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+
+    return true;
+}
+
+export const validateHour = (name, value, field, itemsHandle) => {
+    console.log("valudateHour: " + value);
+
+    for (var condicion of field["conditions"]) {
+        if (condicion == "required") {
+            if (value == 'undefined' || value == null|| value.length == 0) {
+                itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('no-vacío') });
+                return false;
+            }
+        }
+    }
+
+    if (value == 'undefined' || value == null|| value.length == 0) { // si llego aqui, no es requerido
+        itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+        return true;
+    }
+    // comprobar si la fecha tiene buena pinta.
+    const parts  = value.split(":");
+    const hour   = parseInt(parts[0]);
+    const minute = parseInt(parts[1]);
+
+    if ( isNaN(hour) || isNaN(minute) ) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('no-es-una-hora') });
+        return false;
+    }
+
+    //if (field.hasOwnProperty('yearmin') ) {
+    //    const aniomin = new Date().getFullYear() - field.yearmin;
+    //    if (anio < aniomin) {
+    //        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('fecha-no-válida') });
+    //        return false;
+    //    }
+    //}
+
+    //if (field.hasOwnProperty('yearmax') ) {
+    //    const aniomin   = new Date().getFullYear() - field.yearmax;
+    //    const datetmp   = new Date(aniomin,month - 1,day);
+    //    const valuedate = new Date(anio,month - 1,day);
+    //    if ( valuedate > datetmp   ) {
+    //        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('fecha-no-válida') });
+    //        return false;
+    //    }
+    //}
+
+    if (hour > 23) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('hora-no-válida') });
+        return false;
+    }
+    if (minute > 59) {
+        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('hora-no-válida') });
+        return false;
+    }
+    
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+
+    return true;
+}
+
+//00000000000000000000000000000000000000000000000000000000000000000
+
 export const validateEmails = (campo,emails, itemsHandle) => {
     for (var email of emails) 
         if (!validateEmail(campo,email.value,itemsHandle)) 
@@ -249,10 +377,13 @@ export const validateAll = (items, itemsHandle) => {
 export const validate = (name, value,field,itemsHandle) => {
     let condicion = "";
 
+    console.log("estoy en validate");
+    console.debug(field);
     if (!field.hasOwnProperty('conditions'))
         return true;
     
     for (condicion of field.conditions) {
+        console.log(condicion);
         if (condicion == "number") {
             if (isNaN(value)) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
@@ -260,9 +391,16 @@ export const validate = (name, value,field,itemsHandle) => {
             }
         }
 
-        if (condicion == "text") {
+        if (condicion == "text") {            
             if (!isNaN(value)) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-texto') });
+                return false;
+            }
+        }
+
+        if (condicion == "required") {
+            if (value === undefined || value === "") {
+                itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('requerido') });
                 return false;
             }
         }

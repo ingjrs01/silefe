@@ -1,17 +1,21 @@
 import ClayAutocomplete from '@clayui/autocomplete';
+import ClayForm from '@clayui/form';
 import { MD5 } from 'crypto-js';
 import React, { useEffect, useState } from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
+import { spritemap } from '../../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
-export const Selectfilter = ({ itemsHandle, field, item }) => {
+export const Selectfilter = ({ itemsHandle, field, item, action, error }) => {
     const [options, setOptions] = useState(new Map());
     const [val, setVal ] = useState ("");
     var selected = "";
     var sha1 = ""; 
 
+    const accion = action !== undefined ? action: ITEMS_ACTIONS.SET; 
+
     const change = (fieldname,value) => {
-        itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: fieldname, value: value });
+        itemsHandle({ type: accion, fieldname: fieldname, value: value });
     }
      
     const loadOptions = () => {
@@ -61,6 +65,11 @@ export const Selectfilter = ({ itemsHandle, field, item }) => {
 
     return (
         <>
+        <ClayForm.Group
+          className={`${error != 'undefined' && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `}
+          key={"Group-" + field.key} >
+  
+  
             <label htmlFor="basicInput" key={"label-" + field.name}>{field.label}</label>
             <ClayAutocomplete
                 aria-labelledby="clay-autocomplete-label-1"
@@ -79,6 +88,15 @@ export const Selectfilter = ({ itemsHandle, field, item }) => {
                     cambiar().map(item => (<ClayAutocomplete.Item key={item}>{item}</ClayAutocomplete.Item>))
                 }
             </ClayAutocomplete>
-        </>
+          {
+            error != 'undefined' && error.length > 0 &&
+            <ClayForm.FeedbackGroup key={"error" + field.name}>
+              <ClayForm.FeedbackItem key={"err" + field.name}>
+                <ClayForm.FeedbackIndicator key={"erfi" + field.name} spritemap={spritemap} symbol="check-circle-full" />{error[0]} </ClayForm.FeedbackItem>
+            </ClayForm.FeedbackGroup>
+          }
+        </ClayForm.Group>
+      </>
+   
     )
 }

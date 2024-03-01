@@ -6,8 +6,8 @@ export const EJECUCION_ACTIONS = {
     SETSEARCHITEMS: 6,
     CHECKSEARCH: 7,
     CHECKALLSEARCH: 8,
-    SAVE: 9,
-    CANCEL: 10,
+    SAVE: 24,
+    CANCEL: 25,
     DELETE_ITEM:11,
     SETITEM: 15,
     SETSEARCHFIELD: 18,
@@ -15,7 +15,10 @@ export const EJECUCION_ACTIONS = {
     SETFORM: 20,
     SETLUGAR: 21,
     SETEMPRESA: 22,
+    ADDERROR: 9, // No CAMBIAR ESTOS CODIGOS
+    CLEARERRORS: 10,
 }
+
 export const iniState = {
     item: {
         formacionAccionId: 0,
@@ -68,7 +71,26 @@ export const iniState = {
     status: "list",
     participanteId: 0,
     load: 0,
+    errors: [],
 }
+
+const resetErrors = (form) => {
+    let errores = {};
+    let tmp_item = {};
+    Object.keys(form.fields).forEach(j => {
+        errores[j] = [];
+        if (form.fields[j].type === "multilang") {
+            let tt = {}
+            form.languages.forEach(el => { tt[el] = "" });
+            tmp_item[j] = tt;
+        }
+        else
+            tmp_item[j] = [];
+    });
+
+    return errores;
+}
+
 let tmpar= [];
 
 export const reducerEjecucion = (state, action ) => {
@@ -78,6 +100,7 @@ export const reducerEjecucion = (state, action ) => {
             return {
                 ...state,
                 form: action.form,
+                errors: resetErrors(action.form),
             }
         case EJECUCION_ACTIONS.START:
             return {
@@ -125,11 +148,13 @@ export const reducerEjecucion = (state, action ) => {
                 deleted: [],
                 searchItems: [],
                 status: "list",
+                errors: [],
             }
         case EJECUCION_ACTIONS.LOAD_ITEMS:
             return {
                 ...state,
                 items: action.items,
+                errors: [],
             }
 
         case EJECUCION_ACTIONS.SELECT_ITEM:
@@ -137,6 +162,7 @@ export const reducerEjecucion = (state, action ) => {
                 ...state,
                 item: state.items[action.index],
                 status: "edit",
+                errors: resetErrors(state.form),
             }
         case EJECUCION_ACTIONS.NEW_ITEM:
             return {
@@ -281,6 +307,18 @@ export const reducerEjecucion = (state, action ) => {
                 }
             }
 
+        case EJECUCION_ACTIONS.ADDERROR:
+            return {
+                ...state,
+                errors: { ...state.errors, [action.name]: [action.value] }
+            }
+
+        case EJECUCION_ACTIONS.CLEARERRORS:
+            return {
+                ...state,
+                errors: { ...state.errors, [action.name]: [] }
+            }
+    
         default:
             throw new Error ("Ación no válida");
     }

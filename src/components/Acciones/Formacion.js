@@ -10,23 +10,22 @@ import { Hour } from '../../includes/interface/fields/Hour';
 import { Select } from '../../includes/interface/fields/Select';
 import { EJECUCION_ACTIONS } from './Ejecucion.reducer';
 
-export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
+export const Formacion = ({ ejecucion, ejecucionHandler }) => {
     
     const editUrl = "/lugar/";
     const backUrl = "/accion/";
     const ancestorId = "11";
     const empresaUrl = '/empresa/';
 
+    console.log("estoy en Formacion");
+    console.debug(ejecucion);
+
     return (
         <>
             <div className="container">
                 <div className="row">
-                    <ClayForm.Group className={"col-3"} key={"Group-101"} >
-                        <Dateinput itemsHandle={ejecucionHandler} field={items.fields.fields["inicio"]} item={ejecucion.item.inicio} action={EJECUCION_ACTIONS.SETFIELD} />
-                    </ClayForm.Group>
-                    <ClayForm.Group className={"col-3"} key={"Group-102"} >
-                        <Dateinput itemsHandle={ejecucionHandler} field={items.fields.fields["fin"]} item={ejecucion.item.fin} action={EJECUCION_ACTIONS.SETFIELD} />
-                    </ClayForm.Group>
+                    <Dateinput itemsHandle={ejecucionHandler} field={ejecucion.form.fields["inicio"]} item={ejecucion.item.inicio} action={EJECUCION_ACTIONS.SETFIELD} error={ejecucion.errors['inicio']} />
+                    <Dateinput itemsHandle={ejecucionHandler} field={ejecucion.form.fields["fin"]} item={ejecucion.item.fin} action={EJECUCION_ACTIONS.SETFIELD} error={ejecucion.errors['fin']}  />
 
                     <div className="col-6">
                         <div className="row">
@@ -35,8 +34,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
                                 <ClayCheckbox
                                     checked={ejecucion.item.dias.L.value}
                                     onChange={() => ejecucionHandler({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: "dias",value:"L" })}
-                                />
-                                                            
+                                /> 
                             </ClayForm.Group>
 
 
@@ -91,27 +89,15 @@ export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
                     </div>
                 </div>
                 <div className="row">
-
-                    <ClayForm.Group className={"col-2"} key={"Group-110"} >
-                        <Hour itemsHandle={ejecucionHandler} field={items.fields.fields["hIni1"]} item={ejecucion.item.hIni1} action={EJECUCION_ACTIONS.SETFIELD} />
-                    </ClayForm.Group>
-
-                    <ClayForm.Group className={"col-2"} key={"Group-111"} >
-                        <Hour itemsHandle={ejecucionHandler} field={items.fields.fields["hFin1"]} item={ejecucion.item.hFin1} action={EJECUCION_ACTIONS.SETFIELD} />
-                    </ClayForm.Group>
-
-                    <ClayForm.Group className={"col-2"} key={"Group-112"} >
-                        <Hour itemsHandle={ejecucionHandler} field={items.fields.fields["hIni2"]} item={ejecucion.item.hIni2} action={EJECUCION_ACTIONS.SETFIELD} />
-                    </ClayForm.Group>
-
-                    <ClayForm.Group className={"col-2"} key={"Group-113"} >
-                        <Hour itemsHandle={ejecucionHandler} field={items.fields.fields["hFin2"]} item={ejecucion.item.hFin2} action={EJECUCION_ACTIONS.SETFIELD} />
-                    </ClayForm.Group>
+                    <Hour itemsHandle={ejecucionHandler} field={ejecucion.form.fields["hIni1"]} item={ejecucion.item.hIni1} action={EJECUCION_ACTIONS.SETFIELD} error={ejecucion.errors['hIni1']}  />
+                    <Hour itemsHandle={ejecucionHandler} field={ejecucion.form.fields["hFin1"]} item={ejecucion.item.hFin1} action={EJECUCION_ACTIONS.SETFIELD} error={ejecucion.errors['hFin1']}  />
+                    <Hour itemsHandle={ejecucionHandler} field={ejecucion.form.fields["hIni2"]} item={ejecucion.item.hIni2} action={EJECUCION_ACTIONS.SETFIELD} error={ejecucion.errors['hIni2']} />
+                    <Hour itemsHandle={ejecucionHandler} field={ejecucion.form.fields["hFin2"]} item={ejecucion.item.hFin2} action={EJECUCION_ACTIONS.SETFIELD} error={ejecucion.errors['hFin2']}  />
                 </div>
 
                 <div className="row">
                     <ClayForm.Group className={"col-6"} key={"Group-114"} >
-                        <Select  itemsHandle={ejecucionHandler} field={ejecucion.form.fields["empresaId"]} item={ejecucion.item.empresaId} action={EJECUCION_ACTIONS.SETFIELD} /> 
+                        <Select  itemsHandle={ejecucionHandler} field={ejecucion.form.fields["empresaId"]} item={ejecucion.item.empresaId} action={EJECUCION_ACTIONS.SETFIELD} error={ejecucion.errors['empresaId']}  /> 
                         
                         <ClayCard>
                             <ClayCard.Body>
@@ -145,7 +131,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler, items }) => {
 
                     </ClayForm.Group>
                     <ClayForm.Group className={"col-6"} key={"Group-115"} >
-                        <Select  itemsHandle={ejecucionHandler} field={ejecucion.form.fields["lugarId"]} item={ejecucion.item.lugarId} action={EJECUCION_ACTIONS.SETFIELD} /> 
+                        <Select  itemsHandle={ejecucionHandler} field={ejecucion.form.fields["lugarId"]} item={ejecucion.item.lugarId} action={EJECUCION_ACTIONS.SETFIELD} error={ejecucion.errors['lugarId']}  /> 
                         <ClayCard>
                             <ClayCard.Body>
                             <ClayCard.Description displayType="title">

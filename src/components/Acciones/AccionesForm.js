@@ -24,12 +24,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
     <div className="container">
       <ClayCard>
         <ClayCard.Body>
-          {/*
-        <ClayCard.Description displayType="title">
-          {Liferay.Language.get("Acciones")}
-        </ClayCard.Description>
-  */}
-
           <ClayCard.Description truncate={false} displayType="text">
             <ClayForm>
               <ClayTabs active={items.fields.tabActive} modern>
@@ -79,72 +73,32 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
               <ClayTabs.Content activeIndex={items.fields.tabActive} fade>
                 <ClayTabs.TabPane aria-labelledby="tab-1" key={"tab-content-1"}>
                   <div className="row">
-                    <ClayForm.Group className={'has-success col'} key={"Group-1"} >
-                      <Select itemsHandle={itemsHandle} field={items.fields.fields['accionTipoId']} item={items.item.accionTipoId} action={ITEMS_ACTIONS.SET} />
-                    </ClayForm.Group>
-                    <ClayForm.Group className={'has-success col'} key={"Group-nombre"} >
-                      <LocalizedInput itemsHandle={itemsHandle} field={items.fields.fields['nombre']} item={items.item.nombre} action={ITEMS_ACTIONS.SET} />}
-                    </ClayForm.Group>
-
+                      <Select itemsHandle={itemsHandle} field={items.fields.fields['accionTipoId']} item={items.item.accionTipoId} action={ITEMS_ACTIONS.SET} error={items.errors['accionTipoId']}  />
+                      <LocalizedInput itemsHandle={itemsHandle} field={items.fields.fields['nombre']} item={items.item.nombre} action={ITEMS_ACTIONS.SET}  error={items.errors['nombre']}  />
                   </div>
+
                   {
                     (items.item.accionTipoId == 1) &&
-                    <>
                       <div className="row">
-
-                        <ClayForm.Group className={'has-success col'} key={"Group-1"} >
-                          <Select itemsHandle={itemsHandle} field={items.fields.fields['accionTipoFormacionId']} item={items.item.accionTipoFormacionId} action={ITEMS_ACTIONS.SET} />
-                        </ClayForm.Group>
-
-                        <ClayForm.Group className={'has-success col'} key={"Group-teorica"} >
-                          <Toggle itemsHandle={itemsHandle} field={items.fields.fields['teorica']} item={items.item.teorica} action={ITEMS_ACTIONS.SET} />
-                        </ClayForm.Group>
-
-                        <ClayForm.Group className={'has-success col'} key={"Group-practica"} >
-                          <Toggle itemsHandle={itemsHandle} field={items.fields.fields['practica']} item={items.item.practica} action={ITEMS_ACTIONS.SET} />
-                        </ClayForm.Group>
-
-                        <ClayForm.Group className={'has-success col'} key={"Group-grupal"} >
-                          <Toggle itemsHandle={itemsHandle} field={items.fields.fields['grupal']} item={items.item.grupal} action={ITEMS_ACTIONS.SET} />
-                        </ClayForm.Group>
-
-                        <ClayForm.Group className={'has-success  col'} key={"Group-nhoras"} >
-                          <Textinput itemsHandle={itemsHandle} field={items.fields.fields['horas']} item={items.item.grupal} action={ITEMS_ACTIONS.SET} />
-                        </ClayForm.Group>
+                        <Select itemsHandle={itemsHandle} field={items.fields.fields['accionTipoFormacionId']} item={items.item.accionTipoFormacionId} action={ITEMS_ACTIONS.SET}  error={items.errors['accionTipoFormacionId']}  />
+                        <Toggle itemsHandle={itemsHandle} field={items.fields.fields['teorica']} item={items.item.teorica} action={ITEMS_ACTIONS.SET}  error={items.errors['teorica']}  />
+                        <Toggle itemsHandle={itemsHandle} field={items.fields.fields['practica']} item={items.item.practica} action={ITEMS_ACTIONS.SET}  error={items.errors['practica']}  />
+                        <Toggle itemsHandle={itemsHandle} field={items.fields.fields['grupal']} item={items.item.grupal} action={ITEMS_ACTIONS.SET}  error={items.errors['grupal']}  />
+                        <Textinput itemsHandle={itemsHandle} field={items.fields.fields['horas']} item={items.item.grupal} action={ITEMS_ACTIONS.SET}  error={items.errors['horas']}  />
                       </div>
-                    </>
                   }
 
                   <div className="row">
-                    <ClayForm.Group className={'has-success col'} key={"Group-tecnico"} >
-                      <Select itemsHandle={itemsHandle} field={items.fields.fields['tecnicoId']} item={items.item.tecnicoId} action={ITEMS_ACTIONS.SET} />
-                    </ClayForm.Group>
-
-                  </div>
-
-                  <div className="row">
-                    <ClayForm.Group className={'has-success  col-12'} key={"Group-estado"} >
-                      <Select itemsHandle={itemsHandle} field={items.fields.fields['estadoId']} item={items.item.estadoId} action={ITEMS_ACTIONS.SET} />
-
-                    </ClayForm.Group>
+                      <Select itemsHandle={itemsHandle} field={items.fields.fields['tecnicoId']} item={items.item.tecnicoId} action={ITEMS_ACTIONS.SET} error={items.errors['tecnicoId']}  />
                   </div>
                   <div className="row">
-                    <ClayForm.Group className={'has-success  col'} key={"Group-objservaciones"} >
-                      <Textarea itemsHandle={itemsHandle} field={items.fields.fields['observaciones']} item={items.item.observaciones} action={ITEMS_ACTIONS.SET} />
-                    </ClayForm.Group>
+                      <Select itemsHandle={itemsHandle} field={items.fields.fields['estadoId']} item={items.item.estadoId} action={ITEMS_ACTIONS.SET} error={items.errors['estadoId']} />
                   </div>
-
                   <div className="row">
-                    <ClayForm.Group className={'has-success  col'} key={"Group-objservaciones"} >
-                      <Fileinput itemsHandle={itemsHandle} field={items.fields.fields["adjuntos"]} item={items.item["adjuntos"]} />
-                    </ClayForm.Group>
+                      <Textarea itemsHandle={itemsHandle} field={items.fields.fields['observaciones']} item={items.item.observaciones} action={ITEMS_ACTIONS.SET} error={items.errors['observaciones']}  />
                   </div>
-
-
-
                   <div className="row">
-                    <ClayForm.Group className={'has-success'} key={"Group-4"} >
-                    </ClayForm.Group>
+                      <Fileinput itemsHandle={itemsHandle} field={items.fields.fields["adjuntos"]} item={items.item["adjuntos"]}  error={items.errors['adjuntos']}  />
                   </div>
 
                 </ClayTabs.TabPane>
@@ -302,29 +256,13 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-5"}>
                   <h3>{"ELEARNING"}</h3>
                   <div className="row">
-                    <ClayForm.Group className={'has-success  col'} key={"Group-plataforma"} >
-                      <Select itemsHandle={itemsHandle} field={items.fields.fields['plataformaId']} item={items.item.plataformaId} action={ITEMS_ACTIONS.SET} />
-                    </ClayForm.Group>
-
-                    <ClayForm.Group className={'has-success col'} key={"Group-categoria"} >
-                      <Select itemsHandle={itemsHandle} field={items.fields.fields['categoriaId']} item={items.item.categoriaId} action={ITEMS_ACTIONS.SET} />
-                    </ClayForm.Group>
-
-                    <ClayForm.Group className={'has-success  col'} key={"Group-curso"} >
-                      <Select itemsHandle={itemsHandle} field={items.fields.fields['cursoId']} item={items.item.cursoId} action={ITEMS_ACTIONS.SET} />
-                    </ClayForm.Group>
-
+                      <Select itemsHandle={itemsHandle} field={items.fields.fields['plataformaId']} item={items.item.plataformaId} action={ITEMS_ACTIONS.SET}  error={items.errors['plataformaId']}  />
+                      <Select itemsHandle={itemsHandle} field={items.fields.fields['categoriaId']} item={items.item.categoriaId} action={ITEMS_ACTIONS.SET}  error={items.errors['categoriaId']}  />
+                      <Select itemsHandle={itemsHandle} field={items.fields.fields['cursoId']} item={items.item.cursoId} action={ITEMS_ACTIONS.SET}  error={items.errors['cursoId']} />
                   </div>
                   <div className="row">
-
-                    <ClayForm.Group className={'has-success  col'} key={"Group-nparticipantes"} >
-                      <Textinput itemsHandle={itemsHandle} field={items.fields.fields['nparticipantes']} item={items.item.nparticipantes} action={ITEMS_ACTIONS.SET} />
-                    </ClayForm.Group>
-
-                    <ClayForm.Group className={'has-success col'} key={"Group-sincronizados"} >
-                      <Textinput itemsHandle={itemsHandle} field={items.fields.fields['sincronizados']} item={items.item.sincronizados} action={ITEMS_ACTIONS.SET} />
-                    </ClayForm.Group>
-
+                      <Textinput itemsHandle={itemsHandle} field={items.fields.fields['nparticipantes']} item={items.item.nparticipantes} action={ITEMS_ACTIONS.SET}  error={items.errors['nparticipantes']}  />
+                      <Textinput itemsHandle={itemsHandle} field={items.fields.fields['sincronizados']} item={items.item.sincronizados} action={ITEMS_ACTIONS.SET}  error={items.errors['sincronizados']}  />
                   </div>
 
                 </ClayTabs.TabPane>
@@ -364,6 +302,4 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
     </div>
   );
 }
-
 export default AccionesForm;
-// Esto tiene 578

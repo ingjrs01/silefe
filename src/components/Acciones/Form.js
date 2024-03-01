@@ -90,6 +90,7 @@ export const form = {
             label: Liferay.Language.get('Plataforma'),
             name: "plataformaId",
             value:"lelele",
+            enabled: true,
             placeholder: Liferay.Language.get('Plataforma'),
             options: [{value: 0, label:"bla bla"}, {value: 1, label: "Categoría"},{value: 2, label: "Sin Categoría"}],
         },
@@ -107,6 +108,7 @@ export const form = {
             label: Liferay.Language.get('Curso'),
             name: "cursoId",
             value:"lelele",
+            enabled: true,
             placeholder: Liferay.Language.get('Curso'),
         },
 		nparticipantes: {
@@ -149,6 +151,7 @@ export const form = {
             label: Liferay.Language.get('Observaciones'),
             name: "observaciones",
             placeholder: Liferay.Language.get('Observaciones'),
+            conditions: [],
         },
         adjuntos: {
             key:18,
@@ -166,7 +169,7 @@ export const form = {
             yearmax: 0,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             className: 'col-3',
-            conditions:[]
+            conditions:['required']
         },
         fin: {
             key:20,

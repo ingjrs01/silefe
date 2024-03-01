@@ -1,16 +1,24 @@
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
-import { ClayCheckbox, ClayInput } from '@clayui/form';
+import ClayForm, { ClayCheckbox, ClayInput } from '@clayui/form';
 import React from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
 import { validateEmail } from '../../Validators';
 import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
-export const Email = ({ itemsHandle, field, item }) => {
+export const Email = ({ itemsHandle, field, item, action, error }) => {
+
+    const accion = action !== undefined ? action:ITEMS_ACTIONS.SET; 
     if (item == null)
         return (<>Cargando</>)
 
     return (
+
+        <>
+        <ClayForm.Group
+          className={`${error != 'undefined' && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `}
+          key={"Group-" + field.key} >
+  
         <>
             <label htmlFor="basicInput" key={"label-" + field.name}>{ field.label }</label>
             {
@@ -53,6 +61,21 @@ export const Email = ({ itemsHandle, field, item }) => {
                 {Liferay.Language.get("Añadir")}
             </ClayButton>
         </>
+  
+          {
+            error != 'undefined' && error.length > 0 &&
+            <ClayForm.FeedbackGroup key={"error" + field.name}>
+              <ClayForm.FeedbackItem key={"err" + field.name}>
+                <ClayForm.FeedbackIndicator key={"erfi" + field.name} spritemap={spritemap} symbol="check-circle-full" />{error[0]} </ClayForm.FeedbackItem>
+            </ClayForm.FeedbackGroup>
+          }
+        </ClayForm.Group>
+      </>
+   
+
+
+
+
     )
 
 }

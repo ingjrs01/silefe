@@ -1,5 +1,5 @@
 import Button, { ClayButtonWithIcon } from '@clayui/button';
-import { ClayInput } from '@clayui/form';
+import ClayForm, { ClayInput } from '@clayui/form';
 import ClayLink from '@clayui/link';
 import ClayPanel from '@clayui/panel';
 import React, { useState } from 'react';
@@ -7,7 +7,7 @@ import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../../reducers/main.reducer';
 
-export const Fileinput = ({ itemsHandle, field, item }) => {
+export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
 
     const [title, setTitle] = useState();
 
@@ -28,6 +28,9 @@ export const Fileinput = ({ itemsHandle, field, item }) => {
 
     return (
         <>
+        <ClayForm.Group
+          className={`${error != 'undefined' && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `}
+          key={"Group-" + field.key} >
             {
                 item.map((it, index) => (
                     <ClayPanel
@@ -116,7 +119,18 @@ export const Fileinput = ({ itemsHandle, field, item }) => {
             >
                 {Liferay.Language.get("Añadir")}
             </Button>
-        </>
+  
+  
+          {
+            error != 'undefined' && error.length > 0 &&
+            <ClayForm.FeedbackGroup key={"error" + field.name}>
+              <ClayForm.FeedbackItem key={"err" + field.name}>
+                <ClayForm.FeedbackIndicator key={"erfi" + field.name} spritemap={spritemap} symbol="check-circle-full" />{error[0]} </ClayForm.FeedbackItem>
+            </ClayForm.FeedbackGroup>
+          }
+        </ClayForm.Group>
+      </>
+   
     )
 
 }

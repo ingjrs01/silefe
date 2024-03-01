@@ -1,8 +1,10 @@
 import { Liferay } from '../../common/services/liferay/liferay';
+import { GenericForm } from '../../includes/GenericForm';
 
 export const form = {
+    ...GenericForm,
     title: Liferay.Language.get('Ejecucion'),
-    languages: ["es-ES","en-US","gl-ES"],
+    //languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
             key:1,
@@ -66,7 +68,7 @@ export const form = {
             yearmax: 0,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             className: 'col-3',
-            conditions:[]
+            conditions:['date', 'required']
         },
         fin: {
             key:8,
@@ -78,7 +80,7 @@ export const form = {
             yearmax: 0,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             className: 'col-3',
-            conditions:[]
+            conditions:['date', 'required']
         },
         hIni1: {
             key: 21,  
@@ -88,7 +90,7 @@ export const form = {
             value:"",
             placeholder:Liferay.Language.get('YYYY-MM-DD'), 
             className: 'col-2',
-            conditions:[] 
+            conditions:['required'] 
         },
         hFin1: {
             key: 22,  
