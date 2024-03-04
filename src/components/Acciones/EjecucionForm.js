@@ -90,7 +90,7 @@ export const form = {
             value:"",
             placeholder:Liferay.Language.get('YYYY-MM-DD'), 
             className: 'col-2',
-            conditions:['required'] 
+            conditions:[] 
         },
         hFin1: {
             key: 22,  
