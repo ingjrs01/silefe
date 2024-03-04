@@ -1,13 +1,20 @@
 import ClayForm, { ClayInput } from '@clayui/form';
 import { spritemap } from '../../LiferayFunctions';
-import { validate } from '../../Validators';
+import { validateNumber } from '../../Validators';
 import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
 export const Number = ({itemsHandle, field, item, action, error}) => {
 
     const accion = action !== undefined ? action: ITEMS_ACTIONS.SET;
-    return (
 
+    const onChange = (value) => {
+      console.log("onChange");
+
+      validateNumber(field.name, value, field, itemsHandle);
+      itemsHandle({ type: accion, fieldname: field.name, value: value });
+}
+
+    return (
       <>
       <ClayForm.Group
         className={`${error != 'undefined' && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `}
@@ -22,10 +29,7 @@ export const Number = ({itemsHandle, field, item, action, error}) => {
           value={item}
           min={ field.min != 'undefined' ? field.min : null}
           max={ field.max != 'undefined' ? field.max : null}
-          onChange={e => {
-            validate(e.target.name, e.target.value, field, itemsHandle);
-            itemsHandle({ type: accion, fieldname: e.target.name, value: e.target.value });
-          }}>
+          onChange={e => onChange(e.target.value)}>
         </ClayInput>
 
         {

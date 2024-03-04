@@ -169,7 +169,7 @@ export const form = {
             yearmax: 0,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             className: 'col-3',
-            conditions:['required']
+            conditions: [],//['required']
         },
         fin: {
             key:20,

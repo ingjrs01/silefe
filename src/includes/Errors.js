@@ -22,4 +22,5 @@ export const Errors = {
     1008: Liferay.Language.get("El código postal no es válido"),
     1009: Liferay.Language.get("Hora no válida"),
     2001: Liferay.Language.get("No se pude modificar oferta cerrada"),
+    2002: Liferay.Language.get("Accion con tipo de formacion no indicada"),
 }

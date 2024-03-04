@@ -85,6 +85,10 @@ const Convocatorias = () => {
             },
         }
 
+        let endpoint = '/silefe.colectivo/save-colectivo';
+        if (items.status === 'new')
+            endpoint = '/silefe.colectivo/add-colectivo';
+
         let { status, error } = await saveAPI('/silefe.convocatoria/save-convocatoria', data, referer);
         if (status) {
             fetchData();

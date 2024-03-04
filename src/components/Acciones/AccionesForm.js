@@ -6,10 +6,12 @@ import ClayTabs from '@clayui/tabs';
 import React from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from '../../includes/LiferayFunctions';
+import { validateAll } from '../../includes/Validators';
 import DoubleTable from '../../includes/interface/DoubleTable';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { Fileinput } from '../../includes/interface/fields/Fileinput';
 import { LocalizedInput } from '../../includes/interface/fields/LocalizedInput';
+import { Number } from '../../includes/interface/fields/Number';
 import { Select } from '../../includes/interface/fields/Select';
 import { Textarea } from '../../includes/interface/fields/Textarea';
 import { Textinput } from '../../includes/interface/fields/Textinput';
@@ -19,6 +21,17 @@ import { Formacion } from './Formacion';
 
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler, loadHistory, historico, handleHistorico, user }) => {
+
+
+  const clickSave = () => {
+    console.log("Preparado para enviar, primero validamos ");
+    if (validateAll(items,itemsHandle)) {
+      console.log("Todas las validaciones pasadas");
+      save();
+    }
+    else 
+      console.error("Errores en la validacion");
+  }
 
   return (
     <div className="container">
@@ -84,7 +97,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                         <Toggle itemsHandle={itemsHandle} field={items.fields.fields['teorica']} item={items.item.teorica} action={ITEMS_ACTIONS.SET}  error={items.errors['teorica']}  />
                         <Toggle itemsHandle={itemsHandle} field={items.fields.fields['practica']} item={items.item.practica} action={ITEMS_ACTIONS.SET}  error={items.errors['practica']}  />
                         <Toggle itemsHandle={itemsHandle} field={items.fields.fields['grupal']} item={items.item.grupal} action={ITEMS_ACTIONS.SET}  error={items.errors['grupal']}  />
-                        <Textinput itemsHandle={itemsHandle} field={items.fields.fields['horas']} item={items.item.grupal} action={ITEMS_ACTIONS.SET}  error={items.errors['horas']}  />
+                        <Number itemsHandle={itemsHandle} field={items.fields.fields['horas']} item={items.item.horas} action={ITEMS_ACTIONS.SET}  error={items.errors['horas']}  />
                       </div>
                   }
 
@@ -290,9 +303,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
             </div>
 
             <div className="btn-group-item">
-              <ClayButton aria-label="Save" onClick={() => {
-                save();
-              }}
+              <ClayButton aria-label="Save" onClick={clickSave}
                 displayType="primary">{Liferay.Language.get('Guardar')}
               </ClayButton>
             </div>

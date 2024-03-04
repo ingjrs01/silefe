@@ -26,10 +26,13 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
         reader.readAsDataURL(file);
     }
 
+    console.log("Fileinput");
+    console.debug(item);
+
     return (
         <>
         <ClayForm.Group
-          className={`${error != 'undefined' && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `}
+          className={`${error !== undefined && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `}
           key={"Group-" + field.key} >
             {
                 item.map((it, index) => (
@@ -43,7 +46,7 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
                         <div className="form-group" key={"gf" + field.key} >
                             {(it.src === undefined || it.src === "" || it.edit === true) &&
                                 <>
-                                    <label for="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
+                                    <label htmlFor="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
                                     <input
                                         id="inputFile"
                                         key={"inf" + field.key}
@@ -54,7 +57,7 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
                             }
                             {it.src !== undefined && it.src != "" && it.edit === false &&
                                 <>
-                                    <label for="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
+                                    <label htmlFor="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
                                     <ClayInput.Group>
                                         <ClayInput.GroupItem>
                                             <ClayInput
@@ -100,7 +103,7 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
                             }
                         </div>
                         <div className="form-group" key={"gf2" + field.key} >
-                            <label for="titleInputId" key={"fia" + field.key}>{Liferay.Language.get("Título")}</label>
+                            <label htmlFor="titleInputId" key={"fia" + field.key}>{Liferay.Language.get("Título")}</label>
                             <ClayInput
                                 placeholder={field.placeholder}
                                 type="text"
@@ -119,10 +122,9 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
             >
                 {Liferay.Language.get("Añadir")}
             </Button>
-  
-  
+    
           {
-            error != 'undefined' && error.length > 0 &&
+            error != undefined && error.length > 0 &&
             <ClayForm.FeedbackGroup key={"error" + field.name}>
               <ClayForm.FeedbackItem key={"err" + field.name}>
                 <ClayForm.FeedbackIndicator key={"erfi" + field.name} spritemap={spritemap} symbol="check-circle-full" />{error[0]} </ClayForm.FeedbackItem>

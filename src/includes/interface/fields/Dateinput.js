@@ -8,20 +8,20 @@ import { getDays, getMonths } from '../DatesLang';
 export const Dateinput = ({ itemsHandle, field, item, action, error }) => {
 
   const accion = (action !== undefined) ? action : ITEMS_ACTIONS.SET;
-
-  console.log("DateInput");
-  console.debug(field);
   
   const onChange = (value) => {
-    console.log("Llamando la función onChange DateInput");    
     validateDate2(field.name, value, field, itemsHandle);
     itemsHandle({ type: accion, fieldname: field.name, value: value });
   }
 
+  //console.log("Estamos en Dateinput");
+  //console.debug(action);
+  //console.debug(error);
+
   return (
     <>
       <ClayForm.Group
-        className={`${error != 'undefined' && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `} 
+        className={`${error !== undefined && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `} 
         key={"Group-" + field.key} 
       >
         <label htmlFor="basicInput" key={"label" + field.key}>{field.label}</label>
@@ -44,7 +44,7 @@ export const Dateinput = ({ itemsHandle, field, item, action, error }) => {
         />
 
         {
-          error != 'undefined' && error.length > 0 &&
+          error !== undefined && error.length > 0 &&
           <ClayForm.FeedbackGroup key={"error" + field.name}>
             <ClayForm.FeedbackItem key={"err" + field.name}>
               <ClayForm.FeedbackIndicator key={"erfi" + field.name} spritemap={spritemap} symbol="check-circle-full" />{error[0]} </ClayForm.FeedbackItem>

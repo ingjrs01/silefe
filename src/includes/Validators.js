@@ -327,9 +327,27 @@ export const validaRadio = (campo,items,itemsHandle) => {
     return true;
 }
 
+export const validateNumber = (name, value,field,itemsHandle) => {
+
+    console.log("Estoy en validateNumber: " + value);
+    //if (condicion == "required") {
+    //    if (value === undefined || value === "") {
+    //        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('requerido') });
+    //        return false;
+    //    }
+    //}
+
+    //itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('aaaa') });
+    //return false;
+
+    return true;
+}
+
 export const validateAll = (items, itemsHandle) => {
     var result = true;
     for (var campo in items.fields.fields) {
+        console.log("iterando");
+        console.debug(campo);
         if ( items.fields.fields[campo].validate !== 'undefined' &&  items.fields.fields[campo].validate == false)
             console.log("Este campo no se valida: " + campo);
         else
@@ -371,14 +389,15 @@ export const validateAll = (items, itemsHandle) => {
                     break;
             }
     }
+    console.log("todo pasado");
     return true;
 }
 
 export const validate = (name, value,field,itemsHandle) => {
     let condicion = "";
 
-    console.log("estoy en validate");
-    console.debug(field);
+    //console.log("estoy en validate");
+    //console.debug(field);
     if (!field.hasOwnProperty('conditions'))
         return true;
     

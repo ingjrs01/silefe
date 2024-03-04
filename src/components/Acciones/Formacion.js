@@ -17,10 +17,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
     const ancestorId = "11";
     const empresaUrl = '/empresa/';
 
-    console.log("estoy en Formacion");
-    console.debug(ejecucion);
-
-    return (
+        return (
         <>
             <div className="container">
                 <div className="row">

@@ -268,6 +268,7 @@ export const red_items = (state, action) => {
                 //load: (state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.NEW_ITEM:
+            console.log("Creando un new_item");
             tmp_item = { id: 0 };
             Object.keys(state.fields.fields).forEach(fila => {
                 switch (state.fields.fields[fila].type) {
@@ -290,6 +291,18 @@ export const red_items = (state, action) => {
                     case 'doublelist':
                         tmp_item[fila] = []
                         break;
+                    case 'file': 
+                        tmp_item[fila] = [{
+                            descripcion: "sin descripcion",
+                            filename: "",
+                            groupId: "",
+                            id: 0,
+                            title: "sin titulo",
+                            uuid: "",
+                            edit: false,
+                            src: "",
+                        }];
+                        break;
                     default:
                         tmp_item[fila] = null;
                         break;
@@ -297,6 +310,8 @@ export const red_items = (state, action) => {
             });
 
             tmp_item['id'] = 0;
+            console.log("esto ya está");
+            console.debug(tmp_item);
             return {
                 ...state,
                 item: tmp_item,

@@ -56,8 +56,8 @@ const Acciones = ({user}) => {
         if (items.status === 'new')
             endpoint = '/silefe.accion/add-accion';
         let { data, status, error } = await saveAPI(endpoint, pdata, referer);
-        console.log("Datos enviados a guardar");
-        console.debug(status);
+        //console.log("Datos enviados a guardar");
+        //console.debug(status);
         if (status) {
             const obj2 = { id: data.accionId, docentes: docentes.items, userId: getUserId() };
             let respon = await saveAPI('/silefe.accion/save-docentes-accion', obj2, referer);
