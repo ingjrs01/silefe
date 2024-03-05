@@ -34,11 +34,12 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
             {
                 item.map((it, index) => (
                     <ClayPanel
-                        collapsble
+                        collapsable
                         displayTitle={Liferay.Language.get("Adjunto")}
                         displayType="secondary"
                         showCollapseIcon={false}
                         spritemap={spritemap}
+                        key={"panel" + field.key}
                     >
                         <div className="form-group" key={"gf" + field.key} >
                             {(it.src === undefined || it.src === "" || it.edit === true) &&

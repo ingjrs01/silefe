@@ -17,6 +17,8 @@ export const TITULACIONES_ACTIONS = {
     NEW_ITEM: 14,
     SAVE_ITEM: 15,
     EMPTY_DELETED: 16,
+    CHANGE_SELECTED: 17,
+    CHANGE_ALLSELECTED: 18,
 }
 
 export const initialState = {
@@ -25,6 +27,7 @@ export const initialState = {
     deleted: [],
     status: "list",
     items: [],
+    selectAll: false,
 }
 
 let newniveles = [];
@@ -36,6 +39,7 @@ let tmpNivelId = 0;
 let tmpFamiliaId = 0;
 
 export const reducerTitulacion = (state, action ) => {
+    let tmpItems = []; 
     switch (action.type) {
         case TITULACIONES_ACTIONS.START:
             return {
@@ -175,7 +179,7 @@ export const reducerTitulacion = (state, action ) => {
         case TITULACIONES_ACTIONS.LOAD_ITEMS:
             return {
                 ...state,
-                items: action.items
+                items: action.items.map(i => ({...i, selected: false}))
             }
         case TITULACIONES_ACTIONS.SELECT_ITEM:
             return {
@@ -234,6 +238,18 @@ export const reducerTitulacion = (state, action ) => {
             return {
                 ...state,
                 deleted: []
+            }
+        case TITULACIONES_ACTIONS.CHANGE_SELECTED: 
+            tmpItems = [...state.items]
+            tmpItems[action.index].selected = !tmpItems[action.index].selected;
+            return {
+                ...state,
+                items: tmpItems
+            }
+        case TITULACIONES_ACTIONS.CHANGE_ALLSELECTED: 
+            return {
+                ...state,
+                selectAll: !state.selectAll,
             }
         default:
             throw new Error ("Ación no válida");

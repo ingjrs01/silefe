@@ -8,6 +8,16 @@ import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reduc
 import { TableForm } from "./TableForm";
 
 export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
+  
+  const changeSelectFile = (index) => {
+    //console.log("changeSelect");
+    titulacionHandler({type: TITULACIONES_ACTIONS.CHANGE_SELECTED, index: index });
+  }
+
+  const changeSelectall = () => {
+    console.log("seleccionando todos");
+    titulacionHandler({type: TITULACIONES_ACTIONS.CHANGE_ALLSELECTED});
+  }
 
   return (
     <>
@@ -16,20 +26,19 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
           <ClayTable>
             <ClayTable.Head>
               <ClayTable.Row>
-                <ClayTable.Cell headingCell><ClayCheckbox checked={false} />
+                <ClayTable.Cell headingCell><ClayCheckbox checked={redTitulaciones.selectAll} onChange={changeSelectall} />
                 </ClayTable.Cell>
-                <ClayTable.Cell headingCell>{"Inicio"}</ClayTable.Cell>
-                <ClayTable.Cell headingCell>{"Fin"}</ClayTable.Cell>
-                <ClayTable.Cell expanded headingCell>{"Titulacion"}</ClayTable.Cell>
+                <ClayTable.Cell headingCell>{Liferay.Language.get("Inicio")}</ClayTable.Cell>
+                <ClayTable.Cell headingCell>{Liferay.Language.get("Fin")}</ClayTable.Cell>
+                <ClayTable.Cell expanded headingCell>{Liferay.Language.get("Titulacion")}</ClayTable.Cell>
                 <ClayTable.Cell headingCell>{"Acciones"}</ClayTable.Cell>
               </ClayTable.Row>
             </ClayTable.Head>
             <ClayTable.Body>
-              {redTitulaciones.items.map((item, index) => {
-                return (
+              {redTitulaciones.items.map((item, index) => (
                   <>
                     <ClayTable.Row>
-                      <ClayTable.Cell><ClayCheckbox checked={false} />
+                      <ClayTable.Cell><ClayCheckbox checked={item.selected} onChange={e => changeSelectFile(index)} />
                       </ClayTable.Cell>
                       <ClayTable.Cell>{item.ini}</ClayTable.Cell>
                       <ClayTable.Cell>{item.fin}</ClayTable.Cell>
@@ -57,18 +66,14 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
                           title="Close"
                         />
 
-
                       </ClayTable.Cell>
                     </ClayTable.Row>
                   </>
-                );
-              })}
-
+                ))}
             </ClayTable.Body>
           </ClayTable>
-          <ClayButton onClick={e => {
-            titulacionHandler({ type: TITULACIONES_ACTIONS.NEW_ITEM })
-          }}
+          <ClayButton 
+            onClick={e => titulacionHandler({ type: TITULACIONES_ACTIONS.NEW_ITEM }) }
             displayType="primary">{Liferay.Language.get('Nuevo')}
           </ClayButton>
         </>

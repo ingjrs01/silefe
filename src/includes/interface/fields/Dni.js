@@ -9,7 +9,6 @@ export const Dni = ({ itemsHandle, field, item, tipoDoc, error, action }) => {
   const accion = (action !== undefined)?action:ITEMS_ACTIONS.SET;
 
   const writeDocument = (target, name, value) => {
-    console.log("writeDocument: " + name+ "-> " + value);
     switch (tipoDoc) {
       case '1':
         writeDni(name, value);
@@ -40,9 +39,6 @@ export const Dni = ({ itemsHandle, field, item, tipoDoc, error, action }) => {
     validateDni(tipoDoc, name, dni_limpio, itemsHandle);
     itemsHandle({ type: accion, fieldname: name, value: dni_limpio });
   }
-
-  console.log("dni, tiene algún problema");
-  console.log(field.enabled);
   
   return (
     <>

@@ -80,21 +80,16 @@ const Participaciones = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                         <ClayTable.Row key={row.id} >
                                             {
                                                 items.form.table.map(column => {
-                                                    console.log("recorriendo tabla");
-                                                    console.debug(column);
-                                                    console.debug(row);
                                                     switch (column.columnType) {
                                                         case "multilang":
                                                             return (<ClayTable.Cell key={column.columnName + row.id}>{row[column.columnName][lang]}</ClayTable.Cell>)
                                                         case "string":
-                                                            console.log("bla: " + column.columnName + "-" + row[column.columnName])
                                                             return (<ClayTable.Cell key={column.columnName + row.id}>{row[column.columnName]}</ClayTable.Cell>)
                                                         case "boolean":
                                                             return (<ClayTable.Cell key={column.columName + row.id}>{<ClayCheckbox checked={row[column.columName]} disabled />} </ClayTable.Cell>)
                                                         case "checkbox":
                                                             return (
                                                                 <ClayTable.Cell key={column.key + row.id}><ClayCheckbox checked={row.checked} onChange={() => {
-                                                                    console.log("lalala");
                                                                     //itemsHandle({ type: ITEMS_ACTIONS.CHECK, index: index }); 
                                                                 }} value={row[column.columName]} />
                                                                     <span>{row[column.columName]}</span>
@@ -106,7 +101,6 @@ const Participaciones = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                             <ClayTable.Cell>
                                                 <ClayButtonWithIcon
                                                     onClick={() => {
-                                                        console.log("editando")
                                                         /*itemsHandle({ type: ITEMS_ACTIONS.SELECT_ITEM, index: index })*/
                                                         handler({ type: CITAS_ACTIONS.VIEW, index: 0 });
                                                     }}

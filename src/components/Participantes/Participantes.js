@@ -77,8 +77,6 @@ const Participantes = ({ user }) => {
         }
 
         fetchAPIData('/silefe.cita/get-citas-participante', postcitas, referer).then(response => {
-            console.log("respueta de cargar las citas del aprticipante");
-            console.debug(response);
             citasHandler({
                 type: CITAS_ACTIONS.LOAD, items: response.data.map(item => ({
                     ...item,
@@ -116,16 +114,12 @@ const Participantes = ({ user }) => {
             },
         }
         fetchAPIData('/silefe.oferta/get-ofertas-by-participante', postparticipaciones, referer).then(response => {
-            console.debug("tratando los datos de participaciones");
-            console.debug(response);
             const data_part = response.data.map(item => ({
                 ...item,
                 tipoParticipacion: "Oferta",
                 participacionIni: toDate(item.fechaIncorporacion),
                 nombreParticipacion: item.titulo
             }));
-            console.debug(data_part);
-
             participacionesHandler({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: data_part, pages: response.totalPages });
         });
 

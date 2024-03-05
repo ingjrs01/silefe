@@ -14,7 +14,7 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
     return (
         <>
         { ( experiencias.status === "list" ) &&
-        <div>
+        <div className='col-12'>
             <ClayTable key="key_experiencias">
             <ClayTable.Head>
                 <ClayTable.Row>
