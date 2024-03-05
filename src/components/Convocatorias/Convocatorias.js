@@ -85,39 +85,15 @@ const Convocatorias = () => {
             },
         }
 
-        let endpoint = '/silefe.colectivo/save-colectivo';
-        if (items.status === 'new')
-            endpoint = '/silefe.colectivo/add-colectivo';
-
         let { status, error } = await saveAPI('/silefe.convocatoria/save-convocatoria', data, referer);
         if (status) {
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
         }
-
-        //else {
-        //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-        //}
+        else {
+            setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
+        }
     }
-
-    //const handleSave = async () => {
-    //const data = {
-    //    convocatoriaId: items.item.id,
-    //    obj: items.item,
-    //    userId: getUserId(),
-    //}
-    //let endpoint = '/silefe.convocatoria/save-convocatoria';
-    //if (items.status === 'new')
-    //    endpoint = '/silefe.convocatoria/add-convocatoria';
-    //let { status, error } = await saveAPI(endpoint, data, referer);
-    //if (status) {
-    //    fetchData();
-    //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);
-    //}
-    //else {
-    //    setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-    //}
-    //}
 
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map(i => { return i.convocatoriaId });

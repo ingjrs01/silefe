@@ -11,9 +11,9 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer.js';
+import { formatPost } from '../../includes/utils.js';
 import Menu from '../Menu';
 import { form } from './Form';
-import { formatPost } from '../../includes/utils.js';
 
 const Colectivos = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
