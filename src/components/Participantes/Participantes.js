@@ -495,6 +495,7 @@ const Participantes = ({ user }) => {
                 <ExperienciasRender
                     experiencias={redExperiencias}
                     experienciasHandler={experienciasHandler}
+                    key={"experiencias"}
                 />,
             Citas:
                 <Citas

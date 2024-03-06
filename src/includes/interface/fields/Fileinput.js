@@ -34,7 +34,7 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
             {
                 item.map((it, index) => (
                     <ClayPanel
-                        collapsable
+                        collapsable={false}
                         displayTitle={Liferay.Language.get("Adjunto")}
                         displayType="secondary"
                         showCollapseIcon={false}

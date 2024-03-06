@@ -52,6 +52,7 @@ const TabsForm = ({ itemsHandle, save, items, plugin, user }) => {
                   itemsHandle={itemsHandle}
                   items={items}
                   plugin={plugin}
+                  key={"renderFields"+tab.key}
                 />
               </ClayTabs.TabPane>
             );

@@ -486,7 +486,6 @@ const Acciones = ({user}) => {
         loadDocentesSearch()
     }, [docentes.paginationSearch.page, docentes.search])
 
-
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 

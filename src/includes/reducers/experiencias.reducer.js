@@ -10,6 +10,8 @@ export const EXPERIENCIA_ACTIONS = {
     SAVE: 8,
     CANCEL: 9,
     DELETE_ITEM:10,    
+    CHANGE_SELECTED: 11,
+    CHANGE_ALLSELECTED: 12,
   }
 const initialState = {
     items: [],
@@ -19,9 +21,12 @@ const initialState = {
     tipoContratoOptions: [],
     motivosOptions: [],
     ocupacionesOptions: [],
+    selectAll: false,
 }
 
 export const reducerExperiencia = (state=initialState, action ) => {
+    let tmpItems = [];
+    let estado = false;
     switch (action.type) {
         case EXPERIENCIA_ACTIONS.START:
             return {
@@ -45,7 +50,7 @@ export const reducerExperiencia = (state=initialState, action ) => {
         case EXPERIENCIA_ACTIONS.LOAD_ITEMS:
             return {
                 ...state,
-                items: action.experiencias,
+                items: action.experiencias.map(i => ({...i, selected: false})),
                 participanteId: action.participanteId
             }
 
@@ -128,7 +133,21 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 items: tmp,
                 deleted: [...state.deleted,obj],
             }
-       
+        case EXPERIENCIA_ACTIONS.CHANGE_SELECTED: 
+            tmpItems = [...state.items]
+            tmpItems[action.index].selected = !tmpItems[action.index].selected;
+            return {
+                ...state,
+                items: tmpItems
+            }
+        case EXPERIENCIA_ACTIONS.CHANGE_ALLSELECTED: 
+            estado = !state.selectAll;             
+
+            return {
+                ...state,
+                items: state.items.map(i => ({...i, selected: estado})),
+                selectAll: estado, 
+            }       
         default: 
             throw new Error ("Ación no válida");
     }

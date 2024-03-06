@@ -39,7 +39,7 @@ export const DoubleList = ({itemsHandle, field, item, action, error}) => {
         key={"Group-" + field.key} >
         
          <ClayPanel
-          collapsable
+          collapsable={false}
           displayTitle={
             <ClayPanel.Title>
               <h3>{field.label}</h3>

@@ -40,6 +40,7 @@ let tmpFamiliaId = 0;
 
 export const reducerTitulacion = (state, action ) => {
     let tmpItems = []; 
+    let estado = false;
     switch (action.type) {
         case TITULACIONES_ACTIONS.START:
             return {
@@ -247,9 +248,12 @@ export const reducerTitulacion = (state, action ) => {
                 items: tmpItems
             }
         case TITULACIONES_ACTIONS.CHANGE_ALLSELECTED: 
+            estado = !state.selectAll;             
+
             return {
                 ...state,
-                selectAll: !state.selectAll,
+                items: state.items.map(i => ({...i, selected: estado})),
+                selectAll: estado, 
             }
         default:
             throw new Error ("Ación no válida");
