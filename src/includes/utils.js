@@ -31,7 +31,6 @@ export const handleDelete = (index, items, itemsHandle, onOpenChange) => {
     onOpenChange(true);
 }
 
-
 export const formatDocument = (tipoDoc, value) => {
   if (tipoDoc == 1)
     return formatDni(value);

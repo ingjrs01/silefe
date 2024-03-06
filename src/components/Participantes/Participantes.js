@@ -13,8 +13,9 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
+import { EXPERIENCIA_ACTIONS } from '../../includes/reducers/actions';
 import { CITAS_ACTIONS, initialState as iniCitas, reducerCitas } from '../../includes/reducers/citas.reducer';
-import { EXPERIENCIA_ACTIONS, reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
+import { reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
@@ -24,9 +25,9 @@ import Menu from '../Menu';
 import { form as citasform } from './CitasForm';
 import { ExperienciasRender } from './ExperienciasRender';
 import { form } from "./Form";
+import { form as experienciasForm } from './Formularios/Experiencias';
 import { form as participacionesForm } from './ParticipacionesForm';
 import { TitulacionesRender } from './TitulacionesRender';
-
 
 const Participantes = ({ user }) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -128,6 +129,7 @@ const Participantes = ({ user }) => {
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
+            experienciasHandler({type: EXPERIENCIA_ACTIONS.START , form: experienciasForm });
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             citasHandler({ type: CITAS_ACTIONS.SETFORM, form: citasform });
             participacionesHandler({ type: SUBTABLE_ACTIONS.SETFORM, form: participacionesForm });
@@ -296,7 +298,7 @@ const Participantes = ({ user }) => {
     }
 
     const fetchData = async () => {
-        experienciasHandler({ type: EXPERIENCIA_ACTIONS.START });
+        //experienciasHandler({ type: EXPERIENCIA_ACTIONS.START });
         if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0)
             queryTitulaciones();
 
@@ -475,7 +477,11 @@ const Participantes = ({ user }) => {
             experienciasHandler({ type: EXPERIENCIA_ACTIONS.CONTRATOS, contratoOptions: opts })
         });
         fetchAPIData('/silefe.mbaja/all', {}, referer).then(response => {
-            const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] })).unshift({ id: 0, descripcion: " " });
+            console.log("Esto es response");
+            console.log(response);
+            const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));//.unshift({ id: 0, descripcion: " " });
+            console.log("consultados los motivos");
+            console.debug(motivos);
             experienciasHandler({ type: EXPERIENCIA_ACTIONS.MOTIVOS, motivos: motivos });
         });
         fetchAPIData('/silefe.cno/all', { descripcion: "" }, referer).then(response => {

@@ -1,19 +1,23 @@
-export const EXPERIENCIA_ACTIONS = {
-    START: 0,
-    LOAD_ITEMS: 1,
-    SELECT_ITEM: 2,
-    NEW_ITEM: 3,
-    SETFIELD: 4,
-    CONTRATOS: 5,
-    MOTIVOS: 6,
-    OCUPACIONES: 7,
-    SAVE: 8,
-    CANCEL: 9,
-    DELETE_ITEM:10,    
-    CHANGE_SELECTED: 11,
-    CHANGE_ALLSELECTED: 12,
-  }
+import { EXPERIENCIA_ACTIONS } from './actions';
+//export const EXPERIENCIA_ACTIONS = {
+//    START: 0,
+//    LOAD_ITEMS: 1,
+//    SELECT_ITEM: 2,
+//    NEW_ITEM: 3,
+//    SETFIELD: 4,
+//    CONTRATOS: 5,
+//    MOTIVOS: 6,
+//    OCUPACIONES: 7,
+//    SAVE: 8,
+//    CANCEL: 9,
+//    DELETE_ITEM:10,    
+//    CHANGE_SELECTED: 11,
+//    CHANGE_ALLSELECTED: 12,
+//  }
+
+
 const initialState = {
+    fields: {},
     items: [],
     deleted: [],
     status: "list",
@@ -22,15 +26,38 @@ const initialState = {
     motivosOptions: [],
     ocupacionesOptions: [],
     selectAll: false,
+    errors: {},
+}
+
+const resetErrors = (fields) => {
+    let errores = {};
+    let tmp_item = {};
+    Object.keys(fields.fields).forEach(j => {
+        errores[j] = [];
+        if (fields.fields[j].type === "multilang") {
+            let tt = {}
+            fields.languages.forEach(el => { tt[el] = "" });
+            tmp_item[j] = tt;
+        }
+        else
+            tmp_item[j] = [];
+    });
+
+    return errores;
 }
 
 export const reducerExperiencia = (state=initialState, action ) => {
     let tmpItems = [];
     let estado = false;
+    console.log("Accion pulsada->" + action.type);
     switch (action.type) {
         case EXPERIENCIA_ACTIONS.START:
             return {
                 ...state,
+                fields: {
+                    //...state.fields,
+                    ...action.form,
+                },
                 item: {
                     id: 0,
                     ini: "",
@@ -46,12 +73,14 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 },
                 items: [],
                 status: "list",
+                errors: resetErrors(action.form),
             }
         case EXPERIENCIA_ACTIONS.LOAD_ITEMS:
             return {
                 ...state,
                 items: action.experiencias.map(i => ({...i, selected: false})),
-                participanteId: action.participanteId
+                participanteId: action.participanteId,
+                errors: resetErrors(state.fields),
             }
 
         case EXPERIENCIA_ACTIONS.SELECT_ITEM:
@@ -79,7 +108,8 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 },
                 status: "edit",
             }
-        case EXPERIENCIA_ACTIONS.SETFIELD:
+        case EXPERIENCIA_ACTIONS.SET:
+            console.log("me están haciendo SET");
             return {
                 ...state,
                 item: {...state.item, [action.fieldname]:action.value}
@@ -91,10 +121,10 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 tipoContratoOptions: action.contratoOptions
             }
         case EXPERIENCIA_ACTIONS.MOTIVOS: 
-        return {
-            ...state,
-            motivosOptions: action.motivos,//action.motivos.map(item => {return {value: item.id, label: item.descripcion}}),
-        }
+            return {
+                ...state,
+                motivosOptions: action.motivos,//action.motivos.map(item => {return {value: item.id, label: item.descripcion}}),
+            }
 
         case EXPERIENCIA_ACTIONS.OCUPACIONES:
             return {
@@ -133,21 +163,31 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 items: tmp,
                 deleted: [...state.deleted,obj],
             }
-        case EXPERIENCIA_ACTIONS.CHANGE_SELECTED: 
+        case EXPERIENCIA_ACTIONS.CHECK: 
             tmpItems = [...state.items]
             tmpItems[action.index].selected = !tmpItems[action.index].selected;
             return {
                 ...state,
                 items: tmpItems
             }
-        case EXPERIENCIA_ACTIONS.CHANGE_ALLSELECTED: 
+        case EXPERIENCIA_ACTIONS.CHECKALL: 
             estado = !state.selectAll;             
 
             return {
                 ...state,
                 items: state.items.map(i => ({...i, selected: estado})),
                 selectAll: estado, 
-            }       
+            } 
+        case EXPERIENCIA_ACTIONS.CLEARERRORS:
+            return {
+                ...state,
+                errors: { ...state.errors, [action.name]: [] }
+            }
+        case EXPERIENCIA_ACTIONS.ADDERROR:
+            return {
+                ...state,
+                errors: { ...state.errors, [action.name]: [action.value] }
+            }
         default: 
             throw new Error ("Ación no válida");
     }

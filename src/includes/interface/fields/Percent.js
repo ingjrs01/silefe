@@ -7,7 +7,7 @@ export const Percent = ({itemsHandle, field, item, action, error}) => {
     return (
       <>
       <ClayForm.Group
-        className={`${error != 'undefined' && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `}
+        className={`${error !== undefined && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} `}
         key={"Group-" + field.key} >
 
         <label htmlFor="basicInput" key={"label" + field.label}>{field.label}</label>
@@ -32,7 +32,7 @@ export const Percent = ({itemsHandle, field, item, action, error}) => {
         </ClayInput.Group>
 
         {
-          error != 'undefined' && error.length > 0 &&
+          error !== undefined && error.length > 0 &&
           <ClayForm.FeedbackGroup key={"error" + field.name}>
             <ClayForm.FeedbackItem key={"err" + field.name}>
               <ClayForm.FeedbackIndicator key={"erfi" + field.name} spritemap={spritemap} symbol="check-circle-full" />{error[0]} </ClayForm.FeedbackItem>

@@ -4,7 +4,6 @@ import { GenericForm } from '../../includes/GenericForm';
 export const form = {
     ...GenericForm,
     title: Liferay.Language.get('Ejecucion'),
-    //languages: ["es-ES","en-US","gl-ES"],
     fields: {
         id: {
             key:1,

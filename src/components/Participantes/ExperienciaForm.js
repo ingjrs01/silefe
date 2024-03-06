@@ -7,7 +7,7 @@ import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { getDays, getMonths } from '../../includes/interface/DatesLang';
 import { Selectfilter } from '../../includes/interface/fields/Selectfilter';
-import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/experiencias.reducer";
+import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/actions";
 
 export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
 
@@ -21,11 +21,13 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
           <ClayCard.Description truncate={false} displayType="text">
             <ClayForm >
               <div className="row">
-                {/* ---------------------------------------------------------------------------------------------------------------- */}
+                {/* ---------------------------------------------------------------------------------------------------------------- 
+                <Dateinput itemsHandle={experienciasHandler} field={items.fields.fields[it]} item={experiencias.item.ini} action={EXPERIENCIA_ACTIONS.SET} error={items.errors[it]} /> 
+                */}
                 <ClayForm.Group className="col">
                   <label htmlFor="basicInput">{Liferay.Language.get("Fecha Inicio")}</label>
                   <ClayDatePicker
-                    onChange={val => experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'ini', value: val }) }
+                    onChange={val => experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'ini', value: val }) }
                     placeholder={""}
                     firstDayOfWeek={1}
                     months={getMonths(getLanguageId())}
@@ -43,7 +45,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                 <ClayForm.Group className="col">
                   <label htmlFor="basicInput">{"Fecha Fin"}</label>
                   <ClayDatePicker
-                    onChange={val => { experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'fin', value: val }) }}
+                    onChange={val => { experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'fin', value: val }) }}
                     placeholder={""}
                     firstDayOfWeek={1}
                     months={getMonths(getLanguageId())}
@@ -65,7 +67,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                     key={"tipoContratoId1"}
                     disabled={false}
                     onChange={evt => {
-                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'tipoContratoId', value: evt.target.value })
+                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'tipoContratoId', value: evt.target.value })
                     }}
                     value={experiencias.item.tipoContratoId} >
                     {
@@ -91,7 +93,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                     key={"cif"}
                     value={experiencias.item.cif}
                     onChange={e => {
-                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'cif', value: e.target.value });
+                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'cif', value: e.target.value });
                     }}>
                   </ClayInput>
                 </ClayForm.Group>
@@ -105,7 +107,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                     value={experiencias.item.razonSocial}
                     onChange={e => {
                       //validate(e.target.name, e.target.value);
-                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'razonSocial', value: e.target.value });
+                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'razonSocial', value: e.target.value });
                     }}>
                   </ClayInput>
                 </ClayForm.Group>
@@ -118,7 +120,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                     key={"puesto"}
                     value={experiencias.item.puesto}
                     onChange={e => {
-                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'puesto', value: e.target.value });
+                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'puesto', value: e.target.value });
                     }}>
                   </ClayInput>
                 </ClayForm.Group>
@@ -126,7 +128,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
               <div className="row">
               <ClayForm.Group className={"col-4"} key={"Group-111"} >
                     <Selectfilter 
-                      change={(fieldname,value) => experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: fieldname, value: value })}
+                      change={(fieldname,value) => experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: fieldname, value: value })}
                       field={{name: "ocupacion", options: experiencias.ocupacionesOptions, label: "Ocupacion", placeholder:"Ocupacion", className: 'col-4' }} 
                       item={experiencias.item.ocupacion}
                     />
@@ -141,7 +143,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                     key={"ocupacion"}
                     disabled={false}
                     onChange={evt => {
-                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'ocupacion', value: evt.target.value })
+                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'ocupacion', value: evt.target.value })
                     }}
                     value={experiencias.item.ocupacion} >
                     {
@@ -167,7 +169,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                     key={"duracion"}
                     value={experiencias.item.duracion}
                     onChange={e => {
-                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'duracion', value: e.target.value });
+                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'duracion', value: e.target.value });
                     }}>
                   </ClayInput>
                 </ClayForm.Group>
@@ -180,7 +182,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                     key={"motivoBajaId1"}
                     disabled={false}
                     onChange={evt => {
-                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'motivoBajaId', value: evt.target.value })
+                      experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'motivoBajaId', value: evt.target.value })
                     }}
                     value={experiencias.item.motivoBajaId} >
                     {
@@ -206,7 +208,7 @@ export const ExperienciaForm = ({ experiencias, experienciasHandler }) => {
                     placeholder="Insert your name here"
                     type="text"
                     value={experiencias.item.observaciones}
-                    onChange={evt => experienciasHandler({ type: EXPERIENCIA_ACTIONS.SETFIELD, fieldname: 'observaciones', value: evt.target.value })}
+                    onChange={evt => experienciasHandler({ type: EXPERIENCIA_ACTIONS.SET, fieldname: 'observaciones', value: evt.target.value })}
                   />
                 </ClayForm.Group>
               </div>

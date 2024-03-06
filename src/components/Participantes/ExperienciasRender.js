@@ -1,22 +1,24 @@
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import { ClayCheckbox } from '@clayui/form';
 import ClayTable from '@clayui/table';
-import React from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from '../../includes/LiferayFunctions';
-import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/experiencias.reducer";
-import { ExperienciaForm } from "./ExperienciaForm";
+import RenderFields from '../../includes/interface/RenderFields';
+import { EXPERIENCIA_ACTIONS } from "../../includes/reducers/actions";
 
 export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
+
+    const rows = experiencias.fields.rows;
+
     if (!experiencias.items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
     const changeAll = () => {
-        experienciasHandler({type: EXPERIENCIA_ACTIONS.CHANGE_ALLSELECTED});
+        experienciasHandler({type: EXPERIENCIA_ACTIONS.CHECKALL});
     }
 
     const changeSelect = (index) => {
-        experienciasHandler({type: EXPERIENCIA_ACTIONS.CHANGE_SELECTED, index: index});
+        experienciasHandler({type: EXPERIENCIA_ACTIONS.CHECK, index: index});
     }
 
     return (
@@ -73,12 +75,31 @@ export const ExperienciasRender = ({experiencias,experienciasHandler}) =>  {
         </div>
         }
         {
-            (experiencias.status === 'edit') &&  
-            
+            /*
             <ExperienciaForm
-                experiencias={experiencias}
-                experienciasHandler={experienciasHandler}
+            experiencias={experiencias}
+            experienciasHandler={experienciasHandler}
             />           
+            */
+           (experiencias.status === 'edit') &&  
+           <>
+               <RenderFields 
+                   rows={rows}
+                   itemsHandle={experienciasHandler}
+                   items={experiencias}
+                   plugin={"lalala"}
+               />
+
+               <div className="btn-group">
+               <div className="btn-group-item">
+                 <ClayButton onClick={e => experienciasHandler({type: EXPERIENCIA_ACTIONS.CANCEL})} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+               </div>
+               <div className="btn-group-item">
+                 <ClayButton onClick={ () => experienciasHandler({type: EXPERIENCIA_ACTIONS.SAVE}) } displayType="primary">{Liferay.Language.get('Guardar')}</ClayButton>
+               </div>
+             </div>
+           </>
+   
         }
         </>
     );
