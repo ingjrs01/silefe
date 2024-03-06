@@ -36,7 +36,7 @@ export const form = {
             yearmax: 0,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             className: 'col-3',
-            conditions:[]
+            conditions:['required']
         },
         tipoContratoId: {
             key:4,
