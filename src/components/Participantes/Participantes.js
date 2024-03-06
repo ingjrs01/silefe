@@ -129,7 +129,9 @@ const Participantes = ({ user }) => {
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
-            experienciasHandler({type: EXPERIENCIA_ACTIONS.START , form: experienciasForm });
+            console.log("Se ha inicializado el form");
+            console.debug(experienciasForm);
+            experienciasHandler({ type: EXPERIENCIA_ACTIONS.START, form: experienciasForm });
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             citasHandler({ type: CITAS_ACTIONS.SETFORM, form: citasform });
             participacionesHandler({ type: SUBTABLE_ACTIONS.SETFORM, form: participacionesForm });
@@ -317,7 +319,7 @@ const Participantes = ({ user }) => {
                 colectivos: i.colectivos ?? [],
                 carnets: i.carnets ?? [],
                 prestaciones: i.prestaciones ?? [],
-                adjuntos: i.adjuntos.map(a => ({ ...a, edit: false, src : toURL(a.uuid, a.groupId) })),
+                adjuntos: i.adjuntos.map(a => ({ ...a, edit: false, src: toURL(a.uuid, a.groupId) })),
                 checked: false
             })
         });
@@ -403,6 +405,23 @@ const Participantes = ({ user }) => {
         });
         form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "Pasaporte" }];
         form.fields.sexo.options = [{ key: 0, value: "H", label: Liferay.Language.get('Hombre') }, { key: 1, value: "M", label: Liferay.Language.get('Mujer') }];
+
+        fetchAPIData('/silefe.tipocontrato/all', {}, referer).then(response => {
+            const opts = response.data.map(item => ({ value: item.tipoContratoId, label: item.descripcion[lang] }));
+            experienciasForm.fields.tipoContratoId.options = opts;
+            //experienciasHandler({ type: EXPERIENCIA_ACTIONS.CONTRATOS, contratoOptions: opts })
+        });
+        fetchAPIData('/silefe.mbaja/all', {}, referer).then(response => {
+            const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));//.unshift({ id: 0, descripcion: " " });
+            experienciasForm.fields.motivoBajaId.options = motivos;
+            //experienciasHandler({ type: EXPERIENCIA_ACTIONS.MOTIVOS, motivos: motivos });
+        });
+        fetchAPIData('/silefe.cno/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));
+            //experienciasHandler({ type: EXPERIENCIA_ACTIONS.OCUPACIONES, ocupaciones: opts });
+        });
+
+
     }
 
     const changeProvince = (id) => {
@@ -471,22 +490,6 @@ const Participantes = ({ user }) => {
         fetchAPIData('/silefe.titulacion/all', {}, referer).then(response => {
             const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
             titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: opts });
-        });
-        fetchAPIData('/silefe.tipocontrato/all', {}, referer).then(response => {
-            const opts = response.data.map(item => ({ value: item.tipoContratoId, label: item.descripcion[lang] }));
-            experienciasHandler({ type: EXPERIENCIA_ACTIONS.CONTRATOS, contratoOptions: opts })
-        });
-        fetchAPIData('/silefe.mbaja/all', {}, referer).then(response => {
-            console.log("Esto es response");
-            console.log(response);
-            const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));//.unshift({ id: 0, descripcion: " " });
-            console.log("consultados los motivos");
-            console.debug(motivos);
-            experienciasHandler({ type: EXPERIENCIA_ACTIONS.MOTIVOS, motivos: motivos });
-        });
-        fetchAPIData('/silefe.cno/all', { descripcion: "" }, referer).then(response => {
-            const opts = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));
-            experienciasHandler({ type: EXPERIENCIA_ACTIONS.OCUPACIONES, ocupaciones: opts });
         });
     }
 

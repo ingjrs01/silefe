@@ -46,7 +46,7 @@ const resetErrors = (fields) => {
     return errores;
 }
 
-export const reducerExperiencia = (state=initialState, action ) => {
+export const reducerExperiencia = (state = initialState, action) => {
     let tmpItems = [];
     let estado = false;
     console.log("Accion pulsada->" + action.type);
@@ -78,7 +78,7 @@ export const reducerExperiencia = (state=initialState, action ) => {
         case EXPERIENCIA_ACTIONS.LOAD_ITEMS:
             return {
                 ...state,
-                items: action.experiencias.map(i => ({...i, selected: false})),
+                items: action.experiencias.map(i => ({ ...i, selected: false })),
                 participanteId: action.participanteId,
                 errors: resetErrors(state.fields),
             }
@@ -109,38 +109,36 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 status: "edit",
             }
         case EXPERIENCIA_ACTIONS.SET:
-            console.log("me están haciendo SET");
             return {
                 ...state,
-                item: {...state.item, [action.fieldname]:action.value}
+                item: { ...state.item, [action.fieldname]: action.value }
             }
-        case EXPERIENCIA_ACTIONS.CONTRATOS: 
+        case EXPERIENCIA_ACTIONS.CONTRATOS:
             //let options = action.contratoOptions.map(item => { return {value:item.tipoContratoId, label: item.descripcion}});            
             return {
                 ...state,
                 tipoContratoOptions: action.contratoOptions
             }
-        case EXPERIENCIA_ACTIONS.MOTIVOS: 
-            return {
-                ...state,
-                motivosOptions: action.motivos,//action.motivos.map(item => {return {value: item.id, label: item.descripcion}}),
-            }
-
-        case EXPERIENCIA_ACTIONS.OCUPACIONES:
-            return {
-                ...state,
-                ocupacionesOptions: action.ocupaciones,
-            }
+        //case EXPERIENCIA_ACTIONS.MOTIVOS: 
+        //    return {
+        //        ...state,
+        //        motivosOptions: action.motivos,
+        //    }
+        //case EXPERIENCIA_ACTIONS.OCUPACIONES:
+        //    return {
+        //        ...state,
+        //        ocupacionesOptions: action.ocupaciones,
+        //    }
         case EXPERIENCIA_ACTIONS.SAVE:
             let tmp = [];
 
             if (state.item.id > 0) {
                 tmp = [...state.items];
-                const index = tmp.findIndex(item => item.id == state.item.id );
-                tmp.splice(index,1,state.item);
+                const index = tmp.findIndex(item => item.id == state.item.id);
+                tmp.splice(index, 1, state.item);
             }
             else {
-                tmp = [...state.items,state.item];
+                tmp = [...state.items, state.item];
             }
 
             return {
@@ -153,31 +151,31 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 ...state,
                 status: "list",
             }
-        case EXPERIENCIA_ACTIONS.DELETE_ITEM:                             
-            let obj = {...state.items[action.index]};
+        case EXPERIENCIA_ACTIONS.DELETE_ITEM:
+            let obj = { ...state.items[action.index] };
             tmp = [...state.items];
-            tmp.splice(action.index,1);
+            tmp.splice(action.index, 1);
 
             return {
                 ...state,
                 items: tmp,
-                deleted: [...state.deleted,obj],
+                deleted: [...state.deleted, obj],
             }
-        case EXPERIENCIA_ACTIONS.CHECK: 
+        case EXPERIENCIA_ACTIONS.CHECK:
             tmpItems = [...state.items]
             tmpItems[action.index].selected = !tmpItems[action.index].selected;
             return {
                 ...state,
                 items: tmpItems
             }
-        case EXPERIENCIA_ACTIONS.CHECKALL: 
-            estado = !state.selectAll;             
+        case EXPERIENCIA_ACTIONS.CHECKALL:
+            estado = !state.selectAll;
 
             return {
                 ...state,
-                items: state.items.map(i => ({...i, selected: estado})),
-                selectAll: estado, 
-            } 
+                items: state.items.map(i => ({ ...i, selected: estado })),
+                selectAll: estado,
+            }
         case EXPERIENCIA_ACTIONS.CLEARERRORS:
             return {
                 ...state,
@@ -188,7 +186,7 @@ export const reducerExperiencia = (state=initialState, action ) => {
                 ...state,
                 errors: { ...state.errors, [action.name]: [action.value] }
             }
-        default: 
-            throw new Error ("Ación no válida");
+        default:
+            throw new Error("Ación no válida");
     }
 }
