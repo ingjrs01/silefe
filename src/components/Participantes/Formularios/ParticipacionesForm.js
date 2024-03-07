@@ -1,9 +1,9 @@
-import { Liferay } from '../../common/services/liferay/liferay';
-import { GenericForm } from "../../includes/GenericForm";
+import { Liferay } from '../../../common/services/liferay/liferay';
+import { GenericForm } from "../../../includes/GenericForm";
 
 export const form = {
     ...GenericForm,
-    title: Liferay.Language.get('Citas'),
+    title: Liferay.Language.get('Participaciones'),
     fields: {
         id: {
             key:1,
@@ -164,42 +164,42 @@ export const form = {
         },
     ],
     table: [
-        //{
-        //    columnName: "id",
-        //    columnTitle: "Id",
-        //    columnType: "checkbox",
-        //    key: "tc1",
-        //},
         {
-            columnName: "appointmentDateTime", 
-            columnTitle: Liferay.Language.get('Fecha'),
+            columnName: "tipoParticipacion", 
+            columnTitle: Liferay.Language.get('Tipo'),
             columnType: "string",
             key: "tc2",
         },
         {
-            columnName: "method", 
-            columnTitle: Liferay.Language.get('Método'),
+            columnName: "nombreParticipacion", 
+            columnTitle: Liferay.Language.get('Nombre'),
             columnType: "multilang",
-            key: "tc5",
-        },
-        //{
-        //    columnName: "origen", 
-        //    columnTitle: Liferay.Language.get('Origen'),
-        //    columnType: "string",
-        //    key: "tc3",
-        //},
-        {
-            columnName: "subject", 
-            columnTitle: Liferay.Language.get('Asunto'),
-            columnType: "string",
             key: "tc3",
+        },
+        {
+            columnName: "cnae", 
+            columnTitle: Liferay.Language.get('Puesto'),
+            columnType: "multilang",
+            key: "tc4",
+        }, 
+        {
+            columnName: "empresa", 
+            columnTitle: Liferay.Language.get('Empresa'),
+            columnType: "string",
+            key: "tc5",
+        }, 
+        {
+            columnName: "participacionIni", 
+            columnTitle: Liferay.Language.get('Inicio'),
+            columnType: "string",
+            key: "tc6",
         },       
-        //{
-        //    columnName: "participantInName",
-        //    columnTitle: Liferay.Language.get('Participante'),
-        //    columnType: "string",
-        //    key: "tc4",
-        //},
+        {
+            columnName: "estadoParticipacion", 
+            columnTitle: Liferay.Language.get('Estado'),
+            columnType: "multilang",
+            key: "tc7",
+        },
     ],
     searchFields: ['appointmentDate'],
 };

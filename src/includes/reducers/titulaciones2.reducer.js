@@ -2,8 +2,8 @@ import { TITULACIONES_ACTIONS } from './actions';
 
 export const initialState = {
     fields: { },
-    titulacionTipoOptions: [],
-    titulacionNivelOptions: [],
+    //titulacionTipoOptions: [],
+    //titulacionNivelOptions: [],
     deleted: [],
     status: "list",
     items: [],
@@ -38,7 +38,6 @@ let tmpFamiliaId = 0;
 export const reducerTitulacion = (state, action ) => {
     let tmpItems = []; 
     let estado = false;
-    console.log("Estoy en el reducer titulaciones: " + action.type);
     switch (action.type) {        
         case TITULACIONES_ACTIONS.START:
             return {
@@ -48,145 +47,28 @@ export const reducerTitulacion = (state, action ) => {
                 },
                 item: {
                     id: 0,
-                    ini: "hoy",
-                    fin: "mañana",
-                    titulacionTipoId: 101,
-                    titulacionNivelId: 102,
-                    titulacionFamiliaId: 1,
-                    titulacionId: 1,
+                    ini: "",
+                    fin: "",
+                    titulacionTipoId: 0,
+                    titulacionNivelId: 0,
+                    titulacionFamiliaId: 0,
+                    titulacionId: 0,
                 },
                 items: [],
-                tipoOptions: [],
-                nivelOptions: initialState.titulacionNivelOptions,
-                familiaOptions: [],
-                titulacionOptions: [],
-                tipos: [],
-                niveles: [],
-                familias: [],
-                titulaciones: [],
                 status: "list",
                 deleted: [],
                 errors: resetErrors(action.form),
             }
-        //case TITULACIONES_ACTIONS.TIPOS:
-        //    return {
-        //        ...state,
-        //        //tipoOptions: action.tipos.map(item => ({value:item.titulacionTipoId,label:item.descripcion})),
-        //        tipoOptions: action.tipos,
-        //        tipos: action.tipos
-        //    }
 
-        case TITULACIONES_ACTIONS.NIVEL:
-            return {
-                ...state,
-                niveles: action.nivel
-            }
-            
-        case TITULACIONES_ACTIONS.FAMILIA:
-            return {
-                ...state,
-                familias: action.familias
-            }
-           
-        case TITULACIONES_ACTIONS.TITULACION:
-            return {
-                ...state,
-                titulaciones:action.titulaciones,
-            }
-        //case TITULACIONES_ACTIONS.SET_TITULACION:
-        //    return {
-        //        ...state,
-        //        titulacion: action.titulacion
-        //    }
-        case TITULACIONES_ACTIONS.SET_TITULACIONTIPO:
-            tmpTipoId = 0;
-            if (action.value == "0")
-                tmpTipoId = state.tipoOptions[0].value
-            else
-                tmpTipoId = action.value
-
-            newniveles = state.niveles.filter(i => i.titulacionTipoId == tmpTipoId).map(i => {return {value:i.titulacionNivelId,label:i.descripcion}})
-            tmpNivelId = 0;
-            tmpFamiliaId = 0;
-            newtitulaciones = [];
-            newfamilias = [];
-
-            if (newniveles.length > 0) {
-                tmpNivelId = newniveles[0].value;
-                newfamilias = state.familias.filter(i => i.titulacionNivelId == tmpNivelId).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
-            }
-
-            if (newfamilias.length > 0) {
-                tmpFamiliaId = newfamilias[0].value;
-                newtitulaciones = state.titulaciones.filter(i => i.titulacionFamiliaId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
-            }
-            
-            return {
-                ...state,
-                titulacion: {...state.titulacion,
-                    titulacionTipoId: action.value,
-                    titulacionNivelId: tmpNivelId,
-                    titulacionFamiliaId: tmpFamiliaId,
-                    titulacionId:        (newtitulaciones.length > 0)?newtitulaciones[0].value:0,
-                },
-                nivelOptions: newniveles,
-                familiaOptions: newfamilias,
-                titulacionOptions: newtitulaciones,
-            }
-        case TITULACIONES_ACTIONS.SET_TITULACIONNIVEL:
-            if (action.value == "0")
-                return {
-                    ...state
-                }
-            newfamilias = state.familias.filter(i => i.titulacionNivelId == action.value).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
-            tmpFamiliaId = 0;
-            newtitulaciones = [];
-
-            if (newfamilias.length > 0) {
-                tmpFamiliaId = newfamilias[0].value
-                newtitulaciones = state.titulaciones.filter(i => i.titulacionId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
-            }
-
-            return {
-                ...state,
-                titulacion: {
-                    ...state.titulacion,
-                    titulacionNivelId: action.value,
-                    titulacionFamiliaId: (newfamilias.length > 0)?newfamilias[0].value:0,
-                    titulacionId:        (newtitulaciones.length > 0)?newtitulaciones[0].value:0,
-                },
-                familiaOptions: newfamilias,
-                titulacionOptions: newtitulaciones,
-            }
-        case TITULACIONES_ACTIONS.SET_TITULACIONFAMILIA:
-            if (action.value == "0") 
-                return {
-                    ...state
-                }
-
-            newtitulaciones = state.titulaciones.filter(i => i.titulacionFamiliaId == action.value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
-            return {
-                ...state,
-                titulacion: {
-                    ...state.titulacion,
-                    titulacionFamiliaId: action.value,
-                    titulacionId:        (newtitulaciones.length > 0)?newtitulaciones[0].value:0,
-                },
-                titulacionOptions: newtitulaciones,
-            }
-        case TITULACIONES_ACTIONS.SET_TITULACIONID:
-            const titulacionName = state.titulaciones.filter(i => i.titulacionId == action.value)[0].descripcion
-            return {
-                ...state,
-                titulacion: {...state.titulacion,titulacionId: action.value, titulacionName: titulacionName},
-            }
         case TITULACIONES_ACTIONS.LOAD_ITEMS:
             return {
                 ...state,
                 items: action.items.map(i => ({...i, selected: false})),
                 errors: resetErrors(state.fields),
             }
+
         case TITULACIONES_ACTIONS.SELECT_ITEM:
+
             return {
                 ...state,
                 item: state.items[action.index],
@@ -214,8 +96,8 @@ export const reducerTitulacion = (state, action ) => {
                 ...state,
                 item: {
                     id: 0,
-                    ini: "2023-02-17",
-                    fin: "2023-02-17",
+                    ini: "",
+                    fin: "",
                     titulacionTipoId: 0,
                     titulacionNivelId: 0,
                     titulacionFamiliaId: 0,
@@ -244,14 +126,14 @@ export const reducerTitulacion = (state, action ) => {
                 ...state,
                 deleted: []
             }
-        case TITULACIONES_ACTIONS.CHANGE_SELECTED: 
+        case TITULACIONES_ACTIONS.CHECK:
             tmpItems = [...state.items]
             tmpItems[action.index].selected = !tmpItems[action.index].selected;
             return {
                 ...state,
                 items: tmpItems
             }
-        case TITULACIONES_ACTIONS.CHANGE_ALLSELECTED: 
+        case TITULACIONES_ACTIONS.CHECKALL:
             estado = !state.selectAll;             
 
             return {
@@ -260,7 +142,6 @@ export const reducerTitulacion = (state, action ) => {
                 selectAll: estado, 
             }
         case TITULACIONES_ACTIONS.SET:
-            console.log("TITULACIONES_ACTIONS.SET");
             if (action.fieldname === 'titulacionTipoId') { 
                 tmpTipoId = 0;
                 if (action.value == "0")
@@ -268,7 +149,7 @@ export const reducerTitulacion = (state, action ) => {
                 else
                     tmpTipoId = action.value
     
-                newniveles = state.niveles.filter(i => i.titulacionTipoId == tmpTipoId).map(i => {return {value:i.titulacionNivelId,label:i.descripcion}})
+                newniveles = state.fields.fields.titulacionNivelId.all.filter(i => i.titulacionTipoId == tmpTipoId).map(i => {return {value:i.titulacionNivelId,label:i.descripcion}})
                 tmpNivelId = 0;
                 tmpFamiliaId = 0;
                 newtitulaciones = [];
@@ -276,12 +157,12 @@ export const reducerTitulacion = (state, action ) => {
     
                 if (newniveles.length > 0) {
                     tmpNivelId = newniveles[0].value;
-                    newfamilias = state.familias.filter(i => i.titulacionNivelId == tmpNivelId).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
+                    newfamilias = state.fields.fields.titulacionFamiliaId.all.filter(i => i.titulacionNivelId == tmpNivelId).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
                 }
     
                 if (newfamilias.length > 0) {
                     tmpFamiliaId = newfamilias[0].value;
-                    newtitulaciones = state.titulaciones.filter(i => i.titulacionFamiliaId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+                    newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionFamiliaId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
                 }
                 
                 return {
@@ -310,9 +191,6 @@ export const reducerTitulacion = (state, action ) => {
                             }
                         }
                     },
-                    //nivelOptions: newniveles,
-                    //familiaOptions: newfamilias,
-                    //titulacionOptions: newtitulaciones,
                 }
             }
             //------------------------------------------------------------------
@@ -321,12 +199,12 @@ export const reducerTitulacion = (state, action ) => {
                     return {
                         ...state
                     }
-                newfamilias = state.familias.filter(i => i.titulacionNivelId == action.value).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
+                newfamilias = state.fields.fields.titulacionFamiliaId.all.filter(i => i.titulacionNivelId == action.value).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
                 tmpFamiliaId = 0;
                 newtitulaciones = [];
                 if (newfamilias.length > 0) {
                     tmpFamiliaId = newfamilias[0].value
-                    newtitulaciones = state.titulaciones.filter(i => i.titulacionId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+                    newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
                 }
                 return {
                     ...state,
@@ -350,8 +228,6 @@ export const reducerTitulacion = (state, action ) => {
                             }
                         }
                     },
-                    //familiaOptions: newfamilias,
-                    //titulacionOptions: newtitulaciones,
                 }
             }
 
@@ -360,7 +236,7 @@ export const reducerTitulacion = (state, action ) => {
                 return {
                     ...state
                 }
-                newtitulaciones = state.titulaciones.filter(i => i.titulacionFamiliaId == action.value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+                newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionFamiliaId == action.value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
                 return {
                     ...state,
                     item: {
@@ -378,7 +254,6 @@ export const reducerTitulacion = (state, action ) => {
                             }
                         }
                     },
-                    titulacionOptions: newtitulaciones,
                 }               
             }
             //--------------------------------------------------------------------

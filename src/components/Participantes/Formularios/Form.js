@@ -1,5 +1,5 @@
-import { Liferay } from '../../common/services/liferay/liferay';
-import { GenericForm } from '../../includes/GenericForm';
+import { Liferay } from '../../../common/services/liferay/liferay';
+import { GenericForm } from '../../../includes/GenericForm';
 
 export const form = {
     ...GenericForm,

@@ -22,12 +22,12 @@ import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/redu
 import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones2.reducer';
 import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
-import { form as citasform } from './CitasForm';
 import { ExperienciasRender } from './ExperienciasRender';
-import { form } from "./Form";
+import { form as citasform } from './Formularios/CitasForm';
 import { form as experienciasForm } from './Formularios/Experiencias';
+import { form } from "./Formularios/Form";
+import { form as participacionesForm } from './Formularios/ParticipacionesForm';
 import { form as titulacionesForm } from './Formularios/Titulaciones';
-import { form as participacionesForm } from './ParticipacionesForm';
 import { TitulacionesRender } from './TitulacionesRender';
 
 const Participantes = ({ user }) => {
@@ -130,8 +130,6 @@ const Participantes = ({ user }) => {
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
-            console.log("Se ha inicializado el form");
-            console.debug(experienciasForm);
             experienciasHandler({ type: EXPERIENCIA_ACTIONS.START, form: experienciasForm });
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             citasHandler({ type: CITAS_ACTIONS.SETFORM, form: citasform });
@@ -474,27 +472,23 @@ const Participantes = ({ user }) => {
                 value: item.titulacionTipoId,
                 label: item.descripcion[lang]
             }));
-            //titulacionHandler({ type: TITULACIONES_ACTIONS.TIPOS, tipos: opts });
             titulacionesForm.fields.titulacionTipoId.options = opts;
         });
         
         fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "" }, referer).then(response => {
-            console.log("Se recuperan las titulaciones nivel: ");
-            console.debug(response);
             const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang], tipo: item.tipo[lang] }));
-            titulacionHandler({ type: TITULACIONES_ACTIONS.NIVEL, nivel: opts });
+            titulacionesForm.fields.titulacionNivelId.all = opts;
         });
         
         fetchAPIData('/silefe.titulacionfam/all', { descripcion: "" }, referer).then(response => {
             const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
-            titulacionHandler({ type: TITULACIONES_ACTIONS.FAMILIA, familias: opts });
+            titulacionesForm.fields.titulacionFamiliaId.all = opts;
         });
         
         fetchAPIData('/silefe.titulacion/all', {}, referer).then(response => {
             const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
-            titulacionHandler({ type: TITULACIONES_ACTIONS.TITULACION, titulaciones: opts });
+            titulacionesForm.fields.titulacionId.all = opts;
         });
-        // CARGO TODO
         titulacionHandler({ type: TITULACIONES_ACTIONS.START, form: titulacionesForm });
     }
 

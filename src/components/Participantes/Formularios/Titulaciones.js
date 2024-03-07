@@ -57,6 +57,7 @@ export const form = {
             enabled:true,
             conditions: [],
             options: [{label: "Seleccionar", value: 0}],
+            all: [],
             className: 'col-2',
             change: () => {console.log("cambiando el tipo contrato")}
         },
