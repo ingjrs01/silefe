@@ -69,7 +69,8 @@ export const reducerTitulacion = (state, action ) => {
         case TITULACIONES_ACTIONS.TIPOS:
             return {
                 ...state,
-                tipoOptions: action.tipos.map(item => { return {value:item.titulacionTipoId,label:item.descripcion}}),
+                //tipoOptions: action.tipos.map(item => ({value:item.titulacionTipoId,label:item.descripcion})),
+                tipoOptions: action.tipos,
                 tipos: action.tipos
             }
 

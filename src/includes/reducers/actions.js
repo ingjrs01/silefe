@@ -16,6 +16,31 @@ export const EXPERIENCIA_ACTIONS = {
     DELETE_ITEM:90,    
   }
 
+  export const TITULACIONES_ACTIONS = {
+    START: 0,
+    LOAD_ITEMS: 1,
+    CHECK: 2,       
+    CHECKALL: 3,    
+    SELECT_ITEM: 6, 
+    NEW_ITEM: 7,    
+    SET: 5,         
+    ADDERROR: 9,
+    CLEARERRORS: 10,
+    SAVE: 80,
+    CANCEL: 8,
+    DELETE_ITEM:90,    
+    //TIPOS: 50,
+    NIVEL: 51,
+    FAMILIA: 52,
+    TITULACION: 53,
+    SET_TITULACION: 54,
+    SET_TITULACIONTIPO: 55,
+    SET_TITULACIONNIVEL: 56,
+    SET_TITULACIONFAMILIA: 57,
+    SET_TITULACIONID: 58,
+    EMPTY_DELETED: 16,
+}
+
   export const ITEMS_ACTIONS = {
     START: 0,
     LOAD: 1,

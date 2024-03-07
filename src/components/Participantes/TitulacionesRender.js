@@ -4,18 +4,20 @@ import ClayTable from '@clayui/table';
 import React from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from '../../includes/LiferayFunctions';
-import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
-import { TableForm } from "./TableForm";
+import { TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
+//import { TableForm } from "./TableForm";
+import RenderFields from '../../includes/interface/RenderFields';
 
 export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
 
+  const rows = redTitulaciones.fields.rows;
+
   const changeSelectFile = (index) => {
-    titulacionHandler({ type: TITULACIONES_ACTIONS.CHANGE_SELECTED, index: index });
+    titulacionHandler({ type: TITULACIONES_ACTIONS.CHECK, index: index });
   }
 
   const changeSelectall = () => {
-    console.log("seleccionando todos");
-    titulacionHandler({ type: TITULACIONES_ACTIONS.CHANGE_ALLSELECTED });
+    titulacionHandler({ type: TITULACIONES_ACTIONS.CHECKALL });
   }
 
   return (
@@ -45,8 +47,8 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
                     <ClayTable.Cell>
                       <ClayButtonWithIcon
                         aria-label={Liferay.Language.get("Editar")}
-                        onClick={e => {
-                          titulacionHandler({ type: TITULACIONES_ACTIONS.SET_TITULACIONTIPO, value: redTitulaciones.items[index].titulacionTipoId });
+                        onClick={() => {
+                          titulacionHandler({ type: TITULACIONES_ACTIONS.SET, fieldname: 'titulacionTipoId', value: redTitulaciones.items[index].titulacionTipoId });
                           titulacionHandler({ type: TITULACIONES_ACTIONS.SELECT_ITEM, index: index });
                         }}
                         displayType="secondary"
@@ -77,15 +79,25 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
           </ClayButton>
         </>
       }
-
       {
         (redTitulaciones.status === 'edit') &&
-        <TableForm
-          redTitulaciones={redTitulaciones}
-          titulacionHandler={titulacionHandler}
-        />
+        <>
+          <RenderFields
+            rows={rows}
+            itemsHandle={titulacionHandler}
+            items={redTitulaciones}
+            plugin={"lalala"}
+          />
+          <div className="btn-group">
+            <div className="btn-group-item">
+              <ClayButton onClick={() => titulacionHandler({ type: TITULACIONES_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+            </div>
+            <div className="btn-group-item">
+              <ClayButton onClick={() => titulacionHandler({ type: TITULACIONES_ACTIONS.SAVE })} displayType="primary">{Liferay.Language.get('Guardar')}</ClayButton>
+            </div>
+          </div>
+        </>
       }
-
     </>
   )
 }

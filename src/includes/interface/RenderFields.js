@@ -20,8 +20,7 @@ import { Textarea } from './fields/Textarea';
 import { Textinput } from './fields/Textinput';
 import { Toggle } from './fields/Toggle';
 
-const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
-  return (
+const RenderFields = ({ rows, itemsHandle, items, plugin }) => (
     <div className="col-12">
       {rows.map(row => (
           <div className="row">
@@ -52,6 +51,6 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => {
             ))}
           </div>
         ))}
-    </div> )}
+    </div> )
 
 export default RenderFields;
