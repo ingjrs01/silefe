@@ -310,22 +310,22 @@ const Ofertas = ({user}) => {
         });
         // consulto los cno's
         fetchAPIData('/silefe.cno/all', { }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => ({ value: obj.id, label: obj.descripcion[lang] }) )];
             form.fields.puestoId.options = opts;
         });
         // cargamos las cna's
         fetchAPIData('/silefe.cnae/all', { }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj=>({ value: obj.id, label: obj.descripcion[lang] }) )];
             form.fields.cnaeId.options = opts;
         });
         // cargamos los tipos de contrato
         fetchAPIData('/silefe.tipocontrato/all', {  }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj =>({ value: obj.id, label: obj.descripcion[lang]}))];
             form.fields.tipoContratoId.options = opts;
         });
         // cargamos los candidatos: 
         fetchAPIData('/silefe.carnet/all', {  }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj =>({value: obj.id, label: obj.descripcion[lang] }) )];
             form.fields.permisos.options = opts;
         });
 
@@ -337,19 +337,19 @@ const Ofertas = ({user}) => {
 
         const postdata = { origin: "offer"}
         fetchAPIData('/silefe.estado/get-estados-from-origin', postdata, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj =>({ value: obj.id, label: obj.nombre[lang] }) )];
             form.fields.estadoId.options = opts;
         });
 
         form.fields.jornadaId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: Liferay.Language.get("Completa") }, { value: "2", label: Liferay.Language.get("Parcial") }];
 
         fetchAPIData('/silefe.salario/all', { }, referer).then(response => {
-            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => ({ value: obj.id, label: obj.descripcion[lang]}))];
             form.fields.salarioId.options = opts;
         });
 
         fetchAPIData('/silefe.colectivo/all', { }, referer).then(response => {
-            const opts = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+            const opts = [...response.data.map(obj =>({ value: obj.id, label: obj.descripcion[lang]}))];
             form.fields.colectivos.options = opts;
         });
     }

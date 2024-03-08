@@ -408,12 +408,10 @@ const Participantes = ({ user }) => {
         fetchAPIData('/silefe.tipocontrato/all', {}, referer).then(response => {
             const opts = response.data.map(item => ({ value: item.tipoContratoId, label: item.descripcion[lang] }));
             experienciasForm.fields.tipoContratoId.options = opts;
-            //experienciasHandler({ type: EXPERIENCIA_ACTIONS.CONTRATOS, contratoOptions: opts })
         });
         fetchAPIData('/silefe.mbaja/all', {}, referer).then(response => {
             const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));//.unshift({ id: 0, descripcion: " " });
             experienciasForm.fields.motivoBajaId.options = motivos;
-            //experienciasHandler({ type: EXPERIENCIA_ACTIONS.MOTIVOS, motivos: motivos });
         });
         fetchAPIData('/silefe.cno/all', { descripcion: "" }, referer).then(response => {
             const opts = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));

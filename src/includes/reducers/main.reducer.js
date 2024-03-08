@@ -168,6 +168,9 @@ export const red_items = (state, action) => {
                 checkall: false
             }
         case ITEMS_ACTIONS.SET:
+            console.log("Estamos en SET");
+            console.debug(action);
+            console.debug(state);
             if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
                 state.fields.fields[action.fieldname].change(action.value, action.fieldname);
             }

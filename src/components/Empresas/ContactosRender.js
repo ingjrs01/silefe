@@ -4,10 +4,13 @@ import ClayTable from '@clayui/table';
 import React from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from '../../includes/LiferayFunctions';
-import { CONTACTOS_ACTIONS } from "../../includes/reducers/contactos.reducer";
-import { ContactosForm } from "./ContactosForm";
+import RenderFields from '../../includes/interface/RenderFields';
+import { REDUCER_ACTIONS } from "../../includes/reducers/actions";
 
 const ContactosRender = ({redContactos,contactosHandle}) =>  {
+
+    const rows = redContactos.fields.rows; 
+
     if (!redContactos.items) 
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
@@ -37,7 +40,7 @@ const ContactosRender = ({redContactos,contactosHandle}) =>  {
                 <ClayTable.Cell>{item.cargo }</ClayTable.Cell>
                 <ClayTable.Cell>
                     <ClayButtonWithIcon 
-                        onClick={ () => contactosHandle({type: CONTACTOS_ACTIONS.SELECT_ITEM,index: index})}
+                        onClick={ () => contactosHandle({type: REDUCER_ACTIONS.SELECT_ITEM,index: index})}
                         displayType="secondary"
                         spritemap={spritemap}
                         aria-label="Edit"
@@ -46,7 +49,7 @@ const ContactosRender = ({redContactos,contactosHandle}) =>  {
                     />
                     <ClayButtonWithIcon
                         className="ml-1"
-                        onClick={ () => contactosHandle({type: CONTACTOS_ACTIONS.DELETE, index:index}) }
+                        onClick={ () => contactosHandle({type: REDUCER_ACTIONS.DELETE_ITEM, index:index}) }
                         displayType="danger"
                         spritemap={spritemap}
                         aria-label="Delete"
@@ -60,19 +63,30 @@ const ContactosRender = ({redContactos,contactosHandle}) =>  {
 
             </ClayTable.Body>
             </ClayTable>
-            <ClayButton onClick={ ()  => contactosHandle({type: CONTACTOS_ACTIONS.NEW_ITEM}) } displayType="primary">{Liferay.Language.get('Nuevo')}
+            <ClayButton onClick={ ()  => contactosHandle({type: REDUCER_ACTIONS.NEW_ITEM}) } displayType="primary">{Liferay.Language.get('Nuevo')}
             </ClayButton>
             </>
         }
 
         {
             (redContactos.status === 'edit') &&
-            <ContactosForm
-                redContactos={redContactos}
-                contactosHandle={contactosHandle}
+            <>
+            <RenderFields
+                rows={rows}
+                itemsHandle={contactosHandle}
+                items={redContactos}
+                plugin={"lalala"}
             />
+            <div className="btn-group">
+                <div className="btn-group-item">
+                    <ClayButton onClick={e => contactosHandle({ type: REDUCER_ACTIONS.CANCEL })} displayType="secondary">{Liferay.Language.get('Cancelar')}</ClayButton>
+                </div>
+                <div className="btn-group-item">
+                    <ClayButton onClick={() => contactosHandle({ type: REDUCER_ACTIONS.SAVE })} displayType="primary">{Liferay.Language.get('Guardar')}</ClayButton>
+                </div>
+            </div>
+        </>
         }
-
         </>
     );
 }

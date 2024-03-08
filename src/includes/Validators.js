@@ -18,7 +18,7 @@ export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
         case '1': // SI EL TIPO ES 1, SE TRATA DE UN DNI
             if (value.match(DNI_REGEX)) {
                 const numerodni = parseInt(value.replace(/[.a-zA-Z-]+/g, ""));
-                console.log(dniletter[numerodni % 23] + "  === " + value.substring(8, 9).toLocaleUpperCase());
+                //console.log(dniletter[numerodni % 23] + "  === " + value.substring(8, 9).toLocaleUpperCase());
                 if (value.length >= 8 && value.substring(8, 9).toLocaleUpperCase() != dniletter[numerodni % 23]) {
                     itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-dni') });
                     return false;
@@ -36,7 +36,7 @@ export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
                 var p1 = (inicio.charCodeAt(0) - 88) * 10000000;
                 
                 const numerodni = p1 + parseInt(value.replace(/[.a-zA-Z-]+/g, ""));
-                console.log(value.substring(8, 11).toLocaleUpperCase() + "  ===  " + dniletter[numerodni % 23]);
+                //console.log(value.substring(8, 11).toLocaleUpperCase() + "  ===  " + dniletter[numerodni % 23]);
 
                 if (value.length >= 7 && value.substring(8, 11).toLocaleUpperCase() != dniletter[numerodni % 23]) {
                     itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-nie') });
@@ -133,7 +133,6 @@ export const validateDate = (name, value, items, itemsHandle) => {
 // esta es la nueva version de la funcion que tengo
 
 export const validateDate2 = (name, value, field, itemsHandle) => {
-    console.log("esto es validateDate2: " + value);
 
     for (var condicion of field["conditions"]) {
         //if (condicion == "number") {
@@ -199,7 +198,6 @@ export const validateDate2 = (name, value, field, itemsHandle) => {
 }
 
 export const validateHour = (name, value, field, itemsHandle) => {
-    console.log("valudateHour: " + value);
 
     for (var condicion of field["conditions"]) {
         if (condicion == "required") {
@@ -329,7 +327,7 @@ export const validaRadio = (campo,items,itemsHandle) => {
 
 export const validateNumber = (name, value,field,itemsHandle) => {
 
-    console.log("Estoy en validateNumber: " + value);
+    //console.log("Estoy en validateNumber: " + value);
     //if (condicion == "required") {
     //    if (value === undefined || value === "") {
     //        itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('requerido') });
@@ -346,8 +344,6 @@ export const validateNumber = (name, value,field,itemsHandle) => {
 export const validateAll = (items, itemsHandle) => {
     var result = true;
     for (var campo in items.fields.fields) {
-        console.log("iterando");
-        console.debug(campo);
         if ( items.fields.fields[campo].validate !== 'undefined' &&  items.fields.fields[campo].validate == false)
             console.log("Este campo no se valida: " + campo);
         else
@@ -389,20 +385,16 @@ export const validateAll = (items, itemsHandle) => {
                     break;
             }
     }
-    console.log("todo pasado");
     return true;
 }
 
 export const validate = (name, value,field,itemsHandle) => {
     let condicion = "";
 
-    //console.log("estoy en validate");
-    //console.debug(field);
     if (!field.hasOwnProperty('conditions'))
         return true;
     
     for (condicion of field.conditions) {
-        console.log(condicion);
         if (condicion == "number") {
             if (isNaN(value)) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });

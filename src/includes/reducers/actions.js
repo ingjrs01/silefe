@@ -1,3 +1,18 @@
+export const REDUCER_ACTIONS = {
+  START: 0,
+  LOAD_ITEMS: 1,  // REVISAR
+  CHECK: 2,       // hecho
+  CHECKALL: 3,    // hecho
+  SELECT_ITEM: 6, // hecho
+  NEW_ITEM: 7,    // hecho
+  SET: 5,         // hecho
+  ADDERROR: 9,
+  CLEARERRORS: 10,// hecho
+  SAVE: 80,
+  CANCEL: 8,
+  DELETE_ITEM:90,    
+}
+
 export const EXPERIENCIA_ACTIONS = {
     START: 0,
     LOAD_ITEMS: 1,  // REVISAR
@@ -8,9 +23,9 @@ export const EXPERIENCIA_ACTIONS = {
     SET: 5,         // hecho
     ADDERROR: 9,
     CLEARERRORS: 10,// hecho
-    CONTRATOS: 50,
-    MOTIVOS: 60,
-    OCUPACIONES0: 70,
+    //CONTRATOS: 50,
+    //MOTIVOS: 60,
+    //OCUPACIONES0: 70,
     SAVE: 80,
     CANCEL: 8,
     DELETE_ITEM:90,    

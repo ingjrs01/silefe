@@ -24,7 +24,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => (
     <div className="col-12">
       {rows.map(row => (
           <div className="row">
-            {row.cols.map(it => (
+            {row.cols.map(it =>(
               <>
                     {(items.fields.fields[it].type === 'multitext')   && <Phone          itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} action={ITEMS_ACTIONS.SET} error={items.errors[it]} key={items.fields.fields[it].key + "-f"}/> }
                     {(items.fields.fields[it].type === 'text')        && <Textinput      itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} action={ITEMS_ACTIONS.SET} error={items.errors[it]} key={items.fields.fields[it].key + "-f"}/> }

@@ -1,5 +1,5 @@
-import { Liferay } from '../../common/services/liferay/liferay';
-import { GenericForm } from '../../includes/GenericForm';
+import { Liferay } from '../../../common/services/liferay/liferay';
+import { GenericForm } from '../../../includes/GenericForm';
 
 export const form = {
     ...GenericForm,
@@ -82,8 +82,8 @@ export const form = {
         planFormacion: {
             key: 37,
             type: "toggle",
-            label: Liferay.Language.get('Pan_formacion'),
-            name: "panFormacion",
+            label: Liferay.Language.get('Plan_formacion'),
+            name: "planFormacion",
             enable: true,
             className: "col-2",
         },

@@ -42,7 +42,6 @@ export const reducerCentros = (state=initialState, action ) => {
             }
 
         case CENTROS_ACTIONS.SELECT_ITEM:
-            // tengo que cargar los municipios de la provincia activa
             tmp = state.all_municipios.filter(i => i.provinciaId == state.items[action.index].provinciaId).map(it => {return {value:it.id,label:it.nombre}});
             return {
                 ...state,
