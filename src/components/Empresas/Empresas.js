@@ -10,6 +10,7 @@ import { FHistoryEntity } from "../../includes/interface/FHistoryEntity";
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
+import { SimpleTable } from '../../includes/interface/SimpleTable';
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
 import { REDUCER_ACTIONS } from '../../includes/reducers/actions';
@@ -18,8 +19,6 @@ import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/
 import { initialState as iniCentros, reducerItems } from '../../includes/reducers/tabItem.reducer';
 import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
-import CentrosRender from "./CentrosRender";
-import ContactosRender from "./ContactosRender";
 import { form as formCentros } from './Formularios/Centros';
 import { form as formContactos } from './Formularios/Contactos';
 import { form } from "./Formularios/Form";
@@ -96,7 +95,6 @@ const Empresas = ({user}) => {
             let { data, status, error } = response;
             if (status) {
                 if (redCentros.items.length > 0) {
-                    //const oo = redCentros.items.filter(i => redCentros.modified.includes(i.id));
                     saveAPI('/silefe.empresacentros/save-centros-by-empresa', { id: data.empresaId, centros: redCentros.items, userId: getUserId() }, referer).then(respon => {
                         console.log("lalala");
                     });
@@ -110,8 +108,8 @@ const Empresas = ({user}) => {
                 }
                 // vamos a sincronizar los contactos, sólo si se han modificado
                 // ponemos el origenId aquí,porque es donde lo sabemos cuando la empresa es nueva
-                if (redContactos.modified.length > 0) {
-                    const contacts = redContactos.items.filter(i => redContactos.modified.includes(i.id)).map((item) => ({ ...item, origenId: data.empresaId, userId: getUserId() }));
+                if (redContactos.items.length > 0) {
+                    const contacts = redContactos.items.map((item) => ({ ...item, origenId: data.empresaId, userId: getUserId() }));
                     saveAPI('/silefe.contacto/save-by-empresa', { id: data.empresaId, contactos: contacts }, referer).then(response => {
                         console.log("a la vuelta de guardar los contactos");
                     });
@@ -205,14 +203,14 @@ const Empresas = ({user}) => {
     const plugin2 = () => {
         return {
             Centros:
-                <CentrosRender
+                <SimpleTable
                     reducer={redCentros}
-                    centrosHandle={centrosHandle}
+                    handler={centrosHandle}
                 />,
             Contactos:
-                <ContactosRender
-                    redContactos={redContactos}
-                    contactosHandle={contactosHandle}
+                <SimpleTable
+                    reducer={redContactos}
+                    handler={contactosHandle}
                 />,
             Historico: 
                 <FHistoryEntity

@@ -31,7 +31,7 @@ export const Radio = ({itemsHandle, field, item, action, error}) => {
                   key={field.name + it5.key}
                   label={it5.label}
                   value={it5.value}
-                  onClick={a => { itemsHandle({ type: accion, fieldname: it, value: a.target.value }); }}
+                  onClick={a => { itemsHandle({ type: accion, fieldname: field.name, value: a.target.value }); }}
                 />
               )
             })}

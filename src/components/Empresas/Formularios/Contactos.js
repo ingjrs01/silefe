@@ -83,33 +83,44 @@ export const form = {
             cols: ['telefono', 'email', 'cargo'],
         },
     ],
-table: {
-        id: {
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        documento: {
-            columnTitle: Liferay.Language.get('CIF'),
-            columnType: "dni",
-            key: "c2",
-        },
-        razonSocial: {
-            columnTitle: Liferay.Language.get('RazonSocial'),
-            columnType: "string",
-            key: "c3",
-        },
-        email: {
-            columnTitle: Liferay.Language.get('Email'),
-            columnType: "email",
-            key: "c4",
-        },
-        telefono: {
-            columnTitle: Liferay.Language.get('Teléfono'),
-            columnType: "phone",
-            key: "c5",
-        },
+table: [
+    //{
+    //    columnName: 'id',
+    //    columnTitle: "Id",
+    //    columnType: "checkbox",
+    //    key: "c1",
+    //},
+    {
+        columnName: 'nombre',
+        columnTitle: Liferay.Language.get('Nombre'),
+        columnType: "string",
+        key: "c2",
     },
-    searchFields: ['documento', 'razonSocial', 'admiteEnvios'],
-    searchField: 'razonSocial'
+    {
+        columnName: 'apellido1',
+        columnTitle: Liferay.Language.get('Apellido1'),
+        columnType: "string",
+        key: "c3",
+    },
+    {
+        columnName: 'apellido2', 
+        columnTitle: Liferay.Language.get('Apellido2'),
+        columnType: "string",
+        key: "c4",
+    },
+    {
+        columnName: 'cargo', 
+        columnTitle: Liferay.Language.get('Cargo'),
+        columnType: "string",
+        key: "c5",
+    },
+    //{
+    //    columnName: 'telefono',
+    //    columnTitle: Liferay.Language.get('Teléfono'),
+    //    columnType: "phone",
+    //    key: "c5",
+    //},
+    ],   
+    searchFields: ['nombre'],
+    searchField: 'nombre'
 };

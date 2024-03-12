@@ -65,7 +65,8 @@ const createItem = (form) => {
 export const reducerItems = (state = initialState, action) => {
     let tmpItems = [];
     let estado = false;
-    console.log("Accion pulsada->" + action.type);
+    let tmp_item = {};
+    //console.log("Accion pulsada->" + action.type);
     switch (action.type) {
         case REDUCER_ACTIONS.START:
             return {
@@ -179,6 +180,41 @@ export const reducerItems = (state = initialState, action) => {
                 ...state,
                 errors: { ...state.errors, [action.name]: [action.value] }
             }
+        case REDUCER_ACTIONS.SET_MULTIFIELD:
+            let newField = state.item;
+            newField[action.fieldname][action.pos].value = action.value;
+
+            return {
+                ...state,
+                item: newField
+            }
+        case REDUCER_ACTIONS.SET_MULTIFIELDCHECK:
+            tmp_item = state.item[action.fieldname].map(item => ({ ...item, default: false }));
+            tmp_item[action.pos].default = true;
+            return {
+                ...state,
+                item: {
+                    ...state.item,
+                    [action.fieldname]: tmp_item
+                }
+            }
+        case REDUCER_ACTIONS.ADD_MULTIFIELD:
+            tmp_item = state.item;
+            let key = tmp_item[action.fieldname].length + 1;
+            tmp_item[action.fieldname].push({ key: key, value: "", default: (tmp_item[action.fieldname].length == 0) ? true : false });
+
+            return {
+                ...state,
+                item: tmp_item,
+            }
+        case REDUCER_ACTIONS.REMOVE_MULTIFIELD:
+            tmp_item = state.item;
+            tmp_item[action.fieldname].splice(action.pos, 1);
+
+            return {
+                ...state,
+                item: tmp_item
+            }              
         default:
             throw new Error("Ación no válida");
     }

@@ -121,33 +121,32 @@ export const form = {
             cols: ['tipoViaId', 'nombreVia', 'numero', 'piso'],
         },
     ],
-table: {
-        id: {
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "c1",
-        },
-        documento: {
-            columnTitle: Liferay.Language.get('CIF'),
-            columnType: "dni",
-            key: "c2",
-        },
-        razonSocial: {
-            columnTitle: Liferay.Language.get('RazonSocial'),
-            columnType: "string",
-            key: "c3",
-        },
-        email: {
-            columnTitle: Liferay.Language.get('Email'),
-            columnType: "email",
-            key: "c4",
-        },
-        telefono: {
-            columnTitle: Liferay.Language.get('Teléfono'),
-            columnType: "phone",
-            key: "c5",
-        },
+table: [
+    //{
+    //    columnName: 'id',
+    //    columnTitle: "Id",
+    //    columnType: "checkbox",
+    //    key: "c1",
+    //},
+    {
+        columnName: 'nombre',
+        columnTitle: Liferay.Language.get('Nombre'),
+        columnType: "string",
+        key: "c2",
     },
+    {
+        columnName: 'cp',
+        columnTitle: Liferay.Language.get('Código Postal'),
+        columnType: "string",
+        key: "c3",
+    },
+    {
+        columnName: 'localidad', 
+        columnTitle: Liferay.Language.get('Localidad'),
+        columnType: "string",
+        key: "c4",
+    },
+    ],    
     searchFields: ['documento', 'razonSocial', 'admiteEnvios'],
     searchField: 'razonSocial'
 };
