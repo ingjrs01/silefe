@@ -14,10 +14,6 @@ export const Dateinput = ({ itemsHandle, field, item, action, error }) => {
     itemsHandle({ type: accion, fieldname: field.name, value: value });
   }
 
-  //console.log("Estamos en Dateinput");
-  //console.debug(action);
-  //console.debug(error);
-
   return (
     <>
       <ClayForm.Group

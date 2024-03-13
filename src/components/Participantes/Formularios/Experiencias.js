@@ -137,48 +137,46 @@ export const form = {
             cols: ['observaciones']
         },
     ],
-    table: {
-        id: {
-            columnTitle: "Id",
-            columnType: "checkbox",
-            key: "tc1",
-        },
-        documento: {
-            columnTitle: Liferay.Language.get('Documento'),
-            columnType: "dni",
+    table: [
+        //id: {
+        //    columnTitle: "Id",
+        //    columnType: "checkbox",
+        //    key: "tc1",
+        //},
+        {
+            columnName: 'ini',
+            columnTitle: Liferay.Language.get('Inicio'),
+            columnType: "string",
             key: "tc2",
         },
-        nombre: {
-            columnTitle: Liferay.Language.get('Nombre'),
+        {
+            columnName: 'fin',
+            columnTitle: Liferay.Language.get('Fin'),
             columnType: "string",
             key: "tc3",
         },
-        apellido1: {
-            columnTitle: Liferay.Language.get('Apellido1'),
+        {
+            columnName: 'puesto',
+            columnTitle: Liferay.Language.get('Puesto'),
             columnType: "string",
             key: "tc4",
         },
-        //provincia: {
-        //    columnTitle: Liferay.Language.get('Provincia'),
+        //localidad: {
+        //    columnTitle: Liferay.Language.get('Localidad'),
         //    columnType: "multilang",
-        //    key: "tc5",
+        //    key: "tc6",
         //},
-        localidad: {
-            columnTitle: Liferay.Language.get('Localidad'),
-            columnType: "multilang",
-            key: "tc6",
-        },
-        telefono: {
-            columnTitle: Liferay.Language.get('Teléfono'),
-            columnType: "phone",
-            key: "tc7",
-        },
-        email: {
-            columnTitle: Liferay.Language.get('Email'),
-            columnType: "email",
-            key: "tc8",
-        },
-    },
+        //telefono: {
+        //    columnTitle: Liferay.Language.get('Teléfono'),
+        //    columnType: "phone",
+        //    key: "tc7",
+        //},
+        //email: {
+        //    columnTitle: Liferay.Language.get('Email'),
+        //    columnType: "email",
+        //    key: "tc8",
+        //},
+    ],
     searchFields: ['nombre', 'documento','apellidos','provinciaId', 'municipio','admiteEnvios'],
     searchField: 'nombre',
 };

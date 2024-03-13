@@ -11,6 +11,7 @@ import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
+import { SimpleTable } from '../../includes/interface/SimpleTable';
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
 import { EXPERIENCIA_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
@@ -22,7 +23,6 @@ import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/redu
 import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones2.reducer';
 import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
-import { ExperienciasRender } from './ExperienciasRender';
 import { form as citasform } from './Formularios/CitasForm';
 import { form as experienciasForm } from './Formularios/Experiencias';
 import { form } from "./Formularios/Form";
@@ -489,6 +489,11 @@ const Participantes = ({ user }) => {
         });
         titulacionHandler({ type: TITULACIONES_ACTIONS.START, form: titulacionesForm });
     }
+    // <ExperienciasRender
+    //     experiencias={redExperiencias}
+    //     experienciasHandler={experienciasHandler}
+    //     key={"experiencias"}
+    // />,
 
     const plugin = () => {
         return {
@@ -498,11 +503,10 @@ const Participantes = ({ user }) => {
                     titulacionHandler={titulacionHandler}
                 />,
             Experiencias:
-                <ExperienciasRender
-                    experiencias={redExperiencias}
-                    experienciasHandler={experienciasHandler}
-                    key={"experiencias"}
-                />,
+                <SimpleTable
+                    reducer={redExperiencias}
+                    handler={experienciasHandler}
+                />,            
             Citas:
                 <Citas
                     items={citas}
