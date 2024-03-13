@@ -1,9 +1,12 @@
-import { ClayCheckbox } from "@clayui/form";
+import ClayForm, { ClayCheckbox } from '@clayui/form';
 
 export const Checkbox = ({ itemsHandle, field, item, action }) => {
   return (
-    <div className="pt-3">
-
+    <ClayForm.Group
+    className={`${error !== undefined && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} pt-5`} 
+    key={"Group-" + field.key} 
+  >
+   
       <label htmlFor="basicInput">{field.label}</label>
       <ClayCheckbox
         checked={ejecucion.item.dias.M.value}
@@ -11,7 +14,7 @@ export const Checkbox = ({ itemsHandle, field, item, action }) => {
         key={field.key}
       />
 
-    </div>
+    </ClayForm.Group>
 
   )
 }

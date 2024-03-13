@@ -1,11 +1,15 @@
-import { ClayToggle } from '@clayui/form';
+import ClayForm, { ClayToggle } from '@clayui/form';
 import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
 
-export const Toggle = ({itemsHandle, field, item, action}) => {
+export const Toggle = ({itemsHandle, field, item, action, error}) => {
 
     const accion = (action !== undefined)?action:ITEMS_ACTIONS.SET;
     return (
-        <div className="pt-3">        
+      <ClayForm.Group
+        className={`${error !== undefined && error.length > 0 ? 'has-error' : 'has-success'} ${(field.hasOwnProperty('className')) ? field.className : 'col'} pt-3 `} 
+        key={"Group-" + field.key} 
+      >
+
         <ClayToggle
           label={field.label}
           onToggle={val => {
@@ -16,7 +20,7 @@ export const Toggle = ({itemsHandle, field, item, action}) => {
           toggled={item}
           key={field.key}
         />
-      </div>
-
+      
+      </ClayForm.Group>
     )
 }

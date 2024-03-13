@@ -31,6 +31,8 @@ export const form = {
             label: Liferay.Language.get('FechaCita'),
             name: "appointmentDate",
             value:"",
+            yearmin: 10,
+            yearmax: 8,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             className: 'col-3',
             conditions:[]

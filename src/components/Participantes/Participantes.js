@@ -14,12 +14,12 @@ import { Paginator } from "../../includes/interface/Paginator";
 import { SimpleTable } from '../../includes/interface/SimpleTable';
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
-import { EXPERIENCIA_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
+import { REDUCER_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
 import { CITAS_ACTIONS, initialState as iniCitas, reducerCitas } from '../../includes/reducers/citas.reducer';
-import { reducerExperiencia } from "../../includes/reducers/experiencias.reducer";
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
+import { initialState as iniExperiencias, reducerItems } from '../../includes/reducers/tabItem.reducer';
 import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones2.reducer';
 import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
@@ -33,7 +33,7 @@ import { TitulacionesRender } from './TitulacionesRender';
 const Participantes = ({ user }) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, titsIni);
-    const [redExperiencias, experienciasHandler] = useReducer(reducerExperiencia, { items: [], deleted: [], item: {}, status: "list", participanteId: 0 });
+    const [redExperiencias, experienciasHandler] = useReducer(reducerItems, iniExperiencias);
     const [citas, citasHandler] = useReducer(reducerCitas, iniCitas);
     const [participaciones, participacionesHandler] = useReducer(reducerSubtable, iniState);
     const [historico, handleHistorico] = useReducer(reducerHistorico, iniHistorico);
@@ -130,7 +130,7 @@ const Participantes = ({ user }) => {
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
-            experienciasHandler({ type: EXPERIENCIA_ACTIONS.START, form: experienciasForm });
+            experienciasHandler({ type: REDUCER_ACTIONS.START, form: experienciasForm });
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             citasHandler({ type: CITAS_ACTIONS.SETFORM, form: citasform });
             participacionesHandler({ type: SUBTABLE_ACTIONS.SETFORM, form: participacionesForm });
@@ -299,7 +299,6 @@ const Participantes = ({ user }) => {
     }
 
     const fetchData = async () => {
-        //experienciasHandler({ type: EXPERIENCIA_ACTIONS.START });
         if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0)
             queryTitulaciones();
 
@@ -458,7 +457,7 @@ const Participantes = ({ user }) => {
                     fin: toDate(item.fin),
                 }
             });
-            experienciasHandler({ type: EXPERIENCIA_ACTIONS.LOAD_ITEMS, experiencias: experiencias, participanteId: participanteId });
+            experienciasHandler({ type: REDUCER_ACTIONS.LOAD_ITEMS, items: experiencias, participanteId: participanteId });
         });
     }
 

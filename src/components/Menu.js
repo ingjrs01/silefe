@@ -115,7 +115,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                             aria-label={Liferay.Language.get("Buscar")}
                             spritemap={spritemap}
                             symbol="search-plus"
-                            title="Searchhh"
+                            title="Añadir filtro"
                             onClick={() => itemsHandle({ type: ITEMS_ACTIONS.ADD_FILTER })}
                         />
                     </ClayInput.GroupItem>
@@ -132,6 +132,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                     className="nav-btn nav-btn-monospaced"
                     onClick={() => handleDelete(-1, items, itemsHandle, onOpenChange)}
                     spritemap={spritemap}
+                    title={Liferay.Language.get("Eliminar elemento")}
                     symbol="trash"
                   />
                   {
@@ -141,6 +142,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                       className="nav-btn nav-btn-monospaced"
                       onClick={() => itemsHandle({ type: ITEMS_ACTIONS.SELECT_ITEM })}
                       spritemap={spritemap}
+                      title={Liferay.Language.get("Editar elemento")}
                       symbol="pencil"
                     />
                   }
@@ -150,6 +152,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                       aria-label="Save"
                       className="nav-btn nav-btn-monospaced"
                       onClick={() => handleSave()}
+                      title={Liferay.Language.get("Guardar")}
                       spritemap={spritemap}
                       symbol="disk"
                     />
@@ -162,6 +165,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                       className="nav-btn nav-btn-monospaced"
                       onClick={() => { itemsHandle({ type: ITEMS_ACTIONS.NEW_ITEM }) }}
                       spritemap={spritemap}
+                      title={Liferay.Language.get("Crear elemento")}
                       symbol="plus"
                     />
                   }
@@ -173,6 +177,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                         className="nav-btn nav-btn-monospaced"
                         onClick={() => items.fields.loadCsv()}
                         spritemap={spritemap}
+                        title={Liferay.Language.get("Cargar desde fichero")}
                         symbol="import-list"
                       />
                       <ClayButtonWithIcon
@@ -180,6 +185,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                         className="nav-btn nav-btn-monospaced"
                         onClick={() => download()}
                         spritemap={spritemap}
+                        title={Liferay.Language.get("Descargar")}
                         symbol="document-table"
                       />
                     </>

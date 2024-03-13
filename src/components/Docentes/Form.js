@@ -70,7 +70,7 @@ export const form = {
             name: "fechaNacimiento",
             value:"",
             yearmin: 110,
-            yearmax: 15,
+            yearmax: 0,
             placeholder:Liferay.Language.get('YYYY-MM-DD'),
             conditions:['required'],
             className: 'col-3'

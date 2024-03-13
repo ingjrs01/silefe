@@ -66,7 +66,8 @@ export const reducerItems = (state = initialState, action) => {
     let tmpItems = [];
     let estado = false;
     let tmp_item = {};
-    //console.log("Accion pulsada->" + action.type);
+    console.log("Esto es reducer tabItem");
+    console.log("Accion pulsada->" + action.type);
     switch (action.type) {
         case REDUCER_ACTIONS.START:
             return {

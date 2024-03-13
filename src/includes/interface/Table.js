@@ -3,6 +3,7 @@ import { ClayCheckbox } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayTable from '@clayui/table';
 import React from 'react';
+import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../reducers/items.reducer';
 import { formatDefaultEmail, formatDefaultPhone, formatDocument, handleDelete } from '../utils';
@@ -91,7 +92,7 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
                         spritemap={spritemap}
                         aria-label="Edit"
                         symbol="pencil"
-                        title="Edit"
+                        title={Liferay.Language.get("Editar")}
                     />
                     <ClayButtonWithIcon
                         className="ml-1"
@@ -100,7 +101,7 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
                         spritemap={spritemap}
                         aria-label="Delete"
                         symbol="trash"
-                        title="Delete"
+                        title={Liferay.Language.get("Borrar")}
                     />
                 </ClayTable.Cell>
 
