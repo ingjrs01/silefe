@@ -7,9 +7,9 @@ export const Textarea = ({ itemsHandle, field, item, action, error }) => {
 
   const accion = (action !== undefined) ? action : ITEMS_ACTIONS.SET
 
-  const onChange = (value) => {
-    validate(field.name, value,field, itemsHandle);
-    itemsHandle({ type: accion, fieldname: field.name, value: value })
+  const onChange = (evt) => {
+    validate(field.name, evt.target.value,field, itemsHandle);
+    itemsHandle({ type: accion, fieldname: field.name, value: evt.target.value })
   }
 
   return (
@@ -26,7 +26,8 @@ export const Textarea = ({ itemsHandle, field, item, action, error }) => {
           type="text"
           key={"tarea" + field.key}
           value={item}
-          onChange={e => onChange(e.target.value)}
+          onChange={onChange}
+          onBlur={() => validate(field.name, item,field,itemsHandle)}
         />
 
         {

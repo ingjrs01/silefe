@@ -174,8 +174,8 @@ export const validateDate2 = (name, value, field, itemsHandle) => {
     }
 
     if (field.hasOwnProperty('yearmax') ) {
-        const aniomin   = new Date().getFullYear() - field.yearmax;
-        const datetmp   = new Date(aniomin,month - 1,day);
+        const aniomax   = new Date().getFullYear() + field.yearmax;
+        const datetmp   = new Date(aniomax,month - 1,day);
         const valuedate = new Date(anio,month - 1,day);
         if ( valuedate > datetmp   ) {
             itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('fecha-no-válida') });
@@ -342,21 +342,28 @@ export const validateNumber = (name, value,field,itemsHandle) => {
 }
 
 export const validateAll = (items, itemsHandle) => {
+    console.log("Estoy validando todo");
+
+    console.log("----------------");
     var result = true;
     for (var campo in items.fields.fields) {
+        console.log("Campo: -> " + campo);
         if ( items.fields.fields[campo].validate !== 'undefined' &&  items.fields.fields[campo].validate == false)
             console.log("Este campo no se valida: " + campo);
         else
             switch (items.fields.fields[campo].type) {
                 case "text":
-                    result = validate(campo, items.item[campo],items,itemsHandle)
+                case "textarea": 
+                    console.log("es un campo de texto: ");
+                    console.debug(items);
+                    result = validate(campo, items.item[campo],items.fields.fields[campo],itemsHandle)
                     if (result == false) {
                         console.log("El campo " + campo + " no valida");
                         return false;
                     }
                     break;
                 case "multilang":
-                    if (!validateLocalized(campo, items.item[campo], items,itemsHandle))
+                    if (!validateLocalized(campo, items.item[campo], items.fields.fields[campo],itemsHandle))
                         return false;
                     break;
                 case "dni":
@@ -365,7 +372,7 @@ export const validateAll = (items, itemsHandle) => {
                         return false;
                     break;
                 case "date":
-                    result = validateDate(campo, items.item[campo],items,itemsHandle);
+                    result = validateDate2(campo, items.item[campo],items.fields.fields[campo],itemsHandle);
                     if (!result) return false;
                     break;
                 case "radio": 
@@ -391,6 +398,9 @@ export const validateAll = (items, itemsHandle) => {
 export const validate = (name, value,field,itemsHandle) => {
     let condicion = "";
 
+    console.log("validate" + name);
+    console.debug(field);
+    //debugger;
     if (!field.hasOwnProperty('conditions'))
         return true;
     
@@ -410,7 +420,7 @@ export const validate = (name, value,field,itemsHandle) => {
         }
 
         if (condicion == "required") {
-            if (value === undefined || value === "") {
+            if (value === undefined || value === "" || value === null) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('requerido') });
                 return false;
             }
@@ -421,12 +431,16 @@ export const validate = (name, value,field,itemsHandle) => {
 }
 
 export const validateLocalized = (fieldname, values, field, itemsHandle) => {
+    console.log("validaLocalized");
+    console.debug(values);
     const languages = Object.keys(values);
     let l = "";
     for (l in languages) {
+        console.log("Lengua: " +  l);
         if (!validate(fieldname, values[languages[l]],field,itemsHandle))
             return false;
     }
+    console.log("valida guay");
     return true;
 }
 

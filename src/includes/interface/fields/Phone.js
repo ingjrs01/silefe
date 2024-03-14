@@ -23,7 +23,7 @@ export const Phone = ({ itemsHandle, field, item, action, error }) => {
                     item.map((v, k) => {
                         return (
 
-                            <ClayInput.Group spaced={"any"} className='mt-1' key={"cig" + v.key}>
+                            <ClayInput.Group spaced={"any"} className='mb-1' key={"cig" + v.key}>
                                 <ClayInput
                                     key={field.name + v.key}
                                     type="text"

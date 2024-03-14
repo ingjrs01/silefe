@@ -14,18 +14,8 @@ export const form = {
             placeholder: "Identifier",
             conditions: ["number"]
         },
-        codigo: {
-            key: 2,
-            type: "text",
-            label: Liferay.Language.get('Codigo'),
-            name: "codigo",
-            value: "lalala",
-            placeholder: "Identifier",
-            conditions: ["text"],
-            className: "col-2",
-        },
         descripcion: {
-            key: 3,
+            key: 2,
             type: "multilang",
             label: Liferay.Language.get('Descripción'),
             name: "descripcion",
@@ -33,6 +23,16 @@ export const form = {
             placeholder: Liferay.Language.get('Descripción'),
             className: 'col-6',
             conditions: ["text"]
+        },
+        codigo: {
+            key: 3,
+            type: "text",
+            label: Liferay.Language.get('Codigo'),
+            name: "codigo",
+            value: "lalala",
+            placeholder: "Identifier",
+            conditions: ["text"],
+            className: "col-2",
         },
         inicio: {
             key: 4,
@@ -43,7 +43,7 @@ export const form = {
             yearmin: 5,
             yearmax: 8,
             placeholder: Liferay.Language.get('YYYY-MM-DD'),
-            conditions: [],
+            conditions: ['required'],
             className: 'col-3',
         },
         fin: {
@@ -154,9 +154,9 @@ export const form = {
             type: "textarea",
             label: Liferay.Language.get('Objetivos'),
             name: "objetivos",
-            value: "",
-            placeholder: Liferay.Language.get('Objetivos'),
-            conditions: ["text"]
+            value: null,            
+            placeholder: "",
+            conditions: []
         },
         convocatoria: {
             key: 18,

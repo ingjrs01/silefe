@@ -80,7 +80,7 @@ export const SimpleTable = ({ reducer, handler }) => {
                                                     />
                                                     <ClayButtonWithIcon
                                                         className='ml-1'
-                                                        onClick={ () => handler({type: REDUCER_ACTIONS. DELETE_ITEM, index:index}) }
+                                                        onClick={ () => handler({type: REDUCER_ACTIONS.DELETE_ITEM, index:index}) }
                                                         displayType="danger"
                                                         spritemap={spritemap}
                                                         aria-label="Delete"

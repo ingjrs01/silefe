@@ -7,6 +7,11 @@ import { validateLocalized } from '../../Validators';
 export const LocalizedInput = ({ itemsHandle, field, item, action, error }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
+  const onChange = (evt) => {
+    validateLocalized(field.name, evt, field, itemsHandle);
+    itemsHandle({ type: action, fieldname: field.name, value: evt });
+  }
+
   return (
     <>
       <ClayForm.Group
@@ -19,13 +24,10 @@ export const LocalizedInput = ({ itemsHandle, field, item, action, error }) => {
           locales={locales}
           spritemap={spritemap}
           onSelectedLocaleChange={setSelectedLocale}
-          onTranslationsChange={evt => {
-            validateLocalized(field.name, evt, field, itemsHandle);
-            itemsHandle({ type: action, fieldname: field.name, value: evt });
-          }
-          }
+          onTranslationsChange={onChange}
           selectedLocale={selectedLocale}
           translations={item}
+          onBlur={e => validateLocalized(field.name, item, field, itemsHandle)}
         />
 
         {

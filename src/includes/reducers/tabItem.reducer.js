@@ -148,12 +148,12 @@ export const reducerItems = (state = initialState, action) => {
             }
         case REDUCER_ACTIONS.DELETE_ITEM:
             let obj = { ...state.items[action.index] };
-            tmp = [...state.items];
-            tmp.splice(action.index, 1);
+            tmpItems = [...state.items];
+            tmpItems.splice(action.index, 1);
 
             return {
                 ...state,
-                items: tmp,
+                items: tmpItems,
                 deleted: [...state.deleted, obj],
             }
         case REDUCER_ACTIONS.CHECK:
