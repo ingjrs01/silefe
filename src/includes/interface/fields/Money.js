@@ -11,8 +11,7 @@ export const Money = ({itemsHandle, field,item, action, error}) => {
         if (value == null)
           return "";
         var temp = "";
-        temp = (typeof (value) === 'number') ? value.toString() : value;
-    
+        temp = (typeof (value) === 'number') ? value.toString() : value;        
         var input = temp.replace(/[\D\s\._\-]+/g, "");
         input = input ? parseInt(input, 10) : 0;
         return (input.toLocaleString("es-ES"));

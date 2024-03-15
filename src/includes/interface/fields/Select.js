@@ -1,5 +1,6 @@
 import ClayForm, { ClaySelect } from '@clayui/form';
 import { spritemap } from '../../LiferayFunctions';
+import { validateSelect } from '../../Validators';
 
 export const Select = ({itemsHandle, field, item, className, action, error}) => {
 
@@ -16,6 +17,7 @@ export const Select = ({itemsHandle, field, item, className, action, error}) => 
           disabled={!field.enabled}
           className={className}
           onChange={evt => itemsHandle({ type: action, fieldname: evt.target.name, value: evt.target.value })}
+          onBlur={validateSelect(field.name, item, field, itemsHandle)}
           value={item} >
           {field.options !== 'undefined' && field.options.map(item => (
             <ClaySelect.Option

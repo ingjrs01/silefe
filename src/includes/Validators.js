@@ -444,6 +444,11 @@ export const validateLocalized = (fieldname, values, field, itemsHandle) => {
     return true;
 }
 
+export const validateSelect = (fieldname, value, field, itemsHandle) => {
+    itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: fieldname, value: Liferay.Language.get('error-numero') });
+    return false;
+}
+
 const formatMoney = (value) => {
     var temp = "";
     temp = (typeof (value) === 'number') ? value.toString() : value;

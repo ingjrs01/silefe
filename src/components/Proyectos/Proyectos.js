@@ -514,6 +514,7 @@ const Proyectos = ({ user }) => {
 
         form.fields.porcentaje_total.change = (val) => itemsHandle({ type: ITEMS_ACTIONS.SETUNCOLATERAL, fieldname: 'porcentaje_cofinanciacion', value: 100 - val });
         form.fields.porcentaje_cofinanciacion.change = (val) => itemsHandle({ type: ITEMS_ACTIONS.SETUNCOLATERAL, fieldname: 'porcentaje_total', value: 100 - val });
+        form.fields.cofinanciacion.change = (val => itemsHandle({type: ITEMS_ACTIONS.CHANGE_FIELD_ENABLE, fieldname: "entidadId"}));
     }
 
     const plugin = () => {

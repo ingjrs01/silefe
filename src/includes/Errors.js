@@ -23,4 +23,6 @@ export const Errors = {
     1009: Liferay.Language.get("Hora no válida"),
     2001: Liferay.Language.get("No se pude modificar oferta cerrada"),
     2002: Liferay.Language.get("Accion con tipo de formacion no indicada"),
+    2003: Liferay.Language.get("Se debe seleccionar una entidad si la cofinanciación está activa"),
+    2004: Liferay.Language.get("Debe seleccionar una convocatoria"),
 }

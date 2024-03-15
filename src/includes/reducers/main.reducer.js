@@ -38,6 +38,7 @@ export const ITEMS_ACTIONS = {
     SET_FILEFIELD: 37,
     DELETE_FILEFIELD: 38,
     EDIT_FILEFIELD: 39,
+    CHANGE_FIELD_ENABLE: 40,
 }
 
 export const initialState = {
@@ -63,7 +64,7 @@ export const initialState = {
     load: 0,
     order: [],
     filters: [],
-    history: [],//[{id:1, comment: "Estado pendiente" , user: 'juan', date: '16/08/2023'},{id:2, comment: "Estado pendiente" ,user:'jose', date: '16/08/2023'}],
+    history: [],
 }
 
 const resetErrors = (fields) => {
@@ -93,6 +94,11 @@ const createItem = (form) => {
                 form.languages.forEach(lang => { tt[lang] = "" });
                 tmp_item[j] = tt;
                 break;
+            case "money": 
+            case "percent":
+            case "number": 
+                tmp_item[j] = form.fields[j].hasOwnProperty("value")?form.fields[j]["value"]:0;
+                break;
             case "multitext":
                 tmp_item[j] = tt2;
                 break;
@@ -102,19 +108,31 @@ const createItem = (form) => {
             case "email":
                 tmp_item[j] = tt2;
                 break;
+            case "toggle": 
+                tmp_item[j] = form.fields[j].hasOwnProperty("value")?form.fields[j]["value"]:false;
+                break;
             case "file":
-                tmp_item[j] = {
+                tmp_item[j] = [{
                     title: "ficherirtooooo",
-                    fichero: null,
-                };
+                    fichero: "",
+                    descripcion: "sin descripcion",
+                    filename: "",
+                    groupId: "",
+                    id: 0,
+                    uuid: "",
+                    edit: false,
+                    src: "",
+                }];
+                break;
+            case "doublelist":
+                tmp_item[j] = [];
                 break;
             default:
                 tmp_item[j] = "";
                 break;
         }
     });
-    return tmp_item;
-
+    return {...tmp_item, id: 0};
 }
 
 let index = 0;
@@ -268,53 +286,9 @@ export const red_items = (state, action) => {
                 //load: (state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.NEW_ITEM:
-            console.log("Creando un new_item");
-            tmp_item = { id: 0 };
-            Object.keys(state.fields.fields).forEach(fila => {
-                switch (state.fields.fields[fila].type) {
-                    case 'multilang':
-                        tt = {};
-                        state.fields.languages.forEach(el => { tt[el] = "" });
-                        tmp_item[fila] = tt;
-                        break;
-                    case 'multitext': case 'phone': case 'email':
-                        tt = [];
-                        tt.push({ key: 1, value: "", default: true })
-                        tmp_item[fila] = tt;
-                        break;
-                    case 'toggle':
-                        tmp_item[fila] = false;
-                        break;
-                    case 'select':
-                        tmp_item[fila] = "0";
-                        break;
-                    case 'doublelist':
-                        tmp_item[fila] = []
-                        break;
-                    case 'file': 
-                        tmp_item[fila] = [{
-                            descripcion: "sin descripcion",
-                            filename: "",
-                            groupId: "",
-                            id: 0,
-                            title: "sin titulo",
-                            uuid: "",
-                            edit: false,
-                            src: "",
-                        }];
-                        break;
-                    default:
-                        tmp_item[fila] = null;
-                        break;
-                }
-            });
-
-            tmp_item['id'] = 0;
-            console.log("esto ya está");
-            console.debug(tmp_item);
             return {
                 ...state,
-                item: tmp_item,
+                item: createItem(state.fields),
                 errors: resetErrors(state.fields),
                 status: 'new',
             }
@@ -554,7 +528,29 @@ export const red_items = (state, action) => {
         //            [action.fieldname] : arrc,
         //        }
         //    }
+        case ITEMS_ACTIONS.CHANGE_FIELD_ENABLE: 
+            //console.log("cambiando estado: " + action.fieldname);
+            let estado = state.fields.fields[action.fieldname].enabled;
+            let v = state.fields.fields[action.fieldname].value;
+            console.log("Estado: " + estado + " -- " + v);
 
+            tmp_item = state.fields.fields[action.fieldname];
+            tmp_item.enabled = !estado;
+            tmp_item.value = v + 2;
+
+            return {
+                ...state,
+                fields:  {
+                    ...state.fields,
+                    fields: {
+                        ...state.fields.fields,
+                        [action.fieldname]: {
+                            ...tmp_item,
+                            otra: "otra cosa",
+                        },
+                    },
+                }
+            }        
         default:
             throw new Error("Accion invalida");
     }

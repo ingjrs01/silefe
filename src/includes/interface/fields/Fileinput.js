@@ -25,7 +25,11 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
         }
         reader.readAsDataURL(file);
     }
-
+    console.log("Fileinput");
+    console.debug(error);
+    console.debug(field);
+    console.debug(item);
+    console.log("------------------------");
     return (
         <>
         <ClayForm.Group

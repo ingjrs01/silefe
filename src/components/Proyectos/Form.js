@@ -66,14 +66,15 @@ export const form = {
             name: "participantes",
             placeholder: "0",
             conditions: ["number"],
-            className: 'col-2'
+            className: 'col-2',
+            value: 0,
         },
         fondos_propios: {
             key: 7,
             type: "toggle",
             label: Liferay.Language.get('FondosPropios'),
             name: "fondos_propios",
-            value: "lelele",
+            value: false,
             change: () => { console.log("cambia fondos propios"); }
         },
         cofinanciacion: {
@@ -81,7 +82,7 @@ export const form = {
             type: "toggle",
             label: Liferay.Language.get('Cofinanciacion'),
             name: "cofinanciacion",
-            value: "lelele",
+            value: true,
             placeholder: Liferay.Language.get('Cofinanciacion'),
             change: () => { console.log("cambia cofinanciacion"); }
         },
@@ -99,8 +100,8 @@ export const form = {
             type: "select",
             label: Liferay.Language.get('Entidad'),
             name: "entidadId",
-            value: "lelele",
-            enabled: true,
+            value: 0,
+            enabled: false,
             change: () => { console.log("cambia el select"); }
         },
         ambito_geo: {
@@ -120,6 +121,7 @@ export const form = {
             enabled: true,
             conditions: ["number"],
             className: 'col-2',
+            value:0,
         },
         porcentaje_total: {
             key: 13,
@@ -130,6 +132,7 @@ export const form = {
             enabled: true,
             conditions: ["number"],
             className: 'col-2',
+            value: 100,
         },
         porcentaje_cofinanciacion: {
             key: 14,
@@ -140,6 +143,7 @@ export const form = {
             enabled: true,
             conditions: ["number"],
             className: 'col-2',
+            value: 0,
         },
         //colectivos: {
         //    key: 15,
@@ -183,6 +187,7 @@ export const form = {
             type: "other",
             componentName: "OParticipantes",
             name: "OParticipantes",
+            value: 0,
         },
         empresas: {
             key: 22,
