@@ -93,7 +93,8 @@ export const form = {
             name: "convocatoriaId",
             enabled: true,
             className: 'col-2',
-            change: () => { console.log("cambia el select"); }
+            change: () => { console.log("cambia el select"); },
+            conditions: ['required']
         },
         entidadId: {
             key: 10,

@@ -390,6 +390,10 @@ export const validateAll = (items, itemsHandle) => {
                 case "toggle":
                     console.log("toggle");
                     break;
+                case "select": 
+                    result = validateSelect(campo, items.item[campo],items.fields.fields[campo],itemsHandle)
+                    if (!result) return false;
+                    break;
             }
     }
     return true;
@@ -398,9 +402,9 @@ export const validateAll = (items, itemsHandle) => {
 export const validate = (name, value,field,itemsHandle) => {
     let condicion = "";
 
-    console.log("validate" + name);
-    console.debug(field);
-    //debugger;
+    //console.log("validate" + name + ": " + value);
+    //console.debug(field);
+
     if (!field.hasOwnProperty('conditions'))
         return true;
     
@@ -431,22 +435,30 @@ export const validate = (name, value,field,itemsHandle) => {
 }
 
 export const validateLocalized = (fieldname, values, field, itemsHandle) => {
-    console.log("validaLocalized");
-    console.debug(values);
     const languages = Object.keys(values);
     let l = "";
     for (l in languages) {
-        console.log("Lengua: " +  l);
         if (!validate(fieldname, values[languages[l]],field,itemsHandle))
             return false;
     }
-    console.log("valida guay");
     return true;
 }
 
 export const validateSelect = (fieldname, value, field, itemsHandle) => {
-    itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: fieldname, value: Liferay.Language.get('error-numero') });
-    return false;
+    let condicion = "";
+
+    if (!field.hasOwnProperty("conditions"))
+        return true;
+
+    for (condicion of field.conditions) {
+        if (value === "0") {
+            itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: fieldname, value: Liferay.Language.get('Debe seleccionar un elemento') });
+            return false
+        }
+    }
+
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: fieldname });
+    return true;
 }
 
 const formatMoney = (value) => {

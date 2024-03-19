@@ -22,7 +22,7 @@ export const form = {
             label: Liferay.Language.get('Tipo'),
             name: "accionTipoId",
             enabled:true,
-            conditions: [],
+            conditions: ['required'],
             options: []
         },
         accionTipoFormacionId : {

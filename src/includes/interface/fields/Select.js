@@ -4,6 +4,11 @@ import { validateSelect } from '../../Validators';
 
 export const Select = ({itemsHandle, field, item, className, action, error}) => {
 
+    const onChange = (evt) => {
+      validateSelect(field.name, evt.target.value, field, itemsHandle);
+      itemsHandle({ type: action, fieldname: evt.target.name, value: evt.target.value });
+    }
+
     return (
       <>
       <ClayForm.Group
@@ -16,8 +21,7 @@ export const Select = ({itemsHandle, field, item, className, action, error}) => 
           key={field.key}
           disabled={!field.enabled}
           className={className}
-          onChange={evt => itemsHandle({ type: action, fieldname: evt.target.name, value: evt.target.value })}
-          onBlur={validateSelect(field.name, item, field, itemsHandle)}
+          onChange={onChange}
           value={item} >
           {field.options !== 'undefined' && field.options.map(item => (
             <ClaySelect.Option
