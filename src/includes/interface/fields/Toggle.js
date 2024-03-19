@@ -1,5 +1,5 @@
 import ClayForm, { ClayToggle } from '@clayui/form';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Toggle = ({itemsHandle, field, item, action, error}) => {
 

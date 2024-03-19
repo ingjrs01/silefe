@@ -5,7 +5,7 @@ import ClayTable from '@clayui/table';
 import React from 'react';
 import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../reducers/actions';
 import { formatDefaultEmail, formatDefaultPhone, formatDocument, handleDelete } from '../utils';
 
 const Table = ({ items, itemsHandle, onOpenChange}) => {
@@ -17,34 +17,41 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
         <ClayTable.Row>
             {
               Object.keys(items.fields.table).map(tableCol => {
-                if (items.fields.table[tableCol].columnType == "string" || items.fields.table[tableCol].columnType == "dni" || 
-                  items.fields.table[tableCol].columnType == "multilang" || items.fields.table[tableCol].columnType == "phone" || items.fields.table[tableCol].columnType == "email")
-                  return (
-                    <ClayTable.Cell key={items.fields.table[tableCol].key}  >
-                      <strong>{ items.fields.table[tableCol].columnTitle }</strong>
-                      <span className="navbar-breakpoint-d-none">  </span>
-                      <ClayIcon
-                        symbol="order-ascending"
-                        spritemap={spritemap}
-                        onClick={() =>  itemsHandle({type: ITEMS_ACTIONS.SET_ORDER, fieldname:tableCol})}
-                      />
-                    </ClayTable.Cell> )
-                if (items.fields.table[tableCol].columnType == "boolean")
-                return (
-                  <ClayTable.Cell
-                    key={items.fields.table[tableCol].key}
-                  >
-                    <strong>{ items.fields.table[tableCol].columnTitle }</strong>
-                    <span className="navbar-breakpoint-d-none">  </span>
-                    <ClayIcon
-                      symbol="order-ascending"
-                      spritemap={spritemap}
-                      onClick={() =>  itemsHandle({type: ITEMS_ACTIONS.SET_ORDER, fieldname:tableCol})}
-                    />
-                  </ClayTable.Cell>
-                )
-                if (items.fields.table[tableCol].columnType == "checkbox")
-                  return (<ClayTable.Cell key={items.fields.table[tableCol].key} headingCell><ClayCheckbox checked={items.fields.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
+                switch (items.fields.table[tableCol].columnType) {
+                  case "string":
+                  case "dni": 
+                  case "multilang":
+                  case "phone": 
+                  case "email": 
+                    return (
+                      <ClayTable.Cell key={items.fields.table[tableCol].key}  >
+                        <strong>{ items.fields.table[tableCol].columnTitle }</strong>
+                        <span className="navbar-breakpoint-d-none">  </span>
+                        <ClayIcon
+                          symbol="order-ascending"
+                          spritemap={spritemap}
+                          onClick={() =>  itemsHandle({type: ITEMS_ACTIONS.SET_ORDER, fieldname:tableCol})}
+                        />
+                      </ClayTable.Cell> )
+                    case "boolean": 
+                      return (
+                        <ClayTable.Cell
+                          key={items.fields.table[tableCol].key}
+                        >
+                          <strong>{ items.fields.table[tableCol].columnTitle }</strong>
+                          <span className="navbar-breakpoint-d-none">  </span>
+                          <ClayIcon
+                            symbol="order-ascending"
+                            spritemap={spritemap}
+                            onClick={() =>  itemsHandle({type: ITEMS_ACTIONS.SET_ORDER, fieldname:tableCol})}
+                          />
+                        </ClayTable.Cell>
+                      )
+                    case "checkbox": 
+                      return (<ClayTable.Cell key={items.fields.table[tableCol].key} headingCell><ClayCheckbox checked={items.fields.checkall} onChange={() =>itemsHandle({type:ITEMS_ACTIONS.CHECKALL})} /> </ClayTable.Cell>)
+                    default: 
+                        break;
+                }
               })
             }
             <ClayTable.Cell className={"table-cell-minw-100"} key={"a"}>Acciones</ClayTable.Cell>

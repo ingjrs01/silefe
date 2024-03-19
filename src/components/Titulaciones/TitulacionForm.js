@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { locales, spritemap } from '../../includes/LiferayFunctions';
 import { validateAll } from '../../includes/Validators';
-import { ITEMS_ACTIONS } from "../../includes/reducers/items.reducer";
+import { ITEMS_ACTIONS } from "../../includes/reducers/actions";
 import { TITULACIONES_ACTIONS } from "../../includes/reducers/titulaciones.reducer";
 
 export const TitulacionForm = ({redTitulaciones, titulacionHandler, itemsHandle,items,save}) => {

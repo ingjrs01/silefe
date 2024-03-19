@@ -1,6 +1,6 @@
 import ClayForm, { ClayInput } from '@clayui/form';
 import { spritemap } from '../../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Percent = ({itemsHandle, field, item, action, error}) => {
     const accion = action !== undefined ? action: ITEMS_ACTIONS.SET;

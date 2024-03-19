@@ -14,8 +14,8 @@ import { Hour } from '../interface/fields/Hour';
 import { Select } from '../interface/fields/Select';
 import { Textarea } from '../interface/fields/Textarea';
 import { Textinput } from '../interface/fields/Textinput';
+import { ITEMS_ACTIONS } from '../reducers/actions';
 import { CITAS_ACTIONS, CITAS_STATES } from '../reducers/citas.reducer';
-import { ITEMS_ACTIONS } from '../reducers/main.reducer';
 import { MiniPaginator } from "./MiniPaginator";
 
 //const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {

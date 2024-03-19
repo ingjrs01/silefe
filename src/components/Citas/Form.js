@@ -64,7 +64,7 @@ export const form = {
             label: Liferay.Language.get('Origen'),
             name: "originInId",
             enabled:true,
-            conditions: [],
+            conditions: ["required"],
             options: [],
             className: 'col-4',
             change: () => {console.log("cambiando el origen")}

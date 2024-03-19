@@ -4,7 +4,7 @@ import ClayIcon from '@clayui/icon';
 import ClayTable from '@clayui/table';
 import React from 'react';
 import { getLanguageId, spritemap } from '../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../reducers/actions';
 import { formatDefaultEmail, formatDefaultPhone, formatDocument, handleDelete } from '../utils';
 
 const TableFilter = ({ items, itemsHandle, onOpenChange}) => {

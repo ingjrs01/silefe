@@ -103,7 +103,7 @@ export const reducerItems = (state = initialState, action) => {
             if (state.fields.fields[action.fieldname].hasOwnProperty('effects')) {
                 const fn = state.fields.fields[action.fieldname].effects[0].fieldname;
                 const fk = state.fields.fields[action.fieldname].effects[0].fk;
-                tmpItems = state.fields.fields[fn].all.filter(i => i[fk] == action.value).map(it => {return {value:it.value,label:it.label}});
+                tmpItems = state.fields.fields[fn].all.filter(i => i[fk] === action.value).map(it => {return {value:it.value,label:it.label}});
                 return {
                     ...state,
                     item: {...state.item,[action.fieldname]:action.value},
@@ -129,7 +129,7 @@ export const reducerItems = (state = initialState, action) => {
 
             if (state.item.id > 0) {
                 tmp = [...state.items];
-                const index = tmp.findIndex(item => item.id == state.item.id);
+                const index = tmp.findIndex(item => item.id === state.item.id);
                 tmp.splice(index, 1, state.item);
             }
             else {
@@ -202,7 +202,7 @@ export const reducerItems = (state = initialState, action) => {
         case REDUCER_ACTIONS.ADD_MULTIFIELD:
             tmp_item = state.item;
             let key = tmp_item[action.fieldname].length + 1;
-            tmp_item[action.fieldname].push({ key: key, value: "", default: (tmp_item[action.fieldname].length == 0) ? true : false });
+            tmp_item[action.fieldname].push({ key: key, value: "", default: (tmp_item[action.fieldname].length === 0) ? true : false });
 
             return {
                 ...state,

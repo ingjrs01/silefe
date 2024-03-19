@@ -1,7 +1,7 @@
 import ClayForm, { ClayInput } from '@clayui/form';
 import { spritemap } from '../../LiferayFunctions';
 import { validateDni } from '../../Validators';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 import { formatDocument } from '../../utils';
 
 export const Dni = ({ itemsHandle, field, item, tipoDoc, error, action }) => {

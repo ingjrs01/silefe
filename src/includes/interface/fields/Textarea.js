@@ -1,7 +1,7 @@
 import ClayForm, { ClayInput } from '@clayui/form';
 import { spritemap } from '../../LiferayFunctions';
 import { validate } from '../../Validators';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Textarea = ({ itemsHandle, field, item, action, error }) => {
 

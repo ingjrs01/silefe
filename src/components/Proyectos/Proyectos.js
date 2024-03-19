@@ -11,8 +11,9 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
+import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { HISTORICO_ACTIONS, initialState as hisIni, reducerHistorico } from '../../includes/reducers/historico.reducer';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import Menu from '../Menu';
 import { form as aform } from './AccionForm';
@@ -203,14 +204,20 @@ const Proyectos = ({ user }) => {
                 acciones: accionestosave,
                 projectId: data.proyectoId,
             }
-            let { status2, error2 } = await saveAPI('/silefe.accion/change-project-acciones', postdata, referer);
+            let response2 = await saveAPI('/silefe.accion/change-project-acciones', postdata, referer);
+            if (!response2.status) {
+                console.error("Error con las acciones");
+            }
 
             // borrando los que no se quieren.
             const postdatadelete = {
                 acciones: acciones.deleted.map(item => item.accionId),
                 projectId: 0, // al ponerle el cero es como borrarlo
             }
-            let { status3, error3 } = await saveAPI('/silefe.accion/change-project-acciones', postdatadelete, referer);
+            let response3 = await saveAPI('/silefe.accion/change-project-acciones', postdatadelete, referer);
+            if (!response3.status) {
+                console.error("Error guardando las acciones")
+            }
             // Ofertas: 
             const postofertas = {
                 ofertas: ofertas.items.filter(oferta => oferta.nuevo).map(item => item.ofertaId),
@@ -402,7 +409,7 @@ const Proyectos = ({ user }) => {
     }
 
     const loadParticipantes = (id) => {
-        if (id !== 'undefined') {
+        if (id !== undefined) {
             const postdata = {
                 id: id,
                 pagination: { page: participantes.pagination.page, pageSize: 5 },
@@ -440,7 +447,7 @@ const Proyectos = ({ user }) => {
     }
 
     const loadOfertas = (id) => {
-        if (id != 'undefined') {
+        if (id !== undefined) {
             const postdata = {
                 pagination: { page: acciones.pagination.page, pageSize: 5 },
                 options: {
@@ -473,9 +480,9 @@ const Proyectos = ({ user }) => {
     }
 
     const loadTecnicos = async (id) => {
-        if (id != 'undefined') {
+        if (id !== undefined) {
             const postdata = {
-                projectId: 101,
+                projectId: id,
                 pagination: { page: tecnicos.pagination.page, pageSize: 5 },
             };
             const { data, totalPages } = await fetchAPIData('/silefe.tecnico/filter-by-project', postdata, referer);

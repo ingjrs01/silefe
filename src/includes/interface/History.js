@@ -3,7 +3,7 @@ import ClayCard from "@clayui/card";
 import ClayTable from '@clayui/table';
 import React from 'react';
 import { Liferay } from '../../common/services/liferay/liferay';
-import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../reducers/actions';
 
 export const History = ({ data, itemsHandle, prevState }) => {
    

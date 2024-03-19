@@ -5,7 +5,7 @@ import ClayPaginationBar from '@clayui/pagination-bar';
 import React, { useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from "../LiferayFunctions";
-import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../reducers/actions';
 
 export const Paginator = ({itemsHandle,items}) => {
   const [active, setActive] = useState(items.pagination.page+1);

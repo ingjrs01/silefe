@@ -1,45 +1,46 @@
-export const ITEMS_ACTIONS = {
-    START: 0,
-    LOAD: 1,
-    LOAD_ITEMS: 32,
-    CHECK: 2,
-    CHECKALL: 3,
-    UNSELECT: 4,
-    SET: 5,
-    SELECT_ITEM: 6,
-    NEW_ITEM: 7,
-    EDIT_ITEM: 26,
-    CANCEL: 8,
-    ADDERROR: 9,
-    CLEARERRORS: 10,
-    CANCEL_LOAD: 11,
-    SEARCH: 12,
-    FETCH: 13,
-    SETPAGE: 14,
-    SET_FORMOPTIONS: 15,
-    ADD_MULTIFIELD: 16,
-    REMOVE_MULTIFIELD: 17,
-    SET_MULTIFIELD: 18,
-    SET_MULTIFIELDCHECK: 19,
-    SET_STATUS: 20,
-    SET_ACTIVETAB: 21,
-    SET_ORDER: 22,
-    DELETE_ORDER: 23,
-    SET_PAGESIZE: 24,
-    SET_SEARCHFIELD: 25,
-    SET_FIELDS: 27,
-    HISTORY: 28,
-    SET_ACTIVETAB: 29,
-    SETUNCOLATERAL: 30,
-    SETCOMPLETEITEM: 31,
-    ADD_FILTER: 34,
-    REMOVE_FILTER: 35,
-    ADD_FILEFIELD: 36,
-    SET_FILEFIELD: 37,
-    DELETE_FILEFIELD: 38,
-    EDIT_FILEFIELD: 39,
-    CHANGE_FIELD_ENABLE: 40,
-}
+import { ITEMS_ACTIONS } from "./actions";
+//export const ITEMS_ACTIONS = {
+//    START: 0,
+//    LOAD: 1,
+//    LOAD_ITEMS: 32,
+//    CHECK: 2,
+//    CHECKALL: 3,
+//    UNSELECT: 4,
+//    SET: 5,
+//    SELECT_ITEM: 6,
+//    NEW_ITEM: 7,
+//    EDIT_ITEM: 26,
+//    CANCEL: 8,
+//    ADDERROR: 9,
+//    CLEARERRORS: 10,
+//    CANCEL_LOAD: 11,
+//    SEARCH: 12,
+//    FETCH: 13,
+//    SETPAGE: 14,
+//    SET_FORMOPTIONS: 15,
+//    ADD_MULTIFIELD: 16,
+//    REMOVE_MULTIFIELD: 17,
+//    SET_MULTIFIELD: 18,
+//    SET_MULTIFIELDCHECK: 19,
+//    SET_STATUS: 20,
+//    SET_ACTIVETAB: 21,
+//    SET_ORDER: 22,
+//    DELETE_ORDER: 23,
+//    SET_PAGESIZE: 24,
+//    SET_SEARCHFIELD: 25,
+//    SET_FIELDS: 27,
+//    HISTORY: 28,
+//    //SET_ACTIVETAB: 29,
+//    SETUNCOLATERAL: 30,
+//    SETCOMPLETEITEM: 31,
+//    ADD_FILTER: 34,
+//    REMOVE_FILTER: 35,
+//    ADD_FILEFIELD: 36,
+//    SET_FILEFIELD: 37,
+//    DELETE_FILEFIELD: 38,
+//    EDIT_FILEFIELD: 39,
+//    CHANGE_FIELD_ENABLE: 40,
+//}
 
 export const initialState = {
     arr: [],
@@ -140,7 +141,7 @@ let tmp = []
 
 export const red_items = (state, action) => {
     let tmp_item = {};
-    let tt = {};
+    console.log("red_items: " + action.type);
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS:
             return {
@@ -356,7 +357,7 @@ export const red_items = (state, action) => {
         case ITEMS_ACTIONS.ADD_MULTIFIELD:
             let newItem = state.item;
             let key = newItem[action.fieldname].length + 1;
-            newItem[action.fieldname].push({ key: key, value: "", default: (newItem[action.fieldname].length == 0) ? true : false });
+            newItem[action.fieldname].push({ key: key, value: "", default: (newItem[action.fieldname].length === 0) ? true : false });
 
             return {
                 ...state,
@@ -400,9 +401,9 @@ export const red_items = (state, action) => {
             }
         case ITEMS_ACTIONS.SET_ORDER:
             tmp = [...state.order];
-            index = state.order.findIndex(x => x.name == action.fieldname);
+            index = state.order.findIndex(x => x.name === action.fieldname);
             if (index >= 0) {
-                tmp[index].direction = (tmp[index].direction == 'asc') ? 'desc' : 'asc';
+                tmp[index].direction = (tmp[index].direction === 'asc') ? 'desc' : 'asc';
             }
             else
                 tmp.push({ name: action.fieldname, direction: 'asc' })
@@ -413,7 +414,7 @@ export const red_items = (state, action) => {
                 load: (state.load + 1) % 17,
             }
         case ITEMS_ACTIONS.DELETE_ORDER:
-            index = state.order.findIndex(x => x.name == action.fieldname);
+            index = state.order.findIndex(x => x.name === action.fieldname);
             if (index >= 0) {
                 tmp = [...state.order];
                 tmp.splice(index, 1);
@@ -452,12 +453,12 @@ export const red_items = (state, action) => {
                         name: state.fields.searchField,
                         label: state.fields.fields[state.fields.searchField].label ?? "Sin nombre",
                         value: state.fields.search, operator: "=",
-                        valueLabel: (state.fields.fields[state.fields.searchField].type == "select") ? state.fields.fields[state.fields.searchField].options.filter(it => it.value == state.fields.search)[0].label : state.fields.search,
+                        valueLabel: (state.fields.fields[state.fields.searchField].type === "select") ? state.fields.fields[state.fields.searchField].options.filter(it => it.value === state.fields.search)[0].label : state.fields.search,
                     }
                 ]
             }
         case ITEMS_ACTIONS.REMOVE_FILTER:
-            index = state.filters.findIndex(x => x.name == action.fieldname);
+            index = state.filters.findIndex(x => x.name === action.fieldname);
             if (index >= 0) {
                 tmp = [...state.filters];
                 tmp.splice(index, 1);

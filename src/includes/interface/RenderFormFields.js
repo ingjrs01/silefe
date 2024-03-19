@@ -1,6 +1,6 @@
 import ClayForm from '@clayui/form';
 import React from "react";
-import { ITEMS_ACTIONS } from '../reducers/main.reducer';
+import { ITEMS_ACTIONS } from '../reducers/actions';
 import { Dateinput } from './fields/Dateinput';
 import { Dni } from './fields/Dni';
 import { DoubleList } from './fields/DoubleList';

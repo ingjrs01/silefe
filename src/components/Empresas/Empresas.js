@@ -13,9 +13,9 @@ import { Paginator } from "../../includes/interface/Paginator";
 import { SimpleTable } from '../../includes/interface/SimpleTable';
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
-import { REDUCER_ACTIONS } from '../../includes/reducers/actions';
+import { ITEMS_ACTIONS, REDUCER_ACTIONS } from '../../includes/reducers/actions';
 import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from "../../includes/reducers/historico.reducer";
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { initialState as iniCentros, reducerItems } from '../../includes/reducers/tabItem.reducer';
 import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
@@ -143,7 +143,7 @@ const Empresas = ({user}) => {
     //form.handleSave = handleSave;
 
     const fetchData = async () => {    
-        let { data, totalPages, totalItems, page } = await fetchAPIData('/silefe.empresa/filter', formatPost(items), referer);
+        let { data, totalPages, page } = await fetchAPIData('/silefe.empresa/filter', formatPost(items), referer);
 
         const tmp = await data.map(i => ({
                 ...i,
@@ -240,15 +240,14 @@ const Empresas = ({user}) => {
             initCentrosForm();
             contactosHandle({ type: REDUCER_ACTIONS.START, form: formContactos });
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
-            if (id != 'undefined' && id > 0) {
-                loadItem(id);
-            }
+            if (id !== undefined && id > 0) 
+                loadItem(id);            
             else
                 fetchData();
 
             isInitialized.current = true;
         } else {
-            if (id != 'undefined' && id > 0) {
+            if (id !== undefined && id > 0) {
                 loadItem(id);
             }
             else {

@@ -2,7 +2,7 @@ import ClayDatePicker from '@clayui/date-picker';
 import ClayForm from '@clayui/form';
 import { getLanguageId, spritemap } from '../../LiferayFunctions'; //   '../../LiferayFunctions';
 import { validateDate2 } from '../../Validators';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 import { getDays, getMonths } from '../DatesLang';
 
 export const Dateinput = ({ itemsHandle, field, item, action, error }) => {

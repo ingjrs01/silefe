@@ -125,7 +125,7 @@ export const form = {
             enabled:true,
             options: [],
             className: 'col-2',
-            conditions: []
+            conditions: ['required']
         },
         nombreVia: {
             key: 18,

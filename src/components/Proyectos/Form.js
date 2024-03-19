@@ -54,7 +54,6 @@ export const form = {
             yearmin: 5,
             yearmax: 8,
             value: "lelele",
-            placeholder: Liferay.Language.get('Fin'),
             placeholder: Liferay.Language.get('YYYY-MM-DD'),
             conditions: [],
             className: 'col-3',

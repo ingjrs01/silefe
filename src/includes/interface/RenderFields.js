@@ -1,5 +1,5 @@
 import React from "react";
-import { ITEMS_ACTIONS } from '../reducers/main.reducer';
+import { ITEMS_ACTIONS } from '../reducers/actions';
 import { Button } from './fields/Button';
 import { Dateinput } from './fields/Dateinput';
 import { Dni } from './fields/Dni';

@@ -69,6 +69,7 @@ export const form = {
             options: [],
             change: ()=>{console.log("cambia el select");},
             className: 'col-4',
+            conditions: ["required"]
         },
         cnaeId: {
             key: 7,
@@ -131,7 +132,8 @@ export const form = {
             enabled:true,
             options: [],
             change: ()=>{console.log("cambia el select");},
-            className: 'col-3'
+            className: 'col-3',
+            conditions: ['required'],
         },
         infoJornada: {
             key: 13,
@@ -280,7 +282,6 @@ export const form = {
             value:"",
             //enabled:true,
             className: 'col-9',
-            value:"lelele",
             placeholder:Liferay.Language.get('Comentarios'),
             conditions:[]
         },
@@ -352,7 +353,6 @@ export const form = {
             value:"",
             enabled:true,
             className: 'col-12',
-            value:"lelele",
             placeholder:Liferay.Language.get('Comentarios'),
             options: []
         },

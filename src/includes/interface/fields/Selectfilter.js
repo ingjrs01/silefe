@@ -4,7 +4,7 @@ import { MD5 } from 'crypto-js';
 import React, { useEffect, useState } from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Selectfilter = ({ itemsHandle, field, item, action, error }) => {
     const [options, setOptions] = useState(new Map());

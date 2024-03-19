@@ -10,10 +10,11 @@ import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
+import { initialState, red_items } from '../../includes/reducers/main.reducer';
+import { formatPost } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './Form';
-import { formatPost } from '../../includes/utils';
 
 const Salarios = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);

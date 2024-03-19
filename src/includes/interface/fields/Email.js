@@ -4,11 +4,10 @@ import React from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
 import { validateEmail } from '../../Validators';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Email = ({ itemsHandle, field, item, action, error }) => {
 
-    const accion = action !== undefined ? action:ITEMS_ACTIONS.SET; 
     if (item == null)
         return (<>Cargando</>)
 

@@ -16,7 +16,7 @@ import { Select } from '../../includes/interface/fields/Select';
 import { Textarea } from '../../includes/interface/fields/Textarea';
 import { Textinput } from '../../includes/interface/fields/Textinput';
 import { Toggle } from '../../includes/interface/fields/Toggle';
-import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { Formacion } from './Formacion';
 
 

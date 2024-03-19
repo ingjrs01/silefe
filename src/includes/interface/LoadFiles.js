@@ -3,7 +3,7 @@ import ClayCard from "@clayui/card";
 import ClayForm, { ClayInput } from '@clayui/form';
 import React from 'react';
 import { Liferay } from '../../common/services/liferay/liferay';
-import { ITEMS_ACTIONS } from '../../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 
 export const LoadFiles = ({setFile, processCsv,itemsHandle}) => {
 

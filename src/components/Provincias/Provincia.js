@@ -10,7 +10,8 @@ import { FAvisos } from '../../includes/interface/FAvisos';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import Table from '../../includes/interface/Table';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
+import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import Menu from '../Menu';
 import { form } from './Form';
 

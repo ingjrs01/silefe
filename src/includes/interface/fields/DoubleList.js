@@ -3,7 +3,7 @@ import ClayPanel from '@clayui/panel';
 import React, { useState } from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const DoubleList = ({itemsHandle, field, item, action, error}) => {
 

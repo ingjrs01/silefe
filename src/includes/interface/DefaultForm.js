@@ -3,7 +3,7 @@ import ClayForm from '@clayui/form';
 import React from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { validateAll } from '../Validators';
-import { ITEMS_ACTIONS } from '../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../reducers/actions';
 import RenderFields from "./RenderFields";
 
 const DefaultForm = ({ itemsHandle, items, handleSave }) => {

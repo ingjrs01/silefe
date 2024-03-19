@@ -5,7 +5,7 @@ import ClayPanel from '@clayui/panel';
 import React, { useState } from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../../reducers/main.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
 
@@ -25,11 +25,7 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
         }
         reader.readAsDataURL(file);
     }
-    console.log("Fileinput");
-    console.debug(error);
-    console.debug(field);
-    console.debug(item);
-    console.log("------------------------");
+
     return (
         <>
         <ClayForm.Group
@@ -57,7 +53,7 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
                                     />
                                 </>
                             }
-                            {it.src !== undefined && it.src != "" && it.edit === false &&
+                            {it.src !== undefined && it.src !== "" && it.edit === false &&
                                 <>
                                     <label htmlFor="inputFile" key={"fi" + field.key}>{Liferay.Language.get("Fichero")}</label>
                                     <ClayInput.Group>
@@ -120,13 +116,13 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
                 ))
             }
             <Button
-                onClick={evt => itemsHandle({ type: ITEMS_ACTIONS.ADD_FILEFIELD, fieldname: 'adjuntos' })}
+                onClick={() => itemsHandle({ type: ITEMS_ACTIONS.ADD_FILEFIELD, fieldname: 'adjuntos' })}
             >
                 {Liferay.Language.get("Añadir")}
             </Button>
     
           {
-            error != undefined && error.length > 0 &&
+            error !== undefined && error.length > 0 &&
             <ClayForm.FeedbackGroup key={"error" + field.name}>
               <ClayForm.FeedbackItem key={"err" + field.name}>
                 <ClayForm.FeedbackIndicator key={"erfi" + field.name} spritemap={spritemap} symbol="check-circle-full" />{error[0]} </ClayForm.FeedbackItem>

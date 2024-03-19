@@ -14,10 +14,10 @@ import { Paginator } from "../../includes/interface/Paginator";
 import { SimpleTable } from '../../includes/interface/SimpleTable';
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
-import { REDUCER_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
+import { ITEMS_ACTIONS, REDUCER_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
 import { CITAS_ACTIONS, initialState as iniCitas, reducerCitas } from '../../includes/reducers/citas.reducer';
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
-import { ITEMS_ACTIONS, initialState, red_items } from '../../includes/reducers/main.reducer';
+import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import { initialState as iniExperiencias, reducerItems } from '../../includes/reducers/tabItem.reducer';
 import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones2.reducer';
@@ -134,7 +134,7 @@ const Participantes = ({ user }) => {
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
             citasHandler({ type: CITAS_ACTIONS.SETFORM, form: citasform });
             participacionesHandler({ type: SUBTABLE_ACTIONS.SETFORM, form: participacionesForm });
-            if (id != 'undefined' && id > 0)
+            if (id !== undefined && id > 0)
                 loadParticipante(id);
             else
                 fetchData();
@@ -142,7 +142,7 @@ const Participantes = ({ user }) => {
             isInitialized.current = true;
 
         } else {
-            if (id != 'undefined' && id > 0)
+            if (id !== undefined && id > 0)
                 loadParticipante(id);
             else {
                 const timeoutId = setTimeout(fetchData, 350);
@@ -152,7 +152,7 @@ const Participantes = ({ user }) => {
     }, [items.load]);
 
     useEffect(() => {
-        if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0)
+        if (items.item.provinciaId !== undefined && items.item.provinciaId > 0)
             changeProvince(items.item.provinciaId);
     }, [items.item.provinciaId]);
 
@@ -259,6 +259,9 @@ const Participantes = ({ user }) => {
 
             const obj3 = { experiencias: redExperiencias.items, userId: getUserId() };
             respon = await saveAPI('/silefe.experienciaparticipante/add-multiple', obj3, referer);
+            if (!respon.status)
+                console.error("Error realizando la petición");
+            
             // Tenemos que borrar las experiencas borradas
             if (redExperiencias.deleted.length > 0) {
                 const delExperiencias = redExperiencias.deleted.map(d => { return (d.experienciaParticipanteId) });
@@ -277,7 +280,7 @@ const Participantes = ({ user }) => {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
 
         //console.debug(state.ancestorId);
-        if (state != 'undefined' && state != null && state.backUrl.length > 0)
+        if (state !== undefined && state !== null && state.backUrl.length > 0)
             navigate(state.backUrl + state.ancestorId);
     }
 
@@ -299,10 +302,10 @@ const Participantes = ({ user }) => {
     }
 
     const fetchData = async () => {
-        if (redTitulaciones.tipoOptions == undefined || redTitulaciones.tipoOptions.length == 0)
+        if (redTitulaciones.tipoOptions === undefined || redTitulaciones.tipoOptions.length === 0)
             queryTitulaciones();
 
-        if (form.fields.situacionLaboral.options == undefined)
+        if (form.fields.situacionLaboral.options === undefined)
             await initForm();
 
         let { data, totalPages, page, totalItems } = await fetchAPIData('/silefe.participante/filter', formatPost(items), referer);
@@ -428,7 +431,7 @@ const Participantes = ({ user }) => {
     }
 
     const beforeFormacion = (participanteId) => {
-        if (participanteId != undefined) {
+        if (participanteId !== undefined) {
             fetchAPIData('/silefe.formacionparticipante/filter-by-participante', { participante: participanteId }, referer).then(response => {
                 const tits = response.data.map(i => ({
                     ...i,

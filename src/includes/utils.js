@@ -1,5 +1,5 @@
 import { Liferay } from '../common/services/liferay/liferay';
-import { ITEMS_ACTIONS } from './reducers/items.reducer';
+import { ITEMS_ACTIONS } from './reducers/actions';
 
 export const toURL =  (uuid, groupId) => {
   const urlPortal = Liferay.ThemeDisplay.getPortalURL();

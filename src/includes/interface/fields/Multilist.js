@@ -1,6 +1,6 @@
 import ClayForm, { ClaySelectBox } from '@clayui/form';
 import { spritemap } from '../../LiferayFunctions';
-import { ITEMS_ACTIONS } from "../../reducers/items.reducer";
+import { ITEMS_ACTIONS } from "../../reducers/actions";
 
 export const Multilist = ({itemsHandle, field, item, action, error}) => {
 

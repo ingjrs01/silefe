@@ -52,7 +52,7 @@ export const SimpleTable = ({ reducer, handler }) => {
                                                             if (item[column.columnName] === undefined || item[column.columnName] === null)
                                                                 aa = "ND";
                                                             else {
-                                                                let arr = reducer.fields.fields[column.columnName].options.filter(i => i.value == item[column.columnName].toString());
+                                                                let arr = reducer.fields.fields[column.columnName].options.filter(i => i.value === item[column.columnName].toString());
                                                                 if (arr.length > 0)
                                                                     aa = arr[0].label;
                                                                 else
@@ -63,8 +63,10 @@ export const SimpleTable = ({ reducer, handler }) => {
                                                             return (<ClayTable.Cell key={"ttop" + item.id + column.columnName}>
                                                                 {<ClayCheckbox checked={item[column.columnName]} disabled />}
                                                             </ClayTable.Cell>)
+                                                        default: 
+                                                            return (<ClayTable.Cell headingCell key={"ttop" + item.id + column.columnName}>{item[column.columnName]}</ClayTable.Cell>)
                                                     }
-                                                    <ClayTable.Cell headingCell key={"ttop" + item.id + column.columnName}>{item[column.columnName]}</ClayTable.Cell>
+                                                    
                                                 })
                                             }
     

@@ -2,7 +2,7 @@ import ClayIcon, { ClayIconSpriteContext } from '@clayui/icon';
 import React from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { spritemap } from "../LiferayFunctions";
-import { ITEMS_ACTIONS } from "../reducers/items.reducer";
+import { ITEMS_ACTIONS } from "../reducers/actions";
 
 export const MgtToolbar = ({items, itemsHandle}) => {
     return (

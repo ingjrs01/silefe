@@ -2,7 +2,7 @@ import ClayForm, { ClayInput } from '@clayui/form';
 import React from 'react';
 import { spritemap } from '../../LiferayFunctions';
 import { validateHour } from '../../Validators';
-import { ITEMS_ACTIONS } from '../../reducers/main.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Hour = ({ itemsHandle, field, item, className, action, error }) => {
 

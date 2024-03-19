@@ -6,7 +6,7 @@ import React from 'react';
 import { Liferay } from '../common/services/liferay/liferay';
 import { spritemap } from '../includes/LiferayFunctions';
 import { MgtToolbar } from '../includes/interface/MgtToolbar';
-import { ITEMS_ACTIONS } from '../includes/reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../includes/reducers/actions';
 import { handleDelete } from '../includes/utils';
 
 const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
@@ -23,7 +23,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
             </ClayToolbar.Item>
 
             {
-              items.status == "list" && items.fields.searchFields != undefined && items.fields.searchFields.length > 1 &&
+              items.status === "list" && items.fields.searchFields !== undefined && items.fields.searchFields.length > 1 &&
               <ClayToolbar.Item>
                 <ClaySelect aria-label="Select Label"
                   id={"fieldMenu"}
@@ -49,7 +49,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
               </ClayToolbar.Item>
             }
             {             
-              (items.status == "list") && (items.fields.hasOwnProperty("fields")) && 
+              (items.status === "list") && (items.fields.hasOwnProperty("fields")) && 
               <ClayToolbar.Item>
                 <ClayInput.Group>
                   <ClayInput.GroupItem >
@@ -84,13 +84,13 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                             onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}
                           >
                               <ClaySelect.Option
-                                key={"searchBottonField"+"si"}
-                                label={"Si   "}
+                                key={"searchBottonFieldsi"}
+                                label={Liferay.Language.get("Si")}
                                 value={true}
                               />
                               <ClaySelect.Option
-                                key={"searchBottonField"+"si"}
-                                label={"No  "}
+                                key={"searchBottonFieldni"}
+                                label={Liferay.Language.get("No")}
                                 value={false}
                               />
                           </ClaySelect>
@@ -200,7 +200,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
         </ClayToolbar>
       </ClayIconSpriteContext.Provider>
       {
-        (items.status == 'list' && (items.search.length > 0 || items.filters.length > 0  || items.order.length > 0)) &&
+        (items.status === 'list' && (items.search.length > 0 || items.filters.length > 0  || items.order.length > 0)) &&
         <MgtToolbar items={items} itemsHandle={itemsHandle} />
       }
     </>

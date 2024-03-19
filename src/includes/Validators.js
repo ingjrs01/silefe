@@ -1,15 +1,15 @@
 import { Liferay } from '../common/services/liferay/liferay';
-import { ITEMS_ACTIONS } from "./reducers/items.reducer";
+import { ITEMS_ACTIONS } from "./reducers/actions";
 
 const dniletter = ["T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"];
 
 export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
     var DNI_REGEX = /^[0-9-]{8}([A-Za-z])$/;
-    var CIF_REGEX = /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/;
+    //var CIF_REGEX = /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/;
     const NIE_REGEX = /^[XYZ][0-9-]{7}[A-Za-z]$/;
-    const PASS_REGEX = /^[a-z]{3}[0-9]{6}[a-z]?$/i;
+    //const PASS_REGEX = /^[a-z]{3}[0-9]{6}[a-z]?$/i;
 
-    if (value == undefined || value == null|| value.length == 0) {
+    if (value === undefined || value === null|| value.length === 0) {
         itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('no-vacío') });
         return false;
     }
@@ -19,7 +19,7 @@ export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
             if (value.match(DNI_REGEX)) {
                 const numerodni = parseInt(value.replace(/[.a-zA-Z-]+/g, ""));
                 //console.log(dniletter[numerodni % 23] + "  === " + value.substring(8, 9).toLocaleUpperCase());
-                if (value.length >= 8 && value.substring(8, 9).toLocaleUpperCase() != dniletter[numerodni % 23]) {
+                if (value.length >= 8 && value.substring(8, 9).toLocaleUpperCase() !== dniletter[numerodni % 23]) {
                     itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-dni') });
                     return false;
                 }
@@ -38,7 +38,7 @@ export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
                 const numerodni = p1 + parseInt(value.replace(/[.a-zA-Z-]+/g, ""));
                 //console.log(value.substring(8, 11).toLocaleUpperCase() + "  ===  " + dniletter[numerodni % 23]);
 
-                if (value.length >= 7 && value.substring(8, 11).toLocaleUpperCase() != dniletter[numerodni % 23]) {
+                if (value.length >= 7 && value.substring(8, 11).toLocaleUpperCase() !== dniletter[numerodni % 23]) {
                     itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-nie') });
                     return false;
                 }
@@ -49,11 +49,10 @@ export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-nie') });
                 return false;
             }
-
-            break;
         case '3':
-            console.log("Esto es un pasaporte");
             return true;
+        default: 
+            //throw new Error("Accion invalida");
             break;
     }
     return false;
@@ -61,29 +60,29 @@ export const validateDni = ( tipoDoc, name, value, itemsHandle) => {
 
 export const validateDate = (name, value, items, itemsHandle) => {
     for (var condicion of items.fields.fields[name]["conditions"]) {
-        if (condicion == "number") {
+        if (condicion === "number") {
             if (isNaN(value)) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
                 return false;
             }
         }
 
-        if (condicion == "text") {
+        if (condicion === "text") {
             if (!isNaN(value)) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-texto') });
                 return false;
             }
         }
 
-        if (condicion == "required") {
-            if (value == 'undefined' || value == null|| value.length == 0) {
+        if (condicion === "required") {
+            if (value === 'undefined' || value === null|| value.length === 0) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('no-vacío') });
                 return false;
             }
         }
     }
 
-    if (value == 'undefined' || value == null|| value.length == 0) { // si llego aqui, no es requerido
+    if (value === undefined || value === null|| value.length === 0) { // si llego aqui, no es requerido
         itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
         return true;
     }
@@ -142,15 +141,15 @@ export const validateDate2 = (name, value, field, itemsHandle) => {
         //    }
         //}
 
-        if (condicion == "required") {
-            if (value == 'undefined' || value == null|| value.length == 0) {
+        if (condicion === "required") {
+            if (value === undefined || value === null|| value.length === 0) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('no-vacío') });
                 return false;
             }
         }
     }
 
-    if (value == 'undefined' || value == null|| value.length == 0) { // si llego aqui, no es requerido
+    if (value === 'undefined' || value === null|| value.length === 0) { // si llego aqui, no es requerido
         itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
         return true;
     }
@@ -200,15 +199,15 @@ export const validateDate2 = (name, value, field, itemsHandle) => {
 export const validateHour = (name, value, field, itemsHandle) => {
 
     for (var condicion of field["conditions"]) {
-        if (condicion == "required") {
-            if (value == 'undefined' || value == null|| value.length == 0) {
+        if (condicion === "required") {
+            if (value === 'undefined' || value === null|| value.length === 0) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('no-vacío') });
                 return false;
             }
         }
     }
 
-    if (value == 'undefined' || value == null|| value.length == 0) { // si llego aqui, no es requerido
+    if (value === 'undefined' || value === null|| value.length === 0) { // si llego aqui, no es requerido
         itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
         return true;
     }
@@ -262,7 +261,7 @@ export const validateEmails = (campo,emails, itemsHandle) => {
             return false;
     
     const seleccionados = emails.filter( item => item.default);
-    if (seleccionados.length == 0) {
+    if (seleccionados.length === 0) {
         itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: campo, value: Liferay.Language.get('debe-seleccionar-un-email-por-defecto') });
         return false;
     }
@@ -280,7 +279,7 @@ export const validatePhoneNumbers = (name, phones, itemsHandle) => {
             return false;
     
     const seleccionados = phones.filter( item => item.default);
-    if (seleccionados.length == 0) {
+    if (seleccionados.length === 0) {
         itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('debe-seleccionar-un-telefono-por-defecto') });
         return false;
     }
@@ -316,7 +315,7 @@ export const validatePhoneNumber = (name,value,itemsHandle) => {
 }
 
 export const validaRadio = (campo,items,itemsHandle) => {
-    if (items.item[campo] == null) {
+    if (items.item[campo] === null) {
         itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: campo, value: Liferay.Language.get('debe-elegir-una-opcion') });
         return false;
     }
@@ -348,7 +347,7 @@ export const validateAll = (items, itemsHandle) => {
     var result = true;
     for (var campo in items.fields.fields) {
         console.log("Campo: -> " + campo);
-        if ( items.fields.fields[campo].validate !== 'undefined' &&  items.fields.fields[campo].validate == false)
+        if ( items.fields.fields[campo].validate !== 'undefined' &&  items.fields.fields[campo].validate === false)
             console.log("Este campo no se valida: " + campo);
         else
             switch (items.fields.fields[campo].type) {
@@ -357,7 +356,7 @@ export const validateAll = (items, itemsHandle) => {
                     console.log("es un campo de texto: ");
                     console.debug(items);
                     result = validate(campo, items.item[campo],items.fields.fields[campo],itemsHandle)
-                    if (result == false) {
+                    if (result === false) {
                         console.log("El campo " + campo + " no valida");
                         return false;
                     }
@@ -368,7 +367,7 @@ export const validateAll = (items, itemsHandle) => {
                     break;
                 case "dni":
                     result = validateDni(items.item.tipoDoc,campo, items.item[campo], itemsHandle);
-                    if (result == false)
+                    if (result === false)
                         return false;
                     break;
                 case "date":
@@ -394,6 +393,8 @@ export const validateAll = (items, itemsHandle) => {
                     result = validateSelect(campo, items.item[campo],items.fields.fields[campo],itemsHandle)
                     if (!result) return false;
                     break;
+                default: 
+                    break;
             }
     }
     return true;
@@ -409,21 +410,21 @@ export const validate = (name, value,field,itemsHandle) => {
         return true;
     
     for (condicion of field.conditions) {
-        if (condicion == "number") {
+        if (condicion === "number") {
             if (isNaN(value)) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-numero') });
                 return false;
             }
         }
 
-        if (condicion == "text") {            
+        if (condicion === "text") {            
             if (!isNaN(value)) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('error-texto') });
                 return false;
             }
         }
 
-        if (condicion == "required") {
+        if (condicion === "required") {
             if (value === undefined || value === "" || value === null) {
                 itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: name, value: Liferay.Language.get('requerido') });
                 return false;
@@ -450,8 +451,8 @@ export const validateSelect = (fieldname, value, field, itemsHandle) => {
     if (!field.hasOwnProperty("conditions"))
         return true;
 
-    for (condicion of field.conditions) {
-        if (value === "0") {
+    for (condicion of field.conditions) {        
+        if (condicion === "required" && value === "0") {
             itemsHandle({ type: ITEMS_ACTIONS.ADDERROR, name: fieldname, value: Liferay.Language.get('Debe seleccionar un elemento') });
             return false
         }
@@ -461,10 +462,10 @@ export const validateSelect = (fieldname, value, field, itemsHandle) => {
     return true;
 }
 
-const formatMoney = (value) => {
-    var temp = "";
-    temp = (typeof (value) === 'number') ? value.toString() : value;
-    var input = temp.replace(/[\D\s\._\-]+/g, "");
-    input = input ? parseInt(input, 10) : 0;
-    return (input.toLocaleString("es-ES"));
-}
+//const formatMoney = (value) => {
+//    var temp = "";
+//    temp = (typeof (value) === 'number') ? value.toString() : value;
+//    var input = temp.replace(/[\D\s\._\-]+/g, "");
+//    input = input ? parseInt(input, 10) : 0;
+//    return (input.toLocaleString("es-ES"));
+//}

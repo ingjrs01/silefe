@@ -1,7 +1,7 @@
 import ClayForm, { ClayRadio, ClayRadioGroup } from '@clayui/form';
 import { useState } from 'react';
 import { spritemap } from '../../LiferayFunctions';
-import { ITEMS_ACTIONS } from '../../reducers/items.reducer';
+import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Radio = ({itemsHandle, field, item, action, error}) => {
 
@@ -25,7 +25,7 @@ export const Radio = ({itemsHandle, field, item, action, error}) => {
             //onChange={ evt => {console.log("este es el general")}}
             inline
           >
-            {field.options != "undefined" && field.options.map(it5 => {
+            {field.options !== "undefined" && field.options.map(it5 => {
               return (
                 <ClayRadio
                   key={field.name + it5.key}
