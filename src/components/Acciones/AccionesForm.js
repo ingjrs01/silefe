@@ -1,6 +1,6 @@
 import ClayButton from '@clayui/button';
 import ClayCard from "@clayui/card";
-import ClayForm, { ClayCheckbox } from '@clayui/form';
+import ClayForm from '@clayui/form';
 import ClayPanel from '@clayui/panel';
 import ClayTabs from '@clayui/tabs';
 import React from "react";
@@ -18,7 +18,6 @@ import { Textinput } from '../../includes/interface/fields/Textinput';
 import { Toggle } from '../../includes/interface/fields/Toggle';
 import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { Formacion } from './Formacion';
-
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler, loadHistory, historico, handleHistorico, user }) => {
 
@@ -117,74 +116,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                 </ClayTabs.TabPane>
 
                 <ClayTabs.TabPane aria-labelledby="tab-2" key={"tab-content-2"}>
-                  {
-                    (items.item.accionTipoId != 1) &&
-                    <>
-                      <div className="row">
-                        {
-                          /*
-                          <ClayForm.Group className={"col-3"} key={"Group-91"} >
-                                  <label htmlFor="basicInput">{"Fecha Inicio"}</label>
-                                  <ClayDatePicker
-                                      onChange={val => console.log("aaa")}
-                                      firstDayOfWeek={1}
-                                      months={getMonths(getLanguageId())}
-                                      spritemap={spritemap}
-                                      timezone="GMT+01:00"
-                                      value={"2023-08-23"}
-                                      weekdaysShort={getDays(getLanguageId())}
-                                      years={{
-                                        end: (((new Date().getFullYear()) + 2)),
-                                        start: ((new Date().getFullYear() - 0))
-                                      }}
-                                      />
-                          </ClayForm.Group>
-      
-                          <ClayForm.Group className={"col-3"} key={"Group-92"} >
-                                  <label htmlFor="basicInput">{"Fecha Fin"}</label>
-                                  <ClayDatePicker
-                                      onChange={val => console.log("aaa")}
-                                      firstDayOfWeek={1}
-                                      months={getMonths(getLanguageId())}
-                                      spritemap={spritemap}
-                                      timezone="GMT+01:00"
-                                      value={"2023-08-01"}
-                                      weekdaysShort={getDays(getLanguageId())}
-                                      years={{
-                                        end: (((new Date().getFullYear()) + 2)),
-                                        start: ((new Date().getFullYear() - 0))
-                                      }}
-                                      />
-                          </ClayForm.Group>*/
-                        }
-
-                        <ClayForm.Group className={"col-2"} key={"Group-92a"} >
-                          <label htmlFor="basicInput">{Liferay.Language.get("Teórica")}</label>
-                          <ClayCheckbox
-                            checked={false}
-                            onChange={() => console.log("eso es lo que no se sabe")}
-                          />
-                        </ClayForm.Group>
-
-                        <ClayForm.Group className={"col-2"} key={"Group-92b"} >
-                          <label htmlFor="basicInput">{Liferay.Language.get("Práctica")}</label>
-                          <ClayCheckbox
-                            checked={false}
-                            onChange={() => console.log("eso es lo que no se sabe")}
-                          />
-                        </ClayForm.Group>
-
-                        <ClayForm.Group className={"col-2"} key={"Group-92c"} >
-                          <label htmlFor="basicInput">{Liferay.Language.get("Grupal")}</label>
-                          <ClayCheckbox
-                            checked={false}
-                            onChange={() => console.log("eso es lo que no se sabe")}
-                          />
-                        </ClayForm.Group>
-
-                      </div>
-                    </>
-                  }
                   {
                     (items.item.accionTipoId == 1 || items.item.accionTipoId == 3) &&
                     <>

@@ -42,6 +42,15 @@ const Acciones = ({user}) => {
     const isInitialized = useRef(null);
     const referer = `${url_referer}/acciones`;
 
+    const newElement = () => {
+        console.log("Creando un nuevo elemetno desde las nuevas funciones");
+        ejecucionHandlerT({type: EJECUCION_ACTIONS.NEW_ITEM });
+        ejecucionHandlerP({type: EJECUCION_ACTIONS.NEW_ITEM });
+        ejecucionHandlerG({type: EJECUCION_ACTIONS.NEW_ITEM });
+        docentesHandler({type: SUBTABLE_ACTIONS.NEW_ITEM});
+
+    }
+
     const downloadFile = () => {
         console.log("esto es download file");
     }
@@ -121,6 +130,7 @@ const Acciones = ({user}) => {
     form.downloadFunc = downloadFile;
     form.handleSave = handleSave;
     form.loadCsv = loadCsv;
+    form.handleNew = newElement;
 
 
     const processCsv = () => {

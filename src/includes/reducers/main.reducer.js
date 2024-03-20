@@ -1,46 +1,4 @@
 import { ITEMS_ACTIONS } from "./actions";
-//export const ITEMS_ACTIONS = {
-//    START: 0,
-//    LOAD: 1,
-//    LOAD_ITEMS: 32,
-//    CHECK: 2,
-//    CHECKALL: 3,
-//    UNSELECT: 4,
-//    SET: 5,
-//    SELECT_ITEM: 6,
-//    NEW_ITEM: 7,
-//    EDIT_ITEM: 26,
-//    CANCEL: 8,
-//    ADDERROR: 9,
-//    CLEARERRORS: 10,
-//    CANCEL_LOAD: 11,
-//    SEARCH: 12,
-//    FETCH: 13,
-//    SETPAGE: 14,
-//    SET_FORMOPTIONS: 15,
-//    ADD_MULTIFIELD: 16,
-//    REMOVE_MULTIFIELD: 17,
-//    SET_MULTIFIELD: 18,
-//    SET_MULTIFIELDCHECK: 19,
-//    SET_STATUS: 20,
-//    SET_ACTIVETAB: 21,
-//    SET_ORDER: 22,
-//    DELETE_ORDER: 23,
-//    SET_PAGESIZE: 24,
-//    SET_SEARCHFIELD: 25,
-//    SET_FIELDS: 27,
-//    HISTORY: 28,
-//    //SET_ACTIVETAB: 29,
-//    SETUNCOLATERAL: 30,
-//    SETCOMPLETEITEM: 31,
-//    ADD_FILTER: 34,
-//    REMOVE_FILTER: 35,
-//    ADD_FILEFIELD: 36,
-//    SET_FILEFIELD: 37,
-//    DELETE_FILEFIELD: 38,
-//    EDIT_FILEFIELD: 39,
-//    CHANGE_FIELD_ENABLE: 40,
-//}
 
 export const initialState = {
     arr: [],
@@ -140,8 +98,9 @@ let index = 0;
 let tmp = []
 
 export const red_items = (state, action) => {
-    let tmp_item = {};
-    console.log("red_items: " + action.type);
+    let tmp_arr = [];
+    var tmp_item = {};
+    
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS:
             return {
@@ -174,48 +133,32 @@ export const red_items = (state, action) => {
                 arr: newArr,
                 checkall: false
             }
+
         case ITEMS_ACTIONS.CHECKALL:
             return {
                 ...state,
                 arr: state.arr.map(i => { return { ...i, checked: !state.checkall } }),
                 checkall: !state.checkall
             }
+
         case ITEMS_ACTIONS.UNSELECT:
             return {
                 ...state,
                 arr: state.arr.map(i => { return { ...i, checked: false } }),
                 checkall: false
             }
+
         case ITEMS_ACTIONS.SET:
             if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
                 state.fields.fields[action.fieldname].change(action.value, action.fieldname);
             }
 
-            // TODO: Cuando veamos que sigue funcionando, quitar este código: 
-            //if (state.fields.fields[action.fieldname]["type"] === "file") {
-            //    return {
-            //        ...state,
-            //        item: {
-            //            ...state.item,
-            //            [action.fieldname]: {
-            //                ...state.item[action.fieldname],
-            //                fichero: action.value,
-            //                title: action.titulo,
-            //                filename: action.filename
-            //            },
-            //        },
-            //    }
-            //}
             return {
                 ...state,
                 item: { ...state.item, [action.fieldname]: action.value }
             }
 
         case ITEMS_ACTIONS.SETCOMPLETEITEM:
-            //console.debug()
-            //if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
-            //    state.fields.fields[action.fieldname].change(action.value,action.fieldname);
-            //}
             return {
                 ...state,
                 item: {
@@ -231,27 +174,25 @@ export const red_items = (state, action) => {
             }
 
         case ITEMS_ACTIONS.SELECT_ITEM:
-            let sel = [];
-            let seleccionado = {};
+            let tmp_item2 = {};
             if (action.hasOwnProperty('index')) {
-                seleccionado = state.arr[action.index];
+                tmp_item2 = {...state.arr[action.index]};
             }
             else {
-                sel = state.arr.filter(i => i.checked);
-                if (sel.length > 0)
-                    seleccionado = sel[0];
+                tmp_arr = state.arr.filter(i => i.checked);
+                if (tmp_arr.length > 0)
+                    tmp_item2 = tmp_arr[0];
                 else
                     return state;
             }
 
             if (state.fields.hasOwnProperty('beforeEdit'))
-                state.fields.beforeEdit(seleccionado);
+                state.fields.beforeEdit(tmp_item2);
 
-            let e2 = resetErrors(state.fields);
             return {
                 ...state,
-                item: { ...state.item, ...seleccionado }, // TODO: esto antes se hacía solo con seleccionado
-                errors: e2,
+                item: { ...state.item, ...tmp_item2 },
+                errors: resetErrors(state.fields),
                 status: 'edit',
             }
 
@@ -355,29 +296,31 @@ export const red_items = (state, action) => {
             }
 
         case ITEMS_ACTIONS.ADD_MULTIFIELD:
-            let newItem = state.item;
-            let key = newItem[action.fieldname].length + 1;
-            newItem[action.fieldname].push({ key: key, value: "", default: (newItem[action.fieldname].length === 0) ? true : false });
+            tmp_item = state.item;
+            let key = tmp_item[action.fieldname].length + 1;
+            tmp_item[action.fieldname].push({ key: key, value: "", default: (tmp_item[action.fieldname].length === 0) ? true : false });
 
             return {
                 ...state,
-                item: newItem,
+                item: tmp_item,
             }
+
         case ITEMS_ACTIONS.REMOVE_MULTIFIELD:
-            let delField = state.item;
-            delField[action.fieldname].splice(action.pos, 1);
+            tmp_item = state.item;
+            tmp_item[action.fieldname].splice(action.pos, 1);
 
             return {
                 ...state,
-                item: delField
+                item: tmp_item
             }
+
         case ITEMS_ACTIONS.SET_MULTIFIELD:
-            let newField = state.item;
-            newField[action.fieldname][action.pos].value = action.value;
+            tmp_item = state.item;
+            tmp_item[action.fieldname][action.pos].value = action.value;
 
             return {
                 ...state,
-                item: newField
+                item: tmp_item
             }
         case ITEMS_ACTIONS.SET_MULTIFIELDCHECK:
             var temp = state.item[action.fieldname].map(item => ({ ...item, default: false }))
@@ -400,29 +343,31 @@ export const red_items = (state, action) => {
                 fields: { ...state.fields, tabActive: action.active }
             }
         case ITEMS_ACTIONS.SET_ORDER:
-            tmp = [...state.order];
+            tmp_arr = [...state.order];
             index = state.order.findIndex(x => x.name === action.fieldname);
             if (index >= 0) {
-                tmp[index].direction = (tmp[index].direction === 'asc') ? 'desc' : 'asc';
+                tmp_arr[index].direction = (tmp_arr[index].direction === 'asc') ? 'desc' : 'asc';
             }
             else
-                tmp.push({ name: action.fieldname, direction: 'asc' })
+                tmp_arr.push({ name: action.fieldname, direction: 'asc' })
 
             return {
                 ...state,
-                order: tmp,
+                order: tmp_arr,
                 load: (state.load + 1) % 17,
             }
+
         case ITEMS_ACTIONS.DELETE_ORDER:
             index = state.order.findIndex(x => x.name === action.fieldname);
             if (index >= 0) {
-                tmp = [...state.order];
-                tmp.splice(index, 1);
+                tmp_arr = [...state.order];
+                tmp_arr.splice(index, 1);
             }
             return {
                 ...state,
-                order: tmp
+                order: tmp_arr
             }
+
         case ITEMS_ACTIONS.SET_PAGESIZE:
             return {
                 ...state,
@@ -460,12 +405,12 @@ export const red_items = (state, action) => {
         case ITEMS_ACTIONS.REMOVE_FILTER:
             index = state.filters.findIndex(x => x.name === action.fieldname);
             if (index >= 0) {
-                tmp = [...state.filters];
-                tmp.splice(index, 1);
+                tmp_arr = [...state.filters];
+                tmp_arr.splice(index, 1);
             }
             return {
                 ...state,
-                filters: tmp,
+                filters: tmp_arr,
                 load: (state.load + 1) % 17,
             }
 
@@ -476,13 +421,13 @@ export const red_items = (state, action) => {
                 status: "history",
             }
         case ITEMS_ACTIONS.ADD_FILEFIELD: 
-            let bbb = state.item[action.fieldname];
+            let tmp_item = state.item[action.fieldname];
 
             return {
                 ...state,
                 item:{
                     ...state.item,
-                    [action.fieldname] : [...bbb,{                
+                    [action.fieldname] : [...tmp_item,{                
                         "id": 0,
                         "filename": null,
                         "descripcion": "",
@@ -515,22 +460,8 @@ export const red_items = (state, action) => {
                     [action.fieldname] : arrdel,
                 }
             }
-        //case ITEMS_ACTIONS.EDIT_FILEFIELD:
-        //    let arrc = state.item[action.fieldname];
-        //    arrb[action.index][action.objkey] = action.value;
-        //    if (state.fields.fields[action.fieldname]["type"] === "file") {
-        //        arrb[action.index]["title"] = action.titulo;
-        //        arrb[action.index]["filename"] = action.filename;
-        //    }
-        //    return {
-        //        ...state,
-        //        item: {
-        //            ...state.item, 
-        //            [action.fieldname] : arrc,
-        //        }
-        //    }
+
         case ITEMS_ACTIONS.CHANGE_FIELD_ENABLE: 
-            //console.log("cambiando estado: " + action.fieldname);
             let estado = state.fields.fields[action.fieldname].enabled;
             let v = state.fields.fields[action.fieldname].value;
             console.log("Estado: " + estado + " -- " + v);

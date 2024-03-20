@@ -11,6 +11,13 @@ import { handleDelete } from '../includes/utils';
 
 const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
 
+  const createElement = () => {
+    itemsHandle({ type: ITEMS_ACTIONS.NEW_ITEM });
+
+    if (items.fields.hasOwnProperty("handleNew"))
+      items.fields.handleNew();
+  }
+
   return (
     <>
       <ClayIconSpriteContext.Provider value={spritemap}>
@@ -163,7 +170,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                     <ClayButtonWithIcon
                       aria-label="Add"
                       className="nav-btn nav-btn-monospaced"
-                      onClick={() => { itemsHandle({ type: ITEMS_ACTIONS.NEW_ITEM }) }}
+                      onClick={createElement}
                       spritemap={spritemap}
                       title={Liferay.Language.get("Crear elemento")}
                       symbol="plus"

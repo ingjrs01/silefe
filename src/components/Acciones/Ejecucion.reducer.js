@@ -19,13 +19,13 @@ export const EJECUCION_ACTIONS = {
     CLEARERRORS: 10,
 }
 
-export const iniState = {
-    item: {
+const newItem = () => {
+    let item= {
         formacionAccionId: 0,
         codigo: 0,
         accionId: 0,
         tipoFormacion: 0,
-        inicio: "2023-07-11",
+        inicio: "",
         fin: "",
         hIni1: 0,
         hFin1: 0,
@@ -40,7 +40,7 @@ export const iniState = {
             S: {label: "S", value:false},
             D: {label: "D", value:false},
         },
-        empresaId: 2,
+        empresaId: 0,
         lugarId: 0,
         lugar: {
             id: 0,
@@ -61,7 +61,54 @@ export const iniState = {
             email: "",
             telefono: "",
         }
-    },
+    }
+    return item;
+}
+
+export const iniState = {
+    item: newItem(),
+    //{
+    //    formacionAccionId: 0,
+    //    codigo: 0,
+    //    accionId: 0,
+    //    tipoFormacion: 0,
+    //    inicio: "",
+    //    fin: "",
+    //    hIni1: 0,
+    //    hFin1: 0,
+    //    hIni2: 0,
+    //    hFin2: 0,
+    //    dias: {
+    //        L: {label: "L", value:false},
+    //        M: {label: "M", value:false},
+    //        X: {label: "X", value:false},
+    //        J: {label: "J", value:false},
+    //        V: {label: "V", value:false},
+    //        S: {label: "S", value:false},
+    //        D: {label: "D", value:false},
+    //    },
+    //    empresaId: 0,
+    //    lugarId: 0,
+    //    lugar: {
+    //        id: 0,
+    //        nombre: "Aula Sin nombre",
+    //        provinciaId: 0,
+    //        provincia: "Provincia",
+    //        municipioId: 0,
+    //        municipio: "Municipio",
+    //        localidad: "Localidad",
+    //        via: "Via",
+    //        numero: "0",
+    //        piso: "piso",
+    //    },
+    //    empresa: {
+    //        id: 0,
+    //        razonSocial: "Sin nombre",
+    //        documento: "",
+    //        email: "",
+    //        telefono: "",
+    //    }
+    //},
     form: {},
     items: [],
     deleted: [],
@@ -94,7 +141,6 @@ const resetErrors = (form) => {
 let tmpar= [];
 
 export const reducerEjecucion = (state, action ) => {
-    //console.log("Reducer: " + action.type);
     switch (action.type) {
         case EJECUCION_ACTIONS.SETFORM:
             return {
@@ -167,9 +213,10 @@ export const reducerEjecucion = (state, action ) => {
         case EJECUCION_ACTIONS.NEW_ITEM:
             return {
                 ...state,
-                item: {
-                    id: 0,
-                },
+                item: newItem(),
+                //{
+                //    id: 0,
+                //},
                 status: "edit",
             }
         case EJECUCION_ACTIONS.SETFIELD:
