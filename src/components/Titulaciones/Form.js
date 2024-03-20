@@ -21,7 +21,8 @@ export const form = {
             name: "titulacionTipoId",
             enabled: true,
             conditions: [],
-            options: []
+            options: [],
+            effects: [{fieldname: 'titulacionNivelId', fk: 'titulacionTipoId'}, {fieldname: 'titulacionFamiliaId', fk: 'titulacionNivelId'}],
         },
         titulacionNivelId: {
             key: 3,
@@ -30,7 +31,8 @@ export const form = {
             name: "titulacionNivelId",
             enabled: true,
             conditions: [],
-            options: []
+            options: [],
+            effects: [{fieldname: 'titulacionFamiliaId', fk: 'titulacionNivelId'}]
         },
         titulacionFamiliaId: {
             key: 4,

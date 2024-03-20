@@ -76,7 +76,6 @@ const Prestaciones = () => {
         const endpoint = '/silefe.prestacion/remove-prestaciones';
         let s = items.arr.filter(item => item.checked).map(i => { return i.id });
 
-
         deleteAPI(endpoint, s, referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);

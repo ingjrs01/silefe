@@ -15,7 +15,7 @@ const MenuItems = [
     //{key: 1, url: '/tittipo',      caption: 'Titulaciones Tipo'},
     //{key: 2, url: '/titnivel',     caption: 'Titulaciones Nivel'},
     //{key: 3, url: '/titulacionesf',caption: 'Titulaciones Familias'},
-    //{key: 4, url: '/titulaciones', caption: 'Titulaciones',  icon: 'books'},
+    {key: 4, url: '/titulaciones', caption: 'Titulaciones',  icon: 'books'},
     //{key:22, url: '/tipocontrato', caption: 'TipoContrato' },
     //{key: 5, url: '/colectivos',   caption: 'Colectivos', icon: 'users'},
     //{key: 6, url: '/provincias',   caption: 'Provincias'},

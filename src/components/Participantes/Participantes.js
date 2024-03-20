@@ -20,7 +20,7 @@ import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } fro
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import { initialState as iniExperiencias, reducerItems } from '../../includes/reducers/tabItem.reducer';
-import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones2.reducer';
+import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
 import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import { form as citasform } from './Formularios/CitasForm';

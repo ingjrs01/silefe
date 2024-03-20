@@ -149,9 +149,36 @@ export const red_items = (state, action) => {
             }
 
         case ITEMS_ACTIONS.SET:
+            let tmpItems = [];
+            let ffields = {};
+
             if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
                 state.fields.fields[action.fieldname].change(action.value, action.fieldname);
             }
+            if (state.fields.fields[action.fieldname].hasOwnProperty('effects')) {
+                ffields = state.fields.fields;
+                let ttmp_item = state.item;
+                let anterior = action.value;
+                state.fields.fields[action.fieldname].effects.forEach((element) => {
+                    tmpItems = state.fields.fields[element.fieldname].all.filter(i => i[element.fk] === anterior).map(it => {return {value:it.value,label:it.label}});                     
+                    ffields[element.fieldname].options = tmpItems;
+                    
+                    anterior = tmpItems.filter(el => el.value === ttmp_item[element.fieldname] ).length > 0 ? ttmp_item[element.fieldname] : tmpItems[0].value;
+                    ttmp_item[element.fieldname] = anterior;
+                });
+                return {
+                    ...state,
+                    item: {
+                        ...ttmp_item,
+                        [action.fieldname]:action.value                        
+                    },
+                    fields: {
+                        ...state.fields,
+                        fields: {...ffields                            
+                        }
+                    }
+                }
+            }            
 
             return {
                 ...state,
@@ -464,8 +491,6 @@ export const red_items = (state, action) => {
         case ITEMS_ACTIONS.CHANGE_FIELD_ENABLE: 
             let estado = state.fields.fields[action.fieldname].enabled;
             let v = state.fields.fields[action.fieldname].value;
-            console.log("Estado: " + estado + " -- " + v);
-
             tmp_item = state.fields.fields[action.fieldname];
             tmp_item.enabled = !estado;
             tmp_item.value = v + 2;
@@ -478,7 +503,6 @@ export const red_items = (state, action) => {
                         ...state.fields.fields,
                         [action.fieldname]: {
                             ...tmp_item,
-                            otra: "otra cosa",
                         },
                     },
                 }
