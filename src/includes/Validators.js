@@ -438,10 +438,14 @@ export const validate = (name, value,field,itemsHandle) => {
 export const validateLocalized = (fieldname, values, field, itemsHandle) => {
     const languages = Object.keys(values);
     let l = "";
+    console.log("localized");
     for (l in languages) {
+        console.log(fieldname);
+        console.debug(values);
         if (!validate(fieldname, values[languages[l]],field,itemsHandle))
             return false;
     }
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: fieldname });
     return true;
 }
 

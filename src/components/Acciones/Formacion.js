@@ -14,8 +14,11 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
     
     const editUrl = "/lugar/";
     const backUrl = "/accion/";
-    const ancestorId = "11";
+    const ancestorId = ejecucion.item.accionId;
     const empresaUrl = '/empresa/';
+
+    //console.debug(ejecucion);
+    //debugger;
 
         return (
         <>
@@ -99,7 +102,7 @@ export const Formacion = ({ ejecucion, ejecucionHandler }) => {
                         <ClayCard>
                             <ClayCard.Body>
                             <ClayCard.Description displayType="title">
-                                {"Datos empresa"}
+                                {Liferay.Language.get("Datos empresa")}
                             </ClayCard.Description>
                             <ClayCard.Description truncate={false} displayType="text">
                                 {

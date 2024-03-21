@@ -21,16 +21,15 @@ import { Formacion } from './Formacion';
 
 const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, participantes, participantesHandler, ejecucion, ejecucionHandler, loadHistory, historico, handleHistorico, user }) => {
 
-
   const clickSave = () => {
-    console.log("Preparado para enviar, primero validamos ");
-    if (validateAll(items,itemsHandle)) {
-      console.log("Todas las validaciones pasadas");
+    if (validateAll(items,itemsHandle)) 
       save();
-    }
     else 
       console.error("Errores en la validacion");
   }
+
+  //console.log("AccionesForm");
+  //debugger;
 
   return (
     <div className="container">

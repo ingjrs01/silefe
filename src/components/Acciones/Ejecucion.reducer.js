@@ -230,13 +230,6 @@ export const reducerEjecucion = (state, action ) => {
                         dias: {
                             ...ldias
                         },
-                        // TODO: asegurarse de que no hace falta
-                        //lugar: {
-                        //    ...state.item.lugar
-                        //},
-                        //empresa: {
-                        //    ...state.item.empresa
-                        //}
                     }
                 };
             }
@@ -319,9 +312,9 @@ export const reducerEjecucion = (state, action ) => {
             return {
                 ...state,
                 item: {
+                    ...state.item,
                     ...action.item,
-                    lugar: {...state.item.lugar},
-                    empresa: {...state.item.empresa},
+                    accionId: action.accionId,
                 }
             }
         case EJECUCION_ACTIONS.SETSEARCHFIELD:

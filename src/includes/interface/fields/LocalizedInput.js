@@ -8,6 +8,7 @@ export const LocalizedInput = ({ itemsHandle, field, item, action, error }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0]);
 
   const onChange = (evt) => {
+    console.log("cambiando");
     validateLocalized(field.name, evt, field, itemsHandle);
     itemsHandle({ type: action, fieldname: field.name, value: evt });
   }

@@ -59,8 +59,7 @@ const Empresas = ({user}) => {
     }
 
     const beforeEdit = (id) => {
-        let empresaId = (typeof (id) == 'int')?id:id.id;
-
+        let empresaId = ["int", "string"].includes(typeof (id))?id:id.id;
         loadHistory(empresaId);
         fetchAPIData('/silefe.empresacentros/filter-by-empresa', { empresaId: empresaId }, referer).then(response => {
             const centros = response.data.map(i => ({...i, id: i.empresaCentrosId}));
@@ -231,6 +230,7 @@ const Empresas = ({user}) => {
                     telefono: formatPhones(r.data.telefono),
                 }
             }
+            console.debug(tmp);
             itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: tmp });
         });
     }

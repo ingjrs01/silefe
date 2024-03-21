@@ -43,12 +43,10 @@ const Acciones = ({user}) => {
     const referer = `${url_referer}/acciones`;
 
     const newElement = () => {
-        console.log("Creando un nuevo elemetno desde las nuevas funciones");
         ejecucionHandlerT({type: EJECUCION_ACTIONS.NEW_ITEM });
         ejecucionHandlerP({type: EJECUCION_ACTIONS.NEW_ITEM });
         ejecucionHandlerG({type: EJECUCION_ACTIONS.NEW_ITEM });
         docentesHandler({type: SUBTABLE_ACTIONS.NEW_ITEM});
-
     }
 
     const downloadFile = () => {
@@ -194,9 +192,9 @@ const Acciones = ({user}) => {
         if (item.accionId != undefined && item.accionId > 0) {            
             const accionId = item.accionId;
             loadHistory(accionId);
-            ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
-            ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
-            ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
+            //ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
+            //ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
+            //ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
 
             loadDocentes(accionId);
             loadParticipantes(accionId);
@@ -212,7 +210,7 @@ const Acciones = ({user}) => {
                     hFin2: toHours(response.data.hFin2),
                     dias: JSON.parse(response.data.dias),
                 };
-                ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETITEM, item: item });
+                ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETITEM, item: item, accionId: accionId });
             });
             fetchAPIData('/silefe.formacionaccion/get-formacion-accion', { accionId: accionId, tipoFormacion: 2 }, referer).then(response => {
                 const item = {
@@ -225,7 +223,7 @@ const Acciones = ({user}) => {
                     hFin2: toHours(response.data.hFin2),
                     dias: JSON.parse(response.data.dias),
                 };
-                ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETITEM, item: item });
+                ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETITEM, item: item, accionId: accionId });
             });
             fetchAPIData('/silefe.formacionaccion/get-formacion-accion', { accionId: accionId, tipoFormacion: 3 }, referer).then(response => {
                 const item = {
@@ -238,7 +236,7 @@ const Acciones = ({user}) => {
                     hFin2: toHours(response.data.hFin2),
                     dias: JSON.parse(response.data.dias),
                 };
-                ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETITEM, item: item });
+                ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETITEM, item: item, accionId: accionId });
             });
         }
     }
@@ -500,6 +498,9 @@ const Acciones = ({user}) => {
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
 
+    //console.debug(items);
+    //console.debug(ejecucionT);
+    //debugger;
     return (
         <>
             <Menu

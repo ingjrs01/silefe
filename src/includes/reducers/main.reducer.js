@@ -26,9 +26,9 @@ export const initialState = {
     history: [],
 }
 
+let tmp_item = {};
 const resetErrors = (fields) => {
     let errores = {};
-    let tmp_item = {};
     Object.keys(fields.fields).forEach(j => {
         errores[j] = [];
         if (fields.fields[j].type === "multilang") {
@@ -95,11 +95,11 @@ const createItem = (form) => {
 }
 
 let index = 0;
-let tmp = []
+//let tmp = []
 
 export const red_items = (state, action) => {
     let tmp_arr = [];
-    var tmp_item = {};
+    let tmpItem = {};
     
     switch (action.type) {
         case ITEMS_ACTIONS.SET_FIELDS:
@@ -201,24 +201,23 @@ export const red_items = (state, action) => {
             }
 
         case ITEMS_ACTIONS.SELECT_ITEM:
-            let tmp_item2 = {};
-            if (action.hasOwnProperty('index')) {
-                tmp_item2 = {...state.arr[action.index]};
-            }
+            tmpItem = {};
+            if (action.hasOwnProperty('index')) 
+                tmpItem = {...state.arr[action.index]};            
             else {
                 tmp_arr = state.arr.filter(i => i.checked);
                 if (tmp_arr.length > 0)
-                    tmp_item2 = tmp_arr[0];
+                    tmpItem = tmp_arr[0];
                 else
                     return state;
             }
 
             if (state.fields.hasOwnProperty('beforeEdit'))
-                state.fields.beforeEdit(tmp_item2);
+                state.fields.beforeEdit(tmpItem);
 
             return {
                 ...state,
-                item: { ...state.item, ...tmp_item2 },
+                item: { ...state.item, ...tmpItem },
                 errors: resetErrors(state.fields),
                 status: 'edit',
             }
@@ -226,34 +225,32 @@ export const red_items = (state, action) => {
         // Esta opcion sirve para cdargar un elemento desde un objeto, y no desde el listado. Se usa 
         // cuando se entra desde una entrada directa a otra. 
         case ITEMS_ACTIONS.EDIT_ITEM:
-            tmp_item = {};
+            tmpItem = {};
             Object.keys(state.fields.fields).forEach(j => {
                 switch (state.fields.fields[j].type) {
                     case "multilang":
                         let tt = {}
                         state.fields.languages.forEach(el => { tt[el] = action.item.data[j][el] });
-                        tmp_item[j] = tt;
+                        tmpItem[j] = tt;
                         break;
                     case "multitext":
                         let tt2 = []
                         action.item.data[j].forEach(ite => { tt2.push({ key: ite.key, value: ite.value, default: false }) })
-                        tmp_item[j] = tt2;
+                        tmpItem[j] = tt2;
                         break;
-                    //case "select":
-
                     default:
-                        tmp_item[j] = action.item.data[j];
+                        tmpItem[j] = action.item.data[j];
                         break;
                 }
             });
-            //let err2 = resetErrors(state.fields);
+            //let err2 = 
             return {
                 ...state,
                 status: 'edit',
-                //errors: err2,
-                item: tmp_item,//action.item,
-                //load: (state.load + 1) % 17,
+                errors: resetErrors(state.fields),
+                item: tmpItem,
             }
+
         case ITEMS_ACTIONS.NEW_ITEM:
             return {
                 ...state,
@@ -323,31 +320,31 @@ export const red_items = (state, action) => {
             }
 
         case ITEMS_ACTIONS.ADD_MULTIFIELD:
-            tmp_item = state.item;
-            let key = tmp_item[action.fieldname].length + 1;
-            tmp_item[action.fieldname].push({ key: key, value: "", default: (tmp_item[action.fieldname].length === 0) ? true : false });
+            tmpItem = state.item;
+            let key = tmpItem[action.fieldname].length + 1;
+            tmpItem[action.fieldname].push({ key: key, value: "", default: (tmpItem[action.fieldname].length === 0) ? true : false });
 
             return {
                 ...state,
-                item: tmp_item,
+                item: tmpItem,
             }
 
         case ITEMS_ACTIONS.REMOVE_MULTIFIELD:
-            tmp_item = state.item;
-            tmp_item[action.fieldname].splice(action.pos, 1);
+            tmpItem = state.item;
+            tmpItem[action.fieldname].splice(action.pos, 1);
 
             return {
                 ...state,
-                item: tmp_item
+                item: tmpItem
             }
 
         case ITEMS_ACTIONS.SET_MULTIFIELD:
-            tmp_item = state.item;
-            tmp_item[action.fieldname][action.pos].value = action.value;
+            tmpItem = state.item;
+            tmpItem[action.fieldname][action.pos].value = action.value;
 
             return {
                 ...state,
-                item: tmp_item
+                item: tmpItem
             }
         case ITEMS_ACTIONS.SET_MULTIFIELDCHECK:
             var temp = state.item[action.fieldname].map(item => ({ ...item, default: false }))
@@ -448,13 +445,13 @@ export const red_items = (state, action) => {
                 status: "history",
             }
         case ITEMS_ACTIONS.ADD_FILEFIELD: 
-            let tmp_item = state.item[action.fieldname];
+            tmpItem = state.item[action.fieldname];
 
             return {
                 ...state,
                 item:{
                     ...state.item,
-                    [action.fieldname] : [...tmp_item,{                
+                    [action.fieldname] : [...tmpItem,{                
                         "id": 0,
                         "filename": null,
                         "descripcion": "",
@@ -491,9 +488,9 @@ export const red_items = (state, action) => {
         case ITEMS_ACTIONS.CHANGE_FIELD_ENABLE: 
             let estado = state.fields.fields[action.fieldname].enabled;
             let v = state.fields.fields[action.fieldname].value;
-            tmp_item = state.fields.fields[action.fieldname];
-            tmp_item.enabled = !estado;
-            tmp_item.value = v + 2;
+            tmpItem = state.fields.fields[action.fieldname];
+            tmpItem.enabled = !estado;
+            tmpItem.value = v + 2;
 
             return {
                 ...state,
@@ -502,7 +499,7 @@ export const red_items = (state, action) => {
                     fields: {
                         ...state.fields.fields,
                         [action.fieldname]: {
-                            ...tmp_item,
+                            ...tmpItem,
                         },
                     },
                 }
