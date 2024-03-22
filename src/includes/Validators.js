@@ -341,23 +341,16 @@ export const validateNumber = (name, value,field,itemsHandle) => {
 }
 
 export const validateAll = (items, itemsHandle) => {
-    console.log("Estoy validando todo");
-
-    console.log("----------------");
     var result = true;
     for (var campo in items.fields.fields) {
-        console.log("Campo: -> " + campo);
-        if ( items.fields.fields[campo].validate !== 'undefined' &&  items.fields.fields[campo].validate === false)
+        if ( items.fields.fields[campo].validate !== undefined &&  items.fields.fields[campo].validate === false)
             console.log("Este campo no se valida: " + campo);
         else
             switch (items.fields.fields[campo].type) {
                 case "text":
                 case "textarea": 
-                    console.log("es un campo de texto: ");
-                    console.debug(items);
                     result = validate(campo, items.item[campo],items.fields.fields[campo],itemsHandle)
                     if (result === false) {
-                        console.log("El campo " + campo + " no valida");
                         return false;
                     }
                     break;
@@ -387,7 +380,6 @@ export const validateAll = (items, itemsHandle) => {
                     if (!result) return false;
                     break;
                 case "toggle":
-                    console.log("toggle");
                     break;
                 case "select": 
                     result = validateSelect(campo, items.item[campo],items.fields.fields[campo],itemsHandle)
@@ -402,9 +394,6 @@ export const validateAll = (items, itemsHandle) => {
 
 export const validate = (name, value,field,itemsHandle) => {
     let condicion = "";
-
-    //console.log("validate" + name + ": " + value);
-    //console.debug(field);
 
     if (!field.hasOwnProperty('conditions'))
         return true;
@@ -438,10 +427,7 @@ export const validate = (name, value,field,itemsHandle) => {
 export const validateLocalized = (fieldname, values, field, itemsHandle) => {
     const languages = Object.keys(values);
     let l = "";
-    console.log("localized");
     for (l in languages) {
-        console.log(fieldname);
-        console.debug(values);
         if (!validate(fieldname, values[languages[l]],field,itemsHandle))
             return false;
     }

@@ -362,6 +362,10 @@ const Participantes = ({ user }) => {
             form.fields.prestaciones.options = opts;
         });
 
+        fetchAPIData('/silefe.dgeografica/all', {}, referer).then(response => {
+            form.fields.geograficas.options = [...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+        });
+
         // TODO: Ver como rellenar la situación laboral
         form.fields.situacionLaboral.options = [
             { value: "0", label: seleccionarlabel },

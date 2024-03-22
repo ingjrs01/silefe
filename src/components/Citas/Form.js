@@ -140,7 +140,7 @@ export const form = {
             name: "comments",
             value:"",
             placeholder:Liferay.Language.get('Comentarios'),
-            conditions:["text"]
+            conditions:[]
         },
         participantInName: {
             key:18,

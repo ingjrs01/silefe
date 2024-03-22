@@ -130,7 +130,6 @@ const Acciones = ({user}) => {
     form.loadCsv = loadCsv;
     form.handleNew = newElement;
 
-
     const processCsv = () => {
         console.log("processCsv");
         //        if (file) {
@@ -192,10 +191,6 @@ const Acciones = ({user}) => {
         if (item.accionId != undefined && item.accionId > 0) {            
             const accionId = item.accionId;
             loadHistory(accionId);
-            //ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
-            //ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
-            //ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETFIELD, fieldname: 'accionId', value: accionId });
-
             loadDocentes(accionId);
             loadParticipantes(accionId);
             // Cargando los datos de las acciones: 

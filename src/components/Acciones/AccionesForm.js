@@ -28,9 +28,6 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
       console.error("Errores en la validacion");
   }
 
-  //console.log("AccionesForm");
-  //debugger;
-
   return (
     <div className="container">
       <ClayCard>
@@ -197,7 +194,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                   />
                 </ClayTabs.TabPane>
                 <ClayTabs.TabPane aria-labelledby="tab-5" key={"tab-content-5"}>
-                  <h3>{"ELEARNING"}</h3>
+                  <h3>{Liferay.Language.get("ELEARNING")}</h3>
                   <div className="row">
                       <Select itemsHandle={itemsHandle} field={items.fields.fields['plataformaId']} item={items.item.plataformaId} action={ITEMS_ACTIONS.SET}  error={items.errors['plataformaId']}  />
                       <Select itemsHandle={itemsHandle} field={items.fields.fields['categoriaId']} item={items.item.categoriaId} action={ITEMS_ACTIONS.SET}  error={items.errors['categoriaId']}  />

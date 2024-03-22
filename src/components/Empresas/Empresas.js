@@ -130,6 +130,12 @@ const Empresas = ({user}) => {
                 navigate(state.backUrl + state.ancestorId);
             }
         });
+    }    
+ 
+    const handleCancel = () => {
+        if (state != null && state.backUrl.length > 0) {
+            navigate(state.backUrl + state.ancestorId);
+        }
     }
 
     const downloadfile = () => {
@@ -138,6 +144,7 @@ const Empresas = ({user}) => {
 
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
+    form.handleCancel = handleCancel;
     //form.downloadFunc = downloadfile;
     //form.handleSave = handleSave;
 

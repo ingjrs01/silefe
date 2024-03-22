@@ -3,7 +3,7 @@ import { Liferay } from '../common/services/liferay/liferay';
 export const GenericForm = {
     title: Liferay.Language.get('Elemento'),
     languages: ["es_ES","en_US","gl_ES"],
-    beforeEdit: () => console.log("beforeEdit desde el Form2"),
+    beforeEdit: () => {},
     downloadFunc: () => console.log("download a file in excel format"),
     handleSave: () => console.log("gestionando guardado en GenericForm"),
     loadCsv: () => console.log("gestionando carga de datos desde GenericForm"),

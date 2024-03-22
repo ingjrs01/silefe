@@ -423,6 +423,15 @@ export const form = {
             label: Liferay.Language.get('Adjuntos'), 
             name: "adjuntos", 
         },
+        geograficas: {
+            key: 45,
+            type: "doublelist",
+            label: Liferay.Language.get("Disponibilidad Geográfica"),
+            name: 'geograficas',
+            options: [],
+            enabled: true,
+            className: 'col-12',
+        },
 
 
     },
@@ -501,6 +510,11 @@ export const form = {
                     key:103,
                     cols: ['disponibilidad']
                 },
+                {
+                    key:104,
+                    cols: ['geograficas']
+                },
+
             ]
         },
         {

@@ -258,7 +258,11 @@ export const red_items = (state, action) => {
                 errors: resetErrors(state.fields),
                 status: 'new',
             }
+            
         case ITEMS_ACTIONS.CANCEL:
+            if (state.fields.hasOwnProperty("handleCancel"))
+                state.fields.handleCancel();
+
             return {
                 ...state,
                 arr: state.arr.map(i => { return { ...i, checked: false } }),

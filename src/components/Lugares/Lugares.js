@@ -50,6 +50,12 @@ const Lugares = () => {
         });
     }
 
+    const handleCancel = () => {
+        if (state != 'undefined' && state.backUrl.length > 0) {
+            navigate(state.backUrl + state.ancestorId);
+        }
+    }
+
     const loadMunicipiosProvincia = (pId) => {
         const provinciaId = pId ?? 1;
         fetchAPIData('/silefe.municipio/filter-by-province', {  page: 0, province: provinciaId }, referer).then(response => {
@@ -96,6 +102,7 @@ const Lugares = () => {
     //form.downloadFunc = downloadFile;
     //form.handleSave = handleSave;
     form.loadCsv = loadCsv;
+    form.handleCancel = handleCancel;
 
     useEffect(() => {
         if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0)

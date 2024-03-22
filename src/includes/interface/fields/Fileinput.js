@@ -39,7 +39,7 @@ export const Fileinput = ({ itemsHandle, field, item, action, error }) => {
                         displayType="secondary"
                         showCollapseIcon={false}
                         spritemap={spritemap}
-                        key={"panel" + field.key}
+                        key={"panel" + it.filename + field.key}
                     >
                         <div className="form-group" key={"gf" + field.key} >
                             {(it.src === undefined || it.src === "" || it.edit === true) &&
