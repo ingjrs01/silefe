@@ -1,4 +1,4 @@
-import ClayForm, { ClayDualListBox } from '@clayui/form';
+import ClayForm, { ClayDualListBox, ClayInput } from '@clayui/form';
 import ClayPanel from '@clayui/panel';
 import React, { useState } from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
@@ -50,6 +50,12 @@ export const DoubleList = ({itemsHandle, field, item, action, error}) => {
           spritemap={spritemap}
          >
           <ClayPanel.Body>
+          <ClayInput
+            id="basicInputText"
+            placeholder="Insert your name here"
+            type="text"
+            className='col-3 align-items-end'
+            />
             <ClayDualListBox
               items={items}
               left={{
@@ -68,8 +74,7 @@ export const DoubleList = ({itemsHandle, field, item, action, error}) => {
             />
           </ClayPanel.Body>
          </ClayPanel>
-         
-
+        
         {
           error !== undefined && error.length > 0 &&
           <ClayForm.FeedbackGroup key={"error" + field.name}>
