@@ -432,6 +432,15 @@ export const form = {
             enabled: true,
             className: 'col-12',
         },
+        demandas: {
+            key: 46,
+            type: "doublelist",
+            label: Liferay.Language.get("Puestos demandados"),
+            name: 'demandas',
+            options: [],
+            enabled: true,
+            className: 'col-12',
+        },
 
 
     },
@@ -514,7 +523,10 @@ export const form = {
                     key:104,
                     cols: ['geograficas']
                 },
-
+                {
+                    key:105,
+                    cols: ['demandas']
+                },
             ]
         },
         {
