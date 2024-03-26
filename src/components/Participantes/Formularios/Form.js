@@ -432,17 +432,16 @@ export const form = {
             enabled: true,
             className: 'col-12',
         },
-        demandas: {
+        puestos: {
             key: 46,
             type: "doublelist",
             label: Liferay.Language.get("Puestos demandados"),
-            name: 'demandas',
+            name: 'puestos',
             options: [],
             enabled: true,
             className: 'col-12',
+            search: true,
         },
-
-
     },
     tabActive:0,
     tabs : [
@@ -525,7 +524,7 @@ export const form = {
                 },
                 {
                     key:105,
-                    cols: ['demandas']
+                    cols: ['puestos']
                 },
             ]
         },

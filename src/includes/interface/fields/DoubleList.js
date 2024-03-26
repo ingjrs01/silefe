@@ -6,11 +6,12 @@ import { spritemap } from '../../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const DoubleList = ({itemsHandle, field, item, action, error}) => {
-
+  const [search, setSearch] = useState ("");
+ 
   const accion = (action !== undefined)?action:ITEMS_ACTIONS.SET;
   let izquierda = [];
   let derecha = []; 
-
+  
   field.options.forEach(element => {
     if (item.includes(element.value)) {
       izquierda.push(element);
@@ -20,15 +21,21 @@ export const DoubleList = ({itemsHandle, field, item, action, error}) => {
     }
   });
   const moveBoxesOptions = [izquierda, derecha ];
-
+  
   const [items, setItems] = useState(moveBoxesOptions);
   const [leftSelected, setLeftSelected] = useState([]);
   const [rightSelected, setRightSelected] = useState([]);
-
+  
   const change = (select) => {
     const seleccionados = select[0].map(item => item.value);
     itemsHandle({type: accion, fieldname: field.name,  value: seleccionados});
     setItems(select);
+  }
+  
+  const searchChange = (value) => {
+    setSearch(value);
+    const [a, vacio] = items;
+    setItems([a, derecha.filter(i => i.label.includes(value))]);
   }
 
   return (
@@ -50,12 +57,17 @@ export const DoubleList = ({itemsHandle, field, item, action, error}) => {
           spritemap={spritemap}
          >
           <ClayPanel.Body>
-          <ClayInput
-            id="basicInputText"
-            placeholder="Insert your name here"
-            type="text"
-            className='col-3 align-items-end'
-            />
+          {
+            field.search !== undefined && field.search === true &&
+            <ClayInput
+              id="basicInputText"
+              placeholder="Insert your name here"
+              type="text"
+              value={search}
+              onChange={evt=>searchChange(evt.target.value)}
+              className='col-3 align-items-end'
+              />
+          }
             <ClayDualListBox
               items={items}
               left={{

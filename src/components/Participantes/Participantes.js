@@ -368,7 +368,7 @@ const Participantes = ({ user }) => {
 
         fetchAPIData('/silefe.cno/all', { }, referer).then(response => {
             const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => ({ value: obj.id, label: obj.descripcion[lang] }) )];
-            form.fields.demandas.options = opts;
+            form.fields.puestos.options = opts;
         });
 
 
