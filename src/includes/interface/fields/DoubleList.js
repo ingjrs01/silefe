@@ -61,7 +61,7 @@ export const DoubleList = ({itemsHandle, field, item, action, error}) => {
             field.search !== undefined && field.search === true &&
             <ClayInput
               id="basicInputText"
-              placeholder="Insert your name here"
+              placeholder={Liferay.Language.get("Filtrar disponibles")}
               type="text"
               value={search}
               onChange={evt=>searchChange(evt.target.value)}

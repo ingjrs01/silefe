@@ -442,6 +442,129 @@ export const form = {
             className: 'col-12',
             search: true,
         },
+        motivacion: {
+            key:47,
+            type: "textarea",
+            label: Liferay.Language.get('Motivación'),
+            name: "motivacion",
+            value:"",
+            placeholder: Liferay.Language.get('Motivación'),
+            conditions: []
+        },
+        recursos: {
+            key:48,
+            type: "textarea",
+            label: Liferay.Language.get('Recursos'),
+            name: "recursos",
+            value:"",
+            placeholder: Liferay.Language.get('Recursos'),
+            conditions: []
+        },
+        objetivos: {
+            key:49,
+            type: "textarea",
+            label: Liferay.Language.get('Objetivos'),
+            name: "objetivos",
+            value:"",
+            placeholder: Liferay.Language.get('Objetivos'),
+            conditions: []
+        },
+        personalidad: {
+            key:50,
+            type: "textarea",
+            label: Liferay.Language.get('Personalidad'),
+            name: "personalidad",
+            value:"",
+            placeholder: Liferay.Language.get('Personalidad'),
+            conditions: []
+        },
+        habilidades: {
+            key:51,
+            type: "textarea",
+            label: Liferay.Language.get('Habilidades'),
+            name: "habilidades",
+            value:"",
+            placeholder: Liferay.Language.get('Habilidades'),
+            conditions: []
+        },
+        insInicio: {
+            key:52,
+            type: "date",
+            label: Liferay.Language.get('Fecha Inicio'),
+            name: "insInicio",
+            value:"",
+            conditions: []
+        },
+        insFin: {
+            key:53,
+            type: "date",
+            label: Liferay.Language.get('Fecha Fin'),
+            name: "insFin",
+            value:"",
+            conditions: []
+        },
+        insCreaEmpresa: {
+            key:54,
+            type: "toggle",
+            label: Liferay.Language.get('Crea Empresa'),
+            name: "insCreaEmpresa",
+            value:"",
+            conditions: []
+        },
+        insAltaSS: {
+            key:55,
+            type: "toggle",
+            label: Liferay.Language.get('Alta SS'),
+            name: "insAltaSS",
+            value:"",
+            conditions: []
+        },
+        insEmpresaId: {
+            key:56,
+            type: "select",
+            enabled: true,
+            label: Liferay.Language.get('Empresa'),
+            name: "insEmpresaId",
+            value:"",
+            options: [],
+            conditions: []
+        },
+        insPuesto: {
+            key:57,
+            type: "selectfilter",
+            enabled: true,
+            label: Liferay.Language.get('Puesto'),
+            name: "insPuesto",
+            value:"",
+            options: [],
+            conditions: [],
+            change: ()=>{console.log("cambia el select");},
+        },
+        insTipoContrato: {
+            key:58,
+            type: "select",
+            enabled: true,
+            label: Liferay.Language.get('TipoContrato'),
+            name: "insTipoContrato",
+            value:"",
+            options: [],
+            conditions: []
+        },
+        insJornadaId: {
+            key:59,
+            type: "select",
+            enabled: true,
+            label: Liferay.Language.get('Jornada'),
+            name: "insJornadaId",
+            value:"",
+            options: [],
+            conditions: [],
+        }, 
+        line: {
+            key: 60,
+            type: "line",
+            label: Liferay.Language.get("Inserción")
+        }
     },
     tabActive:0,
     tabs : [
@@ -526,6 +649,42 @@ export const form = {
                     key:105,
                     cols: ['puestos']
                 },
+                {
+                    key:106,
+                    cols: ['motivacion']
+                },
+                {
+                    key:107,
+                    cols: ['recursos']
+                },
+                {
+                    key:108,
+                    cols: ['objetivos']
+                },
+                {
+                    key:109,
+                    cols: ['personalidad']
+                },
+                {
+                    key:110,
+                    cols: ['habilidades']
+                },
+                {
+                    key: 114,
+                    cols:['line'],
+                },
+                {
+                    key:111,
+                    cols: ['insInicio', 'insFin', 'insCreaEmpresa', 'insAltaSS']
+                },
+                {
+                    key: 112,
+                    cols: ['insEmpresaId']
+                },
+                {
+                    key: 113,
+                    cols: ['insPuesto', 'insTipoContrato', 'insJornadaId']
+                }                
             ]
         },
         {

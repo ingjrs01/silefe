@@ -7,6 +7,7 @@ import { DoubleList } from './fields/DoubleList';
 import { Email } from './fields/Email';
 import { Fileinput } from './fields/Fileinput';
 import { Hour } from './fields/Hour';
+import { Line } from "./fields/Line";
 import { LocalizedInput } from './fields/LocalizedInput';
 import { Money } from './fields/Money';
 import { Multilist } from './fields/Multilist';
@@ -26,6 +27,7 @@ const RenderFields = ({ rows, itemsHandle, items, plugin }) => (
           <div className="row">
             {row.cols.map(it =>(
               <>
+                    {(items.fields.fields[it].type === 'line')        && <Line           itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} action={ITEMS_ACTIONS.SET} error={items.errors[it]} key={items.fields.fields[it].key + "-f"}/> }
                     {(items.fields.fields[it].type === 'multitext')   && <Phone          itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} action={ITEMS_ACTIONS.SET} error={items.errors[it]} key={items.fields.fields[it].key + "-f"}/> }
                     {(items.fields.fields[it].type === 'text')        && <Textinput      itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} action={ITEMS_ACTIONS.SET} error={items.errors[it]} key={items.fields.fields[it].key + "-f"}/> }
                     {(items.fields.fields[it].type === 'button')      && <Button         itemsHandle={itemsHandle} field={items.fields.fields[it]} item={items.item[it]} action={ITEMS_ACTIONS.SET} error={items.errors[it]} key={items.fields.fields[it].key + "-f"}/> }

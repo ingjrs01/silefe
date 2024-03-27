@@ -371,7 +371,6 @@ const Participantes = ({ user }) => {
             form.fields.puestos.options = opts;
         });
 
-
         // TODO: Ver como rellenar la situación laboral
         form.fields.situacionLaboral.options = [
             { value: "0", label: seleccionarlabel },
@@ -386,6 +385,7 @@ const Participantes = ({ user }) => {
         });
         fetchAPIData('/silefe.horario/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
+            form.fields.insJornadaId.options= opts;
             form.fields.jornadaId.options = opts;
         });
 
@@ -419,14 +419,25 @@ const Participantes = ({ user }) => {
 
         fetchAPIData('/silefe.tipocontrato/all', {}, referer).then(response => {
             const opts = response.data.map(item => ({ value: item.tipoContratoId, label: item.descripcion[lang] }));
+            form.fields.insTipoContrato.options = opts;
             experienciasForm.fields.tipoContratoId.options = opts;
         });
+
         fetchAPIData('/silefe.mbaja/all', {}, referer).then(response => {
             const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));//.unshift({ id: 0, descripcion: " " });
             experienciasForm.fields.motivoBajaId.options = motivos;
         });
+
+        fetchAPIData('/silefe.empresa/all', {}, referer).then(response => {
+            //const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));
+            const opts = response.data.map(item => ({value: item.empresaId, label: item.razonSocial}));
+            form.fields.insEmpresaId.options = opts;
+            //experienciasForm.fields.motivoBajaId.options = motivos;
+        });
+
         fetchAPIData('/silefe.cno/all', { descripcion: "" }, referer).then(response => {
             const opts = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));
+            form.fields.insPuesto.options = opts;
             //experienciasHandler({ type: EXPERIENCIA_ACTIONS.OCUPACIONES, ocupaciones: opts });
         });
 
