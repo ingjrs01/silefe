@@ -109,7 +109,10 @@ const Participantes = ({ user }) => {
         // TODO: Están buscando en que participa: 
         const postparticipaciones = {
             participanteId: item.id,
-            pagination: { page: 1, pageSize: 10 },
+            pagination: { 
+                page: participaciones.pagination.page, 
+                pageSize: participaciones.pagination.pageSize
+            },
             options: {
                 filters: [
                 ],
@@ -124,7 +127,6 @@ const Participantes = ({ user }) => {
             }));
             participacionesHandler({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: data_part, pages: response.totalPages });
         });
-
     }
 
     useEffect(() => {
@@ -314,6 +316,8 @@ const Participantes = ({ user }) => {
                 ...i,
                 id: i.participanteId,
                 fechaNacimiento: toDate(i.fechaNacimiento),
+                insInicio: toDate(i.insInicio), 
+                insFin: toDate(i.insFin), 
                 email: formatEmails(i.email),
                 telefono: formatPhones(i.telefono),
                 tipoDoc: i.tipoDoc.toString(),
