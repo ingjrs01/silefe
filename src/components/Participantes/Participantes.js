@@ -106,7 +106,6 @@ const Participantes = ({ user }) => {
         beforeExperiencia(item.id);
         loadCitas(item.id);
 
-        // TODO: Están buscando en que participa: 
         const postparticipaciones = {
             participanteId: item.id,
             pagination: { 
@@ -444,8 +443,6 @@ const Participantes = ({ user }) => {
             form.fields.insPuesto.options = opts;
             //experienciasHandler({ type: EXPERIENCIA_ACTIONS.OCUPACIONES, ocupaciones: opts });
         });
-
-
     }
 
     const changeProvince = (id) => {
@@ -541,7 +538,7 @@ const Participantes = ({ user }) => {
                 />,
             Participaciones:
                 <Citas
-                    items={participaciones}
+                    reducer={participaciones}
                     handler={participacionesHandler}
                 />,
             Historico:

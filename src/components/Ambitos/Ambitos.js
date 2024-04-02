@@ -90,7 +90,7 @@ const Ambitos = () => {
     }
 
     const confirmDelete = async () => {
-        let s = items.arr.filter(item => item.checked).map(i => { return i.convocatoriaId });
+        let s = items.arr.filter(item => item.checked).map(i => { return i.ambitoId });
         deleteAPI('/silefe.ambito/remove-ambitos', s, referer).then(res => {
             if (res) {
                 setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);

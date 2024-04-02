@@ -2,7 +2,7 @@ import { useModal } from '@clayui/modal';
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { Errors } from '../../includes/Errors';
-import { url_referer } from '../../includes/LiferayFunctions';
+import { getUserId, url_referer } from '../../includes/LiferayFunctions';
 import { deleteAPI, fetchAPIData, saveAPI } from "../../includes/apifunctions";
 import DefaultForm from '../../includes/interface/DefaultForm';
 import { FAvisos } from '../../includes/interface/FAvisos';
@@ -67,12 +67,7 @@ const TipoContrato = () => {
     }
 
     const handleSave = async () => {
-        //const data = {
-        //    id:       items.item.id,
-        //    descripcion: items.item.descripcion,
-        //    userId:      getUserId(),
-        //}
-        let obj = { obj: items.item, id: items.item.id };
+        let obj = { obj: {...items.item, userId: getUserId()}, id: items.item.id };
         let endpoint = '/silefe.tipocontrato/save-tipo-contrato';
         if (items.status === 'new')
             endpoint = '/silefe.tipocontrato/add-tipo-contrato';
