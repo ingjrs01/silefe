@@ -10,7 +10,8 @@ export const CITAS_ACTIONS = {
     SELECT_ITEM: 6,
     SETFORM: 7,
     VIEW: 8,
-    CLOSEVIEW: 9,
+    ADDERROR: 9,
+    CLOSEVIEW: 11,
     SETPAGE: 10,
     SAVE: 80,
 }
@@ -26,6 +27,7 @@ export const initialState = {
     form: {
         title: "Citas",
     },
+    errors: [],
     pagination: {
         page: 0,
         pageSize: 4,
@@ -35,6 +37,7 @@ export const initialState = {
 }
 let tmp = [];
 export const reducerCitas = (state=initialState, action ) => {
+    console.log("reducerCitas: " + action.type)
     switch (action.type) {
     case CITAS_ACTIONS.START:
         return {
@@ -117,6 +120,11 @@ export const reducerCitas = (state=initialState, action ) => {
             ...state,
             items: tmp,
            status: CITAS_STATES.LIST,
+        }
+    case  CITAS_ACTIONS.ADDERROR:
+        return {
+            ...state,
+            errors: { ...state.errors, [action.name]: [action.value] }                
         }
     }
 }

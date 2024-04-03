@@ -15,7 +15,9 @@ export const initialState = {
     fields: {
         empty: true,
         table: {},
-        tabActive: 0,
+        tabActive: 0,        
+        searchOperator: 0,
+        searchField: "",
     },
     status: "list", /* values: new, edit, list, load, history */
     search: "",
@@ -414,6 +416,17 @@ export const red_items = (state, action) => {
                 search: "",
                 load: (state.load + 1) % 17,
             }
+        case ITEMS_ACTIONS.SET_SEARCHOP:
+            return {
+                ...state,
+                fields: {
+                    ...state.fields,
+                    searchOperator: action.value,
+                },
+                //searchField: action.value,
+                //search: "",
+                load: (state.load + 1) % 17,
+            }    
         case ITEMS_ACTIONS.ADD_FILTER:
             if (state.fields.search === "0")
                 return { ...state }
@@ -425,7 +438,8 @@ export const red_items = (state, action) => {
                     {
                         name: state.fields.searchField,
                         label: state.fields.fields[state.fields.searchField].label ?? "Sin nombre",
-                        value: state.fields.search, operator: "=",
+                        value: state.fields.search, 
+                        operator: state.fields.searchOperator??"=",
                         valueLabel: (state.fields.fields[state.fields.searchField].type === "select") ? state.fields.fields[state.fields.searchField].options.filter(it => it.value === state.fields.search)[0].label : state.fields.search,
                     }
                 ]

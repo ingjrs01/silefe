@@ -1,4 +1,5 @@
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
+import ClayDatePicker from '@clayui/date-picker';
 import { ClayInput, ClaySelect } from '@clayui/form';
 import { ClayIconSpriteContext } from '@clayui/icon';
 import ClayToolbar from '@clayui/toolbar';
@@ -9,6 +10,11 @@ import { MgtToolbar } from '../includes/interface/MgtToolbar';
 import { ITEMS_ACTIONS } from '../includes/reducers/actions';
 import { handleDelete } from '../includes/utils';
 
+import { getLanguageId } from '../includes/LiferayFunctions'; //   '../../LiferayFunctions';
+//import { ITEMS_ACTIONS } from '../../reducers/actions';
+import { getDays, getMonths } from '../includes/interface/DatesLang';
+
+
 const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
 
   const createElement = () => {
@@ -16,6 +22,10 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
 
     if (items.fields.hasOwnProperty("handleNew"))
       items.fields.handleNew();
+  }
+
+  const onChange = (val) => {
+    console.log(val);
   }
 
   return (
@@ -31,6 +41,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
 
             {
               items.status === "list" && items.fields.searchFields !== undefined && items.fields.searchFields.length > 1 &&
+              <>
               <ClayToolbar.Item>
                 <ClaySelect aria-label="Select Label"
                   id={"fieldMenu"}
@@ -39,7 +50,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                   onChange={evt => {
                     itemsHandle({ type: ITEMS_ACTIONS.SET_SEARCHFIELD, value: evt.target.value });
                   }}
-                  value={items.searchField} >
+                  value={items.fields.searchField} >
                   <ClaySelect.Option
                     key={"Aon-0"}
                     label={Liferay.Language.get("Seleccionar")}
@@ -53,7 +64,48 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                     />
                   ))}
                 </ClaySelect>
+                </ClayToolbar.Item>
+                <ClayToolbar.Item>
+
+                <ClaySelect aria-label="Select Label"
+                  id={"fieldMenu2"}
+                  name={"fieldMenu2"}
+                  key={"fieldMenu2"}
+                  onChange={evt => itemsHandle({ type: ITEMS_ACTIONS.SET_SEARCHOP, value: evt.target.value })}
+                  value={items.fields.searchOperator} >
+                  <ClaySelect.Option
+                    key={"CAon-0"}
+                    label={Liferay.Language.get("=")}
+                    value={"="}
+                  />
+                  <ClaySelect.Option
+                    key={"CAon-1"}
+                    label={Liferay.Language.get(">")}
+                    value={">"}
+                  />
+                  <ClaySelect.Option
+                    key={"CAon-3"}
+                    label={Liferay.Language.get("<")}
+                    value={"<"}
+                  />
+                  <ClaySelect.Option
+                    key={"CAon-4"}
+                    label={Liferay.Language.get(">=")}
+                    value={">="}
+                  />
+                  <ClaySelect.Option
+                    key={"CAon-5"}
+                    label={Liferay.Language.get("<=")}
+                    value={"<="}
+                  />
+                  <ClaySelect.Option
+                    key={"CAon-6"}
+                    label={Liferay.Language.get("Contiene")}
+                    value={"like"}
+                  />
+              </ClaySelect>
               </ClayToolbar.Item>
+              </>
             }
             {             
               (items.status === "list") && (items.fields.hasOwnProperty("fields")) && 
@@ -67,7 +119,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                             id={"searchBottonField"}
                             name={"searchBottonField"}
                             key={"searchBottonField"}
-                            value={items.search}                           
+                            value={items.fields.search}                           
                             onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}>
                             {items.fields.fields[items.fields.searchField].options.map(field => (
                               <ClaySelect.Option
@@ -87,7 +139,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                             id={"searchBottonField"}
                             name={"searchBottonField"}
                             key={"searchBottonField"}
-                            value={items.search}                           
+                            value={items.fields.search}                           
                             onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}
                           >
                               <ClaySelect.Option
@@ -104,7 +156,6 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                         }
                       </>
                     }
-
                     {
                       ["text", "multilang", "dni"].includes( items.fields.fields[items.fields.searchField].type) &&
                       <ClayInput
@@ -116,6 +167,25 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                         onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value}) }>
                       </ClayInput>
                     }
+                    {
+                      ["date"].includes( items.fields.fields[items.fields.searchField].type) &&
+                      <ClayDatePicker
+                        onChange={val => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: val}) }
+                        id={"searchDateMenu"}
+                        firstDayOfWeek={1}
+                        months={getMonths(getLanguageId())}
+                        spritemap={spritemap}
+                        timezone="GMT+01:00"
+                        value={items.fields.search}
+                        weekdaysShort={getDays(getLanguageId())}
+                        key={"dtpkrsearch"}
+                        years={{
+                          end: (((new Date().getFullYear()) + 10)),
+                          start: ((new Date().getFullYear() - 10))
+                        }}
+                      />
+                    }
+
                   </ClayInput.GroupItem>
                     <ClayInput.GroupItem>
                         <ClayButtonWithIcon

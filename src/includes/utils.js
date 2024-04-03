@@ -124,11 +124,13 @@ export const formatPhones = (telefonos) => {
 
 export const formatPost = (items) => {
   let filtros = (items.filters !== 'undefined')?[...items.filters]:[]; 
-  //if (items.search && typeof items.fields.search !== 'undefined' && items.fields.search !== "0")
-  //    filtros.push({ name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" });
   
   if (typeof items.fields.search !== 'undefined' && items.fields.search !== "0") 
-      filtros.push({ name: items.fields.searchField, value: (items.fields.search && typeof items.fields.search !== 'undefined') ? items.fields.search : "" });
+      filtros.push({ 
+        name: items.fields.searchField, 
+        value: (items.fields.search && typeof items.fields.search !== 'undefined') ? items.fields.search : "" ,
+        operator: items.fields.searchOperator
+      });
   
   return {
       pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
