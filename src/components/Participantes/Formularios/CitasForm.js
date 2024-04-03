@@ -140,6 +140,13 @@ export const form = {
             placeholder:Liferay.Language.get('Comentarios'),
             conditions:["text"]
         },
+        appointmentDateTime: {
+            key:18,
+            type: "calculated",
+            fields: ['appointmentDate', 'appointmentHour'],
+            label: Liferay.Language.get('Fecha'),
+            name: "appointmentDateTime",
+        },
     },
     rows: [
         {
@@ -164,12 +171,6 @@ export const form = {
         },
     ],
     table: [
-        //{
-        //    columnName: "id",
-        //    columnTitle: "Id",
-        //    columnType: "checkbox",
-        //    key: "tc1",
-        //},
         {
             columnName: "appointmentDateTime", 
             columnTitle: Liferay.Language.get('Fecha'),
@@ -182,12 +183,6 @@ export const form = {
             columnType: "multilang",
             key: "tc5",
         },
-        //{
-        //    columnName: "origen", 
-        //    columnTitle: Liferay.Language.get('Origen'),
-        //    columnType: "string",
-        //    key: "tc3",
-        //},
         {
             columnName: "subject", 
             columnTitle: Liferay.Language.get('Asunto'),

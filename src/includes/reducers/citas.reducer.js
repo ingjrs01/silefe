@@ -12,6 +12,7 @@ export const CITAS_ACTIONS = {
     VIEW: 8,
     CLOSEVIEW: 9,
     SETPAGE: 10,
+    SAVE: 80,
 }
 
 export const CITAS_STATES = {
@@ -32,7 +33,7 @@ export const initialState = {
     },
     status: CITAS_STATES.LIST,
 }
-
+let tmp = [];
 export const reducerCitas = (state=initialState, action ) => {
     switch (action.type) {
     case CITAS_ACTIONS.START:
@@ -58,7 +59,6 @@ export const reducerCitas = (state=initialState, action ) => {
             }
         }
     case CITAS_ACTIONS.VIEW:
-        console.log("viendo un elemento: " + action.index); 
         return {
             ...state,
             status: CITAS_STATES.VIEW, 
@@ -73,10 +73,26 @@ export const reducerCitas = (state=initialState, action ) => {
             item: {id: 0}
         }
     case CITAS_ACTIONS.SET: 
+        let oldItem = state.item;
+        let values = Object.values(state.form.fields);
+        const calculated = values.filter(item => item.type === 'calculated');
+        if (calculated.length > 0) {
+            calculated.forEach(calculatedItem => {
+                let titem = "";
+                calculatedItem.fields.forEach(i => {
+                    if (titem.length > 0) titem += " ";
+                    if (i === action.fieldname)
+                        titem += action.value
+                    else
+                        titem += state.item[i];
+                });
+                oldItem[calculatedItem.name] = titem;
+            });
+        }
         return {
             ...state,
             item: {
-                ...state.item,
+                ...oldItem,
                 [action.fieldname]: action.value
             }
         }
@@ -88,5 +104,19 @@ export const reducerCitas = (state=initialState, action ) => {
                 page: action.page,
             }
         }
-    }    
+    case CITAS_ACTIONS.SAVE: 
+        if (state.item.id > 0) {
+            tmp = [...state.items];
+            const index = tmp.findIndex(item => item.id == state.item.id );
+            tmp.splice(index,1,{...state.item, modified: true});
+        }
+        else 
+            tmp = [...state.items,{...state.item, modified: true}];
+
+        return {
+            ...state,
+            items: tmp,
+           status: CITAS_STATES.LIST,
+        }
+    }
 }

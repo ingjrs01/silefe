@@ -1,12 +1,9 @@
-import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
-import React from "react";
-//import { ClayCheckbox, ClayInput, ClaySelect } from '@clayui/form';
-//import ClayIcon from '@clayui/icon';
-//import ClayUpperToolbar from '@clayui/upper-toolbar';
+import { ClayButtonWithIcon } from '@clayui/button';
 import ClayCard from "@clayui/card";
 import { ClayCheckbox } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayTable from '@clayui/table';
+import React from "react";
 import { Liferay } from "../../common/services/liferay/liferay";
 import { getLanguageId, spritemap } from '../LiferayFunctions';
 import { Dateinput } from '../interface/fields/Dateinput';
@@ -18,7 +15,6 @@ import { ITEMS_ACTIONS } from '../reducers/actions';
 import { CITAS_ACTIONS, CITAS_STATES } from '../reducers/citas.reducer';
 import { MiniPaginator } from "./MiniPaginator";
 
-//const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
 const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {    
     const lang = getLanguageId();
 
@@ -28,7 +24,7 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
 
     if (items === undefined || items.items.length < 1)
         return (
-            <div>{Liferay.Language.get("No hay citas para mostrar")}</div>
+            <div>{Liferay.Language.get("No hay elementos para mostrar")}</div>
         )
 
     return (
@@ -37,58 +33,63 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                 <>
                     {
                         (items.status === CITAS_STATES.VIEW) &&
-                        <div>
-                            <div className="col-md-12">
-                                <ClayCard>
-                                    <ClayCard.Body>
-                                        <ClayCard.Description displayType="title">
-                                            {Liferay.Language.get("Datos de la Cita")}
-                                        </ClayCard.Description>
-                                        <ClayCard.Description truncate={false} displayType="text">
-                                            {
-                                                <>
-                                                <div className='row'>
-                                                <Select 
-                                                    itemsHandle={handler} 
-                                                    field={items.form.fields["tipoCitaId"]} 
-                                                    item={items.item["tipoCitaId"]} 
-                                                    className={'col-3'}
-                                                    />    
-                                                <Dateinput 
-                                                    itemsHandle={handler} 
-                                                    field={items.form.fields["appointmentDate"]} 
-                                                    item={items.item["appointmentDate"]} 
-                                                    className="col-3"
-                                                    action={ITEMS_ACTIONS.SET}
-                                                /> 
-                                                <Hour           
-                                                    itemsHandle={handler} 
-                                                    field={items.form.fields["appointmentHour"]} 
-                                                    item={items.item["appointmentHour"]} 
-                                                    className="col-2"
-                                                    action={ITEMS_ACTIONS.SET}
-                                                /> 
-                                                </div>
-                                                <div className='row'>
-                                                <Textinput  itemsHandle={handler} field={items.form.fields["subject"]} item={items.item["subject"]} />
-                                                </div>
-                                                <Textarea itemsHandle={handler} field={items.form.fields["comments"]} item={items.item["comments"]} />
-                                                </>
-                                            }
+                        <div className="col-12">
+                            <ClayCard>
+                                <ClayCard.Body>
+                                    <ClayCard.Description displayType="title">
+                                        {Liferay.Language.get("Datos de la Cita")}
+                                    </ClayCard.Description>
+                                    <ClayCard.Description truncate={false} displayType="text">
+                                        {
+                                            <>
+                                            <div className='row'>
+                                            <Select 
+                                                itemsHandle={handler} 
+                                                field={items.form.fields["tipoCitaId"]} 
+                                                item={items.item["tipoCitaId"]} 
+                                            />    
+                                            <Dateinput 
+                                                itemsHandle={handler} 
+                                                field={items.form.fields["appointmentDate"]} 
+                                                item={items.item["appointmentDate"]} 
+                                                action={ITEMS_ACTIONS.SET}
+                                            /> 
+                                            <Hour           
+                                                itemsHandle={handler} 
+                                                field={items.form.fields["appointmentHour"]} 
+                                                item={items.item["appointmentHour"]} 
+                                                action={ITEMS_ACTIONS.SET}
+                                            /> 
+                                            </div>
+                                            <div className='row'>
+                                            <Textinput  itemsHandle={handler} field={items.form.fields["subject"]} item={items.item["subject"]} />
+                                            </div>
+                                            <Textarea itemsHandle={handler} field={items.form.fields["comments"]} item={items.item["comments"]} />
+                                            </>
+                                        }
 
-                                        </ClayCard.Description>
-                                        <ClayButton>{"Guardar"}</ClayButton>
-                            <ClayButtonWithIcon
-                                onClick={() => { handler({ type: CITAS_ACTIONS.CLOSEVIEW }) }}
-                                displayType="secondary"
-                                spritemap={spritemap}
-                                aria-label="Cerrar"
-                                symbol="times"
-                                title="Edit"
-                            >{"Cerrar"}</ClayButtonWithIcon>
-                                    </ClayCard.Body>
-                                </ClayCard>
-                            </div>
+                                    </ClayCard.Description>
+                        <ClayButtonWithIcon
+                            onClick={() => { handler({ type: CITAS_ACTIONS.CLOSEVIEW }) }}
+                            displayType="secondary"
+                            spritemap={spritemap}
+                            aria-label="Cerrar"
+                            symbol="times"
+                            title="Edit"
+                        >{"Cerrar"}
+                        </ClayButtonWithIcon>
+                        <ClayButtonWithIcon
+                            onClick={() => { handler({ type: CITAS_ACTIONS.SAVE }) }}
+                            displayType="primary"
+                            spritemap={spritemap}
+                            aria-label="Cerrar"
+                            symbol="disk"
+                            title="Save"
+                        >{"Cerrar"}
+                        </ClayButtonWithIcon>
+
+                                </ClayCard.Body>
+                            </ClayCard>
                         </div>
                     }
 
@@ -122,7 +123,7 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                                         onClick={() => {
                                                             console.log("ordenando");
                                                             /*itemsHandle({ type: ITEMS_ACTIONS.SET_ORDER, fieldname: tableCol })*/
-}}
+                                                        }}
                                                     />
                                                 </ClayTable.Cell>
                                             )
@@ -163,10 +164,7 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                             }
                                             <ClayTable.Cell>
                                                 <ClayButtonWithIcon
-                                                    onClick={() => {
-                                                        /*itemsHandle({ type: ITEMS_ACTIONS.SELECT_ITEM, index: index })*/
-                                                        handler({ type: CITAS_ACTIONS.VIEW, index: 0 });
-                                                    }}
+                                                    onClick={() => { handler({ type: CITAS_ACTIONS.VIEW, index: 0 });}}
                                                     displayType="secondary"
                                                     spritemap={spritemap}
                                                     aria-label="Edit"

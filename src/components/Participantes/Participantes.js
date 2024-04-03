@@ -273,6 +273,14 @@ const Participantes = ({ user }) => {
                     //}
                 });
             }
+            console.debug(citas);
+            const citasModificadas = citas.items.filter(cita => cita.modified == true);
+            citasModificadas.forEach(element => {
+                saveAPI('/silefe.cita/save-cita', {id:element.citaId , obj: element}, referer).then(response=> {
+                    console.log("se ha enviado correctamente");
+                })
+            });
+            //debugger;
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);

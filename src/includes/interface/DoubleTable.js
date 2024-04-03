@@ -95,7 +95,6 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                         placeholder={"Buscar..."}
                                         type="text"
                                         name={"tableTopSearch"}
-                                        //key={"cif"}
                                         value={data.search}
                                         onChange={e => handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value })}>
                                     </ClayInput>
