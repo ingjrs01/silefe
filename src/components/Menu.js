@@ -5,15 +5,11 @@ import { ClayIconSpriteContext } from '@clayui/icon';
 import ClayToolbar from '@clayui/toolbar';
 import React from 'react';
 import { Liferay } from '../common/services/liferay/liferay';
-import { spritemap } from '../includes/LiferayFunctions';
+import { getLanguageId, spritemap } from '../includes/LiferayFunctions';
+import { getDays, getMonths } from '../includes/interface/DatesLang';
 import { MgtToolbar } from '../includes/interface/MgtToolbar';
 import { ITEMS_ACTIONS } from '../includes/reducers/actions';
 import { handleDelete } from '../includes/utils';
-
-import { getLanguageId } from '../includes/LiferayFunctions'; //   '../../LiferayFunctions';
-//import { ITEMS_ACTIONS } from '../../reducers/actions';
-import { getDays, getMonths } from '../includes/interface/DatesLang';
-
 
 const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
 
@@ -22,10 +18,6 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
 
     if (items.fields.hasOwnProperty("handleNew"))
       items.fields.handleNew();
-  }
-
-  const onChange = (val) => {
-    console.log(val);
   }
 
   return (
@@ -73,36 +65,49 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                   key={"fieldMenu2"}
                   onChange={evt => itemsHandle({ type: ITEMS_ACTIONS.SET_SEARCHOP, value: evt.target.value })}
                   value={items.fields.searchOperator} >
-                  <ClaySelect.Option
-                    key={"CAon-0"}
-                    label={Liferay.Language.get("=")}
-                    value={"="}
-                  />
-                  <ClaySelect.Option
-                    key={"CAon-1"}
-                    label={Liferay.Language.get(">")}
-                    value={">"}
-                  />
-                  <ClaySelect.Option
-                    key={"CAon-3"}
-                    label={Liferay.Language.get("<")}
-                    value={"<"}
-                  />
-                  <ClaySelect.Option
-                    key={"CAon-4"}
-                    label={Liferay.Language.get(">=")}
-                    value={">="}
-                  />
-                  <ClaySelect.Option
-                    key={"CAon-5"}
-                    label={Liferay.Language.get("<=")}
-                    value={"<="}
-                  />
-                  <ClaySelect.Option
-                    key={"CAon-6"}
-                    label={Liferay.Language.get("Contiene")}
-                    value={"like"}
-                  />
+                  {
+                    ["date", "number", "select", "selectfilter", "toggle"].includes( items.fields.fields[items.fields.searchField].type) &&
+                    <>
+                    <ClaySelect.Option
+                      key={"CAon-0"}
+                      label={Liferay.Language.get("=")}
+                      value={"="}
+                    />
+                    </>
+                  }
+                  {
+                    ["date", "number", "money", "percent"].includes( items.fields.fields[items.fields.searchField].type) &&
+                    <>
+                    <ClaySelect.Option
+                      key={"CAon-1"}
+                      label={Liferay.Language.get(">")}
+                      value={">"}
+                    />
+                    <ClaySelect.Option
+                      key={"CAon-3"}
+                      label={Liferay.Language.get("<")}
+                      value={"<"}
+                    />
+                    <ClaySelect.Option
+                      key={"CAon-4"}
+                      label={Liferay.Language.get(">=")}
+                      value={">="}
+                    />
+                    <ClaySelect.Option
+                      key={"CAon-5"}
+                      label={Liferay.Language.get("<=")}
+                      value={"<="}
+                    />
+                    </>
+                  }
+                  {
+                    ["text", "multilang", "textarea"].includes( items.fields.fields[items.fields.searchField].type) &&
+                    <ClaySelect.Option
+                      key={"CAon-6"}
+                      label={Liferay.Language.get("Contiene")}
+                      value={"like"}
+                    />
+                  }
               </ClaySelect>
               </ClayToolbar.Item>
               </>
@@ -144,6 +149,11 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                           >
                               <ClaySelect.Option
                                 key={"searchBottonFieldsi"}
+                                label={Liferay.Language.get("Seleccionar")}
+                                value={-1}
+                              />
+                              <ClaySelect.Option
+                                key={"searchBottonFieldsi"}
                                 label={Liferay.Language.get("Si")}
                                 value={true}
                               />
@@ -157,7 +167,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                       </>
                     }
                     {
-                      ["text", "multilang", "dni"].includes( items.fields.fields[items.fields.searchField].type) &&
+                      ["text", "multilang", "dni", "money", "number"].includes( items.fields.fields[items.fields.searchField].type) &&
                       <ClayInput
                         placeholder={"Buscar..."}
                         type="text"

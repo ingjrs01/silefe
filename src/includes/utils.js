@@ -124,7 +124,7 @@ export const formatPhones = (telefonos) => {
 
 export const formatPost = (items) => {
   let filtros = (items.filters !== 'undefined')?[...items.filters]:[]; 
-  
+  //debugger;
   if (typeof items.fields.search !== 'undefined' && items.fields.search !== "0") 
       filtros.push({ 
         name: items.fields.searchField, 

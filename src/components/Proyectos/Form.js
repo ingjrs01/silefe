@@ -373,6 +373,6 @@ export const form = {
             key: "c8",
         },
     },
-    searchFields: ['codigo', 'descripcion', 'convocatoria'],
+    searchFields: ['codigo', 'descripcion', 'convocatoria','presupuesto', 'participantes', 'inicio', 'fin'],
     searchField: 'descripcion',
 };
