@@ -295,6 +295,6 @@ export const form = {
             key: "c7",
         }
     },
-    searchFields: ['nombre','apellidos', 'documento','provinciaId', 'municipioId'],
+    searchFields: ['nombre','apellidos', 'documento','provinciaId', 'municipioId', 'fechaNacimiento'],
     searchField: 'nombre',
 };

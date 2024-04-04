@@ -295,6 +295,6 @@ export const form = {
             key: "c5",
         },
     },
-    searchFields: ['documento', 'razonSocial', 'admiteEnvios'],
+    searchFields: ['documento', 'razonSocial', 'admiteEnvios','trabajadores'],
     searchField: 'razonSocial'
 };

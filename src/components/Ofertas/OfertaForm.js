@@ -158,7 +158,7 @@ export const form = {
             label: Liferay.Language.get('Tareas'),
             name: "tareas",
             placeholder: "",
-            conditions:["text"]
+            conditions:[]
         },
         titulacionRequerido: {
             key: 16,
@@ -319,7 +319,7 @@ export const form = {
             name: "objetivos",
             value:"lelele",
             placeholder:Liferay.Language.get('Objetivos'),
-            conditions:["text"]
+            conditions:[]
         },
         participantes: {
             key: 31,
@@ -508,6 +508,6 @@ export const form = {
         //},
         
     },
-    searchFields: ['titulo','estadoId','puesto','empresa','proyectoId'],
+    searchFields: ['titulo','estadoId','puesto','empresa','proyectoId','jornadaId','salarioId'],
     searchField: 'titulo',
 };

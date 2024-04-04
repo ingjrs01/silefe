@@ -280,7 +280,6 @@ const Participantes = ({ user }) => {
                     console.log("se ha enviado correctamente");
                 })
             });
-            //debugger;
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);

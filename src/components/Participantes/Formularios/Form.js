@@ -787,6 +787,6 @@ export const form = {
             key: "tc8",
         },
     },
-    searchFields: ['nombre', 'documento','apellidos','provinciaId', 'municipio','admiteEnvios'],
+    searchFields: ['nombre', 'documento','apellidos','provinciaId', 'municipio','admiteEnvios','fechaNacimiento'],
     searchField: 'nombre',
 };
