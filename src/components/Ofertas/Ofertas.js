@@ -52,6 +52,11 @@ const Ofertas = ({user}) => {
         });
     }
 
+    const newElement = () => {
+        participantesHandler({type: SUBTABLE_ACTIONS.START });
+        historicoHandle({type: HISTORICO_ACTIONS.START});
+        }
+
     const beforeEdit = (item) => {
         const s = (item == undefined || item == null) ? items.arr.filter(item => item.checked).map(i => { return i.id })[0] : item.ofertaId;
         loadCandidatosOferta(s);
@@ -147,6 +152,7 @@ const Ofertas = ({user}) => {
 
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
+    form.handleNew = newElement;
 
     useEffect(() => {
         const lang = getLanguageId();
@@ -334,7 +340,7 @@ const Ofertas = ({user}) => {
         form.fields.idiomasRequerido.options = opciones_requerido;
         form.fields.informaticaRequerido.options = opciones_requerido;
         form.fields.experienciaRequerido.options = opciones_requerido;
-        form.fields.generoId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Hombre" }, { value: "2", label: "Mujer" }];
+        //form.fields.generoId.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "Hombre" }, { value: "2", label: "Mujer" }];
 
         const postdata = { origin: "offer"}
         fetchAPIData('/silefe.estado/get-estados-from-origin', postdata, referer).then(response => {

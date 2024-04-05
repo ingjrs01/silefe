@@ -34,6 +34,10 @@ const Docentes = ({user}) => {
     const loadCsv = () => {
         itemsHandle({ type: ITEMS_ACTIONS.LOAD });
     }
+    const newElement = () => {
+        historicoHandle({type: HISTORICO_ACTIONS.START});
+    }
+
 
     const loadHistory = (docenteId) => {
         const prequest = {
@@ -135,6 +139,7 @@ const Docentes = ({user}) => {
     form.loadCsv = loadCsv;
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
+    form.handleNew = newElement;
 
     const fetchData = async () => {
         if (form.fields.provinciaId.options == undefined) {

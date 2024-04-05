@@ -31,7 +31,7 @@ export const form = {
             name: "cp",
             value: "",
             placeholder: Liferay.Language.get('00000'),
-            conditions: ["text"],
+            conditions: [],
             className: 'col-2',
         },
         provinciaId: {
@@ -83,7 +83,7 @@ export const form = {
             name: "nombreVia",
             value: "",
             placeholder: Liferay.Language.get('via'),
-            conditions: ["text"],
+            conditions: [],
             className: "col-5",
         },
         numero: {
@@ -93,7 +93,7 @@ export const form = {
             name: "numero",
             value: "",
             placeholder: Liferay.Language.get('0'),
-            conditions: ["text"],
+            conditions: [],
             className: 'col-2'
         },
         piso: {
@@ -103,7 +103,7 @@ export const form = {
             name: "piso",
             value: "",
             placeholder: Liferay.Language.get('0'),
-            conditions: ["text"],
+            conditions: [],
             className: "col-2"
         },
     },

@@ -74,7 +74,7 @@ export const form = {
         cnaeId: {
             key: 7,
             type: "selectfilter",
-            label: Liferay.Language.get('Cnae'),
+            label: Liferay.Language.get('Código ocupacion (Cnae)'),
             name: "cnaeId",
             enabled:true,
             options: [],
@@ -107,7 +107,7 @@ export const form = {
         tipoContratoId: {
             key: 10,
             type: "select",
-            label: Liferay.Language.get('TipoContrato'),
+            label: Liferay.Language.get('Tipo Contrato'),
             name: "tipoContratoId",
             enabled:true,
             options: [],
@@ -117,7 +117,7 @@ export const form = {
         duracionMeses: {
             key:11,
             type: "number",
-            label: Liferay.Language.get('Duracion'),
+            label: Liferay.Language.get('Duracion (meses)'),
             name: "duracionMeses",
             placeholder: "0",
             min: 0,
@@ -246,7 +246,7 @@ export const form = {
         },
         habilidades: {
             key: 25,
-            type: "text",
+            type: "textarea",
             label: Liferay.Language.get('Habilidades'),
             name: "habilidades",
             value:"",
@@ -414,12 +414,12 @@ export const form = {
                 },
                 {
                     key: 52,
-                    cols: ['permisos','vehiculo','necesitaVehiculo']
+                    cols: ['permisos','vehiculo','necesitaVehiculo', 'edadId']
                 },
-                {
-                    key: 53,
-                    cols: ['generoId','edadId']
-                },
+                //{
+                //    key: 53,
+                //    cols: []
+                //},
                 {
                     key: 54,
                     cols: ['habilidades']

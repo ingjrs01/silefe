@@ -90,7 +90,7 @@ export const form = {
         colectivosVulnerables: {
             key: 38,
             type: "toggle",
-            label: Liferay.Language.get('Vulnerables'),
+            label: Liferay.Language.get('Colectivos Vulnerables'),
             name: "colectivosVulnerables",
             enable: true,
             className: "col-2",
@@ -140,7 +140,7 @@ export const form = {
         ayuda: {
             key: 29,
             type: "toggle",
-            label: Liferay.Language.get('Ayuda'),
+            label: Liferay.Language.get('Ayuda Contr. Practi.'),
             name: "ayuda",
             value: "",
             conditions: []
@@ -156,7 +156,7 @@ export const form = {
         admiteEnvios :{
             key: 32,
             type: "toggle",
-            label: Liferay.Language.get("Envios"),
+            label: Liferay.Language.get("Admite Envíos"),
             name: "admiteEnvios",
             value: false,            
         },

@@ -29,9 +29,9 @@ export const form = {
             type: "text",
             label: Liferay.Language.get('Codigo'),
             name: "codigo",
-            value: "lalala",
-            placeholder: "Identifier",
-            conditions: ["text"],
+            value: "",
+            placeholder: Liferay.Language.get("Código"),
+            conditions: [],
             className: "col-2",
         },
         inicio: {

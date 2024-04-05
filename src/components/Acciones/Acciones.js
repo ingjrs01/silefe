@@ -46,7 +46,9 @@ const Acciones = ({user}) => {
         ejecucionHandlerT({type: EJECUCION_ACTIONS.NEW_ITEM });
         ejecucionHandlerP({type: EJECUCION_ACTIONS.NEW_ITEM });
         ejecucionHandlerG({type: EJECUCION_ACTIONS.NEW_ITEM });
-        docentesHandler({type: SUBTABLE_ACTIONS.NEW_ITEM});
+        docentesHandler({type: SUBTABLE_ACTIONS.START});
+        handleHistorico({type: HISTORICO_ACTIONS.START});
+        participantesHandler({type:SUBTABLE_ACTIONS.START});
     }
 
     const downloadFile = () => {

@@ -14,6 +14,7 @@ export const CITAS_ACTIONS = {
     CLOSEVIEW: 11,
     SETPAGE: 10,
     SAVE: 80,
+    EMPTY: 91,
 }
 
 export const CITAS_STATES = {
@@ -42,6 +43,18 @@ export const reducerCitas = (state=initialState, action ) => {
     case CITAS_ACTIONS.START:
         return {
             ...initialState
+        }
+    case CITAS_ACTIONS.EMPTY: 
+        return {
+            items: [],
+            item: {id: 0},
+            errors: [],
+            pagination: {
+                page: 0,
+                pageSize: 4,
+                totalPages: 1,
+            },
+            status: CITAS_STATES.LIST,        
         }
     case CITAS_ACTIONS.LOAD: 
         return {

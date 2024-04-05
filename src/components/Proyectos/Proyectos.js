@@ -62,6 +62,17 @@ const Proyectos = ({ user }) => {
         });
     }
 
+    const newElement = () => {
+        console.log("vaciando todos los elemementos");
+        accionesHandle({type: SUBTABLE_ACTIONS.START });
+        ofertasHandle({type:SUBTABLE_ACTIONS.START });
+        participantesHandle({type: SUBTABLE_ACTIONS.START});
+        empresasHandle({type: SUBTABLE_ACTIONS.START});
+        historicoHandle({type: HISTORICO_ACTIONS.START});
+        tecnicosHandle({type: SUBTABLE_ACTIONS.START });
+    }
+
+
     useEffect(() => {
         if (!isInitialized.current) {
             initForm();
@@ -318,20 +329,12 @@ const Proyectos = ({ user }) => {
 
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
+    form.handleNew = newElement;
 
     const fetchData = () => {
         if (form.fields.entidadId.options === 'undefined') {
             initForm();
         }
-        // const postdata = {
-        //     pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
-        //     options: {
-        //         filters: [
-        //             { name: items.searchField, value: (items.search && typeof items.search !== 'undefined') ? items.search : "" },
-        //         ],
-        //         order: items.order
-        //     }
-        // }
         fetchAPIData('/silefe.proyecto/filter', formatPost(items), referer).then(({ data, totalPages, page, totalItems }) => {
             const tmp = data.map(i => ({
                 ...i,

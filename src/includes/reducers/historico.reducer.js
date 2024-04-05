@@ -32,7 +32,7 @@ export const initialState = {
 
 export const reducerHistorico = (state=initialState, action ) => {
     switch (action.type) {
-    case HISTORICO_ACTIONS:
+    case HISTORICO_ACTIONS.START:
         return {
             ...initialState
         }

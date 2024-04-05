@@ -14,7 +14,8 @@ export const REDUCER_ACTIONS = {
   SET_MULTIFIELDCHECK: 19,
   SAVE: 80,
   CANCEL: 8,
-  DELETE_ITEM:90,    
+  DELETE_ITEM:90, 
+  EMPTY: 91, //    
 }
 
 export const EXPERIENCIA_ACTIONS = {

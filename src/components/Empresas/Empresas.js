@@ -41,6 +41,13 @@ const Empresas = ({user}) => {
         console.log("loadCsv");
     }
 
+    const newElement = () => {
+        centrosHandle({type: REDUCER_ACTIONS.EMPTY});
+        contactosHandle({type: REDUCER_ACTIONS.EMPTY});
+        historicoHandle({type: HISTORICO_ACTIONS.START});
+    }
+
+
     const loadHistory = (empresaId) => {
         const prequest = {
             empresaId: empresaId,
@@ -145,6 +152,7 @@ const Empresas = ({user}) => {
     form.beforeEdit = beforeEdit;
     form.loadCsv = loadCsv;
     form.handleCancel = handleCancel;
+    form.handleNew = newElement;
     //form.downloadFunc = downloadfile;
     //form.handleSave = handleSave;
 

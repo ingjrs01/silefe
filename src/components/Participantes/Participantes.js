@@ -47,6 +47,14 @@ const Participantes = ({ user }) => {
 
     const referer = `${url_referer}/participantes`;
 
+    const newElement = () => {
+        handleHistorico({type: HISTORICO_ACTIONS.START});
+        titulacionHandler({ type: TITULACIONES_ACTIONS.START, form: titulacionesForm }); // Ver de poner una accion empty también
+        experienciasHandler({type: REDUCER_ACTIONS.EMPTY});
+        citasHandler({type: CITAS_ACTIONS.EMPTY});
+        participacionesHandler({type: SUBTABLE_ACTIONS.START });
+    }
+
     const loadHistory = (id) => {
         const post = {
             participanteId: id,
@@ -295,6 +303,7 @@ const Participantes = ({ user }) => {
     form.beforeEdit = beforeEdit;
     form.handleSave = handleSave;
     form.loadCsv = loadCsv;
+    form.handleNew = newElement;
 
     const confirmDelete = async () => {
         let s = items.arr.filter(item => item.checked).map(i => { return i.participanteId });
@@ -334,7 +343,6 @@ const Participantes = ({ user }) => {
                 checked: false
             })
         });
-
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, total: totalItems, totalPages: totalPages, page: page });
     }
 
@@ -386,7 +394,7 @@ const Participantes = ({ user }) => {
             { value: "0", label: seleccionarlabel },
             { value: "1", label: "Trabajando" },
             { value: "2", label: "Desempleado" },
-            { value: "3", label: "Estudiando" }
+            //{ value: "3", label: "Estudiando" }
         ];
 
         fetchAPIData('/silefe.salario/all', {}, referer).then(response => {

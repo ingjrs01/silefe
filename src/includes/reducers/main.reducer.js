@@ -153,7 +153,7 @@ export const red_items = (state, action) => {
         case ITEMS_ACTIONS.SET:
             let tmpItems = [];
             let ffields = {};
-
+            
             if (state.fields.fields[action.fieldname].hasOwnProperty('change')) {
                 state.fields.fields[action.fieldname].change(action.value, action.fieldname);
             }

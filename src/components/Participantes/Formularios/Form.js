@@ -107,13 +107,13 @@ export const form = {
         },
         localidad: {
             key:17,
-            type: "text",
+            type: "multilang",
             label: Liferay.Language.get('Localidad'),
-            name: "Localidad",
-            value:"localidad",
+            name: "localidad",
+            value: "",
             placeholder: Liferay.Language.get('Localidad'),
             className: 'col-6',
-            conditions: ["text"]
+            conditions: []
         },
         tipoviaId: {
             key:6,
@@ -603,7 +603,7 @@ export const form = {
                 },
                 {
                     key: 1051,
-                    cols: ['tipoDiscapacidad', 'porcentajeDiscapacidad', 'tratamiento']
+                    cols: ['tipoDiscapacidad', 'porcentajeDiscapacidad']
                 },
                 {
                     key: 1052,

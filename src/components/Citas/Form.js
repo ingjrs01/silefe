@@ -159,10 +159,10 @@ export const form = {
             key:43,
             cols: ['originInId','participantInId', 'tecnicoInId']
         },
-        {
-            key:44,
-            cols: ['originOutId','participantOutId', 'tecnicoOutId']
-        },
+        //{
+        //    key:44,
+        //    cols: ['originOutId','participantOutId', 'tecnicoOutId']
+        //},
         {
             key:46,
             cols: ['subject']
