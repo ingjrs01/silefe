@@ -1,5 +1,5 @@
-import { Liferay } from '../../common/services/liferay/liferay';
-import { GenericForm } from "../../includes/GenericForm";
+import { Liferay } from '../../../common/services/liferay/liferay';
+import { GenericForm } from "../../../includes/GenericForm";
 
 export const form = {
     ...GenericForm,
@@ -199,6 +199,12 @@ export const form = {
             label: Liferay.Language.get('Adjuntos'), 
             name: "adjuntos", 
         },
+        titulaciones: {
+            key: 25,
+            type: "other",
+            componentName: "Titulaciones",
+            name: "Titulaciones",
+        },        
         historico: {
             key: 20,
             type: "other",
@@ -241,13 +247,25 @@ export const form = {
             ]
         },
         {
-            caption: "Historico",
+            caption: Liferay.Language.get("Formaciones"),
             key: 2,
             ariacontrols: "tabpanel-2",
-            admin: true,
+            admin: false,
             rows: [
                 {
                     key:51,
+                    cols: ['titulaciones'],
+                },
+            ]
+        },
+        {
+            caption: "Historico",
+            key: 3,
+            ariacontrols: "tabpanel-3",
+            admin: true,
+            rows: [
+                {
+                    key:52,
                     cols: ['historico'],
                 },
             ]

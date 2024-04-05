@@ -12,15 +12,20 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import TabsForm from "../../includes/interface/TabsForm";
-import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
+import { TitulacionesRender } from '../../includes/interface/TitulacionesRender';
+import { ITEMS_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
 import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
+import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
 import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
-import { form } from './Form';
+import { form } from './Formularios/Form';
+import { form as titulacionesForm } from './Formularios/Titulaciones';
+
 
 const Docentes = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
+    const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, titsIni);
     const [historico, historicoHandle] = useReducer (reducerHistorico, iniHis);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
@@ -36,8 +41,8 @@ const Docentes = ({user}) => {
     }
     const newElement = () => {
         historicoHandle({type: HISTORICO_ACTIONS.START});
+        titulacionHandler({type: TITULACIONES_ACTIONS.START, form: titulacionesForm});
     }
-
 
     const loadHistory = (docenteId) => {
         const prequest = {
@@ -161,6 +166,34 @@ const Docentes = ({user}) => {
         await itemsHandle({ type: ITEMS_ACTIONS.LOAD_ITEMS, items: tmp, totalPages: totalPages, total: totalItems, page: page });
     }
 
+    const queryTitulaciones = () => {
+        const lang = getLanguageId();
+        fetchAPIData('/silefe.titulaciontipo/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(item => ({
+                ...item,
+                value: item.titulacionTipoId,
+                label: item.descripcion[lang]
+            }));
+            titulacionesForm.fields.titulacionTipoId.options = opts;
+        });
+        
+        fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang], tipo: item.tipo[lang] }));
+            titulacionesForm.fields.titulacionNivelId.all = opts;
+        });
+        
+        fetchAPIData('/silefe.titulacionfam/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
+            titulacionesForm.fields.titulacionFamiliaId.all = opts;
+        });
+        
+        fetchAPIData('/silefe.titulacion/all', {}, referer).then(response => {
+            const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
+            titulacionesForm.fields.titulacionId.all = opts;
+        });
+        titulacionHandler({ type: TITULACIONES_ACTIONS.START, form: titulacionesForm });
+    }
+
     const initForm = async () => {
         const lang = getLanguageId();
         const seleccionarlabel = Liferay.Language.get('Seleccionar');
@@ -178,6 +211,7 @@ const Docentes = ({user}) => {
         form.fields.sexo.options = [{ key: 0, value: "H", label: Liferay.Language.get('Hombre') }, { key: 1, value: "M", label: Liferay.Language.get('Mujer') }];
 
         itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form });
+        queryTitulaciones();
     }
 
     const changeProvince = (id) => {
@@ -190,6 +224,11 @@ const Docentes = ({user}) => {
 
     const plugin = () => {
         return {
+            Titulaciones:
+                <TitulacionesRender
+                    redTitulaciones={redTitulaciones}
+                    titulacionHandler={titulacionHandler}
+                />,
             Historico: 
                 <FHistoryEntity
                     data={historico}

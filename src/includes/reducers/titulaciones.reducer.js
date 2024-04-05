@@ -105,13 +105,13 @@ export const reducerTitulacion = (state, action ) => {
                 status: "edit",
             }
         case TITULACIONES_ACTIONS.SAVE:
-            if (state.item.id == 0) {
-                tmp = [...state.items,state.item];
-            }
+            const titulacionName = state.fields.fields.titulacionId.all.filter(t => t.titulacionId === state.item.titulacionId)[0].descripcion
+            if (state.item.id == 0) 
+                tmp = [...state.items,{...state.item, titulacionName: titulacionName}];
             else {
                 tmp = [...state.items];
                 const index = tmp.findIndex(item => item.id == state.item.id );
-                tmp.splice(index,1,state.item);
+                tmp.splice(index,1,{...state.item, titulacionName: titulacionName});
             }
     
             return {
