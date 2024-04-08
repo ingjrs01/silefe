@@ -62,11 +62,20 @@ const Docentes = ({user}) => {
     }
 
     const beforeEdit = (id) => {
-        let docenteId = 0;
-        if (typeof (id) == 'int')
-            docenteId = id;
-        else
-            docenteId = id.id;
+        const docenteId = (typeof (id) === 'int')?id:id.id;        
+        const lang = getLanguageId();
+        
+        fetchAPIData('/silefe.docente/formaciones-by-docente', { docenteId: docenteId }, referer).then(response => {
+            const tits = response.data.map(i => ({
+                ...i,
+                //id: i.formacionParticipanteId,
+                titulacionName: i.titulacion[lang],
+            }));
+            titulacionHandler({ type: TITULACIONES_ACTIONS.LOAD_ITEMS, items: tits })
+        }).catch((e) => {
+            console.log("Error cargando las titulaciones de un alumno");
+            console.error(e);
+        })
 
         loadHistory(docenteId);
     }
@@ -102,7 +111,8 @@ const Docentes = ({user}) => {
             id: items.item.id,
             obj: {
                 ...items.item,
-                userId: getUserId()
+                userId: getUserId(),
+                titulaciones: redTitulaciones.items.map(item => item.titulacionId),
             },
         }
         

@@ -3,7 +3,7 @@ import { ClayCheckbox } from '@clayui/form';
 import ClayTable from '@clayui/table';
 import React from "react";
 import { Liferay } from '../../common/services/liferay/liferay';
-import { spritemap } from '../../includes/LiferayFunctions';
+import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
 import { TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
 //import { TableForm } from "./TableForm";
 import RenderFields from '../../includes/interface/RenderFields';
@@ -19,6 +19,8 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
   const changeSelectall = () => {
     titulacionHandler({ type: TITULACIONES_ACTIONS.CHECKALL });
   }
+
+  const lang=getLanguageId();
 
   return (
     <>
@@ -64,7 +66,7 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
                             if (item[column.columnName] === undefined || item[column.columnName] === null)
                               aa = "ND";
                             else {
-                              let arr = reducer.fields.fields[column.columnName].options.filter(i => i.value === item[column.columnName].toString());
+                              let arr = redTitulaciones.fields.fields[column.columnName].options.filter(i => i.value === item[column.columnName].toString());
                               if (arr.length > 0)
                                 aa = arr[0].label;
                               else
