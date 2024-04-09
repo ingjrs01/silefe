@@ -167,7 +167,18 @@ export const form = {
             name: "titulacionRequerido",
             enabled:true,
             options: [],
-            change: ()=>{console.log("cambia el select");}
+            className: "col-2",
+            change: ()=>{}
+        },
+        titulacionId: {
+            key: 40,
+            type: "selectfilter",
+            label: Liferay.Language.get('Titulacion'),
+            name: "titulacionId",
+            enabled:true,
+            options: [],
+            className: "col-8",
+            change: ()=>{}
         },
         idiomasRequerido: {
             key: 17,
@@ -176,7 +187,19 @@ export const form = {
             name: "idiomasRequerido",
             enabled:true,
             options: [],
+            className: "col-2",
             change: ()=>{console.log("cambia el select");}
+        },
+        idiomas: {
+            key: 42,
+            type: "multilist",
+            label: Liferay.Language.get('Idiomas'),
+            name: "idiomas",
+            placeholder: "",
+            enabled: true,
+            options: [],
+            className: "col-2",
+            conditions:[]
         },
         informaticaRequerido: {
             key: 18,
@@ -185,7 +208,17 @@ export const form = {
             name: "informaticaRequerido",
             enabled:true,
             options: [],
+            className: "col-2",
             change: ()=>{console.log("cambia el select");}
+        },
+        informatica: {
+            key: 43,
+            type: "multilist",
+            label: Liferay.Language.get("Informática"),
+            name:"informatica",
+            options: [],
+            className: "col-2",
+            change: () => {},
         },
         experienciaRequerido: {
             key: 19,
@@ -194,6 +227,7 @@ export const form = {
             name: "experienciaRequerido",
             enabled:true,
             options: [],
+            className: "col-2",
             change: ()=>{console.log("cambia el select");}
         },
         permisos: {
@@ -204,6 +238,7 @@ export const form = {
             placeholder: "",
             enabled: true,
             options: [],
+            className: "col-2",
             conditions:["text"]
         },
         vehiculo: {
@@ -242,7 +277,8 @@ export const form = {
             value:"",
             enabled:true,
             options: [],
-            change: ()=>{console.log("cambia el select");}
+            className: "col-2",
+            change: ()=>{}
         },
         habilidades: {
             key: 25,
@@ -251,7 +287,9 @@ export const form = {
             name: "habilidades",
             value:"",
             enabled:true,
-            conditions: []
+            className: "col-6",
+            conditions: [],
+            lines: 4,
         },
         estadoId: {
             key: 26,
@@ -373,31 +411,31 @@ export const form = {
             ariacontrols: "tabpanel-1",
             rows: [
                 {
-                    key:40,
+                    key:400,
                     cols: ['titulo', 'proyectoId']
                 },
                 {
-                    key:41,
+                    key:401,
                     cols: ['jornadaId','infoJornada']
                 },
                 {
-                    key:44,
+                    key:404,
                     cols: ['salarioId','infoSalario']
                 },
                 {
-                    key:42,
+                    key:402,
                     cols: [  'empresaId','centroId','duracionMeses', 'vacantes']
                 },
                 {
-                    key:43,
+                    key:403,
                     cols: ['puestoId','cnaeId', 'tipoContratoId','fechaIncorporacion']
                 },
                 {
-                    key:46,
+                    key:406,
                     cols: ['colectivos']
                 },
                 {
-                    key:45,
+                    key:405,
                     cols: ['tareas']
                     
                 },
@@ -409,21 +447,21 @@ export const form = {
             ariacontrols: "tabpanel-2",
             rows: [
                 {
-                    key: 51,
-                    cols: ['titulacionRequerido','idiomasRequerido','informaticaRequerido','experienciaRequerido']
+                    key: 501,
+                    cols: ['titulacionRequerido','titulacionId', 'edadId'],
                 },
                 {
-                    key: 52,
-                    cols: ['permisos','vehiculo','necesitaVehiculo', 'edadId']
+                    key: 502,
+                    cols: ['idiomasRequerido','informaticaRequerido','experienciaRequerido', 'vehiculo','necesitaVehiculo']
+                },
+                {
+                    key: 503,
+                    cols: ['idiomas', 'informatica', 'permisos','habilidades']
                 },
                 //{
-                //    key: 53,
+                //    key: 504,
                 //    cols: []
                 //},
-                {
-                    key: 54,
-                    cols: ['habilidades']
-                },
             ]
         },
         {
