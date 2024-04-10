@@ -24,7 +24,7 @@ export const TitulacionesRender = ({ redTitulaciones, titulacionHandler }) => {
 
   return (
     <>
-      {redTitulaciones.status == "list" &&
+      {redTitulaciones.status === "list" &&
         <>
           <ClayTable>
             <ClayTable.Head>

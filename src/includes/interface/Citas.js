@@ -31,67 +31,68 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
         return (
             <div>{Liferay.Language.get("No hay elementos para mostrar")}</div>
         )
-    console.log("lalala");
-    console.debug(items);
 
     return (
         <>
             {
                 <>
-                    <ClayManagementToolbar>
-                        <ClayManagementToolbar.ItemList>
-                            <ClayManagementToolbar.Search>
-                                <ClayInput.Group>
-                                    <ClayInput.GroupItem>
-                                        <ClayInput
-                                            aria-label="Search"
-                                            className="form-control input-group-inset input-group-inset-after"
-                                            defaultValue=""
-                                            type="text"
-                                        />
-                                        <ClayInput.GroupInsetItem after tag="span">
-                                            <ClayButtonWithIcon
-                                                aria-label="Close search"
-                                                className="navbar-breakpoint-d-none"
-                                                displayType="unstyled"
-                                                onClick={() => setSearchMobile(false)}
-                                                spritemap={spritemap}
-                                                symbol="times"
-                                            />
-                                            <ClayButtonWithIcon
+                    {
+                        items.form.options.table.showToolbar &&
+                        <ClayManagementToolbar>
+                            <ClayManagementToolbar.ItemList>
+                                <ClayManagementToolbar.Search>
+                                    <ClayInput.Group>
+                                        <ClayInput.GroupItem>
+                                            <ClayInput
                                                 aria-label="Search"
-                                                displayType="unstyled"
-                                                spritemap={spritemap}
-                                                symbol="search"
-                                                type="submit"
+                                                className="form-control input-group-inset input-group-inset-after"
+                                                defaultValue=""
+                                                type="text"
                                             />
-                                        </ClayInput.GroupInsetItem>
-                                    </ClayInput.GroupItem>
-                                </ClayInput.Group>
-                            </ClayManagementToolbar.Search>
+                                            <ClayInput.GroupInsetItem after tag="span">
+                                                <ClayButtonWithIcon
+                                                    aria-label="Close search"
+                                                    className="navbar-breakpoint-d-none"
+                                                    displayType="unstyled"
+                                                    onClick={() => setSearchMobile(false)}
+                                                    spritemap={spritemap}
+                                                    symbol="times"
+                                                />
+                                                <ClayButtonWithIcon
+                                                    aria-label="Search"
+                                                    displayType="unstyled"
+                                                    spritemap={spritemap}
+                                                    symbol="search"
+                                                    type="submit"
+                                                />
+                                            </ClayInput.GroupInsetItem>
+                                        </ClayInput.GroupItem>
+                                    </ClayInput.Group>
+                                </ClayManagementToolbar.Search>
 
-                            <ClayManagementToolbar.Item>
-                                <ClayButton
-                                    aria-label="Info"
-                                    className="nav-link nav-link-monospaced"
-                                    displayType="unstyled"
-                                    onClick={() => { }}
-                                >
-                                    <ClayIcon spritemap={spritemap} symbol="info-circle-open" />
-                                </ClayButton>
-                            </ClayManagementToolbar.Item>
+                                <ClayManagementToolbar.Item>
+                                    <ClayButton
+                                        aria-label="Info"
+                                        className="nav-link nav-link-monospaced"
+                                        displayType="unstyled"
+                                        onClick={() => { }}
+                                    >
+                                        <ClayIcon spritemap={spritemap} symbol="info-circle-open" />
+                                    </ClayButton>
+                                </ClayManagementToolbar.Item>
 
-                            <ClayManagementToolbar.Item>
-                                <ClayButtonWithIcon
-                                    aria-label="Add"
-                                    onClick={() => handler({ type: CITAS_ACTIONS.NEW_ITEM })}
-                                    className="nav-btn nav-btn-monospaced"
-                                    spritemap={spritemap}
-                                    symbol="plus"
-                                />
-                            </ClayManagementToolbar.Item>
-                        </ClayManagementToolbar.ItemList>
-                    </ClayManagementToolbar>
+                                <ClayManagementToolbar.Item>
+                                    <ClayButtonWithIcon
+                                        aria-label="Add"
+                                        onClick={() => handler({ type: CITAS_ACTIONS.NEW_ITEM })}
+                                        className="nav-btn nav-btn-monospaced"
+                                        spritemap={spritemap}
+                                        symbol="plus"
+                                    />
+                                </ClayManagementToolbar.Item>
+                            </ClayManagementToolbar.ItemList>
+                        </ClayManagementToolbar>
+                    }
                     {
                         ( items.status === CITAS_STATES.VIEW ) &&
                         <div className="col-12">

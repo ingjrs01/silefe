@@ -285,7 +285,7 @@ const Participantes = ({ user }) => {
                 });
             }
             
-            const citasModificadas = citas.items.filter(cita => cita.modified == true);
+            const citasModificadas = citas.items.filter(cita => cita.modified === true);
             citasModificadas.forEach(element => {
                 const citaObj = {
                     ...element, 

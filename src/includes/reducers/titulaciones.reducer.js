@@ -106,11 +106,11 @@ export const reducerTitulacion = (state, action ) => {
             }
         case TITULACIONES_ACTIONS.SAVE:
             const titulacionName = state.fields.fields.titulacionId.all.filter(t => t.titulacionId === state.item.titulacionId)[0].descripcion
-            if (state.item.id == 0) 
+            if (state.item.id === 0) 
                 tmp = [...state.items,{...state.item, titulacionName: titulacionName}];
             else {
                 tmp = [...state.items];
-                const index = tmp.findIndex(item => item.id == state.item.id );
+                const index = tmp.findIndex(item => item.id === state.item.id );
                 tmp.splice(index,1,{...state.item, titulacionName: titulacionName});
             }
     
@@ -142,12 +142,12 @@ export const reducerTitulacion = (state, action ) => {
         case TITULACIONES_ACTIONS.SET:
             if (action.fieldname === 'titulacionTipoId') { 
                 tmpTipoId = 0;
-                if (action.value == "0")
+                if (action.value === "0")
                     tmpTipoId = state.tipoOptions[0].value
                 else
                     tmpTipoId = action.value
     
-                newniveles = state.fields.fields.titulacionNivelId.all.filter(i => i.titulacionTipoId == tmpTipoId).map(i => {return {value:i.titulacionNivelId,label:i.descripcion}})
+                newniveles = state.fields.fields.titulacionNivelId.all.filter(i => i.titulacionTipoId === tmpTipoId).map(i => {return {value:i.titulacionNivelId,label:i.descripcion}})
                 tmpNivelId = 0;
                 tmpFamiliaId = 0;
                 newtitulaciones = [];
@@ -155,12 +155,12 @@ export const reducerTitulacion = (state, action ) => {
     
                 if (newniveles.length > 0) {
                     tmpNivelId = newniveles[0].value;
-                    newfamilias = state.fields.fields.titulacionFamiliaId.all.filter(i => i.titulacionNivelId == tmpNivelId).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
+                    newfamilias = state.fields.fields.titulacionFamiliaId.all.filter(i => i.titulacionNivelId === tmpNivelId).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
                 }
     
                 if (newfamilias.length > 0) {
                     tmpFamiliaId = newfamilias[0].value;
-                    newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionFamiliaId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+                    newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionFamiliaId === tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
                 }
                 
                 return {
@@ -192,17 +192,17 @@ export const reducerTitulacion = (state, action ) => {
                 }
             }
             //------------------------------------------------------------------
-            if (action.fieldname == 'titulacionNivelId') {
-                if (action.value == "0")
+            if (action.fieldname === 'titulacionNivelId') {
+                if (action.value === "0")
                     return {
                         ...state
                     }
-                newfamilias = state.fields.fields.titulacionFamiliaId.all.filter(i => i.titulacionNivelId == action.value).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
+                newfamilias = state.fields.fields.titulacionFamiliaId.all.filter(i => i.titulacionNivelId === action.value).map(i => {return {value:i.titulacionFamId,label:i.descripcion}})
                 tmpFamiliaId = 0;
                 newtitulaciones = [];
                 if (newfamilias.length > 0) {
                     tmpFamiliaId = newfamilias[0].value
-                    newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionId == tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+                    newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionId === tmpFamiliaId).map(i => {return {value:i.titulacionId,label:i.descripcion}})
                 }
                 return {
                     ...state,
@@ -230,11 +230,11 @@ export const reducerTitulacion = (state, action ) => {
             }
 
             if (action.fieldname === 'titulacionFamiliaId') {
-                if (action.value == "0") 
+                if (action.value === "0") 
                 return {
                     ...state
                 }
-                newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionFamiliaId == action.value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
+                newtitulaciones = state.fields.fields.titulacionId.all.filter(i => i.titulacionFamiliaId === action.value).map(i => {return {value:i.titulacionId,label:i.descripcion}})
                 return {
                     ...state,
                     item: {

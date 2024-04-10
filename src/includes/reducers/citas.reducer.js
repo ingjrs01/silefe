@@ -68,7 +68,6 @@ export const reducerCitas = (state=initialState, action ) => {
                 tecnicoInId:"0",
                 //tecnicoOutId:"0",
                 //participantInEmail:"[{\"key\":1,\"value\":\"jose.pedro@gmail.com\",\"default\":true}]",
-                id:"0",
                 appointmentDate:"",
                 originOutId:"1",
                 appointmentDateTime:"",
@@ -157,7 +156,7 @@ export const reducerCitas = (state=initialState, action ) => {
     case CITAS_ACTIONS.SAVE: 
         if (state.item.id > 0) {
             tmp = [...state.items];
-            const index = tmp.findIndex(item => item.id == state.item.id );
+            const index = tmp.findIndex(item => item.id === state.item.id );
             tmp.splice(index,1,{...state.item, modified: true});
         }
         else 
@@ -186,5 +185,7 @@ export const reducerCitas = (state=initialState, action ) => {
             ...state,
             errors: { ...state.errors, [action.name]: [action.value] }                
         }
+    default:
+        throw new Error("Accion invalida");
     }
 }

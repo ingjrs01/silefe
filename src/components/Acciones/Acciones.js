@@ -92,7 +92,7 @@ const Acciones = ({user}) => {
             if (items.item.teorica !== undefined && items.item.teorica ) {
                 obj4 = { id: ejecucionT.item.id, obj: ejecucionT.item };
                 respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
-                if (respon.status == false) {
+                if (respon.status === false) {
                     setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[respon.error] + " " + respon.msg }]);        
                     return false;
                 }
@@ -101,7 +101,7 @@ const Acciones = ({user}) => {
             if (items.item.practica !== undefined && items.item.practica ) {
                 obj4 = { id: ejecucionP.item.id, obj: ejecucionP.item };
                 respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
-                if (respon.status == false) {
+                if (respon.status === false) {
                     setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[respon.error] + " " + respon.msg  }]);        
                     return false;
                 }
@@ -110,7 +110,7 @@ const Acciones = ({user}) => {
             if (items.item.grupal !== undefined && items.item.grupal) {
                 obj4 = { id: ejecucionG.item.id, obj: ejecucionG.item };
                 respon = await saveAPI('/silefe.formacionaccion/save-formacion-accion', obj4, referer);
-                if (respon.status == false) {
+                if (respon.status === false) {
                     setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[respon.error] + " " + respon.msg  }]);        
                     return false;
                 }
@@ -122,7 +122,7 @@ const Acciones = ({user}) => {
         else
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
 
-        if (state != undefined && state.backUrl.length > 0)
+        if (state !== undefined && state.backUrl.length > 0)
             navigate(state.backUrl + state.ancestorId);
     }
     const loadCsv = () => itemsHandle({ type: ITEMS_ACTIONS.LOAD });
@@ -176,7 +176,7 @@ const Acciones = ({user}) => {
         ejecucionHandlerP({ type: EJECUCION_ACTIONS.START, tipoFormacion: 2 });
         ejecucionHandlerG({ type: EJECUCION_ACTIONS.START, tipoFormacion: 3 });
 
-        if (form.fields.accionTipoId.options.length == 0) {
+        if (form.fields.accionTipoId.options.length === 0) {
             loadForm();
         }
 
@@ -190,7 +190,7 @@ const Acciones = ({user}) => {
     }
 
     const beforeEdit = (item) => {
-        if (item.accionId != undefined && item.accionId > 0) {            
+        if (item.accionId !== undefined && item.accionId > 0) {            
             const accionId = item.accionId;
             loadHistory(accionId);
             loadDocentes(accionId);
@@ -428,32 +428,32 @@ const Acciones = ({user}) => {
     }, [historico.pagination.page] );
 
     useEffect(() => {
-        if (ejecucionT.item.lugarId != 'undefined' && ejecucionT.item.lugarId > 0)
+        if (ejecucionT.item.lugarId !== undefined && ejecucionT.item.lugarId > 0)
             changeLugar(ejecucionT.item.lugarId).then((data) => ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETLUGAR, lugar: data }));
     }, [ejecucionT.item.lugarId]);
 
     useEffect(() => {
-        if (ejecucionP.item.lugarId != 'undefined' && ejecucionP.item.lugarId > 0)
+        if (ejecucionP.item.lugarId !== undefined && ejecucionP.item.lugarId > 0)
             changeLugar(ejecucionP.item.lugarId).then((data) => ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETLUGAR, lugar: data }));
     }, [ejecucionP.item.lugarId]);
 
     useEffect(() => {
-        if (ejecucionG.item.lugarId != 'undefined' && ejecucionG.item.lugarId > 0)
+        if (ejecucionG.item.lugarId !== undefined && ejecucionG.item.lugarId > 0)
             changeLugar(ejecucionG.item.lugarId).then((data) => ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETLUGAR, lugar: data }));
     }, [ejecucionG.item.lugarId]);
 
     useEffect(() => {
-        if (ejecucionT.item.empresaId != 'undefined' && ejecucionT.item.empresaId > 0)
+        if (ejecucionT.item.empresaId !== undefined && ejecucionT.item.empresaId > 0)
             changeCompany(ejecucionT.item.empresaId).then((data) => ejecucionHandlerT({ type: EJECUCION_ACTIONS.SETEMPRESA, empresa: data }));
     }, [ejecucionT.item.empresaId]);
 
     useEffect(() => {
-        if (ejecucionP.item.empresaId != 'undefined' && ejecucionP.item.empresaId > 0)
+        if (ejecucionP.item.empresaId !== undefined && ejecucionP.item.empresaId > 0)
             changeCompany(ejecucionP.item.empresaId).then((data) => ejecucionHandlerP({ type: EJECUCION_ACTIONS.SETEMPRESA, empresa: data }));
     }, [ejecucionP.item.empresaId]);
 
     useEffect(() => {
-        if (ejecucionG.item.empresaId != 'undefined' && ejecucionG.item.empresaId > 0)
+        if (ejecucionG.item.empresaId !== undefined && ejecucionG.item.empresaId > 0)
             changeCompany(ejecucionG.item.empresaId).then((data) => ejecucionHandlerG({ type: EJECUCION_ACTIONS.SETEMPRESA, empresa: data }));
     }, [ejecucionG.item.empresaId]);
 
@@ -467,14 +467,13 @@ const Acciones = ({user}) => {
             docentesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: DocentesForm});
             participantesHandler({type: SUBTABLE_ACTIONS.SETFORM, form: ParticipantesForm});
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
-            if (id != 'undefined' && id > 0) {
+            if (id !== undefined && id > 0) 
                 loadAccion(id);
-            }
             else
                 fetchData();
             isInitialized.current = true;
         } else {
-            if (id != 'undefined' && id > 0) {
+            if (id !== undefined && id > 0) {
                 loadAccion(id);
             }
             else {

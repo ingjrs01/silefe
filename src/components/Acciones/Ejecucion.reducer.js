@@ -220,7 +220,7 @@ export const reducerEjecucion = (state, action ) => {
                 status: "edit",
             }
         case EJECUCION_ACTIONS.SETFIELD:
-            if (action.fieldname == "dias") {
+            if (action.fieldname === "dias") {
                 let ldias = {...state.item.dias};
                 ldias[action.value] = {label: action.value, value:!ldias[action.value].value};
                 return {
@@ -271,7 +271,7 @@ export const reducerEjecucion = (state, action ) => {
 
             if (state.item.id > 0) {
                 tmp = [...state.items];
-                const index = tmp.findIndex(item => item.id == state.item.id );
+                const index = tmp.findIndex(item => item.id === state.item.id );
                 tmp.splice(index,1,state.item);
             }
             else {

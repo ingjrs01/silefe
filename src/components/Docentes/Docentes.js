@@ -127,7 +127,7 @@ const Docentes = ({user}) => {
         else
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
 
-        if (state != 'undefined' && state.backUrl.length > 0)
+        if (state !== undefined && state.backUrl.length > 0)
             navigate(state.backUrl + state.ancestorId);
     }
 
@@ -157,7 +157,7 @@ const Docentes = ({user}) => {
     form.handleNew = newElement;
 
     const fetchData = async () => {
-        if (form.fields.provinciaId.options == undefined) {
+        if (form.fields.provinciaId.options === undefined) {
             await initForm();
         }
 
@@ -251,15 +251,14 @@ const Docentes = ({user}) => {
         if (!isInitialized.current) {
             initForm();
             
-            if (id != 'undefined' && id > 0) {
+            if (id !== undefined && id > 0) 
                 loadDocente(id);
-            }
             else
                 fetchData();
 
             isInitialized.current = true;
         } else {
-            if (id != 'undefined' && id > 0)
+            if (id !== undefined && id > 0)
                 loadDocente(id)
             else {
                 const timeoutId = setTimeout(fetchData, 350);
@@ -269,7 +268,7 @@ const Docentes = ({user}) => {
     }, [items.load]);
 
     useEffect(() => {
-        if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0) {
+        if (items.item.provinciaId !== undefined && items.item.provinciaId > 0) {
             changeProvince(items.item.provinciaId);
         }
 

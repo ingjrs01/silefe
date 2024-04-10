@@ -32,7 +32,7 @@ const Citas = () => {
         if (!isInitialized.current) {
             initForm();
             //itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });  // lo estoy haciendo dentro del initForm
-            if (id != 'undefined' && id > 0)
+            if (id !== undefined && id > 0)
                 loadParticipante(id);
             else
                 fetchData();
@@ -40,7 +40,7 @@ const Citas = () => {
             isInitialized.current = true;
 
         } else {
-            if (id != 'undefined' && id > 0)
+            if (id !== undefined && id > 0)
                 loadParticipante(id);
             else {
                 const timeoutId = setTimeout(fetchData, 350);
@@ -51,7 +51,7 @@ const Citas = () => {
 
     const loadParticipantes = (value, field) => {
         let fieldname = 'participantInId';
-        if (field == 'originOutId')
+        if (field === 'originOutId')
             fieldname = 'participantOutId';
 
         switch (value) {

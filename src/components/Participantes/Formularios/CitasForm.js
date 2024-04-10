@@ -198,6 +198,7 @@ export const form = {
     ],
     options: {
         table: {
+            showToolbar: true,
             showActions: true,
             actions: ['edit','delete']
         }

@@ -166,7 +166,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                                     if (item[column.columnName] === undefined || item[column.columnName] === null)
                                                                         aa = "ND";
                                                                     else {
-                                                                        let arr = data.form.fields[column.columnName].options.filter(i => i.value == item[column.columnName].toString());
+                                                                        let arr = data.form.fields[column.columnName].options.filter(i => i.value === item[column.columnName].toString());
                                                                         if (arr.length > 0)
                                                                             aa = arr[0].label;
                                                                         else
@@ -244,7 +244,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                     </>
                                 }
                                 {
-                                    data.form.fields[data.form.searchFieldMain].type == "text" &&
+                                    data.form.fields[data.form.searchFieldMain].type === "text" &&
                                     <ClayInput
                                         placeholder={"Buscar..."}
                                         type="text"
@@ -359,7 +359,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                                             if (item[column.columnName] === undefined || item[column.columnName] === null)
                                                                 aa = "ND";
                                                             else {
-                                                                let arr = data.form.fields[column.columnName].options.filter(i => i.value == item[column.columnName].toString());
+                                                                let arr = data.form.fields[column.columnName].options.filter(i => i.value === item[column.columnName].toString());
                                                                 if (arr.length > 0)
                                                                     aa = arr[0].label;
                                                                 else

@@ -31,8 +31,9 @@ export const GenericForm = {
             key: "c1",
         },        
     },
-    options: {
+    options: {        
         table: {
+            showToolbar: false,
             showActions: true,
             actions: ['view','delete']
         }

@@ -57,5 +57,7 @@ export const reducerHistorico = (state=initialState, action ) => {
             //total: action.total,
         },
     }
+    default:
+        throw new Error("Accion invalida");
     }    
 }

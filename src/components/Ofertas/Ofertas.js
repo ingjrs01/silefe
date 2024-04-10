@@ -58,7 +58,7 @@ const Ofertas = ({user}) => {
         }
 
     const beforeEdit = (item) => {
-        const s = (item == undefined || item == null) ? items.arr.filter(item => item.checked).map(i => { return i.id })[0] : item.ofertaId;
+        const s = (item === undefined || item === null) ? items.arr.filter(item => item.checked).map(i => { return i.id })[0] : item.ofertaId;
         loadCandidatosOferta(s);
         loadHistory(item.id);
     }
@@ -141,7 +141,7 @@ const Ofertas = ({user}) => {
             }
             else
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
-            if (state != 'undefined' && state != null && state.backUrl.length > 0)
+            if (state !== undefined && state !== null && state.backUrl.length > 0)
                 navigate(state.backUrl);
         });
     }
@@ -166,7 +166,7 @@ const Ofertas = ({user}) => {
             });
                
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
-            if (id != 'undefined' && id > 0) {
+            if (id !== undefined && id > 0) {
                 loadOferta(id);
             }
             else
@@ -174,7 +174,7 @@ const Ofertas = ({user}) => {
 
             isInitialized.current = true;
         } else {
-            if (id != 'undefined' && id > 0) {
+            if (id !== undefined && id > 0) {
                 loadOferta(id);
             }
             else {

@@ -2,7 +2,7 @@ export const CITAS_ACTIONS = {
   START: 0,
   LOAD: 1,
   NEW_ITEM: 2,
-  SAVE: 3,
+  //SAVE: 3,
   CANCEL: 4,
   SET: 5,
   DELETE: 15,

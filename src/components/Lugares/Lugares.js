@@ -44,14 +44,14 @@ const Lugares = () => {
                 setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
             }
 
-            if (state != 'undefined' && state.backUrl.length > 0) {
+            if (state !== undefined && state.backUrl.length > 0) {
                 navigate(state.backUrl + state.ancestorId);
             }
         });
     }
 
     const handleCancel = () => {
-        if (state != 'undefined' && state.backUrl.length > 0) {
+        if (state !== undefined && state.backUrl.length > 0) {
             navigate(state.backUrl + state.ancestorId);
         }
     }
@@ -105,7 +105,7 @@ const Lugares = () => {
     form.handleCancel = handleCancel;
 
     useEffect(() => {
-        if (items.item.provinciaId != 'undefined' && items.item.provinciaId > 0)
+        if (items.item.provinciaId !== undefined && items.item.provinciaId > 0)
             loadMunicipiosProvincia(items.item.provinciaId);
     }, [items.item.provinciaId]);
 
@@ -113,17 +113,15 @@ const Lugares = () => {
         //initCentrosForm();
         if (!isInitialized.current) {
             initForm();
-            if (id != 'undefined' && id > 0) {
+            if (id !== undefined && id > 0) 
                 loadItem(id);
-            }
             else
                 fetchData();
 
             isInitialized.current = true;
         } else {
-            if (id != 'undefined' && id > 0) {
-                loadItem(id);
-            }
+            if (id !== undefined && id > 0) 
+                loadItem(id);            
             else {
                 const timeoutId = setTimeout(fetchData, 350);
                 return () => clearTimeout(timeoutId);

@@ -7,7 +7,7 @@ export const toURL =  (uuid, groupId) => {
 }
 
 export const toHours = (data) => {
-  if (data == undefined)
+  if (data === undefined)
     return "";
 
   const h = new Date(data);
@@ -17,31 +17,31 @@ export const toHours = (data) => {
 }
 
 export const toDate = (data) => {
-  if (data == undefined)
+  if (data === undefined)
     return "";
   return new Date(data).toISOString().substring(0, 10)
 }
 
 export const handleDelete = (index, items, itemsHandle, onOpenChange) => {
-  if (index != -1) {
+  if (index !== -1) {
     itemsHandle({ type: ITEMS_ACTIONS.CHECK, index: index });
   }
 
-  if ((index != 'undefined') || (items.arr.filter(item => item.checked).length > 0))
+  if ((index !== undefined) || (items.arr.filter(item => item.checked).length > 0))
     onOpenChange(true);
 }
 
 export const formatDocument = (tipoDoc, value) => {
-  if (tipoDoc == 1)
+  if (tipoDoc === 1)
     return formatDni(value);
-  if (tipoDoc == 2)
+  if (tipoDoc === 2)
     return formatNif(value);
-  if (tipoDoc == 3)
+  if (tipoDoc === 3)
     return formatCif(value);
 }
 
 export const formatDni = (dni_limpio) => {
-  if (dni_limpio == undefined || dni_limpio.length == 0)
+  if (dni_limpio === undefined || dni_limpio.length === 0)
     return "";
 
   var dni_mostrado = dni_limpio.substr(0, 2);
@@ -56,7 +56,7 @@ export const formatDni = (dni_limpio) => {
 }
 
 export const formatNif = (dni_limpio) => {
-  if (dni_limpio == undefined || dni_limpio.length == 0)
+  if (dni_limpio === undefined || dni_limpio.length === 0)
     return "";
 
   var dni_mostrado = dni_limpio.substr(0, 1);
@@ -72,7 +72,7 @@ export const formatNif = (dni_limpio) => {
 }
 
 export const formatCif = (dni_limpio) => {
-  if (dni_limpio == undefined || dni_limpio.length == 0)
+  if (dni_limpio === undefined || dni_limpio.length === 0)
     return "";
 
   var dni_mostrado = dni_limpio.substr(0, 1);
@@ -88,11 +88,11 @@ export const formatCif = (dni_limpio) => {
 }
 
 export const formatDefaultPhone = (inputphones) => {
-  if (typeof (inputphones) === "string" && inputphones.length == 0)
+  if (typeof (inputphones) === "string" && inputphones.length === 0)
     return "";
 
   const phones = (typeof (inputphones) === "string") ? JSON.parse(inputphones) : inputphones;
-  if (phones === undefined || phones.length == 0)
+  if (phones === undefined || phones.length === 0)
     return "";
 
   const seleccionado = phones.filter(i => i.default);
@@ -105,7 +105,7 @@ export const formatDefaultEmail = (inputemails) => {
   //console.log("formatenado");
   let emails = (typeof (inputemails) == "string") ? JSON.parse(inputemails) : inputemails;
   //console.debug(emails);
-  if (emails == 'undefined' || emails.length == 0)
+  if (emails === 'undefined' || emails.length === 0)
     return "";
   const seleccionado = emails.filter(i => i.default);
   if (seleccionado.length > 0)
