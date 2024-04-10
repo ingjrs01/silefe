@@ -196,7 +196,7 @@ const Participantes = ({ user }) => {
             //const file = fileInput.files[0];
             const formData = new FormData();
             formData.append('file', file);
-            console.debug(formData);
+            //console.debug(formData);
 
             const auth = getAuthToken();
             const endpoint = url_api + '/silefe.participante/save-file';
@@ -294,6 +294,12 @@ const Participantes = ({ user }) => {
                     console.log("se ha enviado correctamente");
                 })
             });
+            // Vamos con las citas borradas: 
+            const citasBorradas = citas.deleted.map(i => i.id);
+            if (citasBorradas.length > 0)
+                deleteAPI('/silefe.cita/delete-citas',citasBorradas, referer).then(responsedel => {
+                    console.log("citas borradas")
+                });
 
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get('Guardado_correctamente') }]);

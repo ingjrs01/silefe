@@ -227,7 +227,7 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                             }
                                             <ClayTable.Cell>
                                                 <ClayButtonWithIcon
-                                                    onClick={() => { handler({ type: CITAS_ACTIONS.VIEW, index: index }); }}
+                                                    onClick={() =>  handler({ type: CITAS_ACTIONS.VIEW, index: index }) }
                                                     displayType="secondary"
                                                     spritemap={spritemap}
                                                     aria-label="Edit"
@@ -236,7 +236,7 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                                 />
                                                 <ClayButtonWithIcon
                                                     className="ml-1"
-                                                    onClick={() => { console.log("borrando")/*handleDelete(index, items, itemsHandle, onOpenChange)*/ }}
+                                                    onClick={() => handler({ type: CITAS_ACTIONS.DELETE, index: index })}
                                                     displayType="danger"
                                                     spritemap={spritemap}
                                                     aria-label="Delete"

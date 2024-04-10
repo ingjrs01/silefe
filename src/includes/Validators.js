@@ -342,10 +342,8 @@ export const validateNumber = (name, value,field,itemsHandle) => {
 
 export const validateAll = (items, itemsHandle) => {
     var result = true;
-    console.log("validando");
     for (var campo in items.fields.fields) {
         //debugger;
-        console.log(campo);
         if ( items.fields.fields[campo].validate !== undefined &&  items.fields.fields[campo].validate === false)
             console.log("Este campo no se valida: " + campo);
         else
@@ -392,7 +390,6 @@ export const validateAll = (items, itemsHandle) => {
                     break;
             }
     }
-    console.log("todo validado");
     return true;
 }
 

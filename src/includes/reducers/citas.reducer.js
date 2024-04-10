@@ -25,6 +25,7 @@ export const CITAS_STATES = {
 export const initialState = {
     items: [],
     item: {id: 0},
+    deleted: [],
     form: {
         title: "Citas",
     },
@@ -37,6 +38,8 @@ export const initialState = {
     status: CITAS_STATES.LIST,
 }
 let tmp = [];
+let tmpItem = {};
+
 export const reducerCitas = (state=initialState, action ) => {   
     switch (action.type) {
     case CITAS_ACTIONS.START:
@@ -69,12 +72,14 @@ export const reducerCitas = (state=initialState, action ) => {
                 appointmentDate:"",
                 originOutId:"1",
                 appointmentDateTime:"",
+                nuevo: true,
             }
         }
     case CITAS_ACTIONS.EMPTY: 
         return {
             items: [],
             item: {id: 0},
+            deleted: [],
             errors: [],
             pagination: {
                 page: 0,
@@ -86,7 +91,8 @@ export const reducerCitas = (state=initialState, action ) => {
     case CITAS_ACTIONS.LOAD: 
         return {
             ...state, 
-            items: action.items,
+            items: action.items.map(i => ({...i, nuevo:false})),
+            deleted: [],
             pagination: {
                 ...state.pagination,
                 totalPages: action.totalPages, 
@@ -162,6 +168,19 @@ export const reducerCitas = (state=initialState, action ) => {
             items: tmp,
            status: CITAS_STATES.LIST,
         }
+    case CITAS_ACTIONS.DELETE: 
+        // borrando un elemento: 
+        tmpItem = {...state.items[action.index]};
+        tmp = [...state.items];
+        tmp.splice(action.index,1);
+       
+        return {
+            ...state,
+            items: tmp,
+            //searchItems: [...state.searchItems, obj],
+            deleted: (tmpItem.nuevo)?[...state.deleted]:[...state.deleted,tmpItem],
+        }
+
     case  CITAS_ACTIONS.ADDERROR:
         return {
             ...state,
