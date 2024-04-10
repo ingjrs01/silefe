@@ -1,3 +1,21 @@
+export const CITAS_ACTIONS = {
+  START: 0,
+  LOAD: 1,
+  NEW_ITEM: 2,
+  SAVE: 3,
+  CANCEL: 4,
+  SET: 5,
+  DELETE: 15,
+  SELECT_ITEM: 6,
+  SETFORM: 7,
+  VIEW: 92,
+  ADDERROR: 9,
+  CLOSEVIEW: 11,
+  SETPAGE: 10,
+  SAVE: 80,
+  EMPTY: 91,
+}
+
 export const REDUCER_ACTIONS = {
   START: 0,
   LOAD_ITEMS: 1,  // REVISAR

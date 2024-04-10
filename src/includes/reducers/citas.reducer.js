@@ -1,22 +1,22 @@
-
-export const CITAS_ACTIONS = {
-    START: 0,
-    LOAD: 1,
-    NEW_ITEM: 2,
-    SAVE: 3,
-    CANCEL: 4,
-    SET: 5,
-    DELETE: 15,
-    SELECT_ITEM: 6,
-    SETFORM: 7,
-    VIEW: 8,
-    ADDERROR: 9,
-    CLOSEVIEW: 11,
-    SETPAGE: 10,
-    SAVE: 80,
-    EMPTY: 91,
-}
-
+import { CITAS_ACTIONS } from './actions';
+//export const CITAS_ACTIONS = {
+//    START: 0,
+//    LOAD: 1,
+//    NEW_ITEM: 2,
+//    SAVE: 3,
+//    CANCEL: 4,
+//    SET: 5,
+//    DELETE: 15,
+//    SELECT_ITEM: 6,
+//    SETFORM: 7,
+//    VIEW: 8,
+//    ADDERROR: 9,
+//    CLOSEVIEW: 11,
+//    SETPAGE: 10,
+//    SAVE: 80,
+//    EMPTY: 91,
+//}
+//
 export const CITAS_STATES = {
     LIST: 1,
     VIEW: 2,
@@ -108,7 +108,7 @@ export const reducerCitas = (state=initialState, action ) => {
                 ...action.form,
             }
         }
-    case CITAS_ACTIONS.VIEW:
+    case CITAS_ACTIONS.SELECT_ITEM:
         return {
             ...state,
             status: CITAS_STATES.VIEW, 

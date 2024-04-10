@@ -29,7 +29,13 @@ export const GenericForm = {
             columnTitle: "Id",
             columnType: "checkbox",
             key: "c1",
-        },
+        },        
+    },
+    options: {
+        table: {
+            showActions: true,
+            actions: ['view','delete']
+        }
     },
     searchFields: [],
 };

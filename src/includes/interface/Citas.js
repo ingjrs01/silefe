@@ -12,8 +12,8 @@ import { Hour } from '../interface/fields/Hour';
 import { Select } from '../interface/fields/Select';
 import { Textarea } from '../interface/fields/Textarea';
 import { Textinput } from '../interface/fields/Textinput';
-import { ITEMS_ACTIONS } from '../reducers/actions';
-import { CITAS_ACTIONS, CITAS_STATES } from '../reducers/citas.reducer';
+import { CITAS_ACTIONS, ITEMS_ACTIONS } from '../reducers/actions';
+import { CITAS_STATES } from '../reducers/citas.reducer';
 import { MiniPaginator } from "./MiniPaginator";
 
 const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
@@ -197,7 +197,10 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                                 </ClayTable.Cell>)
                                     })
                                 }
-                                <ClayTable.Cell className={"table-cell-minw-100"} ><strong>{Liferay.Language.get("Acciones")}</strong></ClayTable.Cell>
+                                {
+                                    items.form.options.table.showActions &&
+                                    <ClayTable.Cell className={"table-cell-minw-100"} ><strong>{Liferay.Language.get("Acciones")}</strong></ClayTable.Cell>
+                                }
                             </ClayTable.Row>
                         </ClayTable.Head>
                         <ClayTable.Body>
@@ -225,25 +228,34 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                                     }
                                                 })
                                             }
+                                            {
+                                            items.form.options.table.showActions &&
                                             <ClayTable.Cell>
-                                                <ClayButtonWithIcon
-                                                    onClick={() =>  handler({ type: CITAS_ACTIONS.VIEW, index: index }) }
-                                                    displayType="secondary"
-                                                    spritemap={spritemap}
-                                                    aria-label="Edit"
-                                                    symbol="pencil"
-                                                    title="Edit"
-                                                />
-                                                <ClayButtonWithIcon
-                                                    className="ml-1"
-                                                    onClick={() => handler({ type: CITAS_ACTIONS.DELETE, index: index })}
-                                                    displayType="danger"
-                                                    spritemap={spritemap}
-                                                    aria-label="Delete"
-                                                    symbol="trash"
-                                                    title="Delete"
-                                                />
+                                                {
+                                                    items.form.options.table.actions.includes("edit") &&
+                                                    <ClayButtonWithIcon
+                                                        onClick={() =>  handler({ type: CITAS_ACTIONS.SELECT_ITEM, index: index }) }
+                                                        displayType="secondary"
+                                                        spritemap={spritemap}
+                                                        aria-label="Edit"
+                                                        symbol="pencil"
+                                                        title="Edit"
+                                                    />
+                                                }
+                                                {
+                                                    items.form.options.table.actions.includes("delete") &&
+                                                    <ClayButtonWithIcon
+                                                        className="ml-1"
+                                                        onClick={() => handler({ type: CITAS_ACTIONS.DELETE, index: index })}
+                                                        displayType="danger"
+                                                        spritemap={spritemap}
+                                                        aria-label="Delete"
+                                                        symbol="trash"
+                                                        title="Delete"
+                                                    />
+                                                }
                                             </ClayTable.Cell>
+                                            }
                                         </ClayTable.Row>
                                     )
                                 })
@@ -255,7 +267,6 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                         changePage={changePageSearch}
                     />
                 </>
-
             }
         </>
     );

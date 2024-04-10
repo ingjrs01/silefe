@@ -14,8 +14,8 @@ import { Paginator } from "../../includes/interface/Paginator";
 import { SimpleTable } from '../../includes/interface/SimpleTable';
 import Table from '../../includes/interface/Table';
 import TabsForm from '../../includes/interface/TabsForm';
-import { ITEMS_ACTIONS, REDUCER_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
-import { CITAS_ACTIONS, initialState as iniCitas, reducerCitas } from '../../includes/reducers/citas.reducer';
+import { CITAS_ACTIONS, ITEMS_ACTIONS, REDUCER_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
+import { initialState as iniCitas, reducerCitas } from '../../includes/reducers/citas.reducer';
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
@@ -126,6 +126,9 @@ const Participantes = ({ user }) => {
             },
         }
         fetchAPIData('/silefe.oferta/get-ofertas-by-participante', postparticipaciones, referer).then(response => {
+            //console.log("Recibidos las partcipane");
+            //console.debug(response);
+            //debugger;
             const data_part = response.data.map(item => ({
                 ...item,
                 tipoParticipacion: "Oferta",
@@ -565,7 +568,8 @@ const Participantes = ({ user }) => {
                 />,
             Participaciones:
                 <Citas
-                    reducer={participaciones}
+                    //reducer={participaciones}
+                    items={participaciones}
                     handler={participacionesHandler}
                 />,
             Historico:

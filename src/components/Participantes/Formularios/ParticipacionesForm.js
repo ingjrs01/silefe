@@ -201,5 +201,11 @@ export const form = {
             key: "tc7",
         },
     ],
+    options: {
+        table: {
+            showActions: false,
+            actions: [ ], //['view','edit','delete']
+        }
+    },
     searchFields: ['appointmentDate'],
 };

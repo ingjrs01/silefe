@@ -196,5 +196,11 @@ export const form = {
         //    key: "tc4",
         //},
     ],
+    options: {
+        table: {
+            showActions: true,
+            actions: ['edit','delete']
+        }
+    },
     searchFields: ['appointmentDate'],
 };
