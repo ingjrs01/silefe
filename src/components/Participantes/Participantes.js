@@ -49,7 +49,7 @@ const Participantes = ({ user }) => {
 
     const newElement = () => {
         handleHistorico({type: HISTORICO_ACTIONS.START});
-        titulacionHandler({ type: TITULACIONES_ACTIONS.START, form: titulacionesForm }); // Ver de poner una accion empty también
+        titulacionHandler({ type: TITULACIONES_ACTIONS.START, form: titulacionesForm });
         experienciasHandler({type: REDUCER_ACTIONS.EMPTY});
         citasHandler({type: CITAS_ACTIONS.EMPTY});
         participacionesHandler({type: SUBTABLE_ACTIONS.START });
@@ -281,10 +281,16 @@ const Participantes = ({ user }) => {
                     //}
                 });
             }
-            console.debug(citas);
+            
             const citasModificadas = citas.items.filter(cita => cita.modified == true);
             citasModificadas.forEach(element => {
-                saveAPI('/silefe.cita/save-cita', {id:element.citaId , obj: element}, referer).then(response=> {
+                const citaObj = {
+                    ...element, 
+                    participantInId: data.participanteId,
+                    tecnicoInId : getUserId(),
+                    userId: getUserId(),
+                };
+                saveAPI('/silefe.cita/save-cita', {id:element.citaId , obj: citaObj}, referer).then(response=> {
                     console.log("se ha enviado correctamente");
                 })
             });

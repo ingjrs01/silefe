@@ -37,12 +37,39 @@ export const initialState = {
     status: CITAS_STATES.LIST,
 }
 let tmp = [];
-export const reducerCitas = (state=initialState, action ) => {
-    console.log("reducerCitas: " + action.type)
+export const reducerCitas = (state=initialState, action ) => {   
     switch (action.type) {
     case CITAS_ACTIONS.START:
         return {
             ...initialState
+        }
+    case CITAS_ACTIONS.NEW_ITEM: 
+        return {
+            ...state,
+            status: CITAS_STATES.VIEW, 
+            item: {
+                id: 0,                
+                //participantOutId:"1601",
+                tipoCitaId:"0",
+                citaId:"0",
+                comments:"",
+                method:{en_US: "Email", es_ES: "Email", gl_ES: "Email"},
+                subject:"",
+                //participantInTelefono:"[{\"key\":1,\"value\":\"659847474\",\"default\":true}]",
+                methodId:"1",
+                originInId:"1",
+                origen:"Participante",
+                //participantInId:"1601",
+                appointmentHour:"16:30",
+                //participantInName:"Jose Pedro Castro Castro",
+                tecnicoInId:"0",
+                //tecnicoOutId:"0",
+                //participantInEmail:"[{\"key\":1,\"value\":\"jose.pedro@gmail.com\",\"default\":true}]",
+                id:"0",
+                appointmentDate:"",
+                originOutId:"1",
+                appointmentDateTime:"",
+            }
         }
     case CITAS_ACTIONS.EMPTY: 
         return {
@@ -69,6 +96,7 @@ export const reducerCitas = (state=initialState, action ) => {
     case CITAS_ACTIONS.SETFORM: 
         return {
             ...state,
+            status: CITAS_STATES.LIST, 
             form: {
                 ...state.form,
                 ...action.form,

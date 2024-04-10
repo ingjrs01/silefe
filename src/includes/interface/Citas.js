@@ -1,7 +1,8 @@
-import { ClayButtonWithIcon } from '@clayui/button';
+import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import ClayCard from "@clayui/card";
-import { ClayCheckbox } from '@clayui/form';
+import { ClayCheckbox, ClayInput } from '@clayui/form';
 import ClayIcon from '@clayui/icon';
+import ClayManagementToolbar from '@clayui/management-toolbar';
 import ClayTable from '@clayui/table';
 import React from "react";
 import { Liferay } from "../../common/services/liferay/liferay";
@@ -15,24 +16,84 @@ import { ITEMS_ACTIONS } from '../reducers/actions';
 import { CITAS_ACTIONS, CITAS_STATES } from '../reducers/citas.reducer';
 import { MiniPaginator } from "./MiniPaginator";
 
-const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {    
+const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
     const lang = getLanguageId();
 
     const changePageSearch = (page) => {
         handler({ type: CITAS_ACTIONS.SETPAGE, page: page });
     }
 
-    if (items === undefined || items.items.length < 1)
+    const setSearchMobile = () => {
+        console.log("lalala");
+    }
+
+    if (items === undefined ) //|| items.items.length < 1)
         return (
             <div>{Liferay.Language.get("No hay elementos para mostrar")}</div>
         )
+    console.log("lalala");
+    console.debug(items);
 
     return (
         <>
             {
                 <>
+                    <ClayManagementToolbar>
+                        <ClayManagementToolbar.ItemList>
+                            <ClayManagementToolbar.Search>
+                                <ClayInput.Group>
+                                    <ClayInput.GroupItem>
+                                        <ClayInput
+                                            aria-label="Search"
+                                            className="form-control input-group-inset input-group-inset-after"
+                                            defaultValue=""
+                                            type="text"
+                                        />
+                                        <ClayInput.GroupInsetItem after tag="span">
+                                            <ClayButtonWithIcon
+                                                aria-label="Close search"
+                                                className="navbar-breakpoint-d-none"
+                                                displayType="unstyled"
+                                                onClick={() => setSearchMobile(false)}
+                                                spritemap={spritemap}
+                                                symbol="times"
+                                            />
+                                            <ClayButtonWithIcon
+                                                aria-label="Search"
+                                                displayType="unstyled"
+                                                spritemap={spritemap}
+                                                symbol="search"
+                                                type="submit"
+                                            />
+                                        </ClayInput.GroupInsetItem>
+                                    </ClayInput.GroupItem>
+                                </ClayInput.Group>
+                            </ClayManagementToolbar.Search>
+
+                            <ClayManagementToolbar.Item>
+                                <ClayButton
+                                    aria-label="Info"
+                                    className="nav-link nav-link-monospaced"
+                                    displayType="unstyled"
+                                    onClick={() => { }}
+                                >
+                                    <ClayIcon spritemap={spritemap} symbol="info-circle-open" />
+                                </ClayButton>
+                            </ClayManagementToolbar.Item>
+
+                            <ClayManagementToolbar.Item>
+                                <ClayButtonWithIcon
+                                    aria-label="Add"
+                                    onClick={() => handler({ type: CITAS_ACTIONS.NEW_ITEM })}
+                                    className="nav-btn nav-btn-monospaced"
+                                    spritemap={spritemap}
+                                    symbol="plus"
+                                />
+                            </ClayManagementToolbar.Item>
+                        </ClayManagementToolbar.ItemList>
+                    </ClayManagementToolbar>
                     {
-                        (items.status === CITAS_STATES.VIEW) &&
+                        ( items.status === CITAS_STATES.VIEW ) &&
                         <div className="col-12">
                             <ClayCard>
                                 <ClayCard.Body>
@@ -42,51 +103,53 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                     <ClayCard.Description truncate={false} displayType="text">
                                         {
                                             <>
-                                            <div className='row'>
-                                            <Select 
-                                                itemsHandle={handler} 
-                                                field={items.form.fields["tipoCitaId"]} 
-                                                item={items.item["tipoCitaId"]} 
-                                            />    
-                                            <Dateinput 
-                                                itemsHandle={handler} 
-                                                field={items.form.fields["appointmentDate"]} 
-                                                item={items.item["appointmentDate"]} 
-                                                action={ITEMS_ACTIONS.SET}
-                                            /> 
-                                            <Hour           
-                                                itemsHandle={handler} 
-                                                field={items.form.fields["appointmentHour"]} 
-                                                item={items.item["appointmentHour"]} 
-                                                action={ITEMS_ACTIONS.SET}
-                                            /> 
-                                            </div>
-                                            <div className='row'>
-                                            <Textinput  itemsHandle={handler} field={items.form.fields["subject"]} item={items.item["subject"]} />
-                                            </div>
-                                            <Textarea itemsHandle={handler} field={items.form.fields["comments"]} item={items.item["comments"]} />
+                                                <div className='row'>
+                                                    <Select
+                                                        itemsHandle={handler}
+                                                        field={items.form.fields["tipoCitaId"]}
+                                                        item={items.item["tipoCitaId"]}
+                                                        action={CITAS_ACTIONS.SET}
+                                                    />
+                                                    <Dateinput
+                                                        itemsHandle={handler}
+                                                        field={items.form.fields["appointmentDate"]}
+                                                        item={items.item["appointmentDate"]}
+                                                        action={ITEMS_ACTIONS.SET}
+                                                    />
+                                                    <Hour
+                                                        itemsHandle={handler}
+                                                        field={items.form.fields["appointmentHour"]}
+                                                        item={items.item["appointmentHour"]}
+                                                        action={ITEMS_ACTIONS.SET}
+                                                    />
+                                                </div>
+                                                <div className='row'>
+                                                    <Textinput itemsHandle={handler} field={items.form.fields["subject"]} item={items.item["subject"]} />
+                                                </div>
+                                                <Textarea itemsHandle={handler} field={items.form.fields["comments"]} item={items.item["comments"]} />
                                             </>
                                         }
 
                                     </ClayCard.Description>
-                        <ClayButtonWithIcon
-                            onClick={() => { handler({ type: CITAS_ACTIONS.CLOSEVIEW }) }}
-                            displayType="secondary"
-                            spritemap={spritemap}
-                            aria-label="Cerrar"
-                            symbol="times"
-                            title="Edit"
-                        >{"Cerrar"}
-                        </ClayButtonWithIcon>
-                        <ClayButtonWithIcon
-                            onClick={() => { handler({ type: CITAS_ACTIONS.SAVE }) }}
-                            displayType="primary"
-                            spritemap={spritemap}
-                            aria-label="Cerrar"
-                            symbol="disk"
-                            title="Save"
-                        >{"Cerrar"}
-                        </ClayButtonWithIcon>
+                                    <ClayButtonWithIcon
+                                        onClick={() => { handler({ type: CITAS_ACTIONS.CLOSEVIEW }) }}
+                                        displayType="secondary"
+                                        spritemap={spritemap}
+                                        aria-label="Cerrar"
+                                        symbol="times"
+                                        title="Edit"
+                                    >{"Cerrar"}
+                                    </ClayButtonWithIcon>
+
+                                    <ClayButtonWithIcon
+                                        onClick={() => { handler({ type: CITAS_ACTIONS.SAVE }) }}
+                                        displayType="primary"
+                                        spritemap={spritemap}
+                                        aria-label="Cerrar"
+                                        symbol="disk"
+                                        title="Save"
+                                    >{"Cerrar"}
+                                    </ClayButtonWithIcon>
 
                                 </ClayCard.Body>
                             </ClayCard>
@@ -139,7 +202,7 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                         </ClayTable.Head>
                         <ClayTable.Body>
                             {
-                                items.items.map((row, index) => {
+                                (items.items !== undefined) && items.items.map((row, index) => {
                                     return (
                                         <ClayTable.Row key={row.id} >
                                             {
@@ -164,7 +227,7 @@ const Citas = ({ items, handler, editUrl, backUrl, ancestorId }) => {
                                             }
                                             <ClayTable.Cell>
                                                 <ClayButtonWithIcon
-                                                    onClick={() => { handler({ type: CITAS_ACTIONS.VIEW, index: 0 });}}
+                                                    onClick={() => { handler({ type: CITAS_ACTIONS.VIEW, index: index }); }}
                                                     displayType="secondary"
                                                     spritemap={spritemap}
                                                     aria-label="Edit"
