@@ -166,9 +166,8 @@ const Ofertas = ({user}) => {
             });
                
             itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form: form });
-            if (id !== undefined && id > 0) {
+            if (id !== undefined && id > 0) 
                 loadOferta(id);
-            }
             else
                 fetchData();
 

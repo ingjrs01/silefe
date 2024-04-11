@@ -546,6 +546,6 @@ export const form = {
         //},
         
     },
-    searchFields: ['titulo','estadoId','puesto','empresa','proyectoId','jornadaId','salarioId'],
+    searchFields: ['titulo','estadoId','puesto','empresa','proyectoId','jornadaId','salarioId', 'informatica', 'idiomas'],
     searchField: 'titulo',
 };

@@ -117,7 +117,7 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
               <ClayToolbar.Item>
                 <ClayInput.Group>
                   <ClayInput.GroupItem >
-                    { ["select"].includes(items.fields.fields[items.fields.searchField].type) &&
+                    { ["select", "multilist"].includes(items.fields.fields[items.fields.searchField].type) &&
                       <>
                         {
                           <ClaySelect aria-label="Select Label"
