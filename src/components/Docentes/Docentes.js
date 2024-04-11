@@ -205,19 +205,16 @@ const Docentes = ({user}) => {
                     label: t.descripcion,
                 }));
         });
-        //debugger;
         fetchAPIData('/silefe.titulacion/all', {}, referer).then(response => {
             console.log("recibidas titulaciones");
             const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
             titulacionesForm.fields.titulacionId.all = opts;
-            //debugger;
             titulacionesForm.fields.titulacionId.options = opts.filter(o => 
                 o.titulacionFamiliaId === titulacionesForm.fields.titulacionFamiliaId.options[0].value).map(t => ({value:t.id, label: t.descripcion}));
 
             form.fields.titulacion.options = opts.map(a => ({value:a.id, label: a.descripcion}));
 
         });
-        //debugger;
         titulacionHandler({ type: TITULACIONES_ACTIONS.START, form: titulacionesForm });
     }
 

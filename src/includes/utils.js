@@ -32,11 +32,11 @@ export const handleDelete = (index, items, itemsHandle, onOpenChange) => {
 }
 
 export const formatDocument = (tipoDoc, value) => {
-  if (tipoDoc === 1)
+  if (tipoDoc === "1")
     return formatDni(value);
-  if (tipoDoc === 2)
+  if (tipoDoc === "2")
     return formatNif(value);
-  if (tipoDoc === 3)
+  if (tipoDoc === "3")
     return formatCif(value);
 }
 
