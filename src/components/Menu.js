@@ -8,6 +8,7 @@ import { Liferay } from '../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../includes/LiferayFunctions';
 import { getDays, getMonths } from '../includes/interface/DatesLang';
 import { MgtToolbar } from '../includes/interface/MgtToolbar';
+import { Selectfilter } from '../includes/interface/fields/Selectfilter';
 import { ITEMS_ACTIONS } from '../includes/reducers/actions';
 import { handleDelete } from '../includes/utils';
 
@@ -124,13 +125,15 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                             id={"searchBottonField"}
                             name={"searchBottonField"}
                             key={"searchBottonField"}
-                            value={items.fields.search}                           
+                            value={items.fields.search}
+                            className={'col-2'}
                             onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}>
                             {items.fields.fields[items.fields.searchField].options.map(field => (
                               <ClaySelect.Option
                                 key={field.key}
                                 label={field.label}
                                 value={field.value}
+                                className={'col-2'}
                               />
                             ))}
                           </ClaySelect>
@@ -176,6 +179,10 @@ const Menu = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
                         value={items.fields.search}
                         onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value}) }>
                       </ClayInput>
+                    }
+                    {
+                      ["selectfilter"].includes( items.fields.fields[items.fields.searchField].type) &&
+                      <Selectfilter itemsHandle={itemsHandle} field={items.fields.fields["titulacion"]} item={items.fields.search} action={ITEMS_ACTIONS.SEARCH} error={items.errors["titulacion"]} key={"a-f"} />
                     }
                     {
                       ["date"].includes( items.fields.fields[items.fields.searchField].type) &&

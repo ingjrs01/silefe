@@ -190,17 +190,34 @@ const Docentes = ({user}) => {
         fetchAPIData('/silefe.titulacionnivel/all', { descripcion: "" }, referer).then(response => {
             const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang], tipo: item.tipo[lang] }));
             titulacionesForm.fields.titulacionNivelId.all = opts;
+            titulacionesForm.fields.titulacionNivelId.options = opts.filter(o => o.titulacionTipoId === titulacionesForm.fields.titulacionTipoId.options[0].id ).map(t => ({
+                value: t.id, 
+                label: t.descripcion
+            }));
         });
         
         fetchAPIData('/silefe.titulacionfam/all', { descripcion: "" }, referer).then(response => {
             const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
             titulacionesForm.fields.titulacionFamiliaId.all = opts;
+            titulacionesForm.fields.titulacionFamiliaId.options = opts.filter(o => 
+                o.titulacionNivelId === titulacionesForm.fields.titulacionNivelId.options[0].value).map(t => ({
+                    value:t.id,
+                    label: t.descripcion,
+                }));
         });
-        
+        //debugger;
         fetchAPIData('/silefe.titulacion/all', {}, referer).then(response => {
+            console.log("recibidas titulaciones");
             const opts = response.data.map(item => ({ ...item, descripcion: item.descripcion[lang] }));
             titulacionesForm.fields.titulacionId.all = opts;
+            //debugger;
+            titulacionesForm.fields.titulacionId.options = opts.filter(o => 
+                o.titulacionFamiliaId === titulacionesForm.fields.titulacionFamiliaId.options[0].value).map(t => ({value:t.id, label: t.descripcion}));
+
+            form.fields.titulacion.options = opts.map(a => ({value:a.id, label: a.descripcion}));
+
         });
+        //debugger;
         titulacionHandler({ type: TITULACIONES_ACTIONS.START, form: titulacionesForm });
     }
 
@@ -220,8 +237,8 @@ const Docentes = ({user}) => {
         form.fields.tipoDoc.options = [{ value: "0", label: seleccionarlabel }, { value: "1", label: "DNI" }, { value: "2", label: "NIE" }, { value: "3", label: "Pasaporte" }];
         form.fields.sexo.options = [{ key: 0, value: "H", label: Liferay.Language.get('Hombre') }, { key: 1, value: "M", label: Liferay.Language.get('Mujer') }];
 
-        itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form });
         queryTitulaciones();
+        itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form });
     }
 
     const changeProvince = (id) => {

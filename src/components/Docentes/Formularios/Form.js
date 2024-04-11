@@ -126,7 +126,7 @@ export const form = {
         },
         municipioId: {
             key:14,
-            type: "select",//"autocomplete",
+            type: "select",
             label: Liferay.Language.get('Municipio'),
             name: "municipioId",
             value:"",
@@ -180,7 +180,7 @@ export const form = {
             type: "email",
             label: Liferay.Language.get('Email'),
             name: "email",
-            values: [],   //{key:1,value:"hola@micorreo.es",default:false}, {key:2,value:"adios@micorreo.es",default:true}],
+            values: [], 
             placeholder: Liferay.Language.get('Email'),
             conditions: ["text"]
         },
@@ -189,7 +189,7 @@ export const form = {
             type: "phone",
             label: Liferay.Language.get('Telefono'),
             name: "telefono",
-            values: [ ], //{key:1,value:"666666666",default:false}, {key:2,value:"777777777",default:true}],
+            values: [ ],
             placeholder: Liferay.Language.get('Telefono'),
             conditions: ["text"]
         },
@@ -205,6 +205,14 @@ export const form = {
             componentName: "Titulaciones",
             name: "Titulaciones",
         },        
+        titulacion: { // only for search bar
+            key:7,
+            type: "select",
+            label: Liferay.Language.get("Titulación"),
+            name: "titulacion",
+            value:"",
+            placeholder:"",
+        },
         historico: {
             key: 20,
             type: "other",
