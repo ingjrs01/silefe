@@ -26,6 +26,7 @@ import { Login } from './components/Login/Login';
 import Lugares from './components/Lugares/Lugares';
 import MBaja from './components/MBaja/MBaja';
 import Ofertas from './components/Ofertas/Ofertas';
+import Pais from './components/Paises/Pais';
 import Participantes from './components/Participantes/Participantes';
 import Plataformas from './components/Plataforma/Plataformas';
 import Prestaciones from './components/Prestaciones/Prestacion';
@@ -122,6 +123,7 @@ const Application = () => {
                                         <Route path='/citas'                element={<ProtectRoute isAllowed={allow} redirectTo={url}><Citas /> </ProtectRoute> } />
                                         <Route path='/discapacidad'         element={<ProtectRoute isAllowed={allow} redirectTo={url}><Discapacidad /> </ProtectRoute> } />
                                         <Route path='/tecnicos'             element={<ProtectRoute isAllowed={allow} redirectTo={url}><Tecnicos /> </ProtectRoute> } />
+                                        <Route path='/paises'               element={<ProtectRoute isAllowed={allow} redirectTo={url}><Pais></Pais></ProtectRoute>} />
                                     </Routes>
                                 </div>
                             </div>

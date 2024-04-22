@@ -112,7 +112,7 @@ export const form = {
             name: "localidad",
             value: "",
             placeholder: Liferay.Language.get('Localidad'),
-            className: 'col-6',
+            className: 'col-4',
             conditions: []
         },
         tipoviaId: {
@@ -133,7 +133,7 @@ export const form = {
             label: Liferay.Language.get('NombreVia'),
             name: "nombreVia",
             value:"",
-            className: 'col-6',
+            className: 'col-4',
             placeholder: Liferay.Language.get('NombreVia'),
             conditions: []
         },
@@ -564,6 +564,25 @@ export const form = {
             key: 60,
             type: "line",
             label: Liferay.Language.get("Inserción")
+        },
+        nacionalidadId: {
+            key:61,
+            type: "select",
+            label: Liferay.Language.get('Nacionalidad'),
+            name: "nacionalidadId",
+            value:"",
+            enabled: true,
+            options: [],
+            conditions: [],
+            className: 'col-2'
+        },
+        permisoTrabajo: {
+            key:62,
+            type: "toggle",
+            label: Liferay.Language.get('Permiso Trabajo'),
+            name: "permisoTrabajo",
+            value: true,
+            className: "col-2"
         }
     },
     tabActive:0,
@@ -583,11 +602,11 @@ export const form = {
                 },
                 {
                     key:1044,
-                    cols: ['provinciaId', 'municipioId', 'localidad']
+                    cols: ['nacionalidadId', 'provinciaId', 'municipioId', 'localidad']
                 },
                 {
                     key:1045,
-                    cols: ['tipoviaId','nombreVia','numero','piso']
+                    cols: ['permisoTrabajo', 'tipoviaId','nombreVia','numero','piso']
                 },
                 {
                     key:1046,

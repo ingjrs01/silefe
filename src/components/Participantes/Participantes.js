@@ -412,6 +412,12 @@ const Participantes = ({ user }) => {
             //{ value: "3", label: "Estudiando" }
         ];
 
+        fetchAPIData('/silefe.paises/all', {}, referer).then(response => {
+            const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
+            form.fields.nacionalidadId.options = opts;
+        });
+        
+
         fetchAPIData('/silefe.salario/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
             form.fields.rangoSalarialId.options = opts;
