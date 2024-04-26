@@ -306,7 +306,7 @@ const Acciones = ({user}) => {
     const loadDocentesSearch = () => {
         let filters = [];
         if (docentes.search.length > 0)
-            filters = [{ name: docentes.searchField, value: docentes.search }];
+            filters = [{ name: docentes.form.searchField, value: docentes.search }];
 
         const postdata = {
             pagination: {
