@@ -101,7 +101,7 @@ export const form = {
             label: Liferay.Language.get('Entidad'),
             name: "entidadId",
             value: 0,
-            enabled: false,
+            enabled: true,
             change: () => { console.log("cambia el select"); }
         },
         ambito_geo: {

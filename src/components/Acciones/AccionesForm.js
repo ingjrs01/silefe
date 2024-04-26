@@ -86,7 +86,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
                   </div>
 
                   {
-                    (items.item.accionTipoId === 1) &&
+                    (items.item.accionTipoId === "1") &&
                       <div className="row">
                         <Select itemsHandle={itemsHandle} field={items.fields.fields['accionTipoFormacionId']} item={items.item.accionTipoFormacionId} action={ITEMS_ACTIONS.SET}  error={items.errors['accionTipoFormacionId']}  />
                         <Toggle itemsHandle={itemsHandle} field={items.fields.fields['teorica']} item={items.item.teorica} action={ITEMS_ACTIONS.SET}  error={items.errors['teorica']}  />
@@ -113,7 +113,7 @@ const AccionesForm = ({ save, items, itemsHandle, docentes, docentesHandler, par
 
                 <ClayTabs.TabPane aria-labelledby="tab-2" key={"tab-content-2"}>
                   {
-                    (items.item.accionTipoId === 1 || items.item.accionTipoId === 3) &&
+                    (items.item.accionTipoId === "1" || items.item.accionTipoId === "3") &&
                     <>
                       {
                         (items.item.teorica) &&

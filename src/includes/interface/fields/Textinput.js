@@ -8,8 +8,6 @@ export const Textinput = ({itemsHandle, field, item, action, error }) => {
     const accion = (action !== undefined ) ? action:ITEMS_ACTIONS.SET;
 
     const onChange = (e) => {
-      console.log("onChange: ");
-      console.log(e);
       validate(e.target.name, e.target.value, field, itemsHandle);
       itemsHandle({ type: accion, fieldname: e.target.name, value: e.target.value });
     }

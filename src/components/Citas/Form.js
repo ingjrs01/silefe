@@ -73,6 +73,7 @@ export const form = {
             key:7,
             type: "selectfilter",
             label: Liferay.Language.get('Participante'),
+            placeholder: Liferay.Language.get("Escribe para buscar"),
             name: "participantInId",
             enabled:true,
             conditions: [],

@@ -393,6 +393,21 @@ export const validateAll = (items, itemsHandle) => {
     return true;
 }
 
+
+export const validateSelectFilter = (name, value,field,itemsHandle) => {
+    console.log("validadndo este campo tan curioso");
+    console.log(name);
+    console.log(value);
+    if (value === null || value === 0) {
+        itemsHandle({type: ITEMS_ACTIONS.ADDERROR, name: name, value: "Debe completar el campo"});
+        return false;
+    }
+
+    itemsHandle({ type: ITEMS_ACTIONS.CLEARERRORS, name: name });
+    return true;
+
+}
+
 export const validate = (name, value,field,itemsHandle) => {
     let condicion = "";
 

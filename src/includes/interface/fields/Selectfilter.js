@@ -4,26 +4,26 @@ import { MD5 } from 'crypto-js';
 import React, { useEffect, useState } from 'react';
 import { Liferay } from '../../../common/services/liferay/liferay';
 import { spritemap } from '../../LiferayFunctions';
+import { validateSelectFilter } from '../../Validators';
 import { ITEMS_ACTIONS } from '../../reducers/actions';
 
 export const Selectfilter = ({ itemsHandle, field, item, action, error }) => {
     const [options, setOptions] = useState(new Map());
     const [val, setVal ] = useState ("");
+    const [ivalue, setIvalue] = useState(0);
     var selected = "";
     var sha1 = ""; 
 
     const accion = action !== undefined ? action: ITEMS_ACTIONS.SET; 
 
     const change = (fieldname,value) => {
-        itemsHandle({ type: accion, fieldname: fieldname, value: value });
+        if (validateSelectFilter(field.name,value,field,itemsHandle))
+            itemsHandle({ type: accion, fieldname: fieldname, value: value });
     }
      
     const loadOptions = () => {
         var tmp = new Map();       
         selected = "";
-        //console.log("loadOptions");
-        //console.debug(field);
-        //console.debug(item);
         let sitem = "";
         if (item == undefined || item == null)
             setVal("");
@@ -47,15 +47,18 @@ export const Selectfilter = ({ itemsHandle, field, item, action, error }) => {
     },[field.options]);
 
     const onChangeSelect = (value) => {
+        if (value === null || value === "" ) {
+            setIvalue(0);
+        }
+
         var s = MD5(value).toString();
         const ttmp = options.get(s);
         if (ttmp != undefined) {
-            //debugger;
+            setIvalue(ttmp.value);
             change(field.name,ttmp.value);            
         }
-            //itemsHandle({ type: ITEMS_ACTIONS.SET, fieldname: field.name, value: ttmp.value })
-        else   
-            console.log("Todavía no hay un elemento válido");
+        //else   
+        //    console.log("Todavía no hay un elemento válido");
         setVal(value);
     }
 
@@ -63,6 +66,10 @@ export const Selectfilter = ({ itemsHandle, field, item, action, error }) => {
         return (Array.from( options.values())).map(i => {return (i.label)}) 
     };
 
+    const salida = () => {
+        validateSelectFilter(field.name,ivalue,field,itemsHandle);
+    }
+ 
     return (
         <>
         <ClayForm.Group
@@ -82,7 +89,7 @@ export const Selectfilter = ({ itemsHandle, field, item, action, error }) => {
                 }}
                 placeholder={ (field.placeholder != 'undefined')?field.placeholder:""}
                 onChange={onChangeSelect}
-                //onItemsChange={()=>console.log("los items han cambiado")}
+                onBlur={salida}
             >
                 {
                     cambiar().map(item => (<ClayAutocomplete.Item key={item}>{item}</ClayAutocomplete.Item>))
