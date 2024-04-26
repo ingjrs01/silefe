@@ -33,6 +33,7 @@ import Prestaciones from './components/Prestaciones/Prestacion';
 import Provincias from './components/Provincias/Provincia';
 import Proyectos from './components/Proyectos/Proyectos';
 import Salarios from './components/Salarios/Salarios';
+import Situaciones from './components/Situaciones/Situaciones';
 import Tecnicos from './components/Tecnicos/Tecnicos';
 import TipoContrato from './components/TipoContrato/TipoContrato';
 import TiposVia from './components/TiposVia/TiposVia';
@@ -124,6 +125,7 @@ const Application = () => {
                                         <Route path='/discapacidad'         element={<ProtectRoute isAllowed={allow} redirectTo={url}><Discapacidad /> </ProtectRoute> } />
                                         <Route path='/tecnicos'             element={<ProtectRoute isAllowed={allow} redirectTo={url}><Tecnicos /> </ProtectRoute> } />
                                         <Route path='/paises'               element={<ProtectRoute isAllowed={allow} redirectTo={url}><Pais></Pais></ProtectRoute>} />
+                                        <Route path='/situaciones'          element={<ProtectRoute isAllowed={allow} redirectTo={url}><Situaciones /></ProtectRoute>} />
                                     </Routes>
                                 </div>
                             </div>

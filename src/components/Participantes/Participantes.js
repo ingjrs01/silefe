@@ -405,12 +405,16 @@ const Participantes = ({ user }) => {
         });
 
         // TODO: Ver como rellenar la situación laboral
-        form.fields.situacionLaboral.options = [
-            { value: "0", label: seleccionarlabel },
-            { value: "1", label: "Trabajando" },
-            { value: "2", label: "Desempleado" },
-            //{ value: "3", label: "Estudiando" }
-        ];
+        fetchAPIData('/silefe.situacioneslab/all', { }, referer).then(response => {
+            const opts = [{ value: "0", label: "Seleccionar" }, ...response.data.map(obj => ({ value: obj.id, label: obj.nombre[lang] }) )];
+            form.fields.situacionLaboral.options = opts;
+        });
+
+        //form.fields.situacionLaboral.options = [
+        //    { value: "0", label: seleccionarlabel },
+        //    { value: "1", label: "Trabajando" },
+        //    { value: "2", label: "Desempleado" },
+        //];
 
         fetchAPIData('/silefe.paises/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
