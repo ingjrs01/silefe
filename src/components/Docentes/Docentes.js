@@ -10,15 +10,18 @@ import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
 import { FModal } from '../../includes/interface/FModal';
 import { LoadFiles } from '../../includes/interface/LoadFiles';
 import { Paginator } from "../../includes/interface/Paginator";
+import { SimpleTable } from '../../includes/interface/SimpleTable';
 import Table from '../../includes/interface/Table';
 import TabsForm from "../../includes/interface/TabsForm";
 import { TitulacionesRender } from '../../includes/interface/TitulacionesRender';
-import { ITEMS_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
+import { ITEMS_ACTIONS, REDUCER_ACTIONS, TITULACIONES_ACTIONS } from '../../includes/reducers/actions';
 import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
+import { initialState as iniExperiencias, reducerItems } from '../../includes/reducers/tabItem.reducer';
 import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
 import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
+import { form as experienciasForm } from './Formularios/Experiencias';
 import { form } from './Formularios/Form';
 import { form as titulacionesForm } from './Formularios/Titulaciones';
 
@@ -26,6 +29,7 @@ import { form as titulacionesForm } from './Formularios/Titulaciones';
 const Docentes = ({user}) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
     const [redTitulaciones, titulacionHandler] = useReducer(reducerTitulacion, titsIni);
+    const [redExperiencias, experienciasHandler] = useReducer(reducerItems, iniExperiencias);
     const [historico, historicoHandle] = useReducer (reducerHistorico, iniHis);
     const [toastItems, setToastItems] = useState([]);
     const { observer, onOpenChange, open } = useModal();
@@ -42,6 +46,7 @@ const Docentes = ({user}) => {
     const newElement = () => {
         historicoHandle({type: HISTORICO_ACTIONS.START});
         titulacionHandler({type: TITULACIONES_ACTIONS.START, form: titulacionesForm});
+        experienciasHandler({type: REDUCER_ACTIONS.EMPTY});
     }
 
     const loadHistory = (docenteId) => {
@@ -61,6 +66,23 @@ const Docentes = ({user}) => {
         });
     }
 
+    const beforeExperiencia = (docenteId) => {
+        fetchAPIData('/silefe.experienciaparticipante/filter-by-docente', { docente: docenteId }, referer).then(response => {
+            console.log("recibidas las experiencias");
+            console.debug(response);
+            const experiencias = response.data.map(item => {
+                return {
+                    ...item,
+                    id: item.experienciaParticipanteId??0,
+                    participanteId: docenteId,
+                    ini: toDate(item.inicio),
+                    fin: toDate(item.fin),
+                }
+            });
+            experienciasHandler({ type: REDUCER_ACTIONS.LOAD_ITEMS, items: experiencias, participanteId: docenteId });
+        });
+    }
+
     const beforeEdit = (id) => {
         const docenteId = (typeof (id) === 'int')?id:id.id;        
         const lang = getLanguageId();
@@ -76,10 +98,9 @@ const Docentes = ({user}) => {
             console.log("Error cargando las titulaciones de un alumno");
             console.error(e);
         })
-
+        beforeExperiencia(docenteId);
         loadHistory(docenteId);
     }
-
 
     const processCsv = () => {
         //if (file) {
@@ -107,7 +128,7 @@ const Docentes = ({user}) => {
     }
 
     const handleSave = async () => {
-        const data = {
+        const pdata = {
             id: items.item.id,
             obj: {
                 ...items.item,
@@ -119,8 +140,25 @@ const Docentes = ({user}) => {
         let endpoint = '/silefe.docente/save-docente';
         if (items.status === 'new')
             endpoint = '/silefe.docente/add-docente';
-        let { status, error } = await saveAPI(endpoint, data, referer);
+        let { data, status, error } = await saveAPI(endpoint, pdata, referer);
         if (status) {
+
+            const obj3 = { experiencias: redExperiencias.items.map(i => ({...i,participanteId: data.docenteId , tipo: 2})), userId: getUserId() };
+            const respon = await saveAPI('/silefe.experienciaparticipante/add-multiple', obj3, referer);
+            if (!respon.status)
+                console.error("Error realizando la petición");
+            
+            // Tenemos que borrar las experiencas borradas
+            if (redExperiencias.deleted.length > 0) {
+                const delExperiencias = redExperiencias.deleted.map(d => { return (d.experienciaParticipanteId) });
+                deleteAPI('/silefe.experienciaparticipante/remove-experiencias', delExperiencias, referer).then(res => {
+                    console.log("delete experiencias");
+                    //if (res) {
+                    //    setToastItems([...toastItems, { title: Liferay.Language.get('Borrar'), type: "info", text: Liferay.Language.get('Borrado_ok') }]);
+                    //}
+                });
+            }
+
             fetchData();
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "info", text: Liferay.Language.get("Guardado_correctamente") }]);
         }
@@ -235,7 +273,27 @@ const Docentes = ({user}) => {
         form.fields.sexo.options = [{ key: 0, value: "H", label: Liferay.Language.get('Hombre') }, { key: 1, value: "M", label: Liferay.Language.get('Mujer') }];
 
         queryTitulaciones();
+
+        fetchAPIData('/silefe.tipocontrato/all', {}, referer).then(response => {
+            const opts = response.data.map(item => ({ value: item.tipoContratoId, label: item.descripcion[lang] }));
+            //form.fields.insTipoContrato.options = opts;
+            experienciasForm.fields.tipoContratoId.options = opts;
+        });
+
+        fetchAPIData('/silefe.cno/all', { descripcion: "" }, referer).then(response => {
+            const opts = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));
+            experienciasForm.fields.ocupacionId.options = opts;
+            //form.fields.insPuesto.options = opts;
+            //experienciasHandler({ type: EXPERIENCIA_ACTIONS.OCUPACIONES, ocupaciones: opts });
+        });        
+
+        fetchAPIData('/silefe.mbaja/all', {}, referer).then(response => {
+            const motivos = response.data.map(item => ({ value: item.id, label: item.descripcion[lang] }));//.unshift({ id: 0, descripcion: " " });
+            experienciasForm.fields.motivoBajaId.options = motivos;
+        });
+
         itemsHandle({ type: ITEMS_ACTIONS.SET_FIELDS, form });
+        experienciasHandler({ type: REDUCER_ACTIONS.START, form: experienciasForm });
     }
 
     const changeProvince = (id) => {
@@ -253,6 +311,11 @@ const Docentes = ({user}) => {
                     redTitulaciones={redTitulaciones}
                     titulacionHandler={titulacionHandler}
                 />,
+            Experiencias:
+                <SimpleTable
+                    reducer={redExperiencias}
+                    handler={experienciasHandler}
+                />,            
             Historico: 
                 <FHistoryEntity
                     data={historico}

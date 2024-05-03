@@ -6,6 +6,7 @@ import { Liferay } from '../../common/services/liferay/liferay'; //  '../common/
 import { getLanguageId, spritemap } from '../LiferayFunctions';
 import { REDUCER_ACTIONS } from '../reducers/actions';
 import RenderFields from './RenderFields';
+import { SearchBar } from './SearchBar';
 
 export const SimpleTable = ({ reducer, handler }) => {
 
@@ -17,6 +18,12 @@ export const SimpleTable = ({ reducer, handler }) => {
 
     return (
         <>
+            <SearchBar
+                itemsHandle={handler}
+                items={reducer}
+            >
+
+            </SearchBar>
             {(reducer.status === "list") &&
                 <>
                     <ClayTable>

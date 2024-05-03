@@ -34,6 +34,7 @@ export const form = {
             value:"lalala",
             placeholder:"Nombre",
             conditions: ["text"],
+            className: "col-3",
         },
         apellido1: {
             key:3,
@@ -111,7 +112,7 @@ export const form = {
             label: Liferay.Language.get('Sexo'),
             name: "sexo",
             change: ()=>{console.log("cambia sexo");},
-            className: 'col-3'
+            className: 'col-2'
         },
         provinciaId: {
             key:13,
@@ -193,6 +194,14 @@ export const form = {
             placeholder: Liferay.Language.get('Telefono'),
             conditions: ["text"]
         },
+        acreditado: {
+            key: 24,
+            type: "toggle",
+            label: Liferay.Language.get('Acreditado'),
+            name: "acreditado",
+            value: true,
+            className: "col-2"
+        },
         adjuntos: {
             key:19,
             type: "file",
@@ -204,6 +213,12 @@ export const form = {
             type: "other",
             componentName: "Titulaciones",
             name: "Titulaciones",
+        },
+        experiencias: {
+            key: 26,
+            type: "other",
+            componentName: "Experiencias",
+            name: "Experiencias",
         },        
         titulacion: { // only for search bar
             key:7,
@@ -230,11 +245,11 @@ export const form = {
             rows: [
                 {
                     key:41,
-                    cols: ['tipoDoc', 'documento','nombre'],
+                    cols: ['tipoDoc', 'documento','fechaNacimiento', 'sexo','acreditado'],
                 },
                 {
                     key:43,
-                    cols: ['apellido1','apellido2','fechaNacimiento', 'sexo',],
+                    cols: ['nombre', 'apellido1','apellido2'],
                 },
                 {
                     key:44,
@@ -267,9 +282,20 @@ export const form = {
             ]
         },
         {
-            caption: "Historico",
-            key: 3,
+            caption: Liferay.Language.get("Experiencias"),
+            key:3,
             ariacontrols: "tabpanel-3",
+            rows: [
+                {
+                    key:301,
+                    cols: ['experiencias']
+                },
+            ]
+        },
+        {
+            caption: "Historico",
+            key: 4,
+            ariacontrols: "tabpanel-4",
             admin: true,
             rows: [
                 {

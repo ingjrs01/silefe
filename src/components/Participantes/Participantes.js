@@ -269,7 +269,7 @@ const Participantes = ({ user }) => {
                 });
             }
 
-            const obj3 = { experiencias: redExperiencias.items, userId: getUserId() };
+            const obj3 = { experiencias: redExperiencias.items.map(i => ({...i,tipo: 1})), userId: getUserId() };
             respon = await saveAPI('/silefe.experienciaparticipante/add-multiple', obj3, referer);
             if (!respon.status)
                 console.error("Error realizando la petición");
@@ -410,17 +410,10 @@ const Participantes = ({ user }) => {
             form.fields.situacionLaboral.options = opts;
         });
 
-        //form.fields.situacionLaboral.options = [
-        //    { value: "0", label: seleccionarlabel },
-        //    { value: "1", label: "Trabajando" },
-        //    { value: "2", label: "Desempleado" },
-        //];
-
         fetchAPIData('/silefe.paises/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.nombre[lang] } })];
             form.fields.nacionalidadId.options = opts;
-        });
-        
+        });        
 
         fetchAPIData('/silefe.salario/all', {}, referer).then(response => {
             const opts = [{ value: "0", label: seleccionarlabel }, ...response.data.map(obj => { return { value: obj.id, label: obj.descripcion[lang] } })];
