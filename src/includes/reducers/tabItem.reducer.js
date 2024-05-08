@@ -1,7 +1,9 @@
 import { REDUCER_ACTIONS } from './actions';
 
 export const initialState = {
-    fields: {},
+    fields: {
+        searchOperator: 0,
+    },
     items: [],
     deleted: [],
     status: "list",
@@ -72,6 +74,7 @@ export const reducerItems = (state = initialState, action) => {
                 ...state,
                 fields: {
                     ...action.form,
+                    searchOperator: 0,
                 },
                 item: createItem(action.form),
                 items: [],

@@ -18,12 +18,16 @@ export const SimpleTable = ({ reducer, handler }) => {
 
     return (
         <>
+      {
+        
             <SearchBar
                 itemsHandle={handler}
                 items={reducer}
             >
 
             </SearchBar>
+         
+      }
             {(reducer.status === "list") &&
                 <>
                     <ClayTable>

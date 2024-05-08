@@ -177,6 +177,6 @@ export const form = {
         //    key: "tc8",
         //},
     ],
-    searchFields: ['nombre', 'documento','apellidos','provinciaId', 'municipio','admiteEnvios'],
-    searchField: 'nombre',
+    searchFields: ['ini', 'fin', 'razonSocial'],
+    searchField: 'razonSocial',
 };

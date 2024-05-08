@@ -1,18 +1,18 @@
-import { ClayButtonWithIcon } from '@clayui/button';
-import ClayDatePicker from '@clayui/date-picker';
-import { ClayInput, ClaySelect } from '@clayui/form';
+import { ClaySelect } from '@clayui/form';
 import ClayToolbar from '@clayui/toolbar';
 import React from 'react';
 import { Liferay } from '../../common/services/liferay/liferay';
-import { getLanguageId, spritemap } from '../LiferayFunctions';
 import { ITEMS_ACTIONS } from '../reducers/actions';
-import { getDays, getMonths } from './DatesLang';
-import { Selectfilter } from './fields/Selectfilter';
 
 
 
 export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
 
+  console.log("esto sería SearchBar");
+  console.debug(items);
+  console.log("lalala");
+  console.debug(items.fields.fields["ini"].type);
+  console.debug(items.fields.searchField);
 
     return (
         <ClayToolbar>
@@ -50,7 +50,27 @@ export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChan
                 </ClaySelect>
                 </ClayToolbar.Item>
                 <ClayToolbar.Item>
+                  {/*
+                  <ClaySelect aria-label='seleccionar filtro'
+                    id={"operadorId"}
+                    name={"operatorId"}
+                    //value={0}
+                    onChange={evt => console.log("esto sería al cosa")}
+                  >
+                    <ClaySelect.Option
+                      key={0}
+                      label={"Seleccionar"}
+                      value={0}
+                    />
+                    <ClaySelect.Option
+                      key={1}
+                      label={"<"}
+                      value={1}
+                    />
+                  </ClaySelect>
+                */}
 
+            
                 <ClaySelect aria-label="Select Label"
                   id={"fieldMenu2"}
                   name={"fieldMenu2"}
@@ -100,10 +120,12 @@ export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChan
                       value={"like"}
                     />
                   }
-              </ClaySelect>
+                </ClaySelect>
+                
               </ClayToolbar.Item>
               </>
             }
+            {/* ahora el cajetin de salida */}
             {             
               (items.status === "list") && (items.fields.hasOwnProperty("fields")) && 
               <ClayToolbar.Item>
@@ -207,6 +229,9 @@ export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChan
                 </ClayInput.Group>
               </ClayToolbar.Item>
               }
+
+
+        
 
           </ClayToolbar.Nav>
         </ClayToolbar>        

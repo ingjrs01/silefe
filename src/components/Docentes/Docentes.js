@@ -79,6 +79,8 @@ const Docentes = ({user}) => {
                     fin: toDate(item.fin),
                 }
             });
+            console.log("las experiencias a pasar son: ");
+            console.debug(experiencias);
             experienciasHandler({ type: REDUCER_ACTIONS.LOAD_ITEMS, items: experiencias, participanteId: docenteId });
         });
     }
