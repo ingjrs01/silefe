@@ -67,23 +67,35 @@ const Docentes = ({user}) => {
     }
 
     const beforeExperiencia = (docenteId) => {
-        fetchAPIData('/silefe.experienciaparticipante/filter-by-docente', { docente: docenteId }, referer).then(response => {
-            console.log("recibidas las experiencias");
-            console.debug(response);
+        const lalala  = formatPost(redExperiencias);
+        const lformacion = Liferay.Language.get("Formación");
+        const lotros = Liferay.Language.get("Otros");
+
+        fetchAPIData('/silefe.experienciaparticipante/filter-by-docente', { docente: docenteId, ...lalala }, referer).then(response => {
             const experiencias = response.data.map(item => {
                 return {
                     ...item,
                     id: item.experienciaParticipanteId??0,
                     participanteId: docenteId,
                     ini: toDate(item.inicio),
+                    inicio: toDate(item.inicio),
                     fin: toDate(item.fin),
+                    formacion:  item.esFormacion?lformacion:lotros,
                 }
             });
-            console.log("las experiencias a pasar son: ");
-            console.debug(experiencias);
-            experienciasHandler({ type: REDUCER_ACTIONS.LOAD_ITEMS, items: experiencias, participanteId: docenteId });
+            experienciasHandler({ type: REDUCER_ACTIONS.LOAD_ITEMS, items: experiencias, participanteId: docenteId, totalPages: response.totalPages, total: response.totalItems, page: response.page });
         });
     }
+
+    useEffect(()=>{
+        console.log("han cambiado los filtros");
+        console.debug(items);
+        if (items.item.docenteId !== undefined && items.item.docenteId != 0)
+            beforeExperiencia(items.item.docenteId);
+        else    
+            console.log("todavía no está cargado el docente, y no puedo hacer la consulta");
+    }, [redExperiencias.filters, redExperiencias.fields.search]);
+
 
     const beforeEdit = (id) => {
         const docenteId = (typeof (id) === 'int')?id:id.id;        

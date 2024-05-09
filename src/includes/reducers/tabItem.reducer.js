@@ -9,7 +9,15 @@ export const initialState = {
     status: "list",
     participanteId: 0,
     selectAll: false,
+    filters: [],
     errors: {},
+    pagination: {
+        page: 0,
+        pageSize: 10,
+        sizes: [10, 20, 30],
+        totalPages: 0,
+        total: 0,
+    },            
 }
 
 const resetErrors = (fields) => {
@@ -75,10 +83,20 @@ export const reducerItems = (state = initialState, action) => {
                 fields: {
                     ...action.form,
                     searchOperator: 0,
+                    search: "",
                 },
+                pagination: {
+                    page: 0,
+                    pageSize: 10,
+                    sizes: [10, 20, 30],
+                    totalPages: 0,
+                    total: 0,
+                },            
                 item: createItem(action.form),
                 items: [],
                 status: "list",
+                filters: [],
+                order: [],
                 errors: resetErrors(action.form),
             }
         case REDUCER_ACTIONS.EMPTY: 
@@ -90,9 +108,17 @@ export const reducerItems = (state = initialState, action) => {
                 errors: resetErrors(state.fields),
             }
         case REDUCER_ACTIONS.LOAD_ITEMS:
+            const totalPages = action.totalPages??1;
+            const total = action.total??0;
+
             return {
                 ...state,
                 items: action.items.map(i => ({ ...i, selected: false })),
+                pagination: {
+                    ...state.pagination,
+                    totalPages: totalPages,
+                    total: total,
+                },                                        
                 errors: resetErrors(state.fields),
             }
 
@@ -224,7 +250,64 @@ export const reducerItems = (state = initialState, action) => {
             return {
                 ...state,
                 item: tmp_item
-            }              
+            }
+        case REDUCER_ACTIONS.SET_SEARCHFIELD: 
+            return {
+                ...state,
+                fields: {
+                    ...state.fields,
+                    searchField: action.value,
+                }
+            }
+        case REDUCER_ACTIONS.SEARCH: 
+            return {
+                ...state,
+                fields: {
+                    ...state.fields,
+                    search: action.value,
+                }
+            }
+        case REDUCER_ACTIONS.ADD_FILTER: 
+            console.log("añadiendo un filtro");
+            return {
+                ...state,
+                fields: {
+                    ...state.fields,
+                    search: "",
+                    //searchField: 0,
+                },
+                filters: [
+                    ...state.filters,
+                    {
+                        name: state.fields.searchField,
+                        label: state.fields.fields[state.fields.searchField].label ?? "Sin nombre",
+                        value: state.fields.search, 
+                        operator: state.fields.searchOperator??"=",
+                        valueLabel: (state.fields.fields[state.fields.searchField].type === "select") ? state.fields.fields[state.fields.searchField].options.filter(it => it.value === state.fields.search)[0].label : state.fields.search,
+                    }
+                ]
+
+            }
+        case REDUCER_ACTIONS.REMOVE_FILTER: 
+            const indice = state.filters.findIndex(x => x.name === action.fieldname);
+            let tmp_arr = [];
+            if (indice >= 0) {
+                tmp_arr = [...state.filters];
+                tmp_arr.splice(indice, 1);
+            }
+            return {
+                ...state,
+                filters: tmp_arr,
+                load: (state.load + 1) % 17,
+            }
+        case REDUCER_ACTIONS.SET_SEARCHOP:
+            return {
+                ...state,
+                fields: {
+                    ...state.fields,
+                    searchOperator: action.value,
+                },
+            }
         default:
             throw new Error("Ación no válida");
     }

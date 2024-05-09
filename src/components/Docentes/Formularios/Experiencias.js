@@ -4,6 +4,7 @@ import { GenericForm } from '../../../includes/GenericForm';
 export const form = {
     ...GenericForm,
     title: Liferay.Language.get('Experiencias'),
+    showSearchBar: true,
     fields: {
         id: {
             key:1,
@@ -14,11 +15,11 @@ export const form = {
             placeholder:"Identifier",
             conditions: ["number"]
         },
-        ini: {
+        inicio: {
             key:2,
             type: "date",
             label: Liferay.Language.get('Fecha Inicio'),
-            name: "ini",
+            name: "inicio",
             value:"",
             yearmin: 110,
             yearmax: 0,
@@ -117,12 +118,39 @@ export const form = {
             enabled:true,
             //className: 'col-2',
             conditions: []
-        }
+        },
+        //tipoExperiencia: {
+        //    key:8,
+        //    type: "select",
+        //    label: Liferay.Language.get('Experiencia'),
+        //    name: "tipoExperiencia",
+        //    value:"",
+        //    enabled:true,
+        //    options: [{label: "Seleccionar", value: "0", key:"expt-0"}, {label: "Docencia", value: "1", key:"expt-1"},{label: "Laboral", value: "2", key:"expt-2"}],
+        //    className: 'col-3',
+        //    conditions: []
+        //},
+        esFormacion: {
+            key: 12,
+            type: "toggle",
+            label: Liferay.Language.get('Formación'),
+            name: "esFormacion",
+            value:"",
+            options: [],
+            change: ()=>{console.log("cambia fondos propios");}
+        },
+        formacion: {
+            key: 13,
+            type: "text",
+            label: Liferay.Language.get('Formación'),
+            name: "formacion",
+            value:"",
+        },
     },
     rows: [
         {
             key:101,
-            cols: ['ini', 'fin','tipoContratoId']
+            cols: ['ini', 'fin','tipoContratoId', 'esFormacion']
         },
         {
             key:102,
@@ -161,6 +189,13 @@ export const form = {
             columnType: "string",
             key: "tc4",
         },
+        {
+            columnName: 'formacion',
+            columnTitle: Liferay.Language.get('Formación'),
+            columnType: "string",
+            key: "tc5",
+        },
+
         //localidad: {
         //    columnTitle: Liferay.Language.get('Localidad'),
         //    columnType: "multilang",
@@ -177,6 +212,6 @@ export const form = {
         //    key: "tc8",
         //},
     ],
-    searchFields: ['ini', 'fin', 'razonSocial'],
+    searchFields: ['inicio', 'fin', 'razonSocial','esFormacion','motivoBajaId', 'tipoContratoId'],
     searchField: 'razonSocial',
 };

@@ -123,6 +123,8 @@ export const formatPhones = (telefonos) => {
 }
 
 export const formatPost = (items) => {
+  console.log("formateando");
+  console.debug(items);
   let filtros = (items.filters !== 'undefined')?[...items.filters]:[]; 
   //debugger;
   if (typeof items.fields.search !== 'undefined' && items.fields.search !== "0") 
@@ -133,7 +135,7 @@ export const formatPost = (items) => {
       });
   
   return {
-      pagination: { page: items.pagination.page, pageSize: items.pagination.pageSize },
+      pagination: { page: items.pagination.page??0, pageSize: items.pagination.pageSize??10 },
       options: {
           filters: [                    
               ...filtros

@@ -1,20 +1,18 @@
-import { ClaySelect } from '@clayui/form';
+import { ClayButtonWithIcon } from '@clayui/button';
+import ClayDatePicker from '@clayui/date-picker';
+import { ClayInput, ClaySelect } from '@clayui/form';
 import ClayToolbar from '@clayui/toolbar';
-import React from 'react';
 import { Liferay } from '../../common/services/liferay/liferay';
+import { getLanguageId, spritemap } from '../../includes/LiferayFunctions';
+import { getDays, getMonths } from '../../includes/interface/DatesLang';
+import { Selectfilter } from '../../includes/interface/fields/Selectfilter';
 import { ITEMS_ACTIONS } from '../reducers/actions';
-
-
+import { MgtToolbar } from './MgtToolbar';
 
 export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChange }) => {
 
-  console.log("esto sería SearchBar");
-  console.debug(items);
-  console.log("lalala");
-  console.debug(items.fields.fields["ini"].type);
-  console.debug(items.fields.searchField);
-
     return (
+      <>
         <ClayToolbar>
           <ClayToolbar.Nav>
             <ClayToolbar.Item className="text-left" expand>
@@ -35,11 +33,14 @@ export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChan
                     itemsHandle({ type: ITEMS_ACTIONS.SET_SEARCHFIELD, value: evt.target.value });
                   }}
                   value={items.fields.searchField} >
+                    {/*
+
                   <ClaySelect.Option
                     key={"Aon-0"}
                     label={Liferay.Language.get("Seleccionar")}
                     value={-1}
                   />
+                */}
                   {items.fields.searchFields.map(field => (
                     <ClaySelect.Option
                       key={"Aon-" + items.fields.fields[field].key}
@@ -70,7 +71,8 @@ export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChan
                   </ClaySelect>
                 */}
 
-            
+                {
+                  items.fields.searchField !== -1 &&
                 <ClaySelect aria-label="Select Label"
                   id={"fieldMenu2"}
                   name={"fieldMenu2"}
@@ -121,35 +123,38 @@ export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChan
                     />
                   }
                 </ClaySelect>
+
+                }
                 
               </ClayToolbar.Item>
               </>
             }
             {/* ahora el cajetin de salida */}
             {             
-              (items.status === "list") && (items.fields.hasOwnProperty("fields")) && 
+              (items.fields.searchField !== -1 && items.status === "list") && (items.fields.hasOwnProperty("fields")) && 
               <ClayToolbar.Item>
                 <ClayInput.Group>
                   <ClayInput.GroupItem >
                     { ["select", "multilist"].includes(items.fields.fields[items.fields.searchField].type) &&
                       <>
-                        {
+                        {<>
                           <ClaySelect aria-label="Select Label"
                             id={"searchBottonField"}
                             name={"searchBottonField"}
                             key={"searchBottonField"}
                             value={items.fields.search}
-                            className={'col-2'}
+                            className={'col-3'}
                             onChange={e => itemsHandle({ type: ITEMS_ACTIONS.SEARCH, value: e.target.value })}>
                             {items.fields.fields[items.fields.searchField].options.map(field => (
                               <ClaySelect.Option
                                 key={field.key}
                                 label={field.label}
                                 value={field.value}
-                                className={'col-2'}
+                                className={'col-3'}
                               />
                             ))}
                           </ClaySelect>
+                          </>
                         }
                       </>
                     }
@@ -229,11 +234,16 @@ export const SearchBar = ({ itemsHandle, items, handleSave, download, onOpenChan
                 </ClayInput.Group>
               </ClayToolbar.Item>
               }
-
-
-        
-
+    
           </ClayToolbar.Nav>
         </ClayToolbar>        
+      {
+        (items.status === 'list' && (items.fields.search.length > 0 || items.filters.length > 0  /*|| items.order.length > 0*/)) &&
+        <>        
+          <MgtToolbar items={items} itemsHandle={itemsHandle} />
+        </>
+      }
+      </>
+
     )
 }

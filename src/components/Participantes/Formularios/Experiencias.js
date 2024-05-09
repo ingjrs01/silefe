@@ -4,6 +4,7 @@ import { GenericForm } from '../../../includes/GenericForm';
 export const form = {
     ...GenericForm,
     title: Liferay.Language.get('Experiencias'),
+    showSearchBar: false,
     fields: {
         id: {
             key:1,

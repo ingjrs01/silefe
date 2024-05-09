@@ -26,10 +26,15 @@ export const REDUCER_ACTIONS = {
   SET: 5,         // hecho
   ADDERROR: 9,
   CLEARERRORS: 10,// hecho
+  SEARCH: 12,     // hecho
   ADD_MULTIFIELD: 16,
   REMOVE_MULTIFIELD: 17,
   SET_MULTIFIELD: 18,
   SET_MULTIFIELDCHECK: 19,
+  SET_SEARCHFIELD: 25, // hecho
+  ADD_FILTER: 34,      // hecho
+  REMOVE_FILTER: 35,   // hecho
+  SET_SEARCHOP: 40,
   SAVE: 80,
   CANCEL: 8,
   DELETE_ITEM:90, 

@@ -9,7 +9,6 @@ import RenderFields from './RenderFields';
 import { SearchBar } from './SearchBar';
 
 export const SimpleTable = ({ reducer, handler }) => {
-
     const rows = reducer.fields.rows;
     let lang = getLanguageId();
 
@@ -18,16 +17,13 @@ export const SimpleTable = ({ reducer, handler }) => {
 
     return (
         <>
-      {
-        
+          {reducer.fields.showSearchBar !== undefined && reducer.fields.showSearchBar &&        
             <SearchBar
                 itemsHandle={handler}
                 items={reducer}
-            >
-
-            </SearchBar>
+            />            
          
-      }
+            }
             {(reducer.status === "list") &&
                 <>
                     <ClayTable>
