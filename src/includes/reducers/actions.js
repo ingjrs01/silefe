@@ -11,7 +11,7 @@ export const CITAS_ACTIONS = {
   VIEW: 92,
   ADDERROR: 9,
   CLOSEVIEW: 11,
-  SETPAGE: 10,
+  SETPAGE: 54,
   SAVE: 80,
   EMPTY: 91,
 }
@@ -27,6 +27,7 @@ export const REDUCER_ACTIONS = {
   ADDERROR: 9,
   CLEARERRORS: 10,// hecho
   SEARCH: 12,     // hecho
+  SETPAGE: 54,    // hecho
   ADD_MULTIFIELD: 16,
   REMOVE_MULTIFIELD: 17,
   SET_MULTIFIELD: 18,
@@ -101,7 +102,7 @@ export const EXPERIENCIA_ACTIONS = {
     CANCEL_LOAD: 11,
     SEARCH: 12,
     FETCH: 13,
-    SETPAGE: 14,
+    SETPAGE: 54,
     SET_FORMOPTIONS: 15,
     ADD_MULTIFIELD: 16,
     REMOVE_MULTIFIELD: 17,

@@ -135,7 +135,7 @@ export const form = {
             type: "toggle",
             label: Liferay.Language.get('Formación'),
             name: "esFormacion",
-            value:"",
+            value: false,
             options: [],
             change: ()=>{console.log("cambia fondos propios");}
         },
@@ -150,7 +150,7 @@ export const form = {
     rows: [
         {
             key:101,
-            cols: ['ini', 'fin','tipoContratoId', 'esFormacion']
+            cols: ['inicio', 'fin','tipoContratoId', 'esFormacion']
         },
         {
             key:102,
@@ -166,13 +166,8 @@ export const form = {
         },
     ],
     table: [
-        //id: {
-        //    columnTitle: "Id",
-        //    columnType: "checkbox",
-        //    key: "tc1",
-        //},
         {
-            columnName: 'ini',
+            columnName: 'inicio',
             columnTitle: Liferay.Language.get('Inicio'),
             columnType: "string",
             key: "tc2",
@@ -190,10 +185,22 @@ export const form = {
             key: "tc4",
         },
         {
+            columnName: 'razonSocial',
+            columnTitle: Liferay.Language.get('Razón Social'),
+            columnType: "string",
+            key: "tc5",
+        },       
+        {
+            columnName: 'tipoContratoId',
+            columnTitle: Liferay.Language.get('Tipo contrato'),
+            columnType: "select",
+            key: "tc6",
+        },       
+        {
             columnName: 'formacion',
             columnTitle: Liferay.Language.get('Formación'),
             columnType: "string",
-            key: "tc5",
+            key: "tc7",
         },
 
         //localidad: {
@@ -212,6 +219,6 @@ export const form = {
         //    key: "tc8",
         //},
     ],
-    searchFields: ['inicio', 'fin', 'razonSocial','esFormacion','motivoBajaId', 'tipoContratoId'],
+    searchFields: ['inicio', 'fin', 'razonSocial','esFormacion','motivoBajaId', 'tipoContratoId', 'puesto'],
     searchField: 'razonSocial',
 };

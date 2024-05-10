@@ -13,7 +13,7 @@ export const initialState = {
     errors: {},
     pagination: {
         page: 0,
-        pageSize: 10,
+        pageSize: 3,
         sizes: [10, 20, 30],
         totalPages: 0,
         total: 0,
@@ -87,7 +87,7 @@ export const reducerItems = (state = initialState, action) => {
                 },
                 pagination: {
                     page: 0,
-                    pageSize: 10,
+                    pageSize: 3,
                     sizes: [10, 20, 30],
                     totalPages: 0,
                     total: 0,
@@ -257,6 +257,7 @@ export const reducerItems = (state = initialState, action) => {
                 fields: {
                     ...state.fields,
                     searchField: action.value,
+                    search: "",
                 }
             }
         case REDUCER_ACTIONS.SEARCH: 
@@ -268,7 +269,6 @@ export const reducerItems = (state = initialState, action) => {
                 }
             }
         case REDUCER_ACTIONS.ADD_FILTER: 
-            console.log("añadiendo un filtro");
             return {
                 ...state,
                 fields: {
@@ -307,6 +307,11 @@ export const reducerItems = (state = initialState, action) => {
                     ...state.fields,
                     searchOperator: action.value,
                 },
+            }
+        case REDUCER_ACTIONS.SETPAGE: 
+            return {
+                ...state,
+                pagination: {...state.pagination, page: action.page},
             }
         default:
             throw new Error("Ación no válida");

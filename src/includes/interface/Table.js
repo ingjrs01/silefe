@@ -89,6 +89,18 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
                           <span>{ row[columName].children[0].value  }</span>
                         </ClayTable.Cell>
                         )
+                      case "select":
+                          let aa = "";
+                          if (row[columName] === undefined || row[columName] === null)
+                              aa = "ND";
+                          else {
+                              let arr = items.fields.fields[columName].options.filter(i => i.value === row[columName].toString());
+                              if (arr.length > 0)
+                                  aa = arr[0].label;
+                              else
+                                  aa = "ND";
+                          }
+                          return (<ClayTable.Cell key={"ttop" + row.id + columName}>{aa} </ClayTable.Cell>)
                       }
                   })
                 }

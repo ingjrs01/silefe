@@ -16,7 +16,7 @@ export const SUBTABLE_ACTIONS = {
     CHECK: 13,
     CHECKALL: 14,
     SETITEMS: 15,
-    SETPAGE: 16,
+    SETPAGE: 54,
     SETPAGES: 17,
     SETSEARCHFIELD: 18,
     LOAD: 19,

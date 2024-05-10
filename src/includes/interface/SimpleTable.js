@@ -1,10 +1,10 @@
 import ClayButton, { ClayButtonWithIcon } from '@clayui/button';
 import { ClayCheckbox } from '@clayui/form';
 import ClayTable from '@clayui/table';
-//import { default as React, default as React } from "react";
-import { Liferay } from '../../common/services/liferay/liferay'; //  '../common/services/liferay/liferay';
+import { Liferay } from '../../common/services/liferay/liferay';
 import { getLanguageId, spritemap } from '../LiferayFunctions';
 import { REDUCER_ACTIONS } from '../reducers/actions';
+import { MiniPaginator } from './MiniPaginator';
 import RenderFields from './RenderFields';
 import { SearchBar } from './SearchBar';
 
@@ -14,6 +14,10 @@ export const SimpleTable = ({ reducer, handler }) => {
 
     if (!reducer.items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)
+
+    const changePage = (page) => {
+        handler({ type: REDUCER_ACTIONS.SETPAGE, page: page });
+    }
 
     return (
         <>
@@ -104,6 +108,11 @@ export const SimpleTable = ({ reducer, handler }) => {
                             })}
                         </ClayTable.Body>
                     </ClayTable>
+                    <MiniPaginator
+                                key={"paginatorbottom"}
+                                pagination={reducer.pagination}
+                                changePage={changePage}
+                            />
                     <ClayButton onClick={() => handler({ type: REDUCER_ACTIONS.NEW_ITEM })}
                         displayType="primary">{Liferay.Language.get('Nuevo')}
                     </ClayButton>

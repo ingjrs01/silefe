@@ -68,6 +68,8 @@ const Docentes = ({user}) => {
 
     const beforeExperiencia = (docenteId) => {
         const lalala  = formatPost(redExperiencias);
+        console.log("Vamos a consutlar la experiencia");
+        console.debug(lalala);
         const lformacion = Liferay.Language.get("Formación");
         const lotros = Liferay.Language.get("Otros");
 
@@ -94,7 +96,7 @@ const Docentes = ({user}) => {
             beforeExperiencia(items.item.docenteId);
         else    
             console.log("todavía no está cargado el docente, y no puedo hacer la consulta");
-    }, [redExperiencias.filters, redExperiencias.fields.search]);
+    }, [redExperiencias.filters, redExperiencias.fields.search, redExperiencias.pagination.page]);
 
 
     const beforeEdit = (id) => {
