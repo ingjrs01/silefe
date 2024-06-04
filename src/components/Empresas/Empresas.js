@@ -17,7 +17,7 @@ import { ITEMS_ACTIONS, REDUCER_ACTIONS } from '../../includes/reducers/actions'
 import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from "../../includes/reducers/historico.reducer";
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { initialState as iniCentros, reducerItems } from '../../includes/reducers/tabItem.reducer';
-import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
+import { exportToCsv, formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import { form as formCentros } from './Formularios/Centros';
 import { form as formContactos } from './Formularios/Contactos';
@@ -146,7 +146,10 @@ const Empresas = ({user}) => {
     }
 
     const downloadfile = () => {
-        console.log("descargando");
+        fetchAPIData('/silefe.empresa/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "empresas.csv");    
+        });
+        
     }
 
     form.beforeEdit = beforeEdit;

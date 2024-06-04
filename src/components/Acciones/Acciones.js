@@ -15,7 +15,7 @@ import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
-import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours, toURL } from '../../includes/utils';
+import { exportToCsv, formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import AccionesForm from "./AccionesForm";
 import { form as DocentesForm } from './DocentesForm';
@@ -52,7 +52,9 @@ const Acciones = ({user}) => {
     }
 
     const downloadFile = () => {
-        console.log("esto es download file");
+        fetchAPIData('/silefe.accion/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "acciones.csv");    
+        });
     }
 
     const handleSave = async () => {

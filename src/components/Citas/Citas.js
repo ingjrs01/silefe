@@ -13,7 +13,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
-import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours } from '../../includes/utils';
+import { exportToCsv, formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
 
@@ -172,12 +172,9 @@ const Citas = () => {
     }
 
     const downloadFile = () => {
-        console.log("download");
-
-        //const worksheet = XLSX.utils.json_to_sheet(items.arr);
-        //const workbook = XLSX.utils.book_new();
-        //XLSX.utils.book_append_sheet(workbook, worksheet, "Dates");
-        //console.log("descarga finalizada");
+        fetchAPIData('/silefe.cita/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "citas.csv");    
+        });
     }
 
     //form.beforeEdit = beforeEdit;

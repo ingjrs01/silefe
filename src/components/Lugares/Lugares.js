@@ -13,7 +13,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
-import { formatPost } from '../../includes/utils';
+import { exportToCsv, formatPost } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
 
@@ -96,7 +96,10 @@ const Lugares = () => {
         fetchAPIRow('/silefe.lugar/get', { id: id }, referer).then(r => itemsHandle({ type: ITEMS_ACTIONS.EDIT_ITEM, item: r }));
     }
     const downloadFile = () => {
-        console.log("downloadFile");
+        fetchAPIData('/silefe.lugar/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "lugar.csv");    
+        });
+
     }
 
     //form.downloadFunc = downloadFile;

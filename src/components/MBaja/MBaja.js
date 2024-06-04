@@ -12,7 +12,7 @@ import { Paginator } from "../../includes/interface/Paginator";
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
-import { formatPost } from '../../includes/utils';
+import { exportToCsv, formatPost } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from "./Form";
 
@@ -73,7 +73,10 @@ const MBaja = () => {
             setToastItems([...toastItems, { title: Liferay.Language.get("Guardar"), type: "danger", text: Errors[error] }]);
     }
     const downloadFile = () => {
-        console.log("downloadFile");
+        fetchAPIData('/silefe.mbaja/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "mbajas.csv");    
+        });
+
     }
 
     //form.handleSave = handleSave; 

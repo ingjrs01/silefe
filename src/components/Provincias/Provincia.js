@@ -12,6 +12,7 @@ import { LoadFiles } from '../../includes/interface/LoadFiles';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
+import { exportToCsv } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './Form';
 
@@ -109,7 +110,10 @@ const Provincias = () => {
     }
 
     const downloadFile = () => {
-        console.log("downloadFile");
+        fetchAPIData('/silefe.provincia/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "provincias.csv");    
+        });
+
     }
     //form.downloadFunc = downloadFile;
     //form.handleSave = handleSave;

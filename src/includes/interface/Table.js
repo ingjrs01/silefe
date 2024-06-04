@@ -23,6 +23,7 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
                   case "multilang":
                   case "phone": 
                   case "email": 
+                  case "date":
                     return (
                       <ClayTable.Cell key={items.fields.table[tableCol].key}  >
                         <strong>{ items.fields.table[tableCol].columnTitle }</strong>
@@ -67,7 +68,7 @@ const Table = ({ items, itemsHandle, onOpenChange}) => {
                     switch (items.fields.table[columName].columnType) {
                       case "multilang":
                         return (<ClayTable.Cell key={columName+row.id}>{ row[columName][lang] }</ClayTable.Cell> )
-                      case "string":
+                      case "string": case "date":
                         return (<ClayTable.Cell key={columName+row.id}>{ row[columName] }</ClayTable.Cell> )
                       case "dni":
                         return (<ClayTable.Cell key={columName+row.id}>{ formatDocument(row["tipoDoc"],row[columName]) }</ClayTable.Cell> )                          

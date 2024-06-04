@@ -19,7 +19,7 @@ import { HISTORICO_ACTIONS, initialState as iniHis, reducerHistorico } from '../
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { initialState as iniExperiencias, reducerItems } from '../../includes/reducers/tabItem.reducer';
 import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
-import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
+import { exportToCsv, formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import { form as experienciasForm } from './Formularios/Experiencias';
 import { form } from './Formularios/Form';
@@ -200,7 +200,9 @@ const Docentes = ({user}) => {
         })
     }
     const downloadFile = () => {
-        console.log("downloadFile");
+        fetchAPIData('/silefe.docente/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "docentes.csv");    
+        });
     }
 
     //form.downloadFunc = downloadFile;

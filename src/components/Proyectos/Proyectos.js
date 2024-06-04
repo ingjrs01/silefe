@@ -25,7 +25,7 @@ import { form as tform } from './TecnicoForm';
 //import Papa from "papaparse";
 import { Liferay } from '../../common/services/liferay/liferay';
 import { FHistoryEntity } from '../../includes/interface/FHistoryEntity';
-import { formatPost, toDate, toHours, toURL } from '../../includes/utils';
+import { exportToCsv, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 
 const Proyectos = ({ user }) => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -324,7 +324,9 @@ const Proyectos = ({ user }) => {
     }
 
     const downloadFile = () => {
-        console.log("descargando fichero");
+        fetchAPIData('/silefe.proyecto/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "proyectos.csv");    
+        });
     }
 
     form.beforeEdit = beforeEdit;

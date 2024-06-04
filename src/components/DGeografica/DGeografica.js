@@ -12,7 +12,7 @@ import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { initialState, red_items } from '../../includes/reducers/main.reducer.js';
-import { formatPost } from '../../includes/utils.js';
+import { exportToCsv, formatPost } from '../../includes/utils.js';
 import Menu from '../Menu';
 import { form } from './Form';
 
@@ -94,7 +94,10 @@ const DGeografica = () => {
     }
 
     const downloadFile = () => {
-        console.log("descargando fichero");
+        fetchAPIData('/silefe.dgeografica/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "dgeografica.csv");    
+        });
+
     }
     //form.downloadFunc = downloadFile;
     //form.handleSave = handleSave;

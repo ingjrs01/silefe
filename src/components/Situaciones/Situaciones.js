@@ -16,7 +16,7 @@ import Menu from '../Menu';
 import { form } from './Form';
 
 import { Paginator } from '../../includes/interface/Paginator';
-import { formatPost } from '../../includes/utils';
+import { exportToCsv, formatPost } from '../../includes/utils';
 
 const Situaciones = () => {
     const [items, itemsHandle] = useReducer(red_items, initialState);
@@ -106,7 +106,10 @@ const Situaciones = () => {
     }
 
     const downloadFile = () => {
-        console.log("downloadFile");
+        fetchAPIData('/silefe.situacioneslab/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "situaciones.csv");    
+        });
+
     }
     //form.downloadFunc = downloadFile;
     //form.handleSave = handleSave;

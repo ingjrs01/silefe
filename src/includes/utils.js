@@ -1,9 +1,10 @@
 import { Liferay } from '../common/services/liferay/liferay';
+import { getLanguageId } from './LiferayFunctions';
 import { ITEMS_ACTIONS } from './reducers/actions';
 
-export const toURL =  (uuid, groupId) => {
+export const toURL = (uuid, groupId) => {
   const urlPortal = Liferay.ThemeDisplay.getPortalURL();
-  return  (urlPortal + "/c/document_library/get_file?uuid=" + uuid + "&groupId=" + groupId);
+  return (urlPortal + "/c/document_library/get_file?uuid=" + uuid + "&groupId=" + groupId);
 }
 
 export const toHours = (data) => {
@@ -122,26 +123,73 @@ export const formatPhones = (telefonos) => {
   return (telefonos != null && telefonos.length > 0) ? JSON.parse(telefonos) : []
 }
 
-export const formatPost = (items) => {
-  console.log("formateando");
-  console.debug(items);
-  let filtros = (items.filters !== 'undefined')?[...items.filters]:[]; 
-  //debugger;
-  if (typeof items.fields.search !== 'undefined' && items.fields.search !== "0") 
-      filtros.push({ 
-        name: items.fields.searchField, 
-        value: (items.fields.search && typeof items.fields.search !== 'undefined') ? items.fields.search : "" ,
-        operator: items.fields.searchOperator
-      });
-  
+export const formatPost = (items, pagination = true) => {
+  let filtros = (items.filters !== 'undefined') ? [...items.filters] : [];
+
+  if (typeof items.fields.search !== 'undefined' && items.fields.search !== "0")
+    filtros.push({
+      name: items.fields.searchField,
+      value: (items.fields.search && typeof items.fields.search !== 'undefined') ? items.fields.search : "",
+      operator: items.fields.searchOperator
+    });
+
   return {
-      pagination: { page: items.pagination.page??0, pageSize: items.pagination.pageSize??10 },
-      options: {
-          filters: [                    
-              ...filtros
-          ],
-          order: items.order,
-      },
+    pagination: pagination ? { page: items.pagination.page ?? 0, pageSize: items.pagination.pageSize ?? 10 } : null,
+    options: {
+      filters: [
+        ...filtros
+      ],
+      order: items.order,
+    },
   }
+}
+
+export const exportToCsv = (data,table,filename="export.csv") => {
+  const lang = getLanguageId();
+  const separador = "|";
+  let dataStr = "";
+  const labelSi = Liferay.Language.get("Sí");
+  const labelNo = Liferay.Language.get("No");
+
+  Object.values(table).forEach(column => {
+    dataStr += column.columnTitle + separador;
+  });
+  dataStr += "\n";
+
+  data.forEach(element => {
+    Object.keys(table).forEach(column => {
+      switch (table[column].columnType) {
+        case 'multilang':
+          dataStr += element[column][lang] + separador;
+          break;
+        case 'date':
+          dataStr += toDate(element[column]) + separador;
+          break;
+        case 'boolean':
+          dataStr += element[column]?labelSi:labelNo;
+          dataStr += separador;
+          break;
+        case 'phone':
+          dataStr += formatDefaultPhone(element[column]) + separador;
+          break;
+        case 'email':
+            dataStr += formatDefaultEmail(element[column]) + separador;
+            break;
+        default:
+          dataStr += element[column] + separador;
+          break;
+      }
+    })
+    dataStr += "\n";
+  });
+
+  const datos = [dataStr];
+  const blob = new Blob([datos], { type: 'text/csv' });
+  const urltmp = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+
+  a.href = urltmp;
+  a.download = filename;
+  a.click();
 }
 

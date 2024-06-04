@@ -359,12 +359,12 @@ export const form = {
         },
         inicio: {
             columnTitle: Liferay.Language.get('F. Inicio'),
-            columnType: "string",
+            columnType: "date",
             key: "c5",
         },
         fin: {
             columnTitle: Liferay.Language.get('F. Fin'),
-            columnType: "string",
+            columnType: "date",
             key: "c6",
         },
         participantes: {

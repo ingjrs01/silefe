@@ -531,7 +531,7 @@ export const form = {
         },
         fechaIncorporacion: {
             columnTitle: Liferay.Language.get('Incorporación'),
-            columnType: "string",
+            columnType: "date",
             key: "c6",
         },
         estado: {

@@ -17,7 +17,7 @@ import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { HISTORICO_ACTIONS, initialState as iniHistorico, reducerHistorico } from '../../includes/reducers/historico.reducer';
 import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
-import { formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours, toURL } from '../../includes/utils';
+import { exportToCsv, formatDefaultEmail, formatDefaultPhone, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import { form } from './OfertaForm';
 import { form as fparticipantes } from './ParticipanteForm';
@@ -147,7 +147,9 @@ const Ofertas = ({user}) => {
     }
 
     const downloadFile = () => {
-        console.log("downloadFile");
+        fetchAPIData('/silefe.oferta/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "ofertas.csv");    
+        });
     }
 
     form.beforeEdit = beforeEdit;

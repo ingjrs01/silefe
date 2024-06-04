@@ -12,7 +12,7 @@ import { Paginator } from '../../includes/interface/Paginator';
 import Table from '../../includes/interface/Table';
 import { ITEMS_ACTIONS } from '../../includes/reducers/actions';
 import { initialState, red_items } from '../../includes/reducers/main.reducer.js';
-import { formatPost } from '../../includes/utils.js';
+import { exportToCsv, formatPost } from '../../includes/utils.js';
 import Menu from '../Menu';
 import { form } from './Form';
 
@@ -95,7 +95,10 @@ const Cofinanciadas = () => {
     }
 
     const downloadFile = () => {
-        console.log("downloadFile");
+        fetchAPIData('/silefe.cofinanciadas/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "cofinanciadas.csv");    
+        });
+
     }
     //form.downloadFunc = downloadFile;
     //form.handleSave = handleSave;

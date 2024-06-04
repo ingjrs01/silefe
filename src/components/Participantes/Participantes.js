@@ -21,7 +21,7 @@ import { initialState, red_items } from '../../includes/reducers/main.reducer';
 import { SUBTABLE_ACTIONS, iniState, reducerSubtable } from '../../includes/reducers/subtable.reducer';
 import { initialState as iniExperiencias, reducerItems } from '../../includes/reducers/tabItem.reducer';
 import { reducerTitulacion, initialState as titsIni } from '../../includes/reducers/titulaciones.reducer';
-import { formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
+import { exportToCsv, formatEmails, formatPhones, formatPost, toDate, toHours, toURL } from '../../includes/utils';
 import Menu from '../Menu';
 import { form as citasform } from './Formularios/CitasForm';
 import { form as experienciasForm } from './Formularios/Experiencias';
@@ -249,7 +249,9 @@ const Participantes = ({ user }) => {
     }
 
     const downloadFile = () => {
-        console.log("download");
+        fetchAPIData('/silefe.participante/filter', formatPost(items,false), referer).then(({data}) => { 
+            exportToCsv(data,  items.fields.table, "Participantes.csv");    
+        });
     }
 
     const handleSave = async () => {
