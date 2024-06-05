@@ -243,6 +243,19 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                         }
                                     </>
                                 }
+                                {data.form.fields[data.form.searchFieldMain].type === "multilang" &&
+                                <>
+                                    <ClayInput
+                                        placeholder={"Buscar..."}
+                                        type="text"
+                                        name={"searchBottonValue"}
+                                        key={"searchBottonValue"}
+                                        value={data.search2}
+                                        onChange={e => handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value, table: 1 }) }>
+                                    </ClayInput>
+                                </>
+
+                                }
                                 {
                                     data.form.fields[data.form.searchFieldMain].type === "text" &&
                                     <ClayInput
@@ -251,9 +264,7 @@ const DoubleTable = ({ data, handler, editUrl, backUrl, ancestorId }) => {
                                         name={"searchBottonValue"}
                                         key={"searchBottonValue"}
                                         value={data.search2}
-                                        onChange={e => {
-                                            handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value, table: 1 });
-                                        }}>
+                                        onChange={e => handler({ type: SUBTABLE_ACTIONS.SETSEARCH, value: e.target.value, table: 1 }) }>
                                     </ClayInput>
                                 }
                             </ClayUpperToolbar.Item>

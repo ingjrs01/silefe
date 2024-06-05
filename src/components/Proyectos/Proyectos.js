@@ -108,7 +108,7 @@ const Proyectos = ({ user }) => {
     useEffect(() => {
         if (items.item.id !== 'undefined' && items.item.id > 0)
             loadAcciones(items.item.id);
-    }, [acciones.load]);
+    }, [acciones.pagination.page, acciones.search2]);
 
     useEffect(() => {
         loadAllAcciones();
@@ -117,6 +117,10 @@ const Proyectos = ({ user }) => {
     useEffect(() => {
         loadAllOfertas();
     }, [ofertas.paginationSearch.page, ofertas.search]);
+
+    useEffect( () => {
+        loadOfertas(items.item.id);
+    }, [ofertas.pagination.page,ofertas.search2]);
 
     useEffect(() => {
         loadAllEmpresas();
@@ -135,13 +139,13 @@ const Proyectos = ({ user }) => {
     useEffect(() => {
         if (items.item.id !== 'undefined' && items.item.id > 0)
             loadEmpresas(items.item.id);
-    }, [empresas.load]);
+    }, [empresas.pagination.page, empresas.search2]);
 
     useEffect(() => {
         if (items.item.id !== 'undefined' && items.item.id > 0) {
             loadTecnicos(items.item.id);
         }
-    }, [tecnicos.pagination.page]);
+    }, [tecnicos.pagination.page, tecnicos.search2]);
 
     const loadProyecto = id => {
         initForm();
@@ -357,7 +361,14 @@ const Proyectos = ({ user }) => {
             const postdata = {
                 pagination: { page: acciones.pagination.page, pageSize: 5 },
                 options: {
-                    filters: [{ name: "proyectoId", value: id }],
+                    filters: [
+                        { name: "proyectoId", value: id },
+                        {
+                            name: acciones.form.searchFieldMain === "" ? "nombre" : acciones.form.searchFieldMain,
+                            value: (acciones.search2 && typeof acciones.search2 !== 'undefined') ? acciones.search2 : ""
+                        }
+
+                    ],
                 }
             }
             fetchAPIData('/silefe.accion/filter', postdata, referer).then(response => {
@@ -436,18 +447,28 @@ const Proyectos = ({ user }) => {
         if (id !== 'undefined') {
             const postdata = {
                 id: id, // TODO: esto cambiar por el projectId
+                pagination: { page: empresas.pagination.page,pageSize: empresas.pagination.pageSize ?? 4 },
                 options: {
-                    pagination: { page: empresas.pagination.page, pageSize: 5 },
-                    filters: [{ name: "proyectoId", value: id }],
+                    filters: [
+                        { name: "proyectoId", value: id },
+                        {
+                            name: empresas.form.searchFieldMain === "" ? "razonSocial" : empresas.form.searchFieldMain,
+                            value: (empresas.search2 && typeof empresas.search2 !== 'undefined') ? empresas.search2 : ""
+                        }                        
+                    ],
                 }
             }
-            fetchAPIData('/silefe.empresa/filter-by-project', postdata, referer).then(response => {
+            //const tmpurl = '/silefe.empresa/filter-by-project';
+            const tmpurl = '/silefe.empresa/filter';
+            fetchAPIData(tmpurl, postdata, referer).then(response => {
                 const tmp = response.data.map(i => ({
                     ...i,
                     telefono: (i.telefono != null && i.telefono.length > 0) ? JSON.parse(i.telefono)[0].value : "",
                 }));
                 empresasHandle({ type: SUBTABLE_ACTIONS.LOAD_ITEMS, items: tmp, pages: response.totalPages });
             });
+            //fetchAPIData('/silefe.empresa/filter', postdata, referer).then(response => empresasHandle({ type: SUBTABLE_ACTIONS.SETSEARCHITEMS, items: response.data, totalPages: response.totalPages }))
+
         }
     }
 
@@ -456,9 +477,16 @@ const Proyectos = ({ user }) => {
             const postdata = {
                 pagination: { page: acciones.pagination.page, pageSize: 5 },
                 options: {
-                    filters: [{ name: "proyectoId", value: id }],
+                    filters: [
+                        { name: "proyectoId", value: id },
+                        {
+                            name: ofertas.form.searchFieldMain === "" ? "titulo" : ofertas.form.searchFieldMain,
+                            value: (ofertas.search2 && typeof ofertas.search2 !== 'undefined') ? ofertas.search2 : ""
+                        }
+                    ],
                 }
             };
+
             fetchAPIData('/silefe.oferta/filter', postdata, referer).then(response => {
                 const itms = (response.data !== undefined && response.data.length > 0) ? response.data.map(i => ({
                     ...i,

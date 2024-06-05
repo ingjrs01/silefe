@@ -101,7 +101,7 @@ const Horarios = () => {
     }
 
     const downloadFile = () => {
-        fetchAPIData('/silefe.horario/filter', formatPost(items,false), referer).then(({data}) => { 
+        fetchAPIData('/silefe.horario/filter', formatPost(items,false), referrer).then(({data}) => { 
             exportToCsv(data,  items.fields.table, "horarios.csv");    
         });
 

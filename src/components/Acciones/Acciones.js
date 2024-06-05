@@ -241,7 +241,21 @@ const Acciones = ({user}) => {
     }
 
     const loadDocentes = (id) => {
-        fetchAPIData('/silefe.accion/filter-docentes-by-accion', { accionId: id }, referer).then(response => {
+        const postdata = {
+            pagination: { page: docentes.pagination.page,pageSize: docentes.pagination.pageSize ?? 4 },
+            options: {
+                filters: [
+                    { name: "accionId", value: id },
+                    {
+                        name: docentes.form.searchFieldMain === "" ? "nombre" : docentes.form.searchFieldMain,
+                        value: (docentes.search2 && typeof docentes.search2 !== 'undefined') ? docentes.search2 : ""
+                    }                        
+                ],
+            }
+        }
+
+        //'/silefe.accion/filter-docentes-by-accion'
+        fetchAPIData('/silefe.docente/filter', postdata, referer).then(response => {
             const tits = (response.data !== undefined && response.data.length > 0)?response.data.map(i => {
                 return {
                     ...i,
@@ -257,7 +271,20 @@ const Acciones = ({user}) => {
     }
 
     const loadParticipantes = (id) =>  {
-        fetchAPIData('/silefe.accion/filter-participantes-by-accion', { accionId: id }, referer).then(response => {
+        console.log("cargando los participantes");
+        const postdata = {
+            pagination: { page: participantes.pagination.page,pageSize: participantes.pagination.pageSize ?? 4 },
+            options: {
+                filters: [
+                    { name: "accionId", value: id },
+                    {
+                        name: participantes.form.searchFieldMain === "" ? "nombre" : participantes.form.searchFieldMain,
+                        value: (participantes.search2 && typeof participantes.search2 !== 'undefined') ? participantes.search2 : ""
+                    }                        
+                ],
+            }
+        }
+        fetchAPIData('/silefe.participante/filter', postdata, referer).then(response => {
             const tits = (response.data !== undefined && response.data.length > 0)?response.data.map(i => {
                 return {
                     ...i,
@@ -461,7 +488,7 @@ const Acciones = ({user}) => {
 
     useEffect( () => {
         loadParticipantes(items.item.id);
-    }, [participantes.load]);
+    }, [participantes.pagination.page, participantes.search2]);
 
     useEffect(() => {
         if (!isInitialized.current) {
@@ -492,6 +519,11 @@ const Acciones = ({user}) => {
     useEffect(() => {
         loadDocentesSearch()
     }, [docentes.paginationSearch.page, docentes.search])
+
+    useEffect(() => {
+        if (items.item.id !== 'undefined' && items.item.id > 0)
+            loadDocentes(items.item.id) ;
+    }, [docentes.pagination.page, docentes.search2]);
 
     if (!items)
         return (<div>{Liferay.Language.get('Cargando')}</div>)

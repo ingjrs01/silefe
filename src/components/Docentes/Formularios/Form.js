@@ -336,6 +336,11 @@ export const form = {
             columnType: "phone",
             key: "c5",
         },
+        email: {
+            columnTitle: Liferay.Language.get('Email'),
+            columnType: "email",
+            key: "tc8",
+        },
         provincia: {
             columnTitle: Liferay.Language.get("Provincia"),
             columnType: "multilang",
