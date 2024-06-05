@@ -254,7 +254,6 @@ const Acciones = ({user}) => {
             }
         }
 
-        //'/silefe.accion/filter-docentes-by-accion'
         fetchAPIData('/silefe.docente/filter', postdata, referer).then(response => {
             const tits = (response.data !== undefined && response.data.length > 0)?response.data.map(i => {
                 return {

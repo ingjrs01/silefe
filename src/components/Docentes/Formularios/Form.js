@@ -222,7 +222,7 @@ export const form = {
         },        
         titulacion: { // only for search bar
             key:7,
-            type: "select",
+            type: "text", //"select",
             label: Liferay.Language.get("Titulación"),
             name: "titulacion",
             value:"",
@@ -352,6 +352,6 @@ export const form = {
             key: "c7",
         }
     },
-    searchFields: ['nombre','apellidos', 'documento','provinciaId', 'municipioId', 'fechaNacimiento'],
+    searchFields: ['nombre','apellidos', 'documento','provinciaId', 'municipioId', 'fechaNacimiento', 'titulacion'],
     searchField: 'nombre',
 };
